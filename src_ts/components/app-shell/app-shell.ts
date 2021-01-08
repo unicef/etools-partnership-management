@@ -95,7 +95,16 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
+declare const dayjs: any;
+declare const dayjs_plugin_utc: any;
+declare const dayjs_plugin_isSameOrBefore: any;
+declare const dayjs_plugin_isSameOrAfter: any;
+declare const dayjs_plugin_isBetween: any;
 
+dayjs.extend(dayjs_plugin_utc);
+dayjs.extend(dayjs_plugin_isSameOrAfter);
+dayjs.extend(dayjs_plugin_isSameOrBefore);
+dayjs.extend(dayjs_plugin_isBetween);
 
 function fetchLangFiles(lang: string) {
   return Promise.allSettled([

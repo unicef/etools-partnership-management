@@ -1,5 +1,5 @@
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-declare const moment: any;
+declare const dayjs: any;
 
 export function prettyDate(dateString: string, format?: string, placeholder?: string) {
   const date = convertDate(dateString);
@@ -7,7 +7,7 @@ export function prettyDate(dateString: string, format?: string, placeholder?: st
 }
 
 function _utcDate(date: any, format?: string) {
-  return !date ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
+  return !date ? '' : dayjs.utc(date).format(format ? format : 'D MMM YYYY');
 }
 
 export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
@@ -64,8 +64,8 @@ export function dateDiff(firstDate: any, secondDate: any, unit?: any) {
   }
 
   if (isValidDate(firstDate) && isValidDate(secondDate)) {
-    const mFirstDate = moment.utc(firstDate);
-    const mSecondDate = moment.utc(secondDate);
+    const mFirstDate = dayjs.utc(firstDate);
+    const mSecondDate = dayjs.utc(secondDate);
     return mSecondDate.diff(mFirstDate, unit);
   }
 
@@ -83,7 +83,7 @@ export function getMaxDateStr(d1Str: string, d2Str: string) {
   } else if (!isValidDate(d1) && !isValidDate(d2)) {
     return null;
   } else {
-    if (moment.utc(d1).isSameOrBefore(d2)) {
+    if (dayjs.utc(d1).isSameOrBefore(d2)) {
       return d2Str;
     } else {
       return d1Str;
@@ -92,7 +92,7 @@ export function getMaxDateStr(d1Str: string, d2Str: string) {
 }
 
 export function isFutureDate(dateStr: string) {
-  return moment.utc().isBefore(moment.utc(new Date(dateStr)));
+  return dayjs.utc().isBefore(dayjs.utc(new Date(dateStr)));
 }
 
 export function dateIsBetween(start: any, end: any, current: any) {
@@ -104,8 +104,8 @@ export function dateIsBetween(start: any, end: any, current: any) {
   }
   const date = current instanceof Date ? current : new Date(current);
 
-  const currentDate = isValidDate(date) ? moment() : moment(date);
-  return currentDate.isBetween(moment(startDate), moment(endDate), 'day', '[]');
+  const currentDate = isValidDate(date) ? dayjs() : dayjs(date);
+  return currentDate.isBetween(dayjs(startDate), dayjs(endDate), 'day', '[]');
 }
 
 export function isValidDate(date: any) {
@@ -113,15 +113,15 @@ export function isValidDate(date: any) {
 }
 
 export function getTodayDateStr() {
-  return moment().format('YYYY-MM-DD');
+  return dayjs().format('YYYY-MM-DD');
 }
 
 export function dateIsBefore(dateToCheckStr: string, dateStr: string) {
-  return moment(dateToCheckStr).isBefore(dateStr);
+  return dayjs(dateToCheckStr).isBefore(dateStr);
 }
 
 export function dateIsAfter(dateToCheckStr: string | Date, dateStr: string | Date) {
-  return moment(dateToCheckStr).isAfter(dateStr);
+  return dayjs(dateToCheckStr).isAfter(dateStr);
 }
 
 function getShortStrMonths() {
@@ -167,5 +167,5 @@ export function formatDate(date: Date, format: string) {
   if (!date) {
     return null;
   }
-  return moment(date).format(format);
+  return dayjs(date).format(format);
 }

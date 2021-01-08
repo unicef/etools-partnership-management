@@ -2,7 +2,7 @@ import {PolymerElement} from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store';
 
-declare const moment: any;
+declare const dayjs: any;
 import Dexie from 'dexie';
 
 import {isEmptyObject} from '../../../utils/utils';
@@ -103,12 +103,12 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
         if (
           startDate &&
           startDate.length &&
-          (!agreement.start || !moment.utc(agreement.start).isAfter(moment.utc(startDate)))
+          (!agreement.start || !dayjs.utc(agreement.start).isAfter(dayjs.utc(startDate)))
         ) {
           return false;
         }
 
-        if (endDate && endDate.length && (!agreement.end || !moment.utc(agreement.end).isBefore(moment.utc(endDate)))) {
+        if (endDate && endDate.length && (!agreement.end || !dayjs.utc(agreement.end).isBefore(dayjs.utc(endDate)))) {
           return false;
         }
 

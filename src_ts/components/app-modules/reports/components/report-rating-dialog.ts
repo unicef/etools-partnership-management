@@ -4,7 +4,7 @@ import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {SharedStyles} from '../../../styles/shared-styles';
-declare const moment: any;
+declare const dayjs: any;
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
@@ -101,7 +101,7 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   getCurrentDate() {
-    return moment(new Date()).format('D-MMM-YYYY');
+    return dayjs(new Date()).format('D-MMM-YYYY');
   }
 
   saveStatus() {
