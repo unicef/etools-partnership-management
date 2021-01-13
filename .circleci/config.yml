@@ -56,6 +56,7 @@ jobs:
            # build and push Docker image
       - run:
           name: Building the image
+          no_output_timeout: 25m
           command: |
             TAG=${CIRCLE_BRANCH}
             docker build -t unicef/etools-pmp:$TAG .
