@@ -149,7 +149,7 @@ class AgreementsList extends connect(store)(
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">
                 CLEAR ALL
               </paper-button>
             </div>
