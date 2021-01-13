@@ -12,7 +12,6 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
-import {IconsActionsEl} from '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import {store} from '../../../../../../store';
@@ -227,7 +226,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
   _editAssessment(e: CustomEvent) {
     const assessment = this.dataItems.find(
-      (a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id'))
+      (a: any) => a.id === Number((e.target as Element).getAttribute('item-id'))
     );
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
