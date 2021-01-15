@@ -14,7 +14,7 @@ import {EnvFlags} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement)) {
+class EnvironmentFlagsPolymerMixin2 extends connect(store)(EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   envFlagsDefaultValue: EnvFlags = {
     prp_mode_off: true,
@@ -62,4 +62,4 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
   }
 }
 
-window.customElements.define('environment-flags', EnvironmentFlagsMixin);
+window.customElements.define('environment-flags', EnvironmentFlagsPolymerMixin2);

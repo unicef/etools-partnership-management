@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
@@ -15,9 +15,9 @@ import CONSTANTS from '../../../../config/app-constants';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EnvironmentFlagsMixin
+ * @appliesMixin EnvironmentFlagsPolymerMixin
  */
-export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
+export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerElement) {
   static get template() {
     return html`
       ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}

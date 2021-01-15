@@ -1,4 +1,4 @@
-import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor, EtoolsTab} from '@unicef-polymer/etools-types';
@@ -7,10 +7,10 @@ import {Constructor, EtoolsTab} from '@unicef-polymer/etools-types';
  * Interventions details tabs functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin EnvironmentFlagsMixin
+ * @appliesMixin EnvironmentFlagsPolymerMixin
  */
 function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class InterventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
+  class InterventionPageTabsClass extends EnvironmentFlagsPolymerMixin(baseClass as Constructor<PolymerElement>) {
     /**
      * Hidden tabs rules:
      *  - overview - on new intervention page

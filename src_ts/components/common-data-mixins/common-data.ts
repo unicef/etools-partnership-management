@@ -7,7 +7,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {PolymerElement} from '@polymer/polymer';
-import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../environment-flags/environment-flags-mixin';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
 
@@ -16,7 +16,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @mixinFunction
  */
 function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class CommonDataClass extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
+  class CommonDataClass extends EnvironmentFlagsPolymerMixin(EndpointsMixin(baseClass)) {
     @property({type: Object})
     commonDataEndpoints = {
       pmp: [

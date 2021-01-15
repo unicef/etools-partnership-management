@@ -42,7 +42,6 @@ setStore(store);
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
- * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin

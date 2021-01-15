@@ -2,7 +2,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
-import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../store';
@@ -29,10 +29,10 @@ import {
  * @customElement
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
- * @appliesMixin EnvironmentFlagsMixin
+ * @appliesMixin EnvironmentFlagsPolymerMixin
  */
 class InterventionItemData extends connect(store)(
-  EnvironmentFlagsMixin(AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)))
+  EnvironmentFlagsPolymerMixin(AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)))
 ) {
   @property({type: Object})
   pdEndpoints: {

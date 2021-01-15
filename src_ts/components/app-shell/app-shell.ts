@@ -127,7 +127,6 @@ setRootPath(BASE_URL);
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
- * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin ScrollControlMixin
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
