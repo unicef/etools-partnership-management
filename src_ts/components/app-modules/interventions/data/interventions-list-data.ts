@@ -105,6 +105,10 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       }
 
       queryResult = queryResult.filter(function (intervention: ListItemIntervention) {
+        if (!intervention) {
+          return;
+        }
+
         if (
           !self._filterFound(intervention, 'status', false, statuses) ||
           !self._filterFound(intervention, 'document_type', false, documentTypes) ||
