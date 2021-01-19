@@ -14,7 +14,7 @@ import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../store';
 import {patchDisaggregation} from '../../../../actions/common-data';
-import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '../../../user/user-permissions';
@@ -28,11 +28,11 @@ import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EnvironmentFlagsMixin
+ * @appliesMixin EnvironmentFlagsPolymerMixin
  * @appliesMixin FrontendPaginationMixin
  */
 class DisaggregationList extends connect(store)(
-  FrontendPaginationMixin(EnvironmentFlagsMixin(EndpointsMixin(PolymerElement)))
+  FrontendPaginationMixin(EnvironmentFlagsPolymerMixin(EndpointsMixin(PolymerElement)))
 ) {
   static get template() {
     // language=HTML

@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlagsMixin from '../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -24,7 +24,7 @@ import {property} from '@polymer/decorators';
  */
 class AppMenu extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(EnvironmentFlagsMixin(PolymerElement))
+  GestureEventListeners(EnvironmentFlagsPolymerMixin(PolymerElement))
 ) {
   public static get template() {
     // main template

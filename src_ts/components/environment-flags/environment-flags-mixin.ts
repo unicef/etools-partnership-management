@@ -8,7 +8,7 @@ import {EnvFlags, Constructor} from '@unicef-polymer/etools-types';
  * @polymer
  * @mixinFunction
  */
-function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function EnvironmentFlagsPolymerMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class EnvironFlagsClass extends baseClass {
     @property({type: Object})
     environmentFlags: EnvFlags | null = null;
@@ -48,4 +48,4 @@ function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass:
   return EnvironFlagsClass;
 }
 
-export default EnvironmentFlagsMixin;
+export default EnvironmentFlagsPolymerMixin;
