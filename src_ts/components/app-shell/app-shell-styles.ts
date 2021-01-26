@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
 import {pageLayoutStyles} from '../styles/page-layout-styles';

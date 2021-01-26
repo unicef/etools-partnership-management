@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
 export const disaggregationTableStyles = html` <style include="iron-flex iron-flex-alignment">
   :host {
@@ -44,8 +43,9 @@ export const disaggregationTableStyles = html` <style include="iron-flex iron-fl
 
   /*   Rows   */
   tr {
-    @apply --layout-horizontal;
-    @apply --layout-center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     border-bottom: 1px solid white;
   }
 
@@ -74,9 +74,10 @@ export const disaggregationTableStyles = html` <style include="iron-flex iron-fl
     min-height: 25px;
     word-wrap: break-word;
     hyphens: auto;
-    @apply --layout-flex;
-    @apply --layout-self-stretch;
-    @apply --layout-center;
+    flex: 1;
+    flex-basis: 0.000000001px;
+    align-self: stretch;
+    align-items: center;
   }
 
   .cellValue {
