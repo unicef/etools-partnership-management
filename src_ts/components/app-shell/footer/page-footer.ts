@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {property} from '@polymer/decorators';
 
 /**
@@ -14,9 +13,11 @@ class PageFooter extends PolymerElement {
     return html`
       <style>
         :host {
-          @apply --layout-vertical;
-          @apply --layout-flex;
-          @apply --layout-end-justified;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          flex-basis: 0.000000001px;
+          justify-content: flex-end;
           padding: 18px 24px;
           width: 100%;
           min-height: 90px;
@@ -24,12 +25,14 @@ class PageFooter extends PolymerElement {
         }
 
         #footer-content {
-          @apply --layout-horizontal;
+          display: flex;
+          flex-direction: row;
         }
 
         #unicef-logo {
-          @apply --layout-horizontal;
-          @apply --layout-inline;
+          display: flex;
+          flex-direction: row;
+          display: inline-flex;
           padding-right: 30px;
         }
 

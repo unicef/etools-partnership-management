@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
@@ -32,7 +31,7 @@ class EtoolsToast extends PolymerElement {
             padding: 8px;
             min-width: 16px;
             margin: 16px -8px -8px 0;
-            @apply --layout-self-end;
+            align-self: flex-end;
           }
         }
         .toast-general-style {
@@ -41,19 +40,19 @@ class EtoolsToast extends PolymerElement {
           max-height: 70vh !important;
         }
         .toast {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
           justify-content: space-between;
         }
         .toast-multi-line {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
           text-align: justify;
         }
       </style>
       <paper-toast id="toast" class="toast-general-style" on-iron-overlay-closed="toastClosed">
-        <paper-button id="confirmBtn" on-tap="confirmToast" class="toast-dismiss-btn-general-style">
-          Ok
-        </paper-button>
+        <paper-button id="confirmBtn" on-tap="confirmToast" class="toast-dismiss-btn-general-style"> Ok </paper-button>
       </paper-toast>
     `;
   }

@@ -6,7 +6,6 @@ import '@polymer/iron-media-query/iron-media-query.js';
 
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-button/paper-button';
@@ -146,9 +145,7 @@ class PartnersList extends connect(store)(
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn"> CLEAR ALL </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -168,24 +165,12 @@ class PartnersList extends connect(store)(
           id="listHeader"
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
-          <etools-data-table-column class="flex" field="vendor_number" sortable>
-            Vendor No.
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-3" field="name" sortable>
-            Name (Short/Full)
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-2" field="partner_type">
-            Partner Type
-          </etools-data-table-column>
-          <etools-data-table-column class="flex" field="hact_rating">
-            HACT Risk Rating
-          </etools-data-table-column>
-          <etools-data-table-column class="flex" field="sea_rating">
-            SEA Risk Rating
-          </etools-data-table-column>
-          <etools-data-table-column class="flex" field="psea_date">
-            Last PSEA Assess. Date
-          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="vendor_number" sortable> Vendor No. </etools-data-table-column>
+          <etools-data-table-column class="flex-3" field="name" sortable> Name (Short/Full) </etools-data-table-column>
+          <etools-data-table-column class="flex-2" field="partner_type"> Partner Type </etools-data-table-column>
+          <etools-data-table-column class="flex" field="hact_rating"> HACT Risk Rating </etools-data-table-column>
+          <etools-data-table-column class="flex" field="sea_rating"> SEA Risk Rating </etools-data-table-column>
+          <etools-data-table-column class="flex" field="psea_date"> Last PSEA Assess. Date </etools-data-table-column>
         </etools-data-table-header>
 
         <template

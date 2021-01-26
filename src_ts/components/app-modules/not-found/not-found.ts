@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import {SharedStyles} from '../../styles/shared-styles';
 
 /**
@@ -22,8 +21,10 @@ class NotFound extends PolymerElement {
         }
 
         div[elevation='1'] {
-          @apply --layout-vertical;
-          @apply --layout-flex;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          flex-basis: 0.000000001px;
         }
 
         a {
