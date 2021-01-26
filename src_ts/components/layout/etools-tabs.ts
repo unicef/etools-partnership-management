@@ -2,7 +2,6 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-tabs/paper-tabs';
 
 import {property} from '@polymer/decorators';
@@ -23,8 +22,9 @@ class EtoolsTabs extends PolymerElement {
         }
 
         :host {
-          @apply --layout-horizontal;
-          @apply --layout-start-justified;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
         }
 
         :host([border-bottom]) {

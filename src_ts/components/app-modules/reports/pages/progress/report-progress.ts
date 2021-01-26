@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
@@ -48,8 +47,9 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
         .indicator-toggle,
         .indicator-header-title,
         .indicator-header-target {
-          @apply --layout-vertical;
-          @apply --layout-center-justified;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         .indicator-toggle {

@@ -1,7 +1,6 @@
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
@@ -43,8 +42,9 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
           cursor: pointer;
         }
         .report-status {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
         }
         .w-auto {
           width: auto;
@@ -129,13 +129,9 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
         <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
-              <iron-label for="file_[[index]]">
-                [[item.type]]
-              </iron-label>
+              <iron-label for="file_[[index]]"> [[item.type]] </iron-label>
 
-              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
-                [[item.file_name]]
-              </a>
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank"> [[item.file_name]] </a>
             </div>
           </template>
         </div>

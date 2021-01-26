@@ -23,8 +23,10 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
         }
 
         :host {
-          @apply --layout-horizontal;
-          @apply --layout-flex;
+          display: flex;
+          flex-direction: row;
+          flex: 1;
+          flex-basis: 0.000000001px;
           @apply --etools-error-messages-box;
         }
 
@@ -56,8 +58,9 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
 
         .errors-box-actions {
           margin-top: 20px;
-          @apply --layout-horizontal;
-          @apply --layout-end-justified;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
         }
 
         paper-button {
@@ -73,16 +76,12 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
         <ul>
           <template is="dom-repeat" items="[[errors]]">
             <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
-            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">
-              [[item]]
-            </li>
+            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">[[item]]</li>
           </template>
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors">
-            Ok
-          </paper-button>
+          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors"> Ok </paper-button>
         </div>
       </etools-content-panel>
     `;
