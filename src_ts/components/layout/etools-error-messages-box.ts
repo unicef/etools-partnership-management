@@ -42,11 +42,12 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
 
         .errors-box {
           --ecp-header-bg: var(--error-box-heading-color);
-          --ecp-content: {
-            color: var(--error-box-text-color);
-            background-color: var(--error-box-bg-color);
-            border-color: var(--error-box-border-color);
-          }
+        }
+
+        etools-content-panel::part(ecp-content) {
+          color: var(--error-box-text-color);
+          background-color: var(--error-box-bg-color);
+          border-color: var(--error-box-border-color);
         }
 
         ul {

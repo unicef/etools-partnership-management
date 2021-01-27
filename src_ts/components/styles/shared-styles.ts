@@ -229,5 +229,21 @@ export const SharedStyles = html`
       word-wrap: break-word; /* for IE */
       width: 100%;
     }
+
+    etools-content-panel::part(epc-header) {
+      background-color: #ffffff;
+      border-bottom: 1px groove var(--dark-divider-color);
+    }
+
+    etools-content-panel::part(ecp-header-title) {
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    etools-content-panel::part(ecp-content) {
+      padding: 0;
+      overflow: hidden;
+    }
   </style>
 `;

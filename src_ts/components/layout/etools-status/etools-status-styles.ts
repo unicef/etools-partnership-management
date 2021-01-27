@@ -1,12 +1,11 @@
 import {html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {SharedStyles} from '../../styles/shared-styles';
 
 export const etoolsStatusStyles = html`
+  ${SharedStyles}
   <style>
     :host {
-      --ecp-content: {
-        padding: 0;
-      }
       display: block;
       position: relative;
       -webkit-box-sizing: border-box;
@@ -25,6 +24,10 @@ export const etoolsStatusStyles = html`
 
     etools-content-panel {
       width: 100%;
+    }
+
+    etools-content-panel::part(ecp-content) {
+      padding: 0;
     }
 
     .divider-line {
