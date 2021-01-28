@@ -4,7 +4,6 @@ import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
@@ -45,7 +44,9 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
         size="md"
         ok-btn-text="Save"
         keep-dialog-open
+        opened="{{dialogOpened}}"
         spinner-Text="Saving..."
+        on-close="_onClose"
         on-confirm-btn-clicked="_savePartnerContact"
       >
         <div class="layout-horizontal row-padding-v flex-c">
@@ -62,9 +63,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
             ></paper-input>
           </div>
           <div class="col col-3 right-align">
-            <etools-form-element-wrapper no-placeholder>
-              <paper-checkbox checked="{{item.active}}"> Active Staff </paper-checkbox>
-            </etools-form-element-wrapper>
+            <paper-checkbox checked="{{item.active}}"> Active Staff </paper-checkbox>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
@@ -144,9 +143,15 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
   @property({type: Array})
   fieldSelectors: string[] = ['#firstName', '#lastName', '#email', '#title'];
 
-  open() {
-    this.resetValidations();
-    (this.$.staffMemberDialog as EtoolsDialog).opened = true;
+  @property({type: Boolean})
+  protected dialogOpened = true;
+
+  set dialogData(data: any) {
+    const {item, partnerId, dataItems, mainEl}: any = data;
+    this.item = item;
+    this.partnerId = partnerId;
+    this.dataItems = dataItems;
+    this.mainEl = mainEl;
   }
 
   _isNewStaffMember(item: {id: number | null}) {
@@ -166,13 +171,8 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
     return valid;
   }
 
-  resetValidations() {
-    this.fieldSelectors.forEach((s) => {
-      const el: (Element & {invalid: boolean}) | null = this.shadowRoot!.querySelector(s);
-      if (el) {
-        el.invalid = false;
-      }
-    });
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   _savePartnerContact() {
@@ -194,7 +194,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
         .then((response: any) => {
           fireEvent(this.mainEl, 'partner-contacts-updated', response.staff_members);
           dialog.stopSpinner();
-          dialog.opened = false;
+          this._onClose();
         })
         .catch((error: any) => {
           dialog.stopSpinner();

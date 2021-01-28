@@ -45,10 +45,11 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         no-padding
         keep-dialog-open
         id="assessmentDialog"
-        opened="{{opened}}"
         size="md"
         ok-btn-text="Save"
         dialog-title="Assessment"
+        opened="{{dialogOpened}}"
+        on-close="_onClose"
         on-confirm-btn-clicked="_validateAndSaveAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
         disable-dismiss-btn="[[uploadInProgress]]"
@@ -111,9 +112,6 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  @property({type: Boolean, notify: true})
-  opened = false;
-
   @property({type: Boolean})
   uploadInProgress = false;
 
@@ -126,7 +124,25 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   originalAssessment!: PartnerAssessment;
 
+  @property({type: Boolean})
+  protected dialogOpened = true;
+
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
+
+  set dialogData(data: any) {
+    let {assessment, partnerId, toastEventSource}: any = data;
+    if (!assessment) {
+      assessment = new PartnerAssessment();
+      assessment.partner = partnerId;
+    }
+    this.toastEventSource = toastEventSource;
+    this.assessment = assessment;
+    this.originalAssessment = copy(this.assessment);
+
+    setTimeout(() => {
+      this.resetValidations();
+    }, 10);
+  }
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -145,6 +161,16 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
   }
 
+  resetValidations() {
+    this._validationSelectors.forEach((selector) => {
+      // @ts-ignore
+      const el = this.shadowRoot.querySelector(selector);
+      if (el) {
+        (el as any).invalid = false;
+      }
+    });
+  }
+
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector) => {
@@ -158,14 +184,14 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     return isValid;
   }
 
-  public _validateAndSaveAssessment() {
+  _validateAndSaveAssessment() {
     if (!this.validate()) {
       return;
     }
     this._saveAssessment();
   }
 
-  public _saveAssessment() {
+  _saveAssessment() {
     if (this.assessment === null) {
       return;
     }
@@ -180,6 +206,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       .then((resp: any) => {
         this._handleResponse(resp, isNew);
         this.stopSpinner();
+        this._onClose();
       })
       .catch((error: any) => {
         this._handleErrorResponse(error);
@@ -187,7 +214,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       });
   }
 
-  public _getBody(isNew: boolean) {
+  _getBody(isNew: boolean) {
     if (!this.assessment) {
       return null;
     }
@@ -199,7 +226,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     return this.assessment;
   }
 
-  public _pickEndpoint(isNew: boolean, assessId: any) {
+  _pickEndpoint(isNew: boolean, assessId: any) {
     const endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
     const endpointParam = isNew ? undefined : {assessmentId: assessId};
 
@@ -207,57 +234,38 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     return this.getEndpoint(endpointName, endpointParam);
   }
 
-  public _handleResponse(response: any, isNew: boolean) {
-    this.set('opened', false);
-
+  _handleResponse(response: any, isNew: boolean) {
     if (isNew) {
-      fireEvent(this, 'assessment-added', response);
+      fireEvent(this, 'dialog-closed', {confirmed: true, response: {action: 'assessment-added', detail: response}});
     } else {
-      fireEvent(this, 'assessment-updated', {
+      fireEvent(this, 'dialog-closed', {confirmed: true, response: {action: 'assessment-updated', detail: {
         before: this.originalAssessment,
         after: response
-      });
+      }}});
     }
   }
 
-  public _handleErrorResponse(error: any) {
+  _handleErrorResponse(error: any) {
     parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
-  public startSpinner() {
+  startSpinner() {
     (this.$.assessmentDialog as EtoolsDialog).startSpinner();
   }
 
-  public stopSpinner() {
+  stopSpinner() {
     (this.$.assessmentDialog as EtoolsDialog).stopSpinner();
   }
 
-  public resetValidations() {
-    this._validationSelectors.forEach((selector) => {
-      // @ts-ignore
-      const el = this.shadowRoot.querySelector(selector);
-      if (el) {
-        (el as any).invalid = false;
-      }
-    });
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
-  public initAssessment(assessment: any, partnerId?: any) {
-    if (!assessment) {
-      assessment = new PartnerAssessment();
-      assessment.partner = partnerId;
-    }
-
-    this.assessment = assessment;
-    this.originalAssessment = copy(this.assessment);
-    this.resetValidations();
-  }
-
-  public _hasId(id: any) {
+  _hasId(id: any) {
     return !!id;
   }
 
-  public _archivedChanged(e: CustomEvent) {
+  _archivedChanged(e: CustomEvent) {
     this.set('assessment.active', !(e.target as PaperCheckboxElement).checked);
   }
 

@@ -13,7 +13,7 @@ import '../../../../interventions/pages/intervention-tab-pages/common/layout/ico
 import './add-edit-staff-members';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
-import {AddEditStaffMembersEl} from './add-edit-staff-members';
+import {openDialog} from '../../../../../utils/dialog';
 
 /**
  * @polymer
@@ -149,9 +149,6 @@ class StaffMembers extends PolymerElement {
   @property({type: Boolean})
   showInactive = false;
 
-  @property({type: Object})
-  addEditDialog!: AddEditStaffMembersEl;
-
   @property({type: Boolean})
   showDelete = false;
 
@@ -168,16 +165,6 @@ class StaffMembers extends PolymerElement {
     return ['dataItemsChanged(dataItems, dataItems.*)'];
   }
 
-  ready() {
-    super.ready();
-    this._createAddEditDialog();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._removeAddEditDialog();
-  }
-
   dataItemsChanged() {
     this._sortInactiveLast();
   }
@@ -191,32 +178,28 @@ class StaffMembers extends PolymerElement {
     });
   }
 
-  _createAddEditDialog() {
-    this.addEditDialog = document.createElement('add-edit-staff-members') as any;
-    this.addEditDialog.mainEl = this;
-    document.querySelector('body')!.appendChild(this.addEditDialog);
-  }
-
-  _removeAddEditDialog() {
-    if (this.addEditDialog) {
-      document.querySelector('body')!.removeChild(this.addEditDialog);
-    }
-  }
-
   _addPartnerContact() {
-    this.addEditDialog.item = new StaffMember({});
-    this.openAddEditDialog();
+    this.openAddEditDialog(new StaffMember({}));
   }
 
   _editPartnerContact(e: Event) {
-    this.addEditDialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
-    this.openAddEditDialog();
+    const item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
+    this.openAddEditDialog(item);
   }
 
-  openAddEditDialog() {
-    this.addEditDialog.partnerId = this.partnerId;
-    this.addEditDialog.dataItems = this.dataItems;
-    this.addEditDialog.open();
+  openAddEditDialog(item?: any) {
+    if(!item) {
+      item = new StaffMember({});
+    }
+    return openDialog({
+      dialog: 'add-edit-staff-members',
+      dialogData: {
+        item: item,
+        partnerId: this.partnerId,
+        dataItems: this.dataItems,
+        mainEl: this
+      }
+    });
   }
 
   _isVisible(active: boolean, showInactive: boolean) {

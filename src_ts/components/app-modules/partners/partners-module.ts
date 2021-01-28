@@ -32,9 +32,9 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
-import {NewPartnerDialog} from './components/new-partner-dialog';
 import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../utils/dialog';
 
 /**
  * @polymer
@@ -227,8 +227,6 @@ class PartnersModule extends connect(store)(
   @property({type: Object})
   originalPartnerData!: Partner;
 
-  newPartnerDialog!: NewPartnerDialog;
-
   public static get observers() {
     return ['_pageChanged(listActive, tabsActive, routeData, currentModule)', '_observeRouteDataId(routeData.id)'];
   }
@@ -236,7 +234,6 @@ class PartnersModule extends connect(store)(
   public ready() {
     super.ready();
     this._initListeners();
-    this._createNewPartnerDialog();
   }
 
   public connectedCallback() {
@@ -254,7 +251,6 @@ class PartnersModule extends connect(store)(
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this._removeNewPartnerDialogFromDom();
     this._removeListeners();
   }
 
@@ -291,24 +287,6 @@ class PartnersModule extends connect(store)(
 
   public _updateBasisForRiskRating(e: CustomEvent) {
     this._savePartner({id: this.partner.id, basis_for_risk_rating: e.detail});
-  }
-
-  public _createNewPartnerDialog() {
-    this.newPartnerDialog = document.createElement('new-partner-dialog') as NewPartnerDialog;
-    this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
-
-    document.querySelector('body')!.appendChild(this.newPartnerDialog);
-
-    this._createPartner = this._createPartner.bind(this);
-    this.newPartnerDialog.addEventListener('create-partner', this._createPartner as any);
-  }
-
-  public _removeNewPartnerDialogFromDom() {
-    if (this.newPartnerDialog) {
-      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner as any);
-
-      document.querySelector('body')!.removeChild(this.newPartnerDialog);
-    }
   }
 
   public _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any, _currentModule: string) {
@@ -399,14 +377,18 @@ class PartnersModule extends connect(store)(
   }
 
   public _openNewPartnerDialog() {
-    this.newPartnerDialog.openNewPartnerDialog();
-  }
-
-  public _createPartner(event: CustomEvent) {
-    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
-    if (partnerData) {
-      partnerData.createPartner(event.detail, this._newPartnerCreated, this._handleCreatePartnerError);
-    }
+    return openDialog({
+      dialog: 'new-partner-dialog'
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return null;
+      }
+      const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+      if (partnerData) {
+        partnerData.createPartner(response, this._newPartnerCreated, this._handleCreatePartnerError);
+      }
+      return true;
+    });
   }
 
   public _newPartnerCreated(partner: any) {
