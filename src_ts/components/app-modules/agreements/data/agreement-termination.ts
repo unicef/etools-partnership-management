@@ -35,12 +35,12 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
         no-padding
         keep-dialog-open
         id="agreementTermination"
-        opened="{{opened}}"
+        opened
         size="md"
         hidden$="[[warningOpened]]"
         ok-btn-text="Terminate"
         dialog-title="Terminate Agreement"
-        on-close="_handleDialogClosed"
+        on-close="_onClose"
         on-confirm-btn-clicked="_triggerAgreementTermination"
         disable-confirm-btn="[[uploadInProgress]]"
         disable-dismiss-btn="[[uploadInProgress]]"
@@ -96,12 +96,11 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
 
   private _validationSelectors: string[] = ['#terminationNotice'];
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
-
-  _handleDialogClosed() {
-    this.resetValidations();
+  set dialogData(data: any) {
+    const {terminationElSource, agreementId, termination}: any = data;
+    this.terminationElSource = terminationElSource;
+    this.agreementId = agreementId;
+    this.termination = termination;
   }
 
   _triggerAgreementTermination() {
@@ -120,17 +119,7 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
       },
       status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
     });
-    this.set('opened', false);
-  }
-
-  // TODO: refactor validation at some point (common with ag add amendment dialog and more)
-  resetValidations() {
-    this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
-      if (el) {
-        el.set('invalid', false);
-      }
-    });
+    this._onClose();
   }
 
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
@@ -153,6 +142,11 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
       this.set('termination.attachment_id', uploadResponse.id);
     }
   }
+
+  _onClose() {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
+  }
+
 }
 
 window.customElements.define('agreement-termination', AgreementTermination);
