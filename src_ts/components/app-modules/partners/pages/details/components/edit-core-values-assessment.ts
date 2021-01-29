@@ -32,7 +32,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
         size="md"
         ok-btn-text="Save"
         keep-dialog-open
-        opened="{{dialogOpened}}"
+        opened
         on-close="_onClose"
         on-confirm-btn-clicked="_saveCoreValueAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
@@ -71,9 +71,6 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
   @property({type: Boolean})
   uploadInProgress = false;
-
-  @property({type: Boolean})
-  protected dialogOpened = true;
 
   set dialogData(data: any) {
     const {item, parent}: any = data;

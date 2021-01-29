@@ -48,7 +48,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         size="md"
         ok-btn-text="Save"
         dialog-title="Assessment"
-        opened="{{dialogOpened}}"
+        opened
         on-close="_onClose"
         on-confirm-btn-clicked="_validateAndSaveAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
@@ -123,9 +123,6 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   @property({type: Object})
   originalAssessment!: PartnerAssessment;
-
-  @property({type: Boolean})
-  protected dialogOpened = true;
 
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 

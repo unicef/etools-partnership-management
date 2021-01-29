@@ -44,7 +44,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
         size="md"
         ok-btn-text="Save"
         keep-dialog-open
-        opened="{{dialogOpened}}"
+        opened
         spinner-Text="Saving..."
         on-close="_onClose"
         on-confirm-btn-clicked="_savePartnerContact"
@@ -142,9 +142,6 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
 
   @property({type: Array})
   fieldSelectors: string[] = ['#firstName', '#lastName', '#email', '#title'];
-
-  @property({type: Boolean})
-  protected dialogOpened = true;
 
   set dialogData(data: any) {
     const {item, partnerId, dataItems, mainEl}: any = data;

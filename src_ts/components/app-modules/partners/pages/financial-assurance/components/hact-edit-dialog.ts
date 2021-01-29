@@ -61,7 +61,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
         dialog-title="Edit HACT Assurance Plan"
         ok-btn-text="Save"
         keep-dialog-open
-        opened="{{dialogOpened}}"
+        opened
         on-close="_onClose"
         spinner-text="Saving..."
         on-confirm-btn-clicked="_saveChanges"
@@ -186,9 +186,6 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
   // Programmatic Visits changes here due to different endpoint for PATCH
   @property({type: Array})
   selectedAudits!: string[];
-
-  @property({type: Boolean})
-  protected dialogOpened = true;
 
   @property({type: Array})
   auditOptions = [

@@ -19,7 +19,7 @@ export class NewPartnerDialog extends PolymerElement {
         disable-confirm-btn="[[vendorNumberIsEmpty]]"
         dialog-title="Import Partner"
         keep-dialog-open
-        opened="{{dialogOpened}}"
+        opened
         on-close="_onClose"
         on-confirm-btn-clicked="_handleDialogClosed"
       >
@@ -45,9 +45,6 @@ export class NewPartnerDialog extends PolymerElement {
 
   @property({type: Boolean, computed: '_vendorNumberIsEmpty(vendorNumber)'})
   vendorNumberIsEmpty = true;
-
-  @property({type: Boolean})
-  protected dialogOpened = true;
 
   // @ts-ignore
   private _vendorNumberIsEmpty(): boolean {
