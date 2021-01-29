@@ -61,6 +61,8 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
         dialog-title="Edit HACT Assurance Plan"
         ok-btn-text="Save"
         keep-dialog-open
+        opened
+        on-close="_onClose"
         spinner-text="Saving..."
         on-confirm-btn-clicked="_saveChanges"
       >
@@ -211,8 +213,11 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
   @property({type: Object})
   toastSource!: PolymerElement;
 
-  openDialog() {
-    (this.$.editPartnersDialog as EtoolsDialog).opened = true;
+  set dialogData(data: any) {
+    const {partner, toastSource}: any = data;
+
+    this.partner = partner;
+    this.toastSource = toastSource;
   }
 
   _partnerChanged(partner: any) {
@@ -254,17 +259,11 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
 
   _handleSaveResponse(resp: any) {
     (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
-    fireEvent(this, 'hact-values-saved', {partner: resp});
-    this._closeDialog();
+    fireEvent(this, 'dialog-closed', {confirmed: true, response: resp});
   }
 
-  _closeDialog() {
-    this.setProperties({
-      editableValues: null,
-      selectedAudits: null,
-      partner: null
-    });
-    (this.$.editPartnersDialog as EtoolsDialog).opened = false;
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   savePartnerDetails(body: any, partnerId: string) {

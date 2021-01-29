@@ -3,8 +3,6 @@ import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -20,7 +18,10 @@ export class NewPartnerDialog extends PolymerElement {
         ok-btn-text="Save"
         disable-confirm-btn="[[vendorNumberIsEmpty]]"
         dialog-title="Import Partner"
-        on-close="_handleDialogClosed"
+        keep-dialog-open
+        opened
+        on-close="_onClose"
+        on-confirm-btn-clicked="_handleDialogClosed"
       >
         <paper-input
           id="vendorNo"
@@ -50,20 +51,15 @@ export class NewPartnerDialog extends PolymerElement {
     return !this.vendorNumber;
   }
 
-  openNewPartnerDialog() {
-    (this.$.vendorNo as PaperInputElement).invalid = false;
-    (this.$.newPartnerDialog as EtoolsDialog).opened = true;
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
-  _handleDialogClosed(closingReason: CustomEvent) {
-    if (closingReason.detail.confirmed) {
-      if (!this.vendorNumber) {
-        return;
-      }
-      fireEvent(this, 'create-partner', {vendor: this.vendorNumber});
-    } else {
-      this.vendorNumber = '';
+  _handleDialogClosed() {
+    if (!this.vendorNumber.trim()) {
+      return;
     }
+    fireEvent(this, 'dialog-closed', {confirmed: true, response: {vendor: this.vendorNumber.trim()}});
   }
 }
 
