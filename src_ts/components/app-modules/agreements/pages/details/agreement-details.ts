@@ -713,10 +713,6 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       dialogData: {
         agreementId: agreementId,
       }
-    }).then(({confirmed, response}) => {
-      if (!confirmed || !response) {
-        return;
-      }
     });
   }
 
