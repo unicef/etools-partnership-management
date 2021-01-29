@@ -191,7 +191,7 @@ class StaffMembers extends PolymerElement {
     if(!item) {
       item = new StaffMember({});
     }
-    return openDialog({
+    openDialog({
       dialog: 'add-edit-staff-members',
       dialogData: {
         item: item,

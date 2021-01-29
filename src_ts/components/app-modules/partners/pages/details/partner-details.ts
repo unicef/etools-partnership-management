@@ -311,7 +311,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
   public _editCoreValuesAssessment(e: CustomEvent) {
     const item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
-    return openDialog({
+    openDialog({
       dialog: 'edit-core-values-assessment',
       dialogData: {
         item: item,

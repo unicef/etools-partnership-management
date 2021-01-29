@@ -168,7 +168,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
   newAssessmentAdded(data: any) {
     this.push('dataItems', data.detail);
-    fireEvent(this, 'assessment-added-step2', data);
+    fireEvent(this, 'assessment-added-step2', data.detail);
   }
 
   assessmentUpdated(data: any) {
@@ -180,7 +180,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
     }
     this.set('dataItems', assessments);
 
-    fireEvent(this, 'assessment-updated-step2', data);
+    fireEvent(this, 'assessment-updated-step2', data.detail);
   }
 
   _addAssessment() {

@@ -377,7 +377,7 @@ class PartnersModule extends connect(store)(
   }
 
   public _openNewPartnerDialog() {
-    return openDialog({
+    openDialog({
       dialog: 'new-partner-dialog'
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {
