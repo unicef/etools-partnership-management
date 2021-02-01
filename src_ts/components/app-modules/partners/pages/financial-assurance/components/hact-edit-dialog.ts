@@ -210,14 +210,10 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     }
   ];
 
-  @property({type: Object})
-  toastSource!: PolymerElement;
-
   set dialogData(data: any) {
-    const {partner, toastSource}: any = data;
+    const {partner}: any = data;
 
     this.partner = partner;
-    this.toastSource = toastSource;
   }
 
   _partnerChanged(partner: any) {
@@ -278,7 +274,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       })
       .catch((err: any) => {
         (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
-        parseRequestErrorsAndShowAsToastMsgs(err, this.toastSource, false);
+        parseRequestErrorsAndShowAsToastMsgs(err, this, false);
       });
   }
 }

@@ -199,8 +199,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
       dialog: 'assessment-dialog',
       dialogData: {
         assessment: assessment,
-        partnerId: partnerId,
-        toastEventSource: this
+        partnerId: partnerId
       }
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {

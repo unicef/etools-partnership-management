@@ -119,20 +119,16 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   assessmentTypes!: LabelAndValue[];
 
   @property({type: Object})
-  toastEventSource!: PolymerElement;
-
-  @property({type: Object})
   originalAssessment!: PartnerAssessment;
 
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 
   set dialogData(data: any) {
-    let {assessment, partnerId, toastEventSource}: any = data;
+    let {assessment, partnerId}: any = data;
     if (!assessment) {
       assessment = new PartnerAssessment();
       assessment.partner = partnerId;
     }
-    this.toastEventSource = toastEventSource;
     this.assessment = assessment;
     this.originalAssessment = copy(this.assessment);
 
@@ -243,7 +239,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _handleErrorResponse(error: any) {
-    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this);
   }
 
   startSpinner() {
