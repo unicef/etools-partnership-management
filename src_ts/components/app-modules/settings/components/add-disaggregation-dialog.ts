@@ -20,6 +20,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
+import {fireEvent} from '../../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -68,7 +69,9 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
         ok-btn-text="Save"
         dialog-title="Add Disaggregation"
         disable-confirm-btn="[[disableConfirmBtn]]"
+        opened
         on-confirm-btn-clicked="_validateAndSaveDisaggregation"
+        on-close="_onClose"
       >
         <div class="layout-horizontal flex-c row-padding-v">
           <div class="col col-4">
@@ -115,19 +118,20 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
   @property({type: Array})
   dataItems!: [];
 
-  @property({type: Object})
-  toastEventSource!: HTMLElement;
-
   @property({type: Boolean})
   disableConfirmBtn = false;
 
-  ready() {
-    super.ready();
+  set dialogData(_data: any) {
+    this.editMode = true;
     this.dataSetModel = {
       value: null,
       active: true
     };
-    this.editMode = true;
+    this.disaggregation = {
+      name: '',
+      active: true,
+      disaggregation_values: []
+    };
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
@@ -141,20 +145,8 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
     localStorage.removeItem('update-redux');
   }
 
-  initializeDisaggregation() {
-    this.disaggregation = {
-      name: '',
-      active: true,
-      disaggregation_values: []
-    };
-  }
-
-  open() {
-    (this.$.etoolsDialog as EtoolsDialog).opened = true;
-  }
-
-  close() {
-    (this.$.etoolsDialog as EtoolsDialog).opened = false;
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   startSpinner() {
@@ -194,11 +186,11 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
         store.dispatch(addDisaggregation(response));
         this.broadcastAddDisaggregToOtherTabs(response);
         this.stopSpinner();
-        this.close();
+        this._onClose();
       })
       .catch((error: any) => {
         this.stopSpinner();
-        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
 
