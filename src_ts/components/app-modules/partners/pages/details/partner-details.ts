@@ -28,9 +28,9 @@ import './components/staff-members';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {convertDate} from '../../../../utils/date-utils';
 import {property} from '@polymer/decorators';
-import {EditCoreValuesAssessmentEl} from './components/edit-core-values-assessment';
 import {Partner} from '../../../../../models/partners.models';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../../../utils/dialog';
 declare const dayjs: any;
 
 /**
@@ -277,9 +277,6 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   @property({type: Boolean})
   showDelete = false;
 
-  @property({type: Object})
-  editCVADialog!: EditCoreValuesAssessmentEl;
-
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
       this.csoTypes = state.commonData!.csoTypes;
@@ -303,14 +300,6 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
       loadingSource: 'partners-page'
     });
     fireEvent(this, 'tab-content-attached');
-    this._createEditCoreValuesAssessmentsDialog();
-  }
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.editCVADialog) {
-      document.querySelector('body')!.removeChild(this.editCVADialog);
-    }
   }
 
   public _shouldShowCVA(archived: boolean, showArchived: boolean) {
@@ -320,16 +309,15 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     return !archived;
   }
 
-  public _createEditCoreValuesAssessmentsDialog() {
-    this.editCVADialog = document.createElement('edit-core-values-assessment') as any;
-    this.editCVADialog.parent = this;
-
-    document.querySelector('body')!.appendChild(this.editCVADialog);
-  }
-
   public _editCoreValuesAssessment(e: CustomEvent) {
-    this.editCVADialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
-    this.editCVADialog.open();
+    const item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
+    openDialog({
+      dialog: 'edit-core-values-assessment',
+      dialogData: {
+        item: item,
+        parent: this
+      }
+    });
   }
 
   public _canEditCVA(attachment: any, archived: boolean) {
