@@ -23,7 +23,6 @@ class PageContentHeader extends PolymerElement {
           flex-direction: column;
           justify-content: flex-start;
           flex: 1;
-          flex-basis: 0.000000001px;
 
           background-color: var(--primary-background-color);
           padding: 0 24px;
@@ -49,7 +48,6 @@ class PageContentHeader extends PolymerElement {
 
         .title-row h1 {
           flex: 1;
-          flex-basis: 0.000000001px;
           @apply --page-title;
         }
 

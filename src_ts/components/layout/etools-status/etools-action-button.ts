@@ -47,7 +47,6 @@ class EtoolsActionButton extends PolymerElement {
 
         .main-btn-part {
           flex: 1;
-          flex-basis: 0.000000001px;
           text-align: center;
           font-weight: 500;
           line-height: 34px;

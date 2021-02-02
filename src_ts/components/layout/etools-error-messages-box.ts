@@ -26,7 +26,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
           display: flex;
           flex-direction: row;
           flex: 1;
-          flex-basis: 0.000000001px;
           @apply --etools-error-messages-box;
         }
 
