@@ -60,7 +60,6 @@ export const buttonsStyles = html` <style>
     display: flex;
     flex-direction: row;
     flex: 1;
-    flex-basis: 0.000000001px;
     justify-content: center;
   }
 

@@ -75,7 +75,6 @@ export const disaggregationTableStyles = html` <style include="iron-flex iron-fl
     word-wrap: break-word;
     hyphens: auto;
     flex: 1;
-    flex-basis: 0.000000001px;
     align-self: stretch;
     align-items: center;
   }

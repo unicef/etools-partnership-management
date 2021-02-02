@@ -114,7 +114,6 @@ export const navMenuStyles = html`
     .nav-menu,
     .nav-menu iron-selector[role='navigation'] {
       flex: 1;
-      flex-basis: 0.000000001px;
     }
 
     .nav-menu-item {

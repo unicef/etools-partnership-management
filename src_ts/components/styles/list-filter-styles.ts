@@ -19,7 +19,6 @@ export const listFilterStyles = html` <style>
     align-items: center;
     flex-wrap: wrap;
     flex: 1;
-    flex-basis: 0.000000001px;
     margin-right: auto;
   }
 
