@@ -24,7 +24,6 @@ class NotFound extends PolymerElement {
           display: flex;
           flex-direction: column;
           flex: 1;
-          flex-basis: 0.000000001px;
         }
 
         a {
