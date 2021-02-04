@@ -472,8 +472,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     openDialog({
       dialog: 'hact-edit-dialog',
       dialogData: {
-        partner: clone(this.partner),
-        toastSource: this
+        partner: clone(this.partner)
       }
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {

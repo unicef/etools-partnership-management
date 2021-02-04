@@ -18,8 +18,8 @@ import {store, RootState} from '../../../../../../../store';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {AddAgAmendmentDialog} from './add-ag-amendment-dialog';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../../../../../utils/dialog';
 
 /**
  * @polymer
@@ -184,9 +184,6 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     'CP extension': 'Extension of Country Programme Cycle'
   };
 
-  @property({type: Object})
-  _addAgAmendmentDialog!: AddAgAmendmentDialog;
-
   @property({type: Array})
   authorizedOfficers: [] = [];
 
@@ -205,37 +202,33 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     }
   }
 
-  ready() {
-    super.ready();
-    this._createAddAgAmendmentDialog();
-  }
-
-  _createAddAgAmendmentDialog() {
-    this.saveNewAmendment = this.saveNewAmendment.bind(this);
-    this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog') as any;
-    this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
-    this._addAgAmendmentDialog.toastEventSource = this;
-    this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment as any);
-    document.querySelector('body')!.appendChild(this._addAgAmendmentDialog);
-  }
-
-  _removeAddAgAmendmentDialog() {
-    if (this._addAgAmendmentDialog) {
-      this._addAgAmendmentDialog.removeEventListener('update-amendment-and-ao', this.saveNewAmendment as any);
-      document.querySelector('body')!.removeChild(this._addAgAmendmentDialog);
-    }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._removeAddAgAmendmentDialog();
-  }
-
   _openAddAgAmendmentDialog() {
-    if (this._addAgAmendmentDialog) {
-      const amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
-      this._addAgAmendmentDialog.initData(this.authorizedOfficers, this.showAuthorizedOfficers, amendmentTypes);
-      this._addAgAmendmentDialog.set('opened', true);
+    const amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
+    openDialog({
+      dialog: 'add-ag-amendment-dialog',
+      dialogData: {
+        authorizedOfficers: this.authorizedOfficers,
+        showAuthorizedOfficers: this.showAuthorizedOfficers,
+        amendmentTypes: amendmentTypes
+      }
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return;
+      }
+      this.saveNewAmendment(response);
+    });
+  }
+
+  saveNewAmendment(data: any) {
+    const unsavedAmendment = data.amendment;
+    if (unsavedAmendment) {
+      this.push('dataItems', unsavedAmendment);
+
+      if (data.ao instanceof Array && data.ao.length > 0) {
+        this.set('selectedAo', data.ao);
+      }
+
+      fireEvent(this, 'save-agreement');
     }
   }
 
@@ -251,19 +244,6 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
       return _amendmentTypes.filter((type) => type.value === 'Change authorized officer');
     }
     return _amendmentTypes;
-  }
-
-  saveNewAmendment(e: CustomEvent) {
-    const unsavedAmendment = e.detail.amendment;
-    if (unsavedAmendment) {
-      this.push('dataItems', unsavedAmendment);
-
-      if (e.detail.ao instanceof Array && e.detail.ao.length > 0) {
-        this.set('selectedAo', e.detail.ao);
-      }
-
-      fireEvent(this, 'save-agreement');
-    }
   }
 
   _getReadonlyAmendmentTypes(types: any) {
