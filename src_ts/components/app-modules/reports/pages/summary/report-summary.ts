@@ -16,6 +16,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../../../utils/dialog';
 
 /**
  * @polymer
@@ -145,14 +146,6 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   @property({type: Array})
   reportAttachments!: any[];
 
-  @property({type: Object})
-  sentBkCommentsDialog!: any;
-
-  ready() {
-    super.ready();
-    this._createSentBkCommentsDialog();
-  }
-
   connectedCallback() {
     super.connectedCallback();
     /**
@@ -163,18 +156,6 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
       active: false,
       loadingSource: 'reports-page'
     });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.sentBkCommentsDialog) {
-      document.querySelector('body')!.removeChild(this.sentBkCommentsDialog);
-    }
-  }
-
-  _createSentBkCommentsDialog() {
-    this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
-    document.querySelector('body')!.appendChild(this.sentBkCommentsDialog);
   }
 
   /**
@@ -220,10 +201,12 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   }
 
   _seeSentBackComments() {
-    if (this.sentBkCommentsDialog) {
-      this.sentBkCommentsDialog.report = this.report;
-      this.sentBkCommentsDialog.opened = true;
-    }
+    openDialog({
+      dialog: 'sent-bk-comments',
+      dialogData: {
+        report: this.report
+      }
+    });
   }
 }
 
