@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const gridLayoutStyles = html` <style>
@@ -8,20 +7,22 @@ export const gridLayoutStyles = html` <style>
     box-sizing: border-box;
   }
   .layout-horizontal {
-    @apply --layout-horizontal;
+    display: flex;
+    flex-direction: row;
   }
   .layout-vertical,
   .col.layout-vertical {
-    @apply --layout-vertical;
+    display: flex;
+    flex-direction: column;
   }
   .space-between {
-    @apply --layout-justified;
+    justify-content: space-between;
   }
   .space-around {
-    @apply --layout-around-justified;
+    justify-content: space-around;
   }
   .layout-wrap {
-    @apply --layout-wrap;
+    flex-wrap: wrap;
   }
   .row-padding {
     padding: 16px 24px;
@@ -35,14 +36,16 @@ export const gridLayoutStyles = html` <style>
     padding-bottom: 16px;
   }
   .row-h {
-    @apply --layout-horizontal;
+    display: flex;
+    flex-direction: row;
   }
   .row-v {
-    @apply --layout-vertical;
+    display: flex;
+    flex-direction: column;
   }
   .flex-c {
     /* flex container */
-    @apply --layout-flex;
+    flex: 1;
   }
   .row-h,
   .row-v {
@@ -84,7 +87,8 @@ export const gridLayoutStyles = html` <style>
     text-align: center;
   }
   .right-align {
-    @apply --layout-horizontal;
+    display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     text-align: right;
@@ -97,7 +101,8 @@ export const gridLayoutStyles = html` <style>
     overflow: hidden;
   }
   .col {
-    @apply --layout-horizontal;
+    display: flex;
+    flex-direction: row;
     box-sizing: border-box;
   }
 

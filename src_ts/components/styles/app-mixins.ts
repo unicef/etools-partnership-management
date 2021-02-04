@@ -1,5 +1,4 @@
 import '@polymer/polymer/lib/elements/custom-style.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 const documentContainer = document.createElement('template');
 // language=HTML
@@ -57,8 +56,9 @@ documentContainer.innerHTML = `
         };
 
         --partner-status-wrapper: {
-          @apply --layout-vertical;
-          @apply --layout-center-justified;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           width: 24px;
           height: 24px;
           -webkit-border-radius: 50%;

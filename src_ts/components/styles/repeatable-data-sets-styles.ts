@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import {actionIconBtnsStyles} from './action-icon-btns-styles.js';
 
@@ -16,18 +15,21 @@ export const repeatableDataSetsStyles = html` ${actionIconBtnsStyles}
     }
 
     .item-actions-container {
-      @apply --layout-horizontal;
+      display: flex;
+      flex-direction: row;
     }
 
     .item-actions-container .actions {
-      @apply --layout-vertical;
-      @apply --layout-center-justified;
-      @apply --layout-wrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .item-container .item-content {
-      @apply --layout-vertical;
-      @apply --layout-flex;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
       margin-left: 10px;
       border-left: 1px solid var(--darker-divider-color);
     }
@@ -37,8 +39,9 @@ export const repeatableDataSetsStyles = html` ${actionIconBtnsStyles}
     }
 
     #bottom-actions {
-      @apply --layout-horizontal;
-      @apply --layout-end-justified;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
       overflow: visible;
       padding-top: 15px;
       padding-bottom: 25px;
@@ -59,8 +62,9 @@ export const repeatableDataSetsStylesV2 = html` <style>
   }
 
   .item-actions-container:before {
-    @apply --layout-vertical;
-    @apply --layout-center-justified;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: absolute;
     top: -32px;
     right: -12px;

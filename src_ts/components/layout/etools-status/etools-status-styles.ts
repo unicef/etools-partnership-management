@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 export const etoolsStatusStyles = html`
   <style>
@@ -28,7 +27,7 @@ export const etoolsStatusStyles = html`
     }
 
     .divider-line {
-      @apply --layout-flex;
+      flex: 1;
     }
 
     .divider-line:first-child {
@@ -36,21 +35,24 @@ export const etoolsStatusStyles = html`
     }
 
     .status-container {
-      @apply --layout-horizontal;
+      display: flex;
+      flex-direction: row;
       min-height: 24px;
       @apply --etools-status-container;
     }
 
     .status-icon,
     .status {
-      @apply --layout-vertical;
-      @apply --layout-center-justified;
-      @apply --layout-wrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .icon-wrapper {
-      @apply --layout-vertical;
-      @apply --layout-center-justified;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       background-color: var(--etools-status-icon-inactive-color, #9d9d9d);
       width: 24px;
       height: 24px;
@@ -71,7 +73,7 @@ export const etoolsStatusStyles = html`
 
     .icon-wrapper iron-icon,
     .icon-wrapper span {
-      @apply --layout-self-center;
+      align-self: center;
     }
 
     .icon-wrapper span {
