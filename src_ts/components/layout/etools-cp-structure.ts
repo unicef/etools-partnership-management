@@ -23,7 +23,8 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
-          @apply --layout-horizontal;
+          display: flex;
+          flex-direction: row;
         }
 
         *[hidden] {
