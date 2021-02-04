@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
@@ -48,7 +47,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       <style include="data-table-styles">
         :host {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
           width: 100%;
         }
 

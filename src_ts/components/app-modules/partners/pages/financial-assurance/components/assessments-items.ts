@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
@@ -85,18 +84,10 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-3">
-              Assessment Type
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Date of Assessment
-            </etools-data-table-column>
-            <etools-data-table-column class="col-6">
-              Report
-            </etools-data-table-column>
-            <etools-data-table-column class="col-1 center-align">
-              Archived
-            </etools-data-table-column>
+            <etools-data-table-column class="col-3"> Assessment Type </etools-data-table-column>
+            <etools-data-table-column class="col-2"> Date of Assessment </etools-data-table-column>
+            <etools-data-table-column class="col-6"> Report </etools-data-table-column>
+            <etools-data-table-column class="col-1 center-align"> Archived </etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -106,12 +97,8 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
               hidden$="[[!_isVisible(item.active, showArchived)]]"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-3">
-                  [[item.type]]
-                </span>
-                <span class="col-data col-2">
-                  [[getDateDisplayValue(item.completed_date)]]
-                </span>
+                <span class="col-data col-3"> [[item.type]] </span>
+                <span class="col-data col-2"> [[getDateDisplayValue(item.completed_date)]] </span>
                 <span class="col-data col-6">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word">
@@ -188,9 +175,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   }
 
   _editAssessment(e: CustomEvent) {
-    const assessment = this.dataItems.find(
-      (a: any) => a.id === Number((e.target as Element).getAttribute('item-id'))
-    );
+    const assessment = this.dataItems.find((a: any) => a.id === Number((e.target as Element).getAttribute('item-id')));
     this._openAssessmentDialog(JSON.parse(JSON.stringify(assessment)));
   }
 
@@ -208,8 +193,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
       }
       if (response.action === 'assessment-added') {
         this.newAssessmentAdded(response);
-      }
-      else if (response.action === 'assessment-updated') {
+      } else if (response.action === 'assessment-updated') {
         this.assessmentUpdated(response);
       }
     });
