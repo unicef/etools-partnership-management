@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -100,7 +99,7 @@ class PageHeader extends connect(store)(
         }
 
         .titlebar {
-          @apply --layout-flex;
+          flex: 1;
           font-size: 28px;
           font-weight: 300;
         }
@@ -111,8 +110,9 @@ class PageHeader extends connect(store)(
         }
 
         .content-align {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
         }
 
         #app-logo {

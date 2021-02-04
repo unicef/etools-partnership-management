@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
@@ -35,7 +34,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
       ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${frWarningsStyles}
       <style>
         :host {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
           width: 100%;
         }
 
@@ -53,7 +53,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         }
 
         .hact-heading {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
           background-color: var(--medium-theme-background-color);
         }
 
@@ -73,7 +74,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         }
 
         .hact-body {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
         }
 
         .row-h + .row-h {
@@ -107,8 +109,9 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         }
 
         .timeline-col {
-          @apply --layout-vertical;
-          @apply --layout-start;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
         }
       </style>
 
@@ -133,16 +136,10 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         <div class="hact-body">
           <div class="row-h">
             <div class="col col-1">
-              <div class$="[[getRiskRatingClass(partner.rating)]]">
-                [[getRiskRatingValue(partner.rating)]]
-              </div>
+              <div class$="[[getRiskRatingClass(partner.rating)]]">[[getRiskRatingValue(partner.rating)]]</div>
             </div>
-            <div class="col col-2 center-align">
-              $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]
-            </div>
-            <div class="col col-2 center-align block">
-              $[[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]
-            </div>
+            <div class="col col-2 center-align">$[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
+            <div class="col col-2 center-align block">$[[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]</div>
             <div class="col col-2 center-align">
               <strong>
                 [[partner.hact_values.programmatic_visits.planned.total]] /
@@ -187,9 +184,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                   <a class="primary" href="interventions/[[partnership.id]]/details">
                     <strong>[[partnership.number]]</strong> </a
                   ><br />
-                  <span>
-                    [[partnership.title]]
-                  </span>
+                  <span> [[partnership.title]] </span>
                 </div>
                 <div class="col col-2 center-align timeline-col">
                   <etools-info-tooltip

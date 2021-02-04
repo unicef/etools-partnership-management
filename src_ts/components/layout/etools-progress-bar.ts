@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-progress/paper-progress';
 import {property} from '@polymer/decorators';
 
@@ -16,8 +15,9 @@ class EtoolsProgressBar extends PolymerElement {
     return html`
       <style>
         :host {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
 
           --paper-progress-active-color: var(--primary-color);
           --paper-progress-secondary-color: var(--primary-background-color);

@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {property} from '@polymer/decorators';
 
 /**
@@ -20,9 +19,10 @@ class PageContentHeader extends PolymerElement {
         }
 
         :host {
-          @apply --layout-vertical;
-          @apply --layout-start-justified;
-          @apply --layout-flex;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          flex: 1;
 
           background-color: var(--primary-background-color);
           padding: 0 24px;
@@ -35,18 +35,19 @@ class PageContentHeader extends PolymerElement {
         }
 
         .content-header-row {
-          @apply --layout-horizontal;
-          @apply --layout-start-justified;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
         }
 
         .title-row {
-          @apply --layout-center;
+          align-items: center;
           margin: 30px 0 0;
           padding: 0 24px;
         }
 
         .title-row h1 {
-          @apply --layout-flex;
+          flex: 1;
           @apply --page-title;
         }
 

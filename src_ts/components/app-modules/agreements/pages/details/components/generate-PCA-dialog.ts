@@ -4,7 +4,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 
 /**
@@ -25,7 +25,10 @@ class GeneratePcaDialog extends PolymerElement {
         size="md"
         ok-btn-text="Download"
         dialog-title="Generate PCA"
-        on-close="_handleDialogClosed"
+        keep-dialog-open
+        on-close="_onClose"
+        on-confirm-btn-clicked="_onConfirm"
+        opened
       >
         <paper-dropdown-menu label="Choose Template">
           <paper-listbox slot="dropdown-content" attr-for-selected="item-value" selected="{{selectedTemplate}}">
@@ -55,25 +58,25 @@ class GeneratePcaDialog extends PolymerElement {
   @property({type: String})
   selectedTemplate: string | null = null;
 
-  open() {
-    (this.$.etoolsDialog as EtoolsDialog).opened = true;
+  set dialogData(data: any) {
+    let {agreementId}: any = data;
+    this.agreementId = agreementId;
   }
 
-  _handleDialogClosed(closingReason: any) {
-    if (typeof closingReason.detail.confirmed === 'undefined') {
-      // filter out the on-close event fired by the containing dropdown
-      return;
-    }
-    if (closingReason.detail.confirmed) {
-      window.open(
-        '/api/v2/agreements/' +
-          this.agreementId +
-          '/generate_doc/?lang=' +
-          encodeURIComponent(this.selectedTemplate as string),
-        '_blank'
-      );
-    }
+  _onConfirm() {
+    window.open(
+      '/api/v2/agreements/' +
+        this.agreementId +
+        '/generate_doc/?lang=' +
+        encodeURIComponent(this.selectedTemplate as string),
+      '_blank'
+    );
     this.selectedTemplate = null;
+    this._onClose();
+  }
+
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 }
 

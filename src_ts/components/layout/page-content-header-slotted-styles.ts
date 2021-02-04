@@ -1,11 +1,11 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const pageContentHeaderSlottedStyles = html` <style>
   .content-header-actions {
-    @apply --layout-horizontal;
-    @apply --layout-end;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
   }
 
   @media (max-width: 576px) {
@@ -15,8 +15,9 @@ export const pageContentHeaderSlottedStyles = html` <style>
   }
 
   .content-header-actions .action {
-    @apply --layout-horizontal;
-    @apply --layout-end;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
   }
 
   .content-header-actions paper-button:not(.primary-btn) {

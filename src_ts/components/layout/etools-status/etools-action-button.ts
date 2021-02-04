@@ -7,7 +7,6 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {StatusAction} from '../../../typings/etools-status.types';
@@ -25,7 +24,8 @@ class EtoolsActionButton extends PolymerElement {
         }
 
         paper-button {
-          @apply --layout-horizontal;
+          display: flex;
+          flex-direction: row;
           padding: 0;
           margin: 0;
           height: 36px;
@@ -46,7 +46,7 @@ class EtoolsActionButton extends PolymerElement {
         }
 
         .main-btn-part {
-          @apply --layout-flex;
+          flex: 1;
           text-align: center;
           font-weight: 500;
           line-height: 34px;

@@ -1,7 +1,6 @@
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
@@ -17,6 +16,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../../../utils/dialog';
 
 /**
  * @polymer
@@ -43,8 +43,9 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
           cursor: pointer;
         }
         .report-status {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
         }
         .w-auto {
           width: auto;
@@ -129,13 +130,9 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
         <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
-              <iron-label for="file_[[index]]">
-                [[item.type]]
-              </iron-label>
+              <iron-label for="file_[[index]]"> [[item.type]] </iron-label>
 
-              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
-                [[item.file_name]]
-              </a>
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank"> [[item.file_name]] </a>
             </div>
           </template>
         </div>
@@ -149,14 +146,6 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   @property({type: Array})
   reportAttachments!: any[];
 
-  @property({type: Object})
-  sentBkCommentsDialog!: any;
-
-  ready() {
-    super.ready();
-    this._createSentBkCommentsDialog();
-  }
-
   connectedCallback() {
     super.connectedCallback();
     /**
@@ -167,18 +156,6 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
       active: false,
       loadingSource: 'reports-page'
     });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.sentBkCommentsDialog) {
-      document.querySelector('body')!.removeChild(this.sentBkCommentsDialog);
-    }
-  }
-
-  _createSentBkCommentsDialog() {
-    this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
-    document.querySelector('body')!.appendChild(this.sentBkCommentsDialog);
   }
 
   /**
@@ -224,10 +201,12 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   }
 
   _seeSentBackComments() {
-    if (this.sentBkCommentsDialog) {
-      this.sentBkCommentsDialog.report = this.report;
-      this.sentBkCommentsDialog.opened = true;
-    }
+    openDialog({
+      dialog: 'sent-bk-comments',
+      dialogData: {
+        report: this.report
+      }
+    });
   }
 }
 

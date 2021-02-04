@@ -1,4 +1,3 @@
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {PolymerElement, html} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -22,8 +21,9 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
         }
 
         .target-row {
-          @apply --layout-horizontal;
-          @apply --layout-end-justified;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
           color: var(--secondary-text-color);
           width: 100%;
           text-align: right;
@@ -71,9 +71,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
 
       <div class="target-row">
         <span>Target:</span>
-        <span title$="[[_getTargetValue(displayType, target)]]">
-          [[_getTargetValue(displayType, target)]]
-        </span>
+        <span title$="[[_getTargetValue(displayType, target)]]"> [[_getTargetValue(displayType, target)]] </span>
       </div>
       <div class="target-row">
         <span>Total cumulative progress:</span>

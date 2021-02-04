@@ -7,7 +7,7 @@ import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import '../../data/agreement-termination';
-import {AgreementTermination} from '../../data/agreement-termination';
+import {openDialog} from '../../../../utils/dialog';
 
 /**
  * @polymer
@@ -80,9 +80,6 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   @property({type: String})
   deleteWarningMessage = 'Are you sure you want to delete this agreement?';
 
-  @property({type: Object})
-  _terminationDialog!: AgreementTermination;
-
   static get observers() {
     return ['_handleStatusChange(status, agreementId)'];
   }
@@ -94,7 +91,6 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
     this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
-    this._createTerminationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
     this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
 
@@ -307,20 +303,17 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       return;
     }
 
-    this._terminationDialog.resetValidations();
-    this._terminationDialog.set('agreementId', this.agreementId);
-    this._terminationDialog.set('termination', {
-      date: null,
-      attachment_notice: null
+    openDialog({
+      dialog: 'agreement-termination',
+      dialogData: {
+        terminationElSource: this,
+        agreementId: this.agreementId,
+        termination: {
+          date: null,
+          attachment_notice: null
+        },
+      }
     });
-    this._terminationDialog.set('opened', true);
-  }
-
-  _createTerminationDialog() {
-    this._terminationDialog = document.createElement('agreement-termination') as any;
-    document.querySelector('body')!.appendChild(this._terminationDialog);
-
-    this._terminationDialog.set('terminationElSource', this);
   }
 
   _setStatusSuspended() {

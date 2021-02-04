@@ -37,12 +37,14 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
         id="reportRatingDialog"
         size="md"
         keep-dialog-open
+        opened
         spinner-text="Sending rating..."
         disable-confirm-btn="[[!selectedOverallStatus.length]]"
         ok-btn-text="[[okBtnText]]"
         cancel-btn-text="Cancel"
         dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
         on-confirm-btn-clicked="saveStatus"
+        on-close="_onClose"
       >
         <div id="content-box" hidden$="[[isSRReport]]">
           <p>
@@ -65,9 +67,6 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: Object})
   report!: GenericObject;
 
-  @property({type: Object})
-  toastEventSource!: HTMLElement;
-
   @property({type: String})
   selectedOverallStatus = '';
 
@@ -77,19 +76,25 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: Boolean})
   isSRReport!: boolean;
 
+  set dialogData(data: any) {
+    const {report}: any = data;
+    this.report = report;
+    this.init();
+  }
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
   }
 
-  open() {
+  init() {
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
     this.set('selectedOverallStatus', this.isSRReport ? 'Met' : '');
     this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
     (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
   }
 
-  close() {
-    (this.$.reportRatingDialog as EtoolsDialog).set('opened', false);
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   startSpinner() {
@@ -114,9 +119,8 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
       .then((response: any) => {
-        fireEvent(this, 'report-accepted', {report: response});
         this.stopSpinner();
-        this.close();
+        fireEvent(this, 'dialog-closed', {confirmed: true, response: response});
       })
       .catch((error: any) => {
         this._handleErrorResponse(error);
@@ -125,9 +129,9 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
   _handleErrorResponse(error: any) {
     this.stopSpinner();
-    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this);
   }
 }
 
-window.customElements.define(ReportRatingDialog.is, ReportRatingDialog);
+window.customElements.define('report-rating-dialog', ReportRatingDialog);
 export {ReportRatingDialog as ReportRatingDialogEl};

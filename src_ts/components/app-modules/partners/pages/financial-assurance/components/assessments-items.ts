@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
@@ -18,8 +17,8 @@ import {store} from '../../../../../../store';
 import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status';
 import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../../models/partners.models';
-import {AssessmentDialog} from './assessment-dialog';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {openDialog} from '../../../../../utils/dialog';
 
 /**
  * @customElement
@@ -78,25 +77,17 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
             disabled="[[!editMode]]"
             hidden$="[[!editMode]]"
             title="Add other assessment"
-            on-tap="_openAddAssessmentDialog"
+            on-tap="_addAssessment"
           >
           </paper-icon-button>
         </div>
 
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-3">
-              Assessment Type
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Date of Assessment
-            </etools-data-table-column>
-            <etools-data-table-column class="col-6">
-              Report
-            </etools-data-table-column>
-            <etools-data-table-column class="col-1 center-align">
-              Archived
-            </etools-data-table-column>
+            <etools-data-table-column class="col-3"> Assessment Type </etools-data-table-column>
+            <etools-data-table-column class="col-2"> Date of Assessment </etools-data-table-column>
+            <etools-data-table-column class="col-6"> Report </etools-data-table-column>
+            <etools-data-table-column class="col-1 center-align"> Archived </etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -106,12 +97,8 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
               hidden$="[[!_isVisible(item.active, showArchived)]]"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-3">
-                  [[item.type]]
-                </span>
-                <span class="col-data col-2">
-                  [[getDateDisplayValue(item.completed_date)]]
-                </span>
+                <span class="col-data col-3"> [[item.type]] </span>
+                <span class="col-data col-2"> [[getDateDisplayValue(item.completed_date)]] </span>
                 <span class="col-data col-6">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word">
@@ -163,50 +150,16 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   @property({type: Boolean})
   showArchived = false;
 
-  @property({type: Object})
-  assessmentDialog!: AssessmentDialog;
-
   @property({type: Boolean})
   showDelete = false;
 
-  ready() {
-    super.ready();
-    this._createAssessmentDialog();
+  newAssessmentAdded(data: any) {
+    this.push('dataItems', data.detail);
+    fireEvent(this, 'assessment-added-step2', data.detail);
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._removeAssessmentDialog();
-  }
-
-  _createAssessmentDialog() {
-    this.assessmentDialog = document.createElement('assessment-dialog') as any;
-    this.assessmentDialog.setAttribute('id', 'assessmentDialog');
-    this.assessmentDialog.toastEventSource = this;
-
-    this.newAssessmentAdded = this.newAssessmentAdded.bind(this);
-    this.assessmentUpdated = this.assessmentUpdated.bind(this);
-    this.assessmentDialog.addEventListener('assessment-added', this.newAssessmentAdded as any);
-    this.assessmentDialog.addEventListener('assessment-updated', this.assessmentUpdated as any);
-
-    document.querySelector('body')!.appendChild(this.assessmentDialog);
-  }
-
-  _removeAssessmentDialog() {
-    if (this.assessmentDialog) {
-      this.assessmentDialog.removeEventListener('assessment-added', this.newAssessmentAdded as any);
-      this.assessmentDialog.removeEventListener('assessment-updated', this.assessmentUpdated as any);
-      document.querySelector('body')!.removeChild(this.assessmentDialog);
-    }
-  }
-
-  newAssessmentAdded(e: CustomEvent) {
-    this.push('dataItems', e.detail);
-    fireEvent(this, 'assessment-added-step2', e.detail);
-  }
-
-  assessmentUpdated(e: CustomEvent) {
-    const updatedAss = e.detail.after;
+  assessmentUpdated(data: any) {
+    const updatedAss = data.detail.after;
     const assessments = JSON.parse(JSON.stringify(this.dataItems));
     const idx = this.dataItems.findIndex((a: any) => a.id === updatedAss.id);
     if (idx > -1) {
@@ -214,22 +167,35 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
     }
     this.set('dataItems', assessments);
 
-    fireEvent(this, 'assessment-updated-step2', e.detail);
+    fireEvent(this, 'assessment-updated-step2', data.detail);
   }
 
-  _openAddAssessmentDialog() {
-    if (this.assessmentDialog) {
-      this.assessmentDialog.initAssessment(null, this.partnerId);
-      this.assessmentDialog.opened = true;
-    }
+  _addAssessment() {
+    this._openAssessmentDialog(null, this.partnerId);
   }
 
   _editAssessment(e: CustomEvent) {
-    const assessment = this.dataItems.find(
-      (a: any) => a.id === Number((e.target as Element).getAttribute('item-id'))
-    );
-    this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
-    this.assessmentDialog.opened = true;
+    const assessment = this.dataItems.find((a: any) => a.id === Number((e.target as Element).getAttribute('item-id')));
+    this._openAssessmentDialog(JSON.parse(JSON.stringify(assessment)));
+  }
+
+  _openAssessmentDialog(assessment: any, partnerId?: any) {
+    openDialog({
+      dialog: 'assessment-dialog',
+      dialogData: {
+        assessment: assessment,
+        partnerId: partnerId
+      }
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return;
+      }
+      if (response.action === 'assessment-added') {
+        this.newAssessmentAdded(response);
+      } else if (response.action === 'assessment-updated') {
+        this.assessmentUpdated(response);
+      }
+    });
   }
 
   _editModeChanged() {

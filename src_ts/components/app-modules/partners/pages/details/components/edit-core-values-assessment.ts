@@ -3,15 +3,13 @@ import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 
 import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
-
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixin from '../../../../../mixins/common-mixin';
-
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+
 /**
  * @polymer
  * @customElement
@@ -34,6 +32,8 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
         size="md"
         ok-btn-text="Save"
         keep-dialog-open
+        opened
+        on-close="_onClose"
         on-confirm-btn-clicked="_saveCoreValueAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
         disable-dismiss-btn="[[uploadInProgress]]"
@@ -72,8 +72,14 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
   @property({type: Boolean})
   uploadInProgress = false;
 
-  open() {
-    (this.$.cvaDialog as EtoolsDialog).opened = true;
+  set dialogData(data: any) {
+    const {item, parent}: any = data;
+    this.item = item;
+    this.parent = parent;
+  }
+
+  _onClose(): void {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   _saveCoreValueAssessment() {
@@ -82,7 +88,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
       return;
     }
     fireEvent(this.parent, 'save-core-values-assessment', this.item);
-    (this.$.cvaDialog as EtoolsDialog).opened = false;
+    this._onClose();
   }
 
   _uploadFinished(e: CustomEvent) {

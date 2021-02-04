@@ -30,9 +30,8 @@ import {isEmptyObject} from '../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {property} from '@polymer/decorators/lib/decorators';
-import {ReportRatingDialogEl} from './components/report-rating-dialog';
-import {ReportRejectDialogEl} from './components/report-reject-dialog';
 import {ReportsListEl} from './pages/list/reports-list';
+import {openDialog} from '../../utils/dialog';
 declare const dayjs: any;
 
 /**
@@ -244,12 +243,6 @@ class ReportsModule extends connect(store)(
   ];
 
   @property({type: Object})
-  reportRatingDialog!: ReportRatingDialogEl;
-
-  @property({type: Object})
-  reportRejectDialog!: ReportRejectDialogEl;
-
-  @property({type: Object})
   permissions!: GenericObject;
 
   @property({type: String})
@@ -264,8 +257,7 @@ class ReportsModule extends connect(store)(
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, routeData)',
-      '_loadReport(routeData.id, tabsActive, prpCountries, currentUser)',
-      '_reportChanged(report)'
+      '_loadReport(routeData.id, tabsActive, prpCountries, currentUser)'
     ];
   }
 
@@ -298,8 +290,6 @@ class ReportsModule extends connect(store)(
       active: true,
       loadingSource: 'reports-page'
     });
-
-    this._createReportStatusUpdateDialogs();
   }
 
   _hideActionBtns(tabsActive: boolean, report: any) {
@@ -365,11 +355,31 @@ class ReportsModule extends connect(store)(
   }
 
   _accept() {
-    this.reportRatingDialog.open();
+    openDialog({
+      dialog: 'report-rating-dialog',
+      dialogData: {
+        report: this.report
+      }
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return;
+      }
+      this._updateReportDetailsObj(response)
+    });
   }
 
   _sendBackToPartner() {
-    this.reportRejectDialog.open();
+    openDialog({
+      dialog: 'report-reject-dialog',
+      dialogData: {
+        report: this.report
+      }
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return;
+      }
+      this._updateReportDetailsObj(response)
+    });
   }
 
   _computeReportFilename(report: any) {
@@ -491,53 +501,13 @@ class ReportsModule extends connect(store)(
     a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this.reportRatingDialog) {
-      this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj as any);
-      document.querySelector('body')!.removeChild(this.reportRatingDialog as any);
-    }
-    if (this.reportRejectDialog) {
-      this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj as any);
-      document.querySelector('body')!.removeChild(this.reportRejectDialog as any);
-    }
-  }
-
-  _createReportStatusUpdateDialogs() {
-    this._updateReportDetailsObj = this._updateReportDetailsObj.bind(this);
-
-    this.reportRatingDialog = document.createElement('report-rating-dialog') as any;
-    this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
-    this.reportRatingDialog.set('toastEventSource', this);
-    this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj as any);
-
-    document.querySelector('body')!.appendChild(this.reportRatingDialog as any);
-
-    this.reportRejectDialog = document.createElement('report-reject-dialog') as any;
-    this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
-    this.reportRejectDialog.set('toastEventSource', this);
-    this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj as any);
-
-    document.querySelector('body')!.appendChild(this.reportRejectDialog as any);
-  }
-
-  _reportChanged(report: any) {
+  _updateReportDetailsObj(report: any) {
     if (!report) {
       return;
     }
-    this.reportRatingDialog.set('report', report);
-    this.reportRejectDialog.set('report', report);
-  }
-
-  _updateReportDetailsObj(e: CustomEvent) {
-    e.stopImmediatePropagation();
-    if (!e.detail.report) {
-      return;
-    }
-    this.set('report', e.detail.report);
+    this.set('report', report);
     // update reports list object data without makeing a new request
-    this._updateReportDataOnList(e.detail.report);
+    this._updateReportDataOnList(report);
   }
 
   _updateReportDataOnList(report: any) {

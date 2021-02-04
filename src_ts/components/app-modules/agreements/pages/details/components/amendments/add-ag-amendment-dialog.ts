@@ -9,7 +9,7 @@ import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
-import {AgreementAmendment, LabelAndValue} from '@unicef-polymer/etools-types';
+import {AgreementAmendment} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -24,12 +24,12 @@ class AddAgAmendmentDialog extends PolymerElement {
         no-padding
         keep-dialog-open
         id="add-ag-amendment"
-        opened="{{opened}}"
+        opened
         size="md"
         hidden$="[[datePickerOpen]]"
         ok-btn-text="Save"
         dialog-title="Add Amendment"
-        on-close="_handleDialogClosed"
+        on-close="_onClose"
         on-confirm-btn-clicked="_validateAndSaveAmendment"
         disable-confirm-btn="[[uploadInProgress]]"
         disable-dismiss-btn="[[uploadInProgress]]"
@@ -106,8 +106,6 @@ class AddAgAmendmentDialog extends PolymerElement {
     `;
   }
 
-  @property({type: Boolean})
-  opened = false;
 
   @property({type: Boolean})
   datePickerOpen = false;
@@ -139,44 +137,31 @@ class AddAgAmendmentDialog extends PolymerElement {
   @property({type: Boolean})
   uploadInProgress = false;
 
-  @property({type: Object})
-  toastEventSource!: PolymerElement;
-
   private _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
 
-  initData(authorizedOfficers: any, showAuthorizedOfficers: boolean, amendmentTypes: LabelAndValue[]) {
+  set dialogData(data: any) {
+    const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes}: any = data;
+
     this.set('amendment', new AgreementAmendment());
     this.set('amendmentTypes', amendmentTypes);
-    this.set('authorizedOfficersOptions', JSON.parse(JSON.stringify(authorizedOfficers)));
+    this.set('authorizedOfficersOptions', authorizedOfficers);
     this.set('authorizedOfficers', []);
     this.set('showAuthorizedOfficers', showAuthorizedOfficers);
     this.set('autoValidate', true);
     this.set('_aoTypeSelected', false);
-    this._resetValidations();
   }
 
   _validateAndSaveAmendment() {
     if (this.validate()) {
-      fireEvent(this, 'update-amendment-and-ao', {
+      fireEvent(this, 'dialog-closed', {confirmed: true, response: {
         amendment: this.amendment,
-        ao: JSON.parse(JSON.stringify(this.authorizedOfficers))
-      });
-      this.set('opened', false);
+        ao: this.authorizedOfficers
+      }});
     }
   }
 
-  _handleDialogClosed() {
-    this.set('autoValidate', false);
-    this._resetValidations();
-  }
-
-  _resetValidations() {
-    this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
-      if (el) {
-        el.set('invalid', false);
-      }
-    });
+  _onClose() {
+    fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   validate() {

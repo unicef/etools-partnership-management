@@ -19,9 +19,9 @@ import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '../../../user/user-permissions';
 import {property} from '@polymer/decorators/lib/decorators';
-import {AddDisaggregationDialogEl} from './add-disaggregation-dialog';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';
+import {openDialog} from '../../../utils/dialog';
 
 /**
  * @polymer
@@ -118,9 +118,6 @@ class DisaggregationList extends connect(store)(
   @property({type: Array})
   disaggregations!: Disaggregation[];
 
-  @property({type: Object})
-  disaggregationModal!: AddDisaggregationDialogEl;
-
   @property({type: Array, computed: '_filterData(disaggregations, q)'})
   filteredDisaggregations!: Disaggregation[];
 
@@ -158,17 +155,6 @@ class DisaggregationList extends connect(store)(
   ready() {
     super.ready();
     this.editMode = true;
-    this.disaggregationModal = document.createElement('add-disaggregation-dialog') as AddDisaggregationDialogEl;
-    this.disaggregationModal.setAttribute('id', 'disaggregationModal');
-    document.querySelector('body')!.appendChild(this.disaggregationModal);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this.disaggregationModal) {
-      document.querySelector('body')!.removeChild(this.disaggregationModal);
-    }
   }
 
   broadcastPatchDisaggregToOtherTabs(disaggregation: Disaggregation) {
@@ -236,10 +222,10 @@ class DisaggregationList extends connect(store)(
     this.set('pagination.totalResults', disaggregs.length);
   }
 
-  _openModal() {
-    this.disaggregationModal.toastEventSource = this;
-    this.disaggregationModal.resetValidations();
-    this.disaggregationModal.open();
+  _addDisaggregation() {
+    openDialog({
+      dialog: 'add-disaggregation-dialog'
+    });
   }
 
   _displayGroups(groups: any) {
@@ -251,11 +237,6 @@ class DisaggregationList extends connect(store)(
         return g.value;
       })
       .join('; ');
-  }
-
-  _addDisaggregation() {
-    this.disaggregationModal.initializeDisaggregation();
-    this._openModal();
   }
 
   userIsPme(currentUser: User) {

@@ -1,11 +1,11 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const listFilterStyles = html` <style>
   #filters {
-    @apply --layout-horizontal;
-    @apply --layout-center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 8px 24px;
     margin-bottom: 24px;
     box-sizing: border-box;
@@ -14,10 +14,11 @@ export const listFilterStyles = html` <style>
   }
 
   #filters-fields {
-    @apply --layout-horizontal;
-    @apply --layout-center;
-    @apply --layout-wrap;
-    @apply --layout-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
     margin-right: auto;
   }
 
@@ -53,8 +54,9 @@ export const listFilterStyles = html` <style>
   }
 
   #hiddenToggle {
-    @apply --layout-horizontal;
-    @apply --layout-center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     cursor: pointer;
     font-weight: normal;
     font-size: 16px;
@@ -65,9 +67,10 @@ export const listFilterStyles = html` <style>
   }
 
   .fixed-controls {
-    @apply --layout-vertical;
-    @apply --layout-center-justified;
-    @apply --layout-self-stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
     padding: 0 0 0 8px;
     margin: 8px 0 8px 24px;
     border-left: 2px solid var(--list-divider-color, #9d9d9d);
@@ -113,9 +116,10 @@ export const listFilterStyles = html` <style>
   }
 
   paper-icon-item {
-    @apply --layout-horizontal;
-    @apply --layout-center;
-    @apply --layout-wrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
     min-height: 48px;
     box-sizing: border-box;
     width: 100%;
@@ -123,8 +127,9 @@ export const listFilterStyles = html` <style>
 
   .clear-all-filters {
     min-height: 48px;
-    @apply --layout-horizontal;
-    @apply --layout-center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     color: var(--primary-color);
     padding-right: 16px;
     border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
