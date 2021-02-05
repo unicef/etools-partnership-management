@@ -9,10 +9,10 @@ import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import '../../../../layout/etools-form-element-wrapper';
 
 import '../../../../layout/etools-error-messages-box.js';
-import '../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
+import '../../../../layout/icons-actions';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';

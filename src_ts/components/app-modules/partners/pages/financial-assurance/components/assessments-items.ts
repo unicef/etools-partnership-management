@@ -10,7 +10,7 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
+import '../../../../../layout/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import {store} from '../../../../../../store';

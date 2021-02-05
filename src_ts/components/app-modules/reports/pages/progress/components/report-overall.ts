@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import '../../../../../layout/etools-form-element-wrapper';
 import '../../../../../styles/grid-layout-styles.js';
 
 import '../../../components/report-status.js';

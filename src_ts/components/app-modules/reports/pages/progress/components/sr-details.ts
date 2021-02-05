@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import '../../../../../layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {property} from '@polymer/decorators';
 import {SharedStyles} from '../../../../../styles/shared-styles';

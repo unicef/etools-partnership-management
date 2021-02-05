@@ -4,7 +4,7 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
-import '../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import '../../../../layout/etools-form-element-wrapper';
 
 import './sent-bk-comments.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
