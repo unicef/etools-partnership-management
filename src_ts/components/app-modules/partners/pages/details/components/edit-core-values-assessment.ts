@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import '../../../../../layout/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixin from '../../../../../mixins/common-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';

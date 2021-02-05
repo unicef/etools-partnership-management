@@ -9,7 +9,7 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 
-import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
+import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
