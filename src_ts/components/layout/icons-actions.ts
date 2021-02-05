@@ -20,15 +20,20 @@ class IconsActions extends PolymerElement {
         }
 
         :host {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -ms-flex-direction: row;
+          -webkit-flex-direction: row;
+          flex-direction: row;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          align-items: center;
           background-color: var(--list-second-bg-color);
           position: absolute;
-          top: 1px;
           right: 0;
-          bottom: 1px;
-
-          @apply --icons-actions;
+          top: 0;
+          bottom: 0;
         }
 
         paper-icon-button {
