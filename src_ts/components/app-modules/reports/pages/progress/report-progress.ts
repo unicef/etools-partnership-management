@@ -15,6 +15,7 @@ import UtilsMixin from '../../../../mixins/utils-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
 import {isEmptyObject} from '../../../../utils/utils';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
@@ -34,7 +35,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   static get template() {
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
       <style include="paper-material-styles">
         *[hidden] {
           display: none !important;

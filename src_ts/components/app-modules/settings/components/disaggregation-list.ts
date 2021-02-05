@@ -8,6 +8,7 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../styles/shared-styles';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
 
 import './add-disaggregation-dialog';
@@ -37,7 +38,7 @@ class DisaggregationList extends connect(store)(
   static get template() {
     // language=HTML
     return html`
-      ${gridLayoutStyles}
+      ${gridLayoutStyles} ${SharedStyles}
       <style include="data-table-styles paper-material-styles">
         [hidden] {
           display: none !important;

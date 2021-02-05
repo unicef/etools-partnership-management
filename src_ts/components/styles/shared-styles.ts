@@ -230,8 +230,8 @@ export const SharedStyles = html`
       width: 100%;
     }
 
-    etools-content-panel::part(epc-header) {
-      background-color: #ffffff;
+    etools-content-panel::part(ecp-header) {
+      background-color: var(--primary-background-color);
       border-bottom: 1px groove var(--dark-divider-color);
     }
 
