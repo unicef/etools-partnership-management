@@ -62,11 +62,11 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
 
-        icons-actions {
+        icons-actions2 {
           visibility: hidden;
         }
 
-        etools-data-table-row:hover icons-actions {
+        etools-data-table-row:hover icons-actions2 {
           visibility: visible;
         }
 
@@ -85,12 +85,12 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
       <etools-content-panel class="content-section" panel-title="Partner Details">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper label="Short Name" value="[[partner.short_name]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Short Name" value="[[partner.short_name]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <paper-input
@@ -104,12 +104,12 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper label="Vendor Number" value="[[partner.vendor_number]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Vendor Number" value="[[partner.vendor_number]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper label="Partner Type" value="[[_partnerComputedType]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Partner Type" value="[[_partnerComputedType]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <etools-dropdown-multi
@@ -123,20 +123,20 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         </div>
 
         <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Address" title$="[[partner.address]]" value="[[partner.address]]">
+          <etools-form-element-wrapper2 label="Address" title$="[[partner.address]]" value="[[partner.address]]">
             <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper label="Phone Number" value="[[partner.phone_number]]">
+            <etools-form-element-wrapper2 label="Phone Number" value="[[partner.phone_number]]">
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
+            <etools-form-element-wrapper2 label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
               <iron-icon icon="communication:email" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4"></div>
         </div>
@@ -149,38 +149,38 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <etools-form-element-wrapper label="Type of Assessment" value="[[partner.type_of_assessment]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Type of Assessment" value="[[partner.type_of_assessment]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Date of Report"
               value="[[getDateDisplayValue(partner.last_assessment_date)]]"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- PSEA risk rating -->
-            <etools-form-element-wrapper label="SEA Risk Rating" no-placeholder>
+            <etools-form-element-wrapper2 label="SEA Risk Rating" no-placeholder>
               <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
                 [[getRiskRatingValue(partner.sea_risk_rating_name)]]
               </span>
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
 
           <div class="col col-4">
             <!--Last PSEA Assess. Date-->
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Last PSEA Assessment Date"
               value="[[getDateDisplayValue(partner.psea_assessment_date)]]"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
       </etools-content-panel>
@@ -224,13 +224,13 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                   <span hidden$="[[item.archived]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
                 </span>
-                <icons-actions
+                <icons-actions2
                   item$="[[item]]"
                   hidden$="[[!_canEditCVA(item.attachment, item.archived, showCoreValuesAssessmentAttachment)]]"
                   show-delete="[[showDelete]]"
                   on-edit="_editCoreValuesAssessment"
                 >
-                </icons-actions>
+                </icons-actions2>
               </div>
             </etools-data-table-row>
           </template>

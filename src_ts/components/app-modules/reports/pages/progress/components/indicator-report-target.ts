@@ -10,7 +10,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  */
 class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   static get is() {
-    return 'indicator-report-target';
+    return 'indicator-report-target2';
   }
 
   static get template() {

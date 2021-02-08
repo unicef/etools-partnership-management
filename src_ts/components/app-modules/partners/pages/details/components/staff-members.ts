@@ -38,11 +38,11 @@ class StaffMembers extends PolymerElement {
           margin-top: 24px;
         }
 
-        icons-actions {
+        icons-actions2 {
           visibility: hidden;
         }
 
-        etools-data-table-row:hover icons-actions {
+        etools-data-table-row:hover icons-actions2 {
           visibility: visible;
         }
 
@@ -127,13 +127,13 @@ class StaffMembers extends PolymerElement {
                   <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
                 </span>
-                <icons-actions
+                <icons-actions2
                   item$="[[item]]"
                   hidden$="[[!editMode]]"
                   show-delete="[[showDelete]]"
                   on-edit="_editPartnerContact"
                 >
-                </icons-actions>
+                </icons-actions2>
               </div>
             </etools-data-table-row>
           </template>
@@ -188,7 +188,7 @@ class StaffMembers extends PolymerElement {
   }
 
   openAddEditDialog(item?: any) {
-    if(!item) {
+    if (!item) {
       item = new StaffMember({});
     }
     openDialog({

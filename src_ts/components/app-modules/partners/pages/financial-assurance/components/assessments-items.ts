@@ -53,11 +53,11 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
           margin-right: 8px;
         }
 
-        icons-actions {
+        icons-actions2 {
           visibility: hidden;
         }
 
-        etools-data-table-row:hover icons-actions {
+        etools-data-table-row:hover icons-actions2 {
           visibility: visible;
         }
 
@@ -112,13 +112,13 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
                   <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
                 </span>
-                <icons-actions
+                <icons-actions2
                   item-id$="[[item.id]]"
                   hidden$="[[!editMode]]"
                   on-edit="_editAssessment"
                   show-delete="[[showDelete]]"
                 >
-                </icons-actions>
+                </icons-actions2>
               </div>
             </etools-data-table-row>
           </template>

@@ -126,4 +126,4 @@ class EtoolsFormElementWrapper extends PolymerElement {
   }
 }
 
-window.customElements.define('etools-form-element-wrapper', EtoolsFormElementWrapper);
+window.customElements.define('etools-form-element-wrapper2', EtoolsFormElementWrapper);

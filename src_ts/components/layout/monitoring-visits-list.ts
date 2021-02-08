@@ -257,4 +257,4 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
   }
 }
 
-window.customElements.define('monitoring-visits-list', MonitoringVisitsList);
+window.customElements.define('monitoring-visits-list2', MonitoringVisitsList);

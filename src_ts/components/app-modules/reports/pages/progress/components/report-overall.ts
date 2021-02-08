@@ -22,17 +22,17 @@ class ReportOverall extends PolymerElement {
 
       <div class="row-h">
         <div class="col col-5">
-          <etools-form-element-wrapper label="PD/SPD output/expected result" value="[[lowerResultTitle]]">
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper2 label="PD/SPD output/expected result" value="[[lowerResultTitle]]">
+          </etools-form-element-wrapper2>
         </div>
         <div class="col col-2">
-          <etools-form-element-wrapper label="Overall Status" no-placeholder>
+          <etools-form-element-wrapper2 label="Overall Status" no-placeholder>
             <report-status status="[[latestIndicator.overall_status]]" slot="prefix"></report-status>
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
         <div class="col col-5">
-          <etools-form-element-wrapper label="Narrative Assessment" value="[[latestIndicator.narrative_assessment]]">
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper2 label="Narrative Assessment" value="[[latestIndicator.narrative_assessment]]">
+          </etools-form-element-wrapper2>
         </div>
       </div>
     `;

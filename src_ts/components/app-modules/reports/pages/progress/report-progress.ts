@@ -167,7 +167,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                         </div>
                       </div>
                       <div class="col col-4 indicator-header-target">
-                        <indicator-report-target
+                        <indicator-report-target2
                           display-type="[[indicatorReport.reportable.blueprint.display_type]]"
                           target="[[indicatorReport.reportable.target]]"
                           cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
@@ -175,7 +175,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                           achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                                 indicatorReport.total.v, indicatorReport.total.c)]]"
                           bold
-                        ></indicator-report-target>
+                        ></indicator-report-target2>
                       </div>
                     </div>
                   </div>
