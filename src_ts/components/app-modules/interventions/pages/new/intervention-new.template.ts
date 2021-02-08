@@ -93,31 +93,31 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-8">
-          <etools-form-element-wrapper
+          <etools-form-element-wrapper2
             label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
             .value="${this.selectedPartner?.vendor_number}"
           >
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-4">
-          <etools-form-element-wrapper
+          <etools-form-element-wrapper2
             label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
             .value="${this.authorizedOfficers}"
           >
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
       </div>
 
       <div class="row">
         <!--   Partner Staff Members   -->
         <div class="col-8 w100">
-          <etools-form-element-wrapper
+          <etools-form-element-wrapper2
             label=${translate('NEW_INTERVENTION.PARTNER_STAFF_MEMBERS')}
             .value="${this.allStaffMembers}"
           >
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
         <div class="col-4">
           <etools-dropdown-multi

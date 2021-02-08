@@ -39,8 +39,8 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
         disable-dismiss-btn="[[uploadInProgress]]"
       >
         <div class="layout-horizontal row-padding-v">
-          <etools-form-element-wrapper label="Date Last Assessed" value="[[getDateDisplayValue(item.date)]]">
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper2 label="Date Last Assessed" value="[[getDateDisplayValue(item.date)]]">
+          </etools-form-element-wrapper2>
         </div>
         <div class="layout-horizontal row-padding-v">
           <etools-upload

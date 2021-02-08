@@ -154,12 +154,12 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-3">
-              <etools-form-element-wrapper
+              <etools-form-element-wrapper2
                 label="Duration (Signed Date - CP End Date)"
                 hidden$="[[!agreement.id]]"
                 value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]"
               >
-              </etools-form-element-wrapper>
+              </etools-form-element-wrapper2>
             </div>
           </template>
         </div>
@@ -179,13 +179,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               required
             >
             </etools-dropdown>
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Partner Name"
               required$="[[agreement.permissions.required.partner]]"
               hidden$="[[agreement.permissions.edit.partner]]"
               value="[[agreement.partner_name]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
@@ -241,12 +241,12 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 hidden$="[[!agreement.permissions.edit.partner_manager]]"
               >
               </etools-dropdown>
-              <etools-form-element-wrapper
+              <etools-form-element-wrapper2
                 label="Signed By Partner"
                 hidden$="[[agreement.permissions.edit.partner_manager]]"
                 value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]"
               >
-              </etools-form-element-wrapper>
+              </etools-form-element-wrapper2>
             </div>
             <div class="col col-3">
               <!-- Signed By Partner Date -->
@@ -264,7 +264,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By UNICEF -->
-              <etools-form-element-wrapper value="Signed by UNICEF Authorized Officer"></etools-form-element-wrapper>
+              <etools-form-element-wrapper2 value="Signed by UNICEF Authorized Officer"> </etools-form-element-wrapper2>
             </div>
 
             <div class="col col-3">
@@ -298,13 +298,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             auto-validate$="[[enableEditForAuthorizedOfficers]]"
           >
           </etools-dropdown-multi>
-          <etools-form-element-wrapper
+          <etools-form-element-wrapper2
             label="Partner Authorized Officers"
             required$="[[agreement.permissions.required.authorized_officers]]"
             hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
             value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]"
           >
-          </etools-form-element-wrapper>
+          </etools-form-element-wrapper2>
         </div>
 
         <div
@@ -711,7 +711,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     openDialog({
       dialog: 'generate-pca-dialog',
       dialogData: {
-        agreementId: agreementId,
+        agreementId: agreementId
       }
     });
   }

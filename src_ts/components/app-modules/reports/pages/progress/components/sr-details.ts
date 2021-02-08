@@ -34,7 +34,7 @@ class SrDetails extends PolymerElement {
       ${SharedStyles}
       <div class="paper-material" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper label="Narrative" value="[[report.narrative]]"> </etools-form-element-wrapper>
+          <etools-form-element-wrapper2 label="Narrative" value="[[report.narrative]]"> </etools-form-element-wrapper2>
         </div>
         <div class="row-padding">
           <template is="dom-repeat" items="[[reportAttachments]]">

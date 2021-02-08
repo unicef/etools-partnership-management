@@ -395,7 +395,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       </etools-content-panel>
 
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
-        <monitoring-visits-list partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list>
+        <monitoring-visits-list2 partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list2>
       </etools-content-panel>
 
       <assessments-items
@@ -641,7 +641,6 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       label: basisVal
     });
   }
-
 }
 
 window.customElements.define('partner-financial-assurance', PartnerFinancialAssurance);

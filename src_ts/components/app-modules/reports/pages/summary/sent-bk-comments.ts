@@ -23,11 +23,11 @@ class SentBkComments extends PolymerElement {
       </style>
 
       <etools-dialog opened on-close="_onClose" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
-        <etools-form-element-wrapper
+        <etools-form-element-wrapper2
           label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
           value="[[report.sent_back_feedback]]"
         >
-        </etools-form-element-wrapper>
+        </etools-form-element-wrapper2>
       </etools-dialog>
     `;
   }

@@ -65,20 +65,20 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
       <div class="content-section paper-material remove-padding" elevation="1">
         <div class="row-h b-border">
           <div class="col col-5">
-            <etools-form-element-wrapper label="Submitted By" value="[[getDisplayValue(report.submitted_by)]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Submitted By" value="[[getDisplayValue(report.submitted_by)]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-2">
-            <etools-form-element-wrapper label="Submission Date" value="[[_displayOrDefault(report.submission_date)]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Submission Date" value="[[_displayOrDefault(report.submission_date)]]">
+            </etools-form-element-wrapper2>
           </div>
           <div class="col col-3 report-status" hidden$="[[statusIs(report.status, 'Sub')]]">
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Report Status"
               class="w-auto"
               value="[[getReportStatus(report.status, report.reviewed_by_name)]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
             <iron-icon
               icon="speaker-notes"
               on-click="_seeSentBackComments"
@@ -86,45 +86,45 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
             ></iron-icon>
           </div>
           <div class="col col-2" hidden$="[[statusIs(report.status, 'Sub')]]">
-            <etools-form-element-wrapper label="Date of Status" value="[[_displayOrDefault(report.review_date)]]">
-            </etools-form-element-wrapper>
+            <etools-form-element-wrapper2 label="Date of Status" value="[[_displayOrDefault(report.review_date)]]">
+            </etools-form-element-wrapper2>
           </div>
         </div>
 
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Non-financial contribution during reporting period"
               value="[[getDisplayValue(report.partner_contribution_to_date)]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Financial contribution during reporting period"
               value="[[getFinancialContributionText(report)]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Challenges/Bottlenecks in the Reporting Period (latest)"
               value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper
+            <etools-form-element-wrapper2
               label="Proposed Way Forward (latest)"
               value="[[getDisplayValue(report.proposed_way_forward)]]"
             >
-            </etools-form-element-wrapper>
+            </etools-form-element-wrapper2>
           </div>
         </div>
         <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">

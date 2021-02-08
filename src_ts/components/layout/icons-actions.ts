@@ -72,6 +72,6 @@ class IconsActions extends PolymerElement {
   }
 }
 
-window.customElements.define('icons-actions', IconsActions);
+window.customElements.define('icons-actions2', IconsActions);
 
 export {IconsActions as IconsActionsEl};
