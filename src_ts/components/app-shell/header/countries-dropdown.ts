@@ -37,7 +37,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         }
 
         etools-dropdown {
-
           --paper-listbox: {
             max-height: 600px;
           }

@@ -146,7 +146,6 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
   _onClose() {
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
-
 }
 
 window.customElements.define('agreement-termination', AgreementTermination);

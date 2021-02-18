@@ -68,9 +68,7 @@ class EtoolsTabs extends PolymerElement {
           <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
             <span class="tab-content">
               [[item.tabLabel]]
-              <template is="dom-if" if="[[item.showTabCounter]]" restamp>
-                ([[item.counter]])
-              </template>
+              <template is="dom-if" if="[[item.showTabCounter]]" restamp>([[item.counter]])</template>
             </span>
           </paper-tab>
         </template>

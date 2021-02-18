@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
@@ -86,25 +87,13 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
                                       of [[paginator.count]] results to show"
           >
-            <etools-data-table-column class="col-2">
-              Report #
-            </etools-data-table-column>
-            <etools-data-table-column class="flex-c">
-              Partner
-            </etools-data-table-column>
-            <etools-data-table-column class="flex-c">
-              Report Status
-            </etools-data-table-column>
-            <etools-data-table-column class="flex-c">
-              Due Date
-            </etools-data-table-column>
-            <etools-data-table-column class="flex-c">
-              Reporting Period
-            </etools-data-table-column>
+            <etools-data-table-column class="col-2">Report #</etools-data-table-column>
+            <etools-data-table-column class="flex-c">Partner</etools-data-table-column>
+            <etools-data-table-column class="flex-c">Report Status</etools-data-table-column>
+            <etools-data-table-column class="flex-c">Due Date</etools-data-table-column>
+            <etools-data-table-column class="flex-c">Reporting Period</etools-data-table-column>
             <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-              <etools-data-table-column class="col-2">
-                PD/SPD ref.#
-              </etools-data-table-column>
+              <etools-data-table-column class="col-2">PD/SPD ref.#</etools-data-table-column>
             </template>
           </etools-data-table-header>
 

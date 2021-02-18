@@ -39,13 +39,9 @@ class SrDetails extends PolymerElement {
         <div class="row-padding">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
-              <iron-label for="file_[[index]]">
-                [[item.type]]
-              </iron-label>
+              <iron-label for="file_[[index]]">[[item.type]]</iron-label>
 
-              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
-                [[item.file_name]]
-              </a>
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">[[item.file_name]]</a>
             </div>
           </template>
         </div>

@@ -17,9 +17,7 @@ class SettingsModule extends PolymerElement {
       <style></style>
 
       <page-content-header>
-        <div slot="page-title">
-          Settings
-        </div>
+        <div slot="page-title">Settings</div>
       </page-content-header>
 
       <div id="main">

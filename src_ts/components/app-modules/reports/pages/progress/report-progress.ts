@@ -155,9 +155,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                         <div class="layout-horizontal calculation-formula">
                           <span>
                             calculation method across locations:
-                            <strong>
-                              [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]
-                            </strong>
+                            <strong>[[_calculationAcrossLocations(indicatorReport)]]</strong>
                           </span>
                           <span class="calculation-formula-delimiter">|</span>
                           <span>
@@ -274,6 +272,10 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
     return indicator.reportable.blueprint.display_type === 'ratio'
       ? 'latest'
       : indicator.reportable.blueprint.calculation_formula_across_periods;
+  }
+
+  _calculationAcrossLocations(indicatorReport: any) {
+    return this.getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations);
   }
 }
 

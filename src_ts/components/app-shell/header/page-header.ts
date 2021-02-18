@@ -221,7 +221,7 @@ class PageHeader extends connect(store)(
           <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector"></etools-app-selector>
-            <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
+            <img id="app-logo" alt="" src$="[[rootPath]]images/etools-logo-color-white.svg">
             <template is="dom-if" if="[[environment]]">
               <div class="envWarning">
                 <span class='envLong'> - </span>[[environment]]

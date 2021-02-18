@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-icon/iron-icon.js';

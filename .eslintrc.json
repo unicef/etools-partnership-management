@@ -2,7 +2,9 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+    "plugin:lit/recommended",
     "google",
+    "plugin:lit-a11y/recommended",
     "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules
     // from @typescript-eslint/eslint-plugin that would conflict with prettier
     "plugin:prettier/recommended" // Enables eslint-plugin-prettier and eslint-config-prettier.
@@ -11,8 +13,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
-    "sourceType": "module",
-    "project": "./tsconfig.json"
+    "sourceType": "module"
   },
   "env": {
     "browser": true,
@@ -21,13 +22,21 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "prettier"
+    "lit",
+    "prettier",
+    "lit-a11y"
   ],
   "rules": {
     "prettier/prettier": "error",
     "lit/attribute-value-entities": "off",
+    "lit/no-legacy-template-syntax": "off",
     "linebreak-style": "off",
-    "no-irregular-whitespace": ["error", {"skipTemplates": true}],
+    "no-irregular-whitespace": [
+      "error",
+      {
+        "skipTemplates": true
+      }
+    ],
     "@typescript-eslint/no-object-literal-type-assertion": "off",
     "padded-blocks": "off",
     "brace-style": "off",
@@ -43,8 +52,17 @@
     "no-var": "off",
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
-    "comma-dangle": ["error", "never"],
-    "max-len": ["error", {"code": 120, "ignoreUrls": true}],
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreUrls": true
+      }
+    ],
     "prefer-promise-reject-errors": "off",
     "camelcase": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -66,10 +84,15 @@
         "variables": true
       }
     ],
-    "@typescript-eslint/no-unused-vars": ["error", {"argsIgnorePattern": "^_"}]
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ]
   },
   "globals": {
-    "moment": true,
+    "dayjs": true,
     "Promise": true,
     "Polymer": true,
     "EtoolsPmpApp": true,

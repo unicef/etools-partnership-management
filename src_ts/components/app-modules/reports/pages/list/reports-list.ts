@@ -102,9 +102,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">CLEAR ALL</paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">

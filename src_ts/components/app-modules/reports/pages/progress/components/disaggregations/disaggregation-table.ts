@@ -70,6 +70,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
                   [ [[_withDefault(labels.denominator_label)]] ]
                 </dd>
               </template>
+              </dl>
             </template>
           </dl>
         </template>

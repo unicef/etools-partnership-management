@@ -81,24 +81,12 @@ class StaffMembers extends PolymerElement {
 
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-2">
-              Position
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              First Name
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Last Name
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Phone Number
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Email Address
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2 center-align">
-              Active Staff
-            </etools-data-table-column>
+            <etools-data-table-column class="col-2">Position</etools-data-table-column>
+            <etools-data-table-column class="col-2">First Name</etools-data-table-column>
+            <etools-data-table-column class="col-2">Last Name</etools-data-table-column>
+            <etools-data-table-column class="col-2">Phone Number</etools-data-table-column>
+            <etools-data-table-column class="col-2">Email Address</etools-data-table-column>
+            <etools-data-table-column class="col-2 center-align">Active Staff</etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -108,21 +96,11 @@ class StaffMembers extends PolymerElement {
               hidden$="[[!_isVisible(item.active, showInactive)]]"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-2">
-                  [[_displayValue(item.title)]]
-                </span>
-                <span class="col-data col-2">
-                  [[_displayValue(item.first_name)]]
-                </span>
-                <span class="col-data col-2">
-                  [[_displayValue(item.last_name)]]
-                </span>
-                <span class="col-data col-2">
-                  [[_displayValue(item.phone)]]
-                </span>
-                <span class="col-data col-2">
-                  [[_displayValue(item.email)]]
-                </span>
+                <span class="col-data col-2">[[_displayValue(item.title)]]</span>
+                <span class="col-data col-2">[[_displayValue(item.first_name)]]</span>
+                <span class="col-data col-2">[[_displayValue(item.last_name)]]</span>
+                <span class="col-data col-2">[[_displayValue(item.phone)]]</span>
+                <span class="col-data col-2">[[_displayValue(item.email)]]</span>
                 <span class="col-data col-2 center-align">
                   <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
