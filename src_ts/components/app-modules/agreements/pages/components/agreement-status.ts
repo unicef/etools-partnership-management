@@ -311,7 +311,7 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         termination: {
           date: null,
           attachment_notice: null
-        },
+        }
       }
     });
   }

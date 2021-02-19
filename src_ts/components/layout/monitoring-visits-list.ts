@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 declare const dayjs: any;
@@ -46,24 +47,12 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
             label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results"
             no-collapse
           >
-            <etools-data-table-column class="col-2" field="reference_number">
-              Reference #
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="primary_traveler">
-              Traveler
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="travel_type">
-              Travel Type
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="date">
-              End Date
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="locations">
-              Locations
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="status">
-              Status
-            </etools-data-table-column>
+            <etools-data-table-column class="col-2" field="reference_number">Reference #</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="primary_traveler">Traveler</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="travel_type">Travel Type</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="date">End Date</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="locations">Locations</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="status">Status</etools-data-table-column>
           </etools-data-table-header>
 
           <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit">
@@ -82,18 +71,14 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                 <span class="col-data col-2" title="[[visit.primary_traveler]]">
                   <span class="truncate"> [[visit.primary_traveler]] </span>
                 </span>
-                <span class="col-data col-2" title="[[visit.travel_type]]">
-                  [[visit.travel_type]]
-                </span>
+                <span class="col-data col-2" title="[[visit.travel_type]]">[[visit.travel_type]]</span>
                 <span class="col-data col-2" title="[[getDateDisplayValue(visit.travel_latest_date)]]">
                   [[getDateDisplayValue(visit.travel_latest_date)]]
                 </span>
                 <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
                   [[getDisplayValue(visit.locations)]]
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">
-                  [[visit.status]]
-                </span>
+                <span class="col-data col-2 capitalize" title="[[visit.status]]">[[visit.status]]</span>
               </div>
             </etools-data-table-row>
           </template>
@@ -123,9 +108,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                 <span class="col-data col-2" title="[[getLocNames(visit.locations_details)]]">
                   [[getLocNames(visit.locations_details)]]
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">
-                  [[visit.status]]
-                </span>
+                <span class="col-data col-2 capitalize" title="[[visit.status]]">[[visit.status]]</span>
               </div>
             </etools-data-table-row>
           </template>

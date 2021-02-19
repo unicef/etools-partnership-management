@@ -68,9 +68,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       >
         <div class="layout-vertical">
           <div class="layout-horizontal">
-            <div class="partner-name">
-              [[partner.name]]
-            </div>
+            <div class="partner-name">[[partner.name]]</div>
           </div>
 
           <div class="avoid-scroll layout-horizontal space-between">

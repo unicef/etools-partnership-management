@@ -106,7 +106,6 @@ class AddAgAmendmentDialog extends PolymerElement {
     `;
   }
 
-
   @property({type: Boolean})
   datePickerOpen = false;
 
@@ -153,10 +152,13 @@ class AddAgAmendmentDialog extends PolymerElement {
 
   _validateAndSaveAmendment() {
     if (this.validate()) {
-      fireEvent(this, 'dialog-closed', {confirmed: true, response: {
-        amendment: this.amendment,
-        ao: this.authorizedOfficers
-      }});
+      fireEvent(this, 'dialog-closed', {
+        confirmed: true,
+        response: {
+          amendment: this.amendment,
+          ao: this.authorizedOfficers
+        }
+      });
     }
   }
 

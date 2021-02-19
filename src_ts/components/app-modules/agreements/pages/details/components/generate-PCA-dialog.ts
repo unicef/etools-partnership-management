@@ -59,7 +59,7 @@ class GeneratePcaDialog extends PolymerElement {
   selectedTemplate: string | null = null;
 
   set dialogData(data: any) {
-    let {agreementId}: any = data;
+    const {agreementId}: any = data;
     this.agreementId = agreementId;
   }
 

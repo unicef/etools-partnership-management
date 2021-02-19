@@ -113,8 +113,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
         if (
           seaDateBefore &&
           seaDateBefore.length &&
-          (!partner.psea_assessment_date ||
-            !dayjs.utc(partner.psea_assessment_date).isBefore(dayjs.utc(seaDateBefore)))
+          (!partner.psea_assessment_date || !dayjs.utc(partner.psea_assessment_date).isBefore(dayjs.utc(seaDateBefore)))
         ) {
           return false;
         }

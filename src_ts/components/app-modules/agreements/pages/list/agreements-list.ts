@@ -149,9 +149,7 @@ class AgreementsList extends connect(store)(
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">CLEAR ALL</paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -177,18 +175,10 @@ class AgreementsList extends connect(store)(
           <etools-data-table-column class="col-4" field="partner_name" sortable>
             Partner Full Name
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type">
-            Type
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_status">
-            Status
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="start" sortable>
-            Start Date
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="end" sortable>
-            End Date
-          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="partner_type">Type</etools-data-table-column>
+          <etools-data-table-column class="col-2" field="partner_status">Status</etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="start" sortable>Start Date</etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="end" sortable>End Date</etools-data-table-column>
         </etools-data-table-header>
 
         <template

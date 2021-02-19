@@ -162,7 +162,6 @@ export function datesAreEqual(date1: any, date2: any) {
   );
 }
 
-
 export function formatDate(date: Date, format: string) {
   if (!date) {
     return null;

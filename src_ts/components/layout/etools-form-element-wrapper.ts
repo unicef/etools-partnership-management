@@ -64,9 +64,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
         <label hidden$="[[!label]]" slot="label">[[label]]</label>
         <slot name="prefix" slot="prefix"></slot>
         <div slot="input" class="paper-input-input">
-          <span class$="input-value [[_getPlaceholderClass(value)]]">
-            [[_getDisplayValue(value)]]
-          </span>
+          <span class$="input-value [[_getPlaceholderClass(value)]]">[[_getDisplayValue(value)]]</span>
           <slot></slot>
         </div>
       </paper-input-container>

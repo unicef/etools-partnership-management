@@ -98,9 +98,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
           </etools-upload>
         </div>
         <div class="row-h">
-          <paper-checkbox checked="[[!assessment.active]]" on-change="_archivedChanged">
-            Archived
-          </paper-checkbox>
+          <paper-checkbox checked="[[!assessment.active]]" on-change="_archivedChanged">Archived</paper-checkbox>
         </div>
       </etools-dialog>
     `;
@@ -231,10 +229,16 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     if (isNew) {
       fireEvent(this, 'dialog-closed', {confirmed: true, response: {action: 'assessment-added', detail: response}});
     } else {
-      fireEvent(this, 'dialog-closed', {confirmed: true, response: {action: 'assessment-updated', detail: {
-        before: this.originalAssessment,
-        after: response
-      }}});
+      fireEvent(this, 'dialog-closed', {
+        confirmed: true,
+        response: {
+          action: 'assessment-updated',
+          detail: {
+            before: this.originalAssessment,
+            after: response
+          }
+        }
+      });
     }
   }
 

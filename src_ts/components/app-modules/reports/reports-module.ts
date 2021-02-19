@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
@@ -107,9 +108,7 @@ class ReportsModule extends connect(store)(
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            Partner Reports
-          </template>
+          <template is="dom-if" if="[[listActive]]">Partner Reports</template>
           <template is="dom-if" if="[[tabsActive]]">
             <div class="secondary-title">
               <a target="_blank" href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
@@ -154,15 +153,10 @@ class ReportsModule extends connect(store)(
           </div>
 
           <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
-            <report-status
-              status="[[report.status]]"
-              hidden$="[[statusIs(report.status, 'Sub')]]"
-            ></report-status>
+            <report-status status="[[report.status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
 
             <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
-              <paper-button slot="dropdown-trigger" class="primary-btn">
-                Accept / Send Back
-              </paper-button>
+              <paper-button slot="dropdown-trigger" class="primary-btn">Accept / Send Back</paper-button>
               <paper-listbox slot="dropdown-content">
                 <paper-item on-tap="_accept">Accept Report</paper-item>
                 <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
@@ -364,7 +358,7 @@ class ReportsModule extends connect(store)(
       if (!confirmed || !response) {
         return;
       }
-      this._updateReportDetailsObj(response)
+      this._updateReportDetailsObj(response);
     });
   }
 
@@ -378,7 +372,7 @@ class ReportsModule extends connect(store)(
       if (!confirmed || !response) {
         return;
       }
-      this._updateReportDetailsObj(response)
+      this._updateReportDetailsObj(response);
     });
   }
 

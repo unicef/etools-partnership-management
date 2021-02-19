@@ -112,9 +112,11 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _setAutomaticDataRefreshLoop(newEndpoint: any) {
-      this._refreshInterval = setInterval(() => {
-        this._requestListData();
-      }, newEndpoint.exp);
+      this._refreshInterval = Number(
+        setInterval(() => {
+          this._requestListData();
+        }, newEndpoint.exp)
+      );
     }
   }
   return ListDataClass;

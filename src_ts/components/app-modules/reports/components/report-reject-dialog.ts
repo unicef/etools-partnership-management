@@ -19,7 +19,6 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @appliesMixin EndpointsMixin
  */
 class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${SharedStyles} ${requiredFieldStarredStyles}

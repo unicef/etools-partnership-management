@@ -68,25 +68,17 @@ class DisaggregationList extends connect(store)(
         </template>
         <div hidden$="[[_emptyList(filteredDisaggregations)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-4" field="name">
-              Name
-            </etools-data-table-column>
+            <etools-data-table-column class="col-4" field="name">Name</etools-data-table-column>
             <etools-data-table-column class="col-6" field="disaggregation_values">
               Disaggregation Groups
             </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="disaggregation_active">
-              Active
-            </etools-data-table-column>
+            <etools-data-table-column class="col-2" field="disaggregation_active">Active</etools-data-table-column>
           </etools-data-table-header>
           <template is="dom-repeat" items="[[dataItems]]">
             <etools-data-table-row no-collapse>
               <div slot="row-data">
-                <span class="col-data col-4">
-                  [[item.name]]
-                </span>
-                <span class="col-data col-6">
-                  [[_displayGroups(item.disaggregation_values)]]
-                </span>
+                <span class="col-data col-4">[[item.name]]</span>
+                <span class="col-data col-6">[[_displayGroups(item.disaggregation_values)]]</span>
                 <span class="col-data col-2">
                   <paper-toggle-button
                     id="showActive-[[item.id]]"

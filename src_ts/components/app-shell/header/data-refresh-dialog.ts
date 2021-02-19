@@ -64,26 +64,18 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
           <div class="title-indent">Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox checked="{{partnersSelected}}">
-                Partners/Government
-              </paper-checkbox>
+              <paper-checkbox checked="{{partnersSelected}}">Partners/Government</paper-checkbox>
             </div>
             <div class="col col-6">
-              <paper-checkbox checked="{{interventionsSelected}}">
-                PD/SPD
-              </paper-checkbox>
+              <paper-checkbox checked="{{interventionsSelected}}">PD/SPD</paper-checkbox>
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox checked="{{agreementsSelected}}">
-                Agreements
-              </paper-checkbox>
+              <paper-checkbox checked="{{agreementsSelected}}">Agreements</paper-checkbox>
             </div>
             <div class="col col-6">
-              <paper-checkbox checked="{{allSelected}}">
-                All
-              </paper-checkbox>
+              <paper-checkbox checked="{{allSelected}}">All</paper-checkbox>
             </div>
           </div>
         </div>

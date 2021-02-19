@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -96,9 +97,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
           <!-- Amendments template download -->
-          <div id="download-template-msg">
-            Use the amendment template for documenting changes and signing.
-          </div>
+          <div id="download-template-msg">Use the amendment template for documenting changes and signing.</div>
           <!-- Download template btn -->
           <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
             <paper-button id="download-template-btn" class="secondary-btn">
@@ -110,27 +109,17 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
         <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header id="listHeader" no-collapse no-title>
-            <etools-data-table-column class="col-1">
-              Agreement Reference Number
-            </etools-data-table-column>
-            <etools-data-table-column class="col-4">
-              Amendment Type
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Signed Date
-            </etools-data-table-column>
-            <etools-data-table-column class="flex-c">
-              Signed Amendment
-            </etools-data-table-column>
+            <etools-data-table-column class="col-1">Agreement Reference Number</etools-data-table-column>
+            <etools-data-table-column class="col-4">Amendment Type</etools-data-table-column>
+            <etools-data-table-column class="col-2">Signed Date</etools-data-table-column>
+            <etools-data-table-column class="flex-c">Signed Amendment</etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
             <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-1">
-                  <template is="dom-if" if="[[item.id]]" restamp>
-                    [[item.number]]
-                  </template>
+                  <template is="dom-if" if="[[item.id]]" restamp>[[item.number]]</template>
                   <template is="dom-if" if="[[!item.id]]" restamp>
                     <etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
                       <span slot="field">Not saved</span>
@@ -138,12 +127,8 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
                     </etools-info-tooltip>
                   </template>
                 </span>
-                <span class="col-data col-4">
-                  [[_getReadonlyAmendmentTypes(item.types)]]
-                </span>
-                <span class="col-data col-2">
-                  [[getDateDisplayValue(item.signed_date)]]
-                </span>
+                <span class="col-data col-4">[[_getReadonlyAmendmentTypes(item.types)]]</span>
+                <span class="col-data col-2">[[getDateDisplayValue(item.signed_date)]]</span>
                 <span class="col-data flex-c">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word">

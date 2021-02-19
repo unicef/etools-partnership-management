@@ -145,7 +145,6 @@ class AppShell extends connect(store)(
     )
   )
 ) {
-
   public static get template() {
     // main template
     // language=HTML
@@ -392,7 +391,7 @@ class AppShell extends connect(store)(
   }
 
   async loadLocalization() {
-    this.waitForTranslationsToLoad().then(async() => {
+    this.waitForTranslationsToLoad().then(async () => {
       await use(this.selectedLanguage);
       this.currentLanguageIsSet = true;
     });
