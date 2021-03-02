@@ -10,6 +10,7 @@ declare global {
     EtoolsSharedDb: any;
     EtoolsLogsLevel: any;
     EtoolsEsmmFitIntoEl: any;
+    applyFocusVisiblePolyfill: any;
   }
 }
 
