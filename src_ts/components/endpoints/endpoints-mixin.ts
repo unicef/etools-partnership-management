@@ -9,6 +9,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -23,10 +24,13 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     currentUser!: User;
 
     public endStateChanged(state: RootState) {
-      if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
-        this.prpCountries = [...state.commonData!.PRPCountryData];
+      if (
+        get(state, 'commonData.PRPCountryData') &&
+        !isJsonStrMatch(state.commonData!.PRPCountryData!, this.prpCountries)
+      ) {
+        this.prpCountries = [...state.commonData!.PRPCountryData!];
       }
-      if (!isJsonStrMatch(state.user!.data, this.currentUser)) {
+      if (get(state, 'user.data') && !isJsonStrMatch(state.user!.data, this.currentUser)) {
         this.currentUser = JSON.parse(JSON.stringify(state.user!.data));
       }
     }
