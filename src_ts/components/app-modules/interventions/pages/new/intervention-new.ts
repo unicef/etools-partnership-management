@@ -36,8 +36,6 @@ export class InterventionNew extends connect(store)(LitElement) {
     this._cpStructures = orderBy<any>(cps, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
   }
 
-  @property() hasUNPP = false;
-
   @property() partnersDropdownData: Partner[] = [];
   @property() selectedPartner: Partner | null = null;
 
@@ -226,7 +224,6 @@ export class InterventionNew extends connect(store)(LitElement) {
     };
     this.selectedAgreement = null;
     this.selectedPartner = null;
-    this.hasUNPP = false;
     this.requestUpdate();
   }
 }

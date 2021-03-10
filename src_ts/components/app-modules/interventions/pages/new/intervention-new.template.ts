@@ -242,22 +242,10 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="row">
-        <!--   UNPP Number Toggle   -->
-        <paper-toggle-button
-          ?checked="${this.hasUNPP}"
-          @checked-changed="${({detail}: CustomEvent) => {
-            this.hasUNPP = detail.value;
-            this.setInterventionField('cfei_number', '');
-          }}"
-        >
-          ${translate('NEW_INTERVENTION.UNPP_NUMBER')}
-        </paper-toggle-button>
-
         <!--   UNPP CFEI Number   -->
-        <div class="col-3">
+        <div class="col-4">
           <paper-input
             id="unppNumber"
-            ?hidden="${!this.hasUNPP}"
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="&#8212;"
             .value="${this.newIntervention.cfei_number}"
