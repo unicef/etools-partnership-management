@@ -140,7 +140,6 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Focal Points   -->
-
         <div class="col-8">
           <etools-info-tooltip>
             <etools-dropdown-multi
