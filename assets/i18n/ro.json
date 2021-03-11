@@ -43,7 +43,8 @@
     "UNICEF_OFFICES": "Birou(ri) UNICEF",
     "UNICEF_SECTIONS": "Sectiuni UNICEF",
     "UNICEF_FOCAL_POINTS": "Persoane de interes ale UNICEF",
-    "UNICEF_BUDGET_OWNER": "Responsabil UNICEF al Bugetului"
+    "UNICEF_BUDGET_OWNER": "Responsabil UNICEF al Bugetului",
+    "PARTNER_FOCAL_POINTS_TOOLTIP": "Utilizatorilor selectati aici li se va acorda acces de editare la acest PD odata ce este trimis partenerului"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Adauga Documentul Programului",
