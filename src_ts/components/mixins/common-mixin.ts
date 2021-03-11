@@ -3,6 +3,7 @@ import {prettyDate} from '../utils/date-utils';
 import {PolymerElement} from '@polymer/polymer';
 import {get} from 'lit-translate';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -42,20 +43,20 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return '';
       }
       if (data.partner_accepted && data.unicef_accepted) {
-        return 'IP & UNICEF Accepted';
+        return getTranslation('PERFORMED_ACTIONS_STATUS.PARTNER_AND_UNICEF_ACCEPTED');
       }
       if (!data.partner_accepted && data.unicef_accepted) {
-        return 'UNICEF Accepted';
+        return getTranslation('PERFORMED_ACTIONS_STATUS.UNICEF_ACCEPTED');
       }
       if (data.partner_accepted && !data.unicef_accepted) {
-        return 'IP Accepted';
+        return getTranslation('PERFORMED_ACTIONS_STATUS.PARTNER_ACCEPTED');
       }
       if (!data.unicef_court && !!data.date_sent_to_partner) {
-        return 'Sent to Partner';
+        return getTranslation('PERFORMED_ACTIONS_STATUS.SENT_TO_PARTNER');
       }
 
       if (data.unicef_court && !!data.submission_date && !!data.date_sent_to_partner) {
-        return 'Sent to UNICEF';
+        return getTranslation('PERFORMED_ACTIONS_STATUS.SENT_TO_UNICEF');
       }
       return '';
     }
