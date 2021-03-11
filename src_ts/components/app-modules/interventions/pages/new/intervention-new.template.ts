@@ -40,6 +40,12 @@ export function template(this: InterventionNew): TemplateResult {
           color: var(--secondary-text-color, #737373);
         }
       }
+
+      paper-input#unppNumber {
+        --paper-input-error: {
+          white-space: normal;
+        }
+      }
     </style>
 
     <!--   Header   -->
@@ -254,13 +260,16 @@ export function template(this: InterventionNew): TemplateResult {
         </paper-toggle-button>
 
         <!--   UNPP CFEI Number   -->
-        <div class="col-3">
+        <div class="col-4">
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
+            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
-            placeholder="&#8212;"
+            placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
+            auto-validate
+            error-message="Expected format: CEF/3 letter country code/4 digit year/3 digit number"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>
