@@ -5,6 +5,7 @@ import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import {formatDate} from '../../../../utils/date-utils';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -38,6 +39,9 @@ export function template(this: InterventionNew): TemplateResult {
           @apply --required-star-style;
           color: var(--secondary-text-color, #737373);
         }
+      }
+      datepicker-lite {
+        --paper-input-container_-_width: 100%;
       }
     </style>
 
@@ -110,35 +114,6 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="row">
-        <!--   Partner Staff Members   -->
-        <div class="col-8 w100">
-          <etools-form-element-wrapper2
-            label=${translate('NEW_INTERVENTION.PARTNER_STAFF_MEMBERS')}
-            .value="${this.allStaffMembers}"
-          >
-          </etools-form-element-wrapper2>
-        </div>
-        <div class="col-4">
-          <etools-dropdown-multi
-            label=${translate('NEW_INTERVENTION.CP_STRUCTURES')}
-            placeholder="&#8212;"
-            .options="${this.cpStructures}"
-            option-value="id"
-            option-label="name"
-            .selectedValues="${this.newIntervention.country_programmes || []}"
-            @etools-selected-items-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField(
-                'country_programmes',
-                detail.selectedItems.map(({id}: any) => id)
-              )}"
-            trigger-value-change-event
-            auto-validate
-          >
-          </etools-dropdown-multi>
-        </div>
-      </div>
-
-      <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-8">
           <etools-info-tooltip>
@@ -163,19 +138,22 @@ export function template(this: InterventionNew): TemplateResult {
           </etools-info-tooltip>
         </div>
         <div class="col-4">
-          <etools-dropdown
-            id="currency"
-            label=${translate('NEW_INTERVENTION.DOCUMENT_CURRENCY')}
+          <etools-dropdown-multi
+            label=${translate('NEW_INTERVENTION.CP_STRUCTURES')}
             placeholder="&#8212;"
-            .options="${this.currencies}"
-            .selected="${this.newIntervention?.planned_budget?.currency}"
+            .options="${this.cpStructures}"
+            option-value="id"
+            option-label="name"
+            .selectedValues="${this.newIntervention.country_programmes || []}"
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'country_programmes',
+                detail.selectedItems.map(({id}: any) => id)
+              )}"
             trigger-value-change-event
-            @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.setCurrency(detail.selectedItem && detail.selectedItem.value)}"
-            option-value="value"
-            option-label="label"
+            auto-validate
           >
-          </etools-dropdown>
+          </etools-dropdown-multi>
         </div>
       </div>
 
@@ -199,24 +177,31 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
-
-        <!--   Reference Number Year   -->
+        <!-- Start Date -->
         <div class="col-4">
-          <etools-dropdown
-            id="yearSelector"
-            label=${translate('NEW_INTERVENTION.REF_NUM_YEAR')}
-            required
-            .options="${this.availableYears}"
-            .selected="${this.newIntervention.reference_number_year}"
-            @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('reference_number_year', detail.selectedItem && detail.selectedItem.value)}"
-            trigger-value-change-event
-            allow-outside-scroll
-            hide-search
-            @focus="${this.resetError}"
-            @click="${this.resetError}"
+          <datepicker-lite
+            id="startDate"
+            label=${translate('INTERVENTIONS_LIST.COLUMNS.START_DATE')}
+            .value="${this.newIntervention.start}"
+            fire-date-has-changed
+            @date-has-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('start', formatDate(detail.date, 'YYYY-MM-DD'))}"
+            selected-date-display-format="D MMM YYYY"
           >
-          </etools-dropdown>
+          </datepicker-lite>
+        </div>
+        <!-- End Date -->
+        <div class="col-4">
+          <datepicker-lite
+            id="endDate"
+            label=${translate('INTERVENTIONS_LIST.COLUMNS.END_DATE')}
+            .value="${this.newIntervention.end}"
+            fire-date-has-changed
+            @date-has-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('end', formatDate(detail.date, 'YYYY-MM-DD'))}"
+            selected-date-display-format="D MMM YYYY"
+          >
+          </datepicker-lite>
         </div>
       </div>
 
@@ -246,22 +231,45 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="row">
-        <!--   UNPP Number Toggle   -->
-        <paper-toggle-button
-          ?checked="${this.hasUNPP}"
-          @checked-changed="${({detail}: CustomEvent) => {
-            this.hasUNPP = detail.value;
-            this.setInterventionField('cfei_number', '');
-          }}"
-        >
-          ${translate('NEW_INTERVENTION.UNPP_NUMBER')}
-        </paper-toggle-button>
+        <!--   Reference Number Year   -->
+        <div class="col-4">
+          <etools-dropdown
+            id="yearSelector"
+            label=${translate('NEW_INTERVENTION.REF_NUM_YEAR')}
+            required
+            .options="${this.availableYears}"
+            .selected="${this.newIntervention.reference_number_year}"
+            @etools-selected-item-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('reference_number_year', detail.selectedItem && detail.selectedItem.value)}"
+            trigger-value-change-event
+            allow-outside-scroll
+            hide-search
+            @focus="${this.resetError}"
+            @click="${this.resetError}"
+          >
+          </etools-dropdown>
+        </div>
 
+        <!--   Document Currency   -->
+        <div class="col-4">
+          <etools-dropdown
+            id="currency"
+            label=${translate('NEW_INTERVENTION.DOCUMENT_CURRENCY')}
+            placeholder="&#8212;"
+            .options="${this.currencies}"
+            .selected="${this.newIntervention?.planned_budget?.currency}"
+            trigger-value-change-event
+            @etools-selected-item-changed="${({detail}: CustomEvent) =>
+              this.setCurrency(detail.selectedItem && detail.selectedItem.value)}"
+            option-value="value"
+            option-label="label"
+          >
+          </etools-dropdown>
+        </div>
         <!--   UNPP CFEI Number   -->
-        <div class="col-3">
+        <div class="col-4">
           <paper-input
             id="unppNumber"
-            ?hidden="${!this.hasUNPP}"
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="&#8212;"
             .value="${this.newIntervention.cfei_number}"
