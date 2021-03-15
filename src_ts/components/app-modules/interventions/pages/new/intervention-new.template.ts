@@ -280,7 +280,7 @@ export function template(this: InterventionNew): TemplateResult {
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
             auto-validate
-            error-message="Expected format: CEF/3 letter country code/4 digit year/3 digit number"
+            error-message="${translate('NEW_INTERVENTION.CFEI_FORMAT_VALIDATION')}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>
