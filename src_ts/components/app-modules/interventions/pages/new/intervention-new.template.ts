@@ -27,7 +27,6 @@ export function template(this: InterventionNew): TemplateResult {
           padding-right: 15px;
         }
       }
-
       paper-input[required][label],
       paper-input-container[required],
       etools-dropdown[required],
@@ -117,21 +116,26 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-8">
-          <etools-dropdown-multi
-            label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
-            placeholder="&#8212;"
-            .readonly="${!this.staffMembers.length}"
-            .options="${this.staffMembers}"
-            .selectedValues="${this.newIntervention.partner_focal_points || []}"
-            @etools-selected-items-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField(
-                'partner_focal_points',
-                detail.selectedItems.map(({value}: LabelAndValue) => value)
-              )}"
-            trigger-value-change-event
-            auto-validate
-          >
-          </etools-dropdown-multi>
+          <etools-info-tooltip>
+            <etools-dropdown-multi
+              slot="field"
+              id="partnerFocalPoints"
+              label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
+              placeholder="&#8212;"
+              .readonly="${!this.staffMembers.length}"
+              .options="${this.staffMembers}"
+              .selectedValues="${this.newIntervention.partner_focal_points || []}"
+              @etools-selected-items-changed="${({detail}: CustomEvent) =>
+                this.setInterventionField(
+                  'partner_focal_points',
+                  detail.selectedItems.map(({value}: LabelAndValue) => value)
+                )}"
+              trigger-value-change-event
+              auto-validate
+            >
+            </etools-dropdown-multi>
+            <span slot="message">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</span>
+          </etools-info-tooltip>
         </div>
         <div class="col-4">
           <etools-dropdown-multi

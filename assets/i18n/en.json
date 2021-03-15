@@ -42,7 +42,8 @@
     "UNICEF_OFFICES": "UNICEF Office(s)",
     "UNICEF_SECTIONS": "UNICEF Sections",
     "UNICEF_FOCAL_POINTS": "UNICEF Focal Points",
-    "UNICEF_BUDGET_OWNER": "UNICEF Budget Owner"
+    "UNICEF_BUDGET_OWNER": "UNICEF Budget Owner",
+    "PARTNER_FOCAL_POINTS_TOOLTIP": "The users selected here will be granted edit access to this PD once it is sent to the partner"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Add Programme Document",
