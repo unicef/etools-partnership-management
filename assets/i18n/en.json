@@ -44,7 +44,8 @@
     "UNICEF_FOCAL_POINTS": "UNICEF Focal Points",
     "UNICEF_BUDGET_OWNER": "UNICEF Budget Owner",
     "PARTNER_FOCAL_POINTS_TOOLTIP": "The users selected here will be granted edit access to this PD once it is sent to the partner",
-    "CFEI_FORMAT_VALIDATION": "Expected format: CEF/3 letter country code/4 digit year/3 digit number"
+    "CFEI_EXPECTED_FORMAT": "Exected format: CEF/3 letter country code/4 digit year/3 digit number",
+    "ON_SAVE_VALIDATION": "Please fill all required fields and fix any data format errors."
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Add Programme Document",

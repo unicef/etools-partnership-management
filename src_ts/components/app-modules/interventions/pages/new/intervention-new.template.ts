@@ -45,6 +45,7 @@ export function template(this: InterventionNew): TemplateResult {
         --paper-input-error: {
           white-space: normal;
         }
+      }
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
@@ -280,7 +281,7 @@ export function template(this: InterventionNew): TemplateResult {
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
             auto-validate
-            error-message="${translate('NEW_INTERVENTION.CFEI_FORMAT_VALIDATION')}"
+            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>

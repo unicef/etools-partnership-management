@@ -44,7 +44,8 @@
     "UNICEF_FOCAL_POINTS": "Persoane de interes ale UNICEF",
     "UNICEF_BUDGET_OWNER": "Responsabil UNICEF al Bugetului",
     "PARTNER_FOCAL_POINTS_TOOLTIP": "Utilizatorilor selectati aici li se va acorda acces de editare la acest PD odata ce este trimis partenerului",
-    "CFEI_FORMAT_VALIDATION": "Formatul asteptat: CEF/codul tarii - 3 litere/ anul - 4 cifre/ 3 cifre"
+    "CFEI_EXPECTED_FORMAT": "Formatul asteptat: CEF/codul tarii - 3 litere/ anul - 4 cifre/ 3 cifre",
+    "ON_SAVE_VALIDATION": "Asigurati-va ca ati completat toate campurile necesare si ati reparat erorile de format ale datelor."
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Adauga Documentul Programului",
