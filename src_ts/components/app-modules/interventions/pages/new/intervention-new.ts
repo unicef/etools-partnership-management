@@ -10,6 +10,8 @@ import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
 import '../../../../layout/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
@@ -35,8 +37,6 @@ export class InterventionNew extends connect(store)(LitElement) {
   set cpStructures(cps) {
     this._cpStructures = orderBy<any>(cps, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
   }
-
-  @property() hasUNPP = false;
 
   @property() partnersDropdownData: Partner[] = [];
   @property() selectedPartner: Partner | null = null;
@@ -226,7 +226,6 @@ export class InterventionNew extends connect(store)(LitElement) {
     };
     this.selectedAgreement = null;
     this.selectedPartner = null;
-    this.hasUNPP = false;
     this.requestUpdate();
   }
 }
