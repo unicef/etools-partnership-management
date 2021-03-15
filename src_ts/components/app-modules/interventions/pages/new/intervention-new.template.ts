@@ -5,6 +5,7 @@ import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import {formatDate} from '../../../../utils/date-utils';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -39,6 +40,9 @@ export function template(this: InterventionNew): TemplateResult {
           @apply --required-star-style;
           color: var(--secondary-text-color, #737373);
         }
+      }
+      datepicker-lite {
+        --paper-input-container_-_width: 100%;
       }
     </style>
 
@@ -169,7 +173,60 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
+        <!-- Start Date -->
+        <div class="col-4">
+          <datepicker-lite
+            id="startDate"
+            label=${translate('INTERVENTIONS_LIST.COLUMNS.START_DATE')}
+            .value="${this.newIntervention.start}"
+            fire-date-has-changed
+            @date-has-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('start', formatDate(detail.date, 'YYYY-MM-DD'))}"
+            selected-date-display-format="D MMM YYYY"
+          >
+          </datepicker-lite>
+        </div>
+        <!-- End Date -->
+        <div class="col-4">
+          <datepicker-lite
+            id="endDate"
+            label=${translate('INTERVENTIONS_LIST.COLUMNS.END_DATE')}
+            .value="${this.newIntervention.end}"
+            fire-date-has-changed
+            @date-has-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('end', formatDate(detail.date, 'YYYY-MM-DD'))}"
+            selected-date-display-format="D MMM YYYY"
+          >
+          </datepicker-lite>
+        </div>
+      </div>
 
+      <div class="row">
+        <!--   SPD is Humanitarian   -->
+        <div ?hidden="${!this.isSPD}">
+          <paper-toggle-button
+            ?checked="${this.newIntervention.humanitarian_flag}"
+            @checked-changed="${({detail}: CustomEvent) => {
+              this.setInterventionField('contingency_pd', false);
+              this.setInterventionField('humanitarian_flag', detail.value);
+            }}"
+          >
+            ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
+          </paper-toggle-button>
+        </div>
+
+        <!--   Contingency Document   -->
+        <div class="col-6" ?hidden="${!this.newIntervention.humanitarian_flag}">
+          <paper-toggle-button
+            ?checked="${this.newIntervention.contingency_pd}"
+            @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
+          >
+            ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
+          </paper-toggle-button>
+        </div>
+      </div>
+
+      <div class="row">
         <!--   Reference Number Year   -->
         <div class="col-4">
           <etools-dropdown
@@ -205,34 +262,6 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
-      </div>
-
-      <div class="row">
-        <!--   SPD is Humanitarian   -->
-        <div ?hidden="${!this.isSPD}">
-          <paper-toggle-button
-            ?checked="${this.newIntervention.humanitarian_flag}"
-            @checked-changed="${({detail}: CustomEvent) => {
-              this.setInterventionField('contingency_pd', false);
-              this.setInterventionField('humanitarian_flag', detail.value);
-            }}"
-          >
-            ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
-          </paper-toggle-button>
-        </div>
-
-        <!--   Contingency Document   -->
-        <div class="col-6" ?hidden="${!this.newIntervention.humanitarian_flag}">
-          <paper-toggle-button
-            ?checked="${this.newIntervention.contingency_pd}"
-            @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
-          >
-            ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
-          </paper-toggle-button>
-        </div>
-      </div>
-
-      <div class="row">
         <!--   UNPP CFEI Number   -->
         <div class="col-4">
           <paper-input
