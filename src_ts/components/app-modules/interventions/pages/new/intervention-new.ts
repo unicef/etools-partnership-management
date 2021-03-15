@@ -17,6 +17,8 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
+import {get as getTranslation} from 'lit-translate';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -176,7 +178,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   createIntervention(): void {
     if (!this.validate()) {
-      fireEvent(this, 'toast', {text: 'Please fill all required fields', showCloseBtn: false});
+      fireEvent(this, 'toast', {text: getTranslation('NEW_INTERVENTION.ON_SAVE_VALIDATION'), showCloseBtn: false});
       return;
     }
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
@@ -213,6 +215,10 @@ export class InterventionNew extends connect(store)(LitElement) {
       const fieldValid: boolean = element.validate();
       valid = valid && fieldValid;
     });
+    const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
+    if (unppEL) {
+      valid = unppEL.validate();
+    }
     return valid;
   }
 

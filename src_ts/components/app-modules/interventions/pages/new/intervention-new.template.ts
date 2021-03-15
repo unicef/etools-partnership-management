@@ -40,6 +40,12 @@ export function template(this: InterventionNew): TemplateResult {
           color: var(--secondary-text-color, #737373);
         }
       }
+
+      paper-input#unppNumber {
+        --paper-input-error: {
+          white-space: normal;
+        }
+      }
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
@@ -270,9 +276,12 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <paper-input
             id="unppNumber"
+            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
-            placeholder="&#8212;"
+            placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
+            auto-validate
+            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>
