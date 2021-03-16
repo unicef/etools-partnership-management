@@ -49,6 +49,12 @@ export function template(this: InterventionNew): TemplateResult {
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
+
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          color: var(--primary-color);
+        }
+      }
     </style>
 
     <!--   Header   -->
