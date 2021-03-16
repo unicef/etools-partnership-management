@@ -22,10 +22,7 @@ import {get as getTranslation} from 'lit-translate';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
-  newIntervention: Partial<Intervention> = {
-    reference_number_year: `${new Date().getFullYear()}`,
-    planned_budget: {currency: 'USD'}
-  };
+  newIntervention: Partial<Intervention> = this.getDefaultNewIntervention();
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
@@ -239,11 +236,16 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   cancel() {
-    this.newIntervention = {
-      reference_number_year: `${new Date().getFullYear()}`
-    };
+    this.newIntervention = this.getDefaultNewIntervention();
     this.selectedAgreement = null;
     this.selectedPartner = null;
     this.requestUpdate();
+  }
+
+  getDefaultNewIntervention() {
+    return {
+      reference_number_year: `${new Date().getFullYear()}`,
+      planned_budget: {currency: 'USD'}
+    };
   }
 }
