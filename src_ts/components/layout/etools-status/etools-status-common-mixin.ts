@@ -7,7 +7,7 @@ import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Status, StatusAction} from '../../../typings/etools-status.types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
 declare const ShadyCSS: any;
 

@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
