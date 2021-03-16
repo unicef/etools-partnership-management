@@ -153,6 +153,11 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (value === undefined) {
       return;
     }
+
+    if (value && value.length === 16) {
+      this.validateCFEI();
+    }
+
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
@@ -204,6 +209,13 @@ export class InterventionNew extends connect(store)(LitElement) {
         agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU
       );
     });
+  }
+
+  validateCFEI(e?: CustomEvent) {
+    const elem = e
+      ? (e.currentTarget as PaperInputElement)
+      : this.shadowRoot?.querySelector<PaperInputElement>('#unppNumber')!;
+    elem.validate();
   }
 
   private validate(): boolean {
