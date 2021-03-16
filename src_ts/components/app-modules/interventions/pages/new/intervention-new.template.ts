@@ -286,8 +286,8 @@ export function template(this: InterventionNew): TemplateResult {
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
-            auto-validate
             error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+            @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>
