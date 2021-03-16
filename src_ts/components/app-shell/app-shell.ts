@@ -90,7 +90,7 @@ import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';

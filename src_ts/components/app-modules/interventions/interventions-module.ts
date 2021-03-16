@@ -29,7 +29,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import InterventionItemData from './data/intervention-item-data.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {setStore} from './pages/intervention-tab-pages/utils/redux-store-access';
