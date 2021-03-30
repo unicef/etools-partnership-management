@@ -168,6 +168,22 @@ export function template(this: InterventionNew): TemplateResult {
           </etools-dropdown-multi>
         </div>
       </div>
+      <div class="row">
+        <!--   UNPP CFEI Number   -->
+        <div class="col-4">
+          <paper-input
+            id="unppNumber"
+            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
+            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            placeholder="CEF/___/____/___"
+            .value="${this.newIntervention.cfei_number}"
+            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+            @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
+            @value-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('cfei_number', detail && detail.value)}"
+          ></paper-input>
+        </div>
+      </div>
 
       <div class="row">
         <!--   Document Type   -->
@@ -189,11 +205,41 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
+        <div class="col-8">
+          <div class="row">
+            <!--   SPD is Humanitarian   -->
+            <div ?hidden="${!this.isSPD}">
+              <paper-toggle-button
+                ?checked="${this.newIntervention.humanitarian_flag}"
+                @checked-changed="${({detail}: CustomEvent) => {
+                  this.setInterventionField('contingency_pd', false);
+                  this.setInterventionField('humanitarian_flag', detail.value);
+                }}"
+              >
+                ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
+              </paper-toggle-button>
+            </div>
+
+            <!--   Contingency Document   -->
+            <div ?hidden="${!this.newIntervention.humanitarian_flag}">
+              <paper-toggle-button
+                ?checked="${this.newIntervention.contingency_pd}"
+                @checked-changed="${({detail}: CustomEvent) =>
+                  this.setInterventionField('contingency_pd', detail.value)}"
+              >
+                ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
+              </paper-toggle-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
         <!-- Start Date -->
         <div class="col-4">
           <datepicker-lite
             id="startDate"
-            label=${translate('INTERVENTIONS_LIST.COLUMNS.START_DATE')}
+            label=${translate('NEW_INTERVENTION.START_DATE_ESTIMATED')}
             .value="${this.newIntervention.start}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -206,7 +252,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <datepicker-lite
             id="endDate"
-            label=${translate('INTERVENTIONS_LIST.COLUMNS.END_DATE')}
+            label=${translate('NEW_INTERVENTION.END_DATE_ESTIMATED')}
             .value="${this.newIntervention.end}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -214,31 +260,6 @@ export function template(this: InterventionNew): TemplateResult {
             selected-date-display-format="D MMM YYYY"
           >
           </datepicker-lite>
-        </div>
-      </div>
-
-      <div class="row">
-        <!--   SPD is Humanitarian   -->
-        <div ?hidden="${!this.isSPD}">
-          <paper-toggle-button
-            ?checked="${this.newIntervention.humanitarian_flag}"
-            @checked-changed="${({detail}: CustomEvent) => {
-              this.setInterventionField('contingency_pd', false);
-              this.setInterventionField('humanitarian_flag', detail.value);
-            }}"
-          >
-            ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
-          </paper-toggle-button>
-        </div>
-
-        <!--   Contingency Document   -->
-        <div class="col-6" ?hidden="${!this.newIntervention.humanitarian_flag}">
-          <paper-toggle-button
-            ?checked="${this.newIntervention.contingency_pd}"
-            @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
-          >
-            ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
-          </paper-toggle-button>
         </div>
       </div>
 
@@ -277,20 +298,6 @@ export function template(this: InterventionNew): TemplateResult {
             option-label="label"
           >
           </etools-dropdown>
-        </div>
-        <!--   UNPP CFEI Number   -->
-        <div class="col-4">
-          <paper-input
-            id="unppNumber"
-            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
-            placeholder="CEF/___/____/___"
-            .value="${this.newIntervention.cfei_number}"
-            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
-            @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
-            @value-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('cfei_number', detail && detail.value)}"
-          ></paper-input>
         </div>
       </div>
 
