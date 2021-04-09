@@ -44,8 +44,8 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
         hidden: false
       },
       {
-        tab: 'progress',
-        tabLabel: 'Progress',
+        tab: 'info',
+        tabLabel: 'Info',
         hidden: false
       }
     ];

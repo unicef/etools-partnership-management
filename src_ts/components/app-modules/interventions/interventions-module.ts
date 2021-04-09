@@ -300,7 +300,8 @@ class InterventionsModule extends connect(store)(
       'attachments',
       'review',
       'progress',
-      'reports'
+      'reports',
+      'info'
     ].includes(activePage);
   }
 

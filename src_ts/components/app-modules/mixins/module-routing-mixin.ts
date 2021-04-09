@@ -112,7 +112,8 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           'attachments',
           'review',
           'progress',
-          'reports'
+          'reports', 
+          'info'
         ].includes(page)
       ) {
         baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
