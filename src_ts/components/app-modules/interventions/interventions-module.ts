@@ -104,8 +104,8 @@ class InterventionsModule extends connect(store)(
       ></app-route>
 
       <app-route route="{{route}}" pattern="/new" active="{{newPageActive}}"></app-route>
-
-      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
+      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}" tail="{{subroute}}"></app-route>      
+      <app-route route="{{subroute}}" pattern="/:subtab" active="[[tabsActive]]" data="{{subRouteData}}"></app-route> 
 
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
@@ -151,16 +151,7 @@ class InterventionsModule extends connect(store)(
                 [[_translate('INTERVENTIONS_LIST.ADD_NEW_PD')]]
               </paper-button>
             </div>
-          </div>
-
-          <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-            <etools-tabs
-              slot="tabs"
-              tabs="[[interventionTabs]]"
-              active-tab="{{routeData.tab}}"
-              on-iron-select="_handleTabSelectAction"
-            ></etools-tabs>
-          </template>
+          </div>          
         </page-content-header>
 
         <div id="main">
