@@ -87,8 +87,8 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.partnersDropdownData, csoPartnersSelector(state))) {
       this.partnersDropdownData = [...csoPartnersSelector(state)];
     }
-    if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
-      this.documentTypes = [...state.commonData!.interventionDocTypes];
+    if (!isJsonStrMatch(this.documentTypes, state.commonData!.documentTypes)) {
+      this.documentTypes = [...state.commonData!.documentTypes];
     }
     if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
       this.unicefUsersData = [...state.commonData!.unicefUsersData];

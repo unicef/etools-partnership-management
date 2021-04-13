@@ -61,7 +61,7 @@ export class CommonDataState {
   }[] = [];
   cpOutputs: CpOutput[] = [];
   countryProgrammes: CountryProgram[] = [];
-  interventionDocTypes: LabelAndValue[] = [];
+  documentTypes: LabelAndValue[] = [];
   interventionStatuses: LabelAndValue[] = [];
   sections: GenericObject[] = [];
   unicefUsersData: MinimalUser[] = [];
@@ -144,7 +144,7 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     case UPDATE_INTERVENTION_DOC_TYPES:
       return {
         ...state,
-        interventionDocTypes: action.intDocTypes
+        documentTypes: action.intDocTypes
       };
 
     case UPDATE_INTERVENTION_STATUSES:
