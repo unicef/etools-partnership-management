@@ -210,7 +210,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
 
     emptyFrsList(intervention: Intervention | ListItemIntervention, interventionIsFromWhere: string) {
       // * The intervention object from interventions-list
-      // has different properties than the one on intervention-details
+      // has different properties than the one on intervention-metadata
       switch (interventionIsFromWhere) {
         case 'interventionDetails':
           return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
