@@ -221,7 +221,7 @@ class InterventionsList extends connect(store)(
               <span class="col-data col-2" data-col-header-label="PD/SPD Reference Number">
                 <a
                   class="pd-ref truncate"
-                  href="interventions/[[intervention.id]]/details"
+                  href="interventions/[[intervention.id]]/metadata"
                   title="[[getDisplayValue(intervention.number)]]"
                   on-click="_triggerInterventionLoadingMsg"
                 >
@@ -476,8 +476,8 @@ class InterventionsList extends connect(store)(
     if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
       this.cpOutputs = [...state.commonData!.cpOutputs];
     }
-    if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
-      this.documentTypes = [...state.commonData!.interventionDocTypes];
+    if (!isJsonStrMatch(this.documentTypes, state.commonData!.documentTypes)) {
+      this.documentTypes = [...state.commonData!.documentTypes];
     }
     if (!isJsonStrMatch(this.interventionStatuses, state.commonData!.interventionStatuses)) {
       this.interventionStatuses = [...state.commonData!.interventionStatuses];

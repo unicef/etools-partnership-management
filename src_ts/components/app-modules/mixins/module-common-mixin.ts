@@ -94,7 +94,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
           // tab element already loaded, no need for loading messages
           return;
         }
-        if (selector === 'intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
+        if (selector === 'intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-metadata') !== null) {
           // intervention-tabs tab element already loaded, no need for loading messages
           return;
         }

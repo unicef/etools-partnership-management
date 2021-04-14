@@ -110,11 +110,11 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       if (
         currentModule === 'interventions' &&
         [
-          'details',
+          'metadata',
           'overview',
           'timing',
           'results',
-          'management',
+          'strategy',
           'attachments',
           'review',
           'progress',

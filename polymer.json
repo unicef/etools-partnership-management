@@ -16,9 +16,9 @@
     "src/components/app-modules/interventions/pages/list/interventions-list.js",
     "src/components/app-modules/interventions/pages/new/intervention-new.js",
 
-    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-details/intervention-details.js",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-overview/intervention-overview.js",
-    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-management/intervention-management.js",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-results/intervention-results.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js",

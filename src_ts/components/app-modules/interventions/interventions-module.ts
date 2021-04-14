@@ -283,11 +283,11 @@ class InterventionsModule extends connect(store)(
 
   showNewPMP(activePage: string) {
     return [
-      'details',
+      'metadata',
       'overview',
       'timing',
       'results',
-      'management',
+      'strategy',
       'attachments',
       'review',
       'progress',
@@ -499,7 +499,7 @@ class InterventionsModule extends connect(store)(
    * Go to details page once the new intervention has been saved
    */
   _newInterventionSaved(intervention: Intervention) {
-    this.set('route.path', '/' + intervention.id + '/details');
+    this.set('route.path', '/' + intervention.id + '/metadata');
   }
 
   _showAddNewIntervBtn(listActive: boolean, permissions: UserPermissions) {
