@@ -63,7 +63,7 @@ class InterventionsModule extends connect(store)(
       <style>
         :host {
           display: block;
-          min-height: calc(100vh - 120px);
+          min-height: calc(100vh - 150px);
         }
 
         .no-capitalization {
