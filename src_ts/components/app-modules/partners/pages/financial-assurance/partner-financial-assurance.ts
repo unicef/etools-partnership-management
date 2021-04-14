@@ -233,7 +233,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <div class="col col-2 center-align hact-values">
             <strong>
               [[partner.hact_values.programmatic_visits.planned.total]] /
-              <span class="green"> [[partner.hact_min_requirements.programme_visits]]</span>
+              <span class="green"> [[partner.hact_min_requirements.programmatic_visits]]</span>
               / [[partner.hact_values.programmatic_visits.completed.total]]
             </strong>
           </div>
