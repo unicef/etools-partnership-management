@@ -19,6 +19,7 @@ export interface RouteCallbackParams {
 export interface RouteDetails {
   routeName: string;
   subRouteName: string | null;
+  subSubRouteName?: string;
   path: string;
   queryParams: RouteQueryParam | null;
   params: RouteParams | null;

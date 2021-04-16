@@ -26,6 +26,12 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     @property({type: Object})
     routeData!: GenericObject;
 
+    @property({type: Object})
+    subroute: any = null;
+
+    @property({type: Object})
+    subRouteData: any;
+
     @property({type: String})
     rootPath!: string;
 
@@ -112,7 +118,8 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           'attachments',
           'review',
           'progress',
-          'reports'
+          'reports', 
+          'info'
         ].includes(page)
       ) {
         baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
