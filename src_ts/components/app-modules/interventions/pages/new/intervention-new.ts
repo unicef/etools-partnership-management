@@ -23,6 +23,7 @@ import {get as getTranslation} from 'lit-translate';
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
   newIntervention: Partial<Intervention> = this.getDefaultNewIntervention();
+  @property({type: Boolean}) windowWidthIsSmall = false;
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];

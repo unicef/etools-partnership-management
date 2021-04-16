@@ -1,4 +1,5 @@
 /* eslint no-invalid-this: 0 */
+import '@polymer/iron-media-query/iron-media-query';
 import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
@@ -6,6 +7,7 @@ import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
+
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -43,7 +45,8 @@ export function template(this: InterventionNew): TemplateResult {
 
       paper-input#unppNumber {
         --paper-input-error: {
-          white-space: normal;
+          white-space: nowrap;
+          overflow: visible;
         }
       }
       datepicker-lite {
@@ -56,6 +59,8 @@ export function template(this: InterventionNew): TemplateResult {
         }
       }
     </style>
+
+    <iron-media-query query="(max-width: 767px)" @query-matches-changed="${(e: any) => this.windowWidthIsSmall = e.detail.value}"></iron-media-query>
 
     <!--   Header   -->
     <div class="title">${translate('NEW_INTERVENTION.INITIAL_DETAILS')}</div>
@@ -177,10 +182,11 @@ export function template(this: InterventionNew): TemplateResult {
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
-            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+            error-message="${this.windowWidthIsSmall ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT') : translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
+            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
         </div>
       </div>
