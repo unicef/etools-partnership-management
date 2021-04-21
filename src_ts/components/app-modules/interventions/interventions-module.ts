@@ -10,7 +10,6 @@ import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import InterventionPageTabsMixin from './mixins/intervention-page-tabs-mixin';
 import '../../layout/page-content-header.js';
 import '../../layout/page-content-header-slotted-styles.js';
 import '../../layout/etools-error-messages-box.js';
@@ -35,6 +34,7 @@ import get from 'lodash-es/get';
 import {setStore} from './pages/intervention-tab-pages/utils/redux-store-access';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../mixins/common-mixin';
+import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
 
 // @ts-ignore
 setStore(store);
@@ -47,13 +47,12 @@ setStore(store);
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRoutingMixin
- * @appliesMixin InterventionPageTabsMixin
  * @appliesMixin SaveInterventionMixin
  */
 class InterventionsModule extends connect(store)(
   ScrollControlMixin(
     ModuleMainElCommonFunctionalityMixin(
-      ModuleRoutingMixin(CommonMixin(InterventionPageTabsMixin(EndpointsMixin(PolymerElement))))
+      ModuleRoutingMixin(CommonMixin(EnvironmentFlagsPolymerMixin(EndpointsMixin(PolymerElement))))
     )
   )
 ) {
