@@ -143,7 +143,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <div class="col col-2 center-align">
               <strong>
                 [[partner.hact_values.programmatic_visits.planned.total]] /
-                <span class="green">[[partner.hact_min_requirements.programme_visits]]</span>
+                <span class="green">[[partner.hact_min_requirements.programmatic_visits]]</span>
                 / [[partner.hact_values.programmatic_visits.completed.total]]
               </strong>
             </div>
