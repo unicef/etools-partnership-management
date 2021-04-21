@@ -58,12 +58,12 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
             display: none;
           }
 
-          --paper-input-container-input: {
-            color: var(--countries-dropdown-color);
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
             cursor: pointer;
-            min-height: 24px;
+            font-size: 16px;
             text-align: right;
-            line-height: 21px; /* for IE */
+            width: 100px;
           }
 
           --paper-menu-button-dropdown: {
@@ -92,7 +92,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         on-etools-selected-item-changed="_countrySelected"
         shown-options-limit="250"
         hide-search
-        min-width="160px"
         auto-width
       ></etools-dropdown>
     `;
