@@ -8,7 +8,6 @@ import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types
 import {translate} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
 
-
 export function template(this: InterventionNew): TemplateResult {
   return html`
     ${SharedStyles}
@@ -30,9 +29,7 @@ export function template(this: InterventionNew): TemplateResult {
         }
       }
       paper-input[required][label],
-      paper-input-container[required],
-      etools-dropdown[required],
-      etools-dropdown-multi[required] {
+      paper-input-container[required] {
         --paper-input-container-label: {
           @apply --required-star-style;
           color: var(--secondary-text-color, #737373);
@@ -41,6 +38,11 @@ export function template(this: InterventionNew): TemplateResult {
           @apply --required-star-style;
           color: var(--secondary-text-color, #737373);
         }
+      }
+
+      etools-dropdown-multi[required]::part(esmm-label),
+      etools-dropdown[required]::part(esmm-label) {
+        @apply --required-star-style;
       }
 
       paper-input#unppNumber {
@@ -52,15 +54,21 @@ export function template(this: InterventionNew): TemplateResult {
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
-
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
+      etools-dropdown-multi {
+        --iron-icon: {
+          margin-left: 10px;
           color: var(--primary-color);
+        }
+        --paper-tooltip: {
+          font-size: 16px !important;
         }
       }
     </style>
 
-    <iron-media-query query="(max-width: 767px)" @query-matches-changed="${(e: any) => this.windowWidthIsSmall = e.detail.value}"></iron-media-query>
+    <iron-media-query
+      query="(max-width: 767px)"
+      @query-matches-changed="${(e: any) => (this.windowWidthIsSmall = e.detail.value)}"
+    ></iron-media-query>
 
     <!--   Header   -->
     <div class="title">${translate('NEW_INTERVENTION.INITIAL_DETAILS')}</div>
@@ -133,26 +141,26 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-8">
-          <etools-info-tooltip>
-            <etools-dropdown-multi
-              slot="field"
-              id="partnerFocalPoints"
-              label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
-              placeholder="&#8212;"
-              .readonly="${!this.staffMembers.length}"
-              .options="${this.staffMembers}"
-              .selectedValues="${this.newIntervention.partner_focal_points || []}"
-              @etools-selected-items-changed="${({detail}: CustomEvent) =>
-                this.setInterventionField(
-                  'partner_focal_points',
-                  detail.selectedItems.map(({value}: LabelAndValue) => value)
-                )}"
-              trigger-value-change-event
-              auto-validate
-            >
-            </etools-dropdown-multi>
-            <span slot="message">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</span>
-          </etools-info-tooltip>
+          <etools-dropdown-multi
+            id="partnerFocalPoints"
+            label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
+            placeholder="&#8212;"
+            .readonly="${!this.staffMembers.length}"
+            .options="${this.staffMembers}"
+            .selectedValues="${this.newIntervention.partner_focal_points || []}"
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'partner_focal_points',
+                detail.selectedItems.map(({value}: LabelAndValue) => value)
+              )}"
+            trigger-value-change-event
+            auto-validate
+          >
+            <iron-icon id="info-icon" icon="info-outline" slot="label-suffix"></iron-icon>
+            <paper-tooltip slot="label-suffix" for="info-icon" position="top">
+              ${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}
+            </paper-tooltip>
+          </etools-dropdown-multi>
         </div>
         <div class="col-4">
           <etools-dropdown-multi
@@ -182,7 +190,9 @@ export function template(this: InterventionNew): TemplateResult {
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
-            error-message="${this.windowWidthIsSmall ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT') : translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+            error-message="${this.windowWidthIsSmall
+              ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
+              : translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
