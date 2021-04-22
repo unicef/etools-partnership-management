@@ -185,25 +185,25 @@ class InterventionsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.REFERENCE_NO')]]
+            [[_translate('INTERVENTIONS_LIST.REFERENCE_NO')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-3" field="partner_name" sortable>
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.PARTNER_ORG_NAME')]]
+            [[_translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="document_type">
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.DOC_TYPE')]]
+            [[_translate('INTERVENTIONS_LIST.DOC_TYPE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="status">
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.STATUS')]]
+            [[_translate('INTERVENTIONS_LIST.STATUS')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.TITLE')]]
+            [[_translate('INTERVENTIONS_LIST.TITLE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="start" sortable>
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.START_DATE')]]
+            [[_translate('INTERVENTIONS_LIST.START_DATE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="end" sortable>
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.END_DATE')]]
+            [[_translate('INTERVENTIONS_LIST.END_DATE')]]
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -556,7 +556,7 @@ class InterventionsList extends connect(store)(
     // IMPORTANT!!!
     this.initListFiltersData([
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.CP_STRUCTURE'),
+        filterName: this._translate('INTERVENTIONS_LIST.CP_STRUCTURE'),
         type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
@@ -568,7 +568,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.COUNTRY_PROGRAMME_OUTPUT'),
+        filterName: this._translate('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -579,7 +579,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.DONORS'),
+        filterName: this._translate('INTERVENTIONS_LIST.DONORS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -590,7 +590,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.PARTNERS'),
+        filterName: this._translate('INTERVENTIONS_LIST.PARTNERS'),
         type: 'etools-dropdown-multi',
         selectionOptions: partners,
         optionValue: 'value',
@@ -602,14 +602,14 @@ class InterventionsList extends connect(store)(
         hideSearch: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.ENDS_BEFORE'),
+        filterName: this._translate('INTERVENTIONS_LIST.ENDS_BEFORE'),
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
         selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.GRANTS'),
+        filterName: this._translate('INTERVENTIONS_LIST.GRANTS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -620,7 +620,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.OFFICES'),
+        filterName: this._translate('INTERVENTIONS_LIST.OFFICES'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -632,7 +632,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.PD_TYPE'),
+        filterName: this._translate('INTERVENTIONS_LIST.PD_TYPE'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -644,7 +644,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.SECTIONS'),
+        filterName: this._translate('INTERVENTIONS_LIST.SECTIONS'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -656,21 +656,21 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.STARTS_AFTER'),
+        filterName: this._translate('INTERVENTIONS_LIST.STARTS_AFTER'),
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
         selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.ENDS_AFTER'),
+        filterName: this._translate('INTERVENTIONS_LIST.ENDS_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'endAfter',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.STATUS'),
+        filterName: this._translate('INTERVENTIONS_LIST.STATUS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -682,7 +682,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.UNICEF_FOCAL_POINT'),
+        filterName: this._translate('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -693,7 +693,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.FILTERS.CONTINGENCY_PD'),
+        filterName: this._translate('INTERVENTIONS_LIST.CONTINGENCY_PD'),
         type: 'paper-toggle',
         selectedValue: this.contingency_pd,
         path: 'contingency_pd',

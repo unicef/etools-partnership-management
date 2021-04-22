@@ -43,20 +43,20 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return '';
       }
       if (data.partner_accepted && data.unicef_accepted) {
-        return getTranslation('PERFORMED_ACTIONS_STATUS.PARTNER_AND_UNICEF_ACCEPTED');
+        return getTranslation('PARTNER_AND_UNICEF_ACCEPTED');
       }
       if (!data.partner_accepted && data.unicef_accepted) {
-        return getTranslation('PERFORMED_ACTIONS_STATUS.UNICEF_ACCEPTED');
+        return getTranslation('UNICEF_ACCEPTED');
       }
       if (data.partner_accepted && !data.unicef_accepted) {
-        return getTranslation('PERFORMED_ACTIONS_STATUS.PARTNER_ACCEPTED');
+        return getTranslation('PARTNER_ACCEPTED');
       }
       if (!data.unicef_court && !!data.date_sent_to_partner) {
-        return getTranslation('PERFORMED_ACTIONS_STATUS.SENT_TO_PARTNER');
+        return getTranslation('SENT_TO_PARTNER');
       }
 
       if (data.unicef_court && !!data.submission_date && !!data.date_sent_to_partner) {
-        return getTranslation('PERFORMED_ACTIONS_STATUS.SENT_TO_UNICEF');
+        return getTranslation('SENT_TO_UNICEF');
       }
       return '';
     }
