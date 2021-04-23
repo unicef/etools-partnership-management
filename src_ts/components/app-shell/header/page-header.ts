@@ -78,12 +78,12 @@ class PageHeader extends connect(store)(
               display: none;
             }
 
-            --paper-input-container-input: {
+            --paper-input-container-shared-input-style: {
               color: var(--light-secondary-text-color);
               cursor: pointer;
-              min-height: 24px;
+              font-size: 16px;
               text-align: right;
-              line-height: 21px; /* for IE */
+              width: 100px;
             }
         }
 
@@ -123,7 +123,6 @@ class PageHeader extends connect(store)(
         .dropdowns {
           display: flex;
           margin-right: 5px;
-          max-width: 280px;
         }
 
         .header {
@@ -243,7 +242,6 @@ class PageHeader extends connect(store)(
                 hide-search
                 allow-outside-scroll
                 no-label-float
-                min-width="160px"
                 auto-width
               ></etools-dropdown>
 
