@@ -3,7 +3,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {DomRepeatEvent, Constructor} from '../../typings/globals.types';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 declare const moment: any;
