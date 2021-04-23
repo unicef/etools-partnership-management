@@ -30,6 +30,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
 
         :host {
           display: block;
+          --paper-input-container-shared-input-style_-_color: var(--countries-dropdown-color);
         }
 
         :host(:hover) {
