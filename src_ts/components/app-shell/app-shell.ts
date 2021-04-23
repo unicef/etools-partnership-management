@@ -386,6 +386,11 @@ class AppShell extends connect(store)(
 
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      if (this.selectedLanguage === 'ar') {
+        import('./required-style-theme-arabic.js');
+      } else {
+        import('./required-style-theme.js');
+      }
       this.loadLocalization();
     }
   }
