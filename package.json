@@ -62,7 +62,7 @@
     "@unicef-polymer/etools-app-selector": "^3.1.5",
     "@unicef-polymer/etools-behaviors": "^3.0.3",
     "@unicef-polymer/etools-content-panel": "^3.0.6",
-    "@unicef-polymer/etools-currency-amount-input": "^3.0.1",
+    "@unicef-polymer/etools-currency-amount-input": "^3.0.7",
     "@unicef-polymer/etools-data-table": "^3.0.1",
     "@unicef-polymer/etools-date-time": "^1.0.1",
     "@unicef-polymer/etools-dexie-caching": "^1.0.2",
