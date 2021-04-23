@@ -13,7 +13,7 @@ import CONSTANTS from '../../../../../../config/app-constants';
 import {IdAndName, Permission} from '../../../../../../typings/globals.types';
 import {property} from '@polymer/decorators';
 import {InterventionPermissionsFields} from '../../../../../../typings/intervention.types';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 
 /**
  * @polymer
