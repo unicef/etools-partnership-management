@@ -71,9 +71,11 @@ export const listFilterStyles = html` <style>
     flex-direction: column;
     justify-content: center;
     align-self: stretch;
-    padding: 0 0 0 8px;
-    margin: 8px 0 8px 24px;
-    border-left: 2px solid var(--list-divider-color, #9d9d9d);
+    padding-inline-start: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-inline-start: 24px;
+    border-inline-start: 2px solid var(--list-divider-color, #9d9d9d);
   }
 
   #filterMenu {
@@ -149,7 +151,11 @@ export const listFilterStyles = html` <style>
       width: 100%;
     }
     .fixed-controls {
-      border-left: none;
+      border-inline-start: none;
+      padding-inline-start: 8px;
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-inline-start: 0;
       margin: 0 auto;
       padding: 0px;
     }
