@@ -346,7 +346,7 @@ class PageHeader extends connect(store)(
       if (this.selectedLanguage === 'ar') {
         htmlTag!.setAttribute('dir', 'rtl');
       } else if (htmlTag!.getAttribute('dir')) {
-        htmlTag!.setAttribute('dir', 'rtl');
+        htmlTag!.removeAttribute('dir');
       }
     }
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
