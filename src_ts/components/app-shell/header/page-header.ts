@@ -342,11 +342,11 @@ class PageHeader extends connect(store)(
     }
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      const body = document.querySelector('body');
+      const htmlTag = document.querySelector('html');
       if (this.selectedLanguage === 'ar') {
-        body!.setAttribute('dir', 'rtl');
-      } else if (body!.getAttribute('dir')) {
-        body!.removeAttribute('dir');
+        htmlTag!.setAttribute('dir', 'rtl');
+      } else if (htmlTag!.getAttribute('dir')) {
+        htmlTag!.removeAttribute('dir');
       }
     }
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
