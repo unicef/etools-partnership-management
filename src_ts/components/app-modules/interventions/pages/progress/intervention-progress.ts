@@ -26,14 +26,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import {User, GenericObject} from '../../../../../typings/globals.types.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
-import {
-  dateDiff,
-  dateIsBetween,
-  isValidDate,
-  dateIsAfter,
-  EdgeAcceptableDateParse,
-  datesAreEqual
-} from '../../../../utils/date-utils';
+import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, datesAreEqual} from '../../../../utils/date-utils';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
@@ -188,7 +181,7 @@ class InterventionProgress extends connect(store)(
               <etools-form-element-wrapper
                 class="col-6"
                 label="UNICEF Cash"
-                value="[[progress.unicef_budget_cash_currency]] 
+                value="[[progress.unicef_budget_cash_currency]]
                         [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]"
               >
               </etools-form-element-wrapper>
@@ -281,7 +274,7 @@ class InterventionProgress extends connect(store)(
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar
                             class="report-progress-bar"
-                            value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, 
+                            value="[[getProgressPercentage(indicatorReport.reportable.total_against_target,
                                         indicatorReport.reportable.blueprint.display_type)]]"
                           >
                           </etools-progress-bar>
@@ -493,10 +486,8 @@ class InterventionProgress extends connect(store)(
       return;
     }
     const today = new Date();
-    // eslint-disable-next-line new-cap
-    const startDt = EdgeAcceptableDateParse(start);
-    // eslint-disable-next-line new-cap
-    const endDt = EdgeAcceptableDateParse(end);
+    const startDt = moment(start).toDate();
+    const endDt = moment(end).toDate();
     try {
       if (dateIsBetween(startDt, endDt, today)) {
         const intervalTotalDays = dateDiff(startDt, endDt);
@@ -518,8 +509,7 @@ class InterventionProgress extends connect(store)(
   }
 
   _convertToDisplayFormat(strDt: string) {
-    // eslint-disable-next-line new-cap
-    return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+    return moment(strDt).format('D MMM YYYY');
   }
 
   getProgressPercentage(progress_percentage: number, displayType: string) {
