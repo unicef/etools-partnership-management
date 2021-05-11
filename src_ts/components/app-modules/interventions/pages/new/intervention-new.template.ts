@@ -54,7 +54,7 @@ export function template(this: InterventionNew): TemplateResult {
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
-      etools-dropdown-multi {
+      etools-dropdown-multi::part(esmm-label-container) {
         --iron-icon: {
           margin-left: 10px;
           color: var(--primary-color);
