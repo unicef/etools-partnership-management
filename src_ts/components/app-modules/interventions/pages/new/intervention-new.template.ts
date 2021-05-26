@@ -7,6 +7,7 @@ import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
+import '@polymer/paper-tooltip/paper-tooltip';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -157,8 +158,8 @@ export function template(this: InterventionNew): TemplateResult {
             auto-validate
           >
             <iron-icon id="info-icon" icon="info-outline" slot="label-suffix"></iron-icon>
-            <paper-tooltip slot="label-suffix" for="info-icon" position="top">
-              ${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}
+            <paper-tooltip slot="label-suffix" for="info-icon" animation-entry="noanimation" position="top">
+              ${this.getDocPartnerFocalPointTooltip()}
             </paper-tooltip>
           </etools-dropdown-multi>
         </div>
