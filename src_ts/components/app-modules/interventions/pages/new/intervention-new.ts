@@ -20,6 +20,7 @@ import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation, translate} from 'lit-translate';
 import {elevationStyles} from '../intervention-tab-pages/common/styles/elevation-styles';
+import {PaperTooltipElement} from '@polymer/paper-tooltip';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -70,6 +71,7 @@ export class InterventionNew extends connect(store)(LitElement) {
       label: year + (-5 + index)
     }));
 
+  private tooltipHandler: any;
   protected render(): TemplateResult {
     return template.call(this);
   }
@@ -258,19 +260,20 @@ export class InterventionNew extends connect(store)(LitElement) {
           --paper-tooltip-background: #ffffff;
           --paper-tooltip: {
             padding: 0;
-            font-size: 16px !important;
+            font-size: 18px !important;
           }
         }
         .content-wrapper {
           padding: 12px;
           width: 100%;
           max-width: 100vw;
+          border-radius: 5px;
         }
 
         .tooltip {
           padding: 12px;
           word-break: break-word;
-          word-wrap: break-word; /* for IE */
+          overflow-wrap: break-word;
           box-sizing: border-box;
           color: var(--primary-text-color);
         }
@@ -285,10 +288,21 @@ export class InterventionNew extends connect(store)(LitElement) {
         }
       </style>
       <div class="content-wrapper elevation" elevation="1">
-        <div class="tooltip border flex-row">
-          <div>${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
-        </div>
+        <div class="tooltip border flex-row">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
       </div>
     `;
+  }
+
+  showPartnerFocalPTooltip() {
+    const tooltip = this.shadowRoot?.querySelector<PaperTooltipElement>('#partner-focal-p-tooltip')!;
+    tooltip.show();
+
+    this.tooltipHandler = this.hidePartnerFocalPTooltip.bind(this, tooltip);
+    document.addEventListener('click', this.tooltipHandler, true);
+  }
+
+  hidePartnerFocalPTooltip(tooltip: PaperTooltipElement) {
+    tooltip.hide();
+    document.removeEventListener('click', this.tooltipHandler);
   }
 }

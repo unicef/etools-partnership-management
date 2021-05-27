@@ -60,9 +60,6 @@ export function template(this: InterventionNew): TemplateResult {
           margin-left: 10px;
           color: var(--primary-color);
         }
-        --paper-tooltip: {
-          font-size: 16px !important;
-        }
       }
     </style>
 
@@ -157,8 +154,20 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <iron-icon id="info-icon" icon="info-outline" slot="label-suffix"></iron-icon>
-            <paper-tooltip slot="label-suffix" for="info-icon" animation-entry="noanimation" position="top">
+            <iron-icon
+              id="info-icon"
+              icon="info-outline"
+              slot="label-suffix"
+              @click="${this.showPartnerFocalPTooltip}"
+            ></iron-icon>
+            <paper-tooltip
+              id="partner-focal-p-tooltip"
+              slot="label-suffix"
+              for="info-icon"
+              manual-mode
+              animation-entry="noanimation"
+              position="top"
+            >
               ${this.getDocPartnerFocalPointTooltip()}
             </paper-tooltip>
           </etools-dropdown-multi>
