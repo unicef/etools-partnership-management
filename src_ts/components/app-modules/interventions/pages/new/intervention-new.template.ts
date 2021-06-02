@@ -155,7 +155,7 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <info-icon-tootltip slot="label-suffix"></info-icon-tootltip>
+            <info-icon-tooltip slot="label-suffix"></info-icon-tootltip>
             <!-- <iron-icon
               id="info-icon"
               icon="info-outline"
@@ -170,7 +170,6 @@ export function template(this: InterventionNew): TemplateResult {
               animation-entry="noanimation"
               position="top"
             >
-              ${this.getDocPartnerFocalPointTooltip()}
             </paper-tooltip> -->
           </etools-dropdown-multi>
         </div>
