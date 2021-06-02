@@ -1,5 +1,5 @@
 /* eslint no-invalid-this: 0 */
-import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
+import {LitElement, customElement, property, CSSResultArray, TemplateResult, html} from 'lit-element';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../store';
@@ -18,7 +18,9 @@ import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, translate} from 'lit-translate';
+import {elevationStyles} from '../intervention-tab-pages/common/styles/elevation-styles';
+import {PaperTooltipElement} from '@polymer/paper-tooltip';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -69,6 +71,7 @@ export class InterventionNew extends connect(store)(LitElement) {
       label: year + (-5 + index)
     }));
 
+  private tooltipHandler: any;
   protected render(): TemplateResult {
     return template.call(this);
   }
@@ -233,7 +236,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [ColumnStyles, NewInterventionStyles];
+    return [ColumnStyles, NewInterventionStyles, elevationStyles];
   }
 
   cancel() {
@@ -249,4 +252,57 @@ export class InterventionNew extends connect(store)(LitElement) {
       planned_budget: {currency: 'USD'}
     };
   }
+
+  // getDocPartnerFocalPointTooltip() {
+  //   return html`
+  //     <style>
+  //       paper-tooltip[slot='label-suffix'] {
+  //         --paper-tooltip-background: #ffffff;
+  //         --paper-tooltip: {
+  //           padding: 0;
+  //           font-size: 18px !important;
+  //         }
+  //       }
+  //       .content-wrapper {
+  //         padding: 12px;
+  //         width: 100%;
+  //         max-width: 100vw;
+  //         border-radius: 5px;
+  //       }
+
+  //       .tooltip {
+  //         padding: 12px;
+  //         word-break: break-word;
+  //         overflow-wrap: break-word;
+  //         box-sizing: border-box;
+  //         color: var(--primary-text-color);
+  //       }
+
+  //       .flex-row {
+  //         display: flex;
+  //         flex-direction: row;
+  //       }
+
+  //       .border {
+  //         border: 1px solid var(--primary-color);
+  //       }
+  //     </style>
+  //     <div class="content-wrapper elevation" elevation="1">
+  //       <div class="tooltip border flex-row">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
+  //     </div>
+  //   `;
+  // }
+
+  // showPartnerFocalPTooltip() {
+  //   const tooltip = this.shadowRoot?.querySelector<PaperTooltipElement>('#partner-focal-p-tooltip')!;
+  //   tooltip.show();
+
+  //   this.tooltipHandler = this.hidePartnerFocalPTooltip.bind(this, tooltip);
+  //   document.addEventListener('click', this.tooltipHandler, true);
+  // }
+
+  // hidePartnerFocalPTooltip(tooltip: PaperTooltipElement) {
+  //   tooltip.hide();
+  //   document.removeEventListener('click', this.tooltipHandler);
+  // }
 }
