@@ -4,7 +4,7 @@ import {translate} from 'lit-translate';
 import '@polymer/paper-tooltip/paper-tooltip';
 import {elevationStyles} from '../intervention-tab-pages/common/styles/elevation-styles';
 
-@customElement('info-icon-tootltip')
+@customElement('info-icon-tooltip')
 export class InfoIconTooltip extends LitElement {
   static get styles() {
     return [elevationStyles];
@@ -32,6 +32,14 @@ export class InfoIconTooltip extends LitElement {
           overflow-wrap: break-word;
           box-sizing: border-box;
           color: var(--primary-text-color);
+          line-height: 20px;
+        }
+
+        @media (max-width: 880px) {
+          .tooltip {
+            white-space: normal;
+            min-width: 99vw;
+          }
         }
 
         .flex-row {
