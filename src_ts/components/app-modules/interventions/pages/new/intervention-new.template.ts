@@ -156,21 +156,6 @@ export function template(this: InterventionNew): TemplateResult {
             auto-validate
           >
             <info-icon-tooltip slot="label-suffix"></info-icon-tooltip>
-            <!-- <iron-icon
-              id="info-icon"
-              icon="info-outline"
-              slot="label-suffix"
-              @click="${this.showPartnerFocalPTooltip}"
-            ></iron-icon>
-            <paper-tooltip
-              id="partner-focal-p-tooltip"
-              slot="label-suffix"
-              for="info-icon"
-              manual-mode
-              animation-entry="noanimation"
-              position="top"
-            >
-            </paper-tooltip> -->
           </etools-dropdown-multi>
         </div>
         <div class="col-4">
