@@ -4,12 +4,13 @@ import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import CommonMixin from '../../../mixins/common-mixin';
 
 /**
  * @polymer
  * @customElement
  */
-export class NewPartnerDialog extends PolymerElement {
+export class NewPartnerDialog extends CommonMixin(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
@@ -18,7 +19,7 @@ export class NewPartnerDialog extends PolymerElement {
         size="md"
         ok-btn-text="Save"
         disable-confirm-btn="[[vendorNumberIsEmpty]]"
-        dialog-title="Import Partner"
+        dialog-title="[[_getTranslation('IMPORT_PARTNER')]]"
         keep-dialog-open
         opened
         on-close="_onClose"
@@ -26,13 +27,13 @@ export class NewPartnerDialog extends PolymerElement {
       >
         <paper-input
           id="vendorNo"
-          label="VISION Vendor Number"
+          label="[[_getTranslation('VISION_VENDOR_NUMBER')]]"
           value="{{vendorNumber}}"
           placeholder="&#8212;"
           autofocus
           required
           auto-validate
-          error-message="VISION Vendor number is required"
+          error-message="[[_getTranslation('VISION_VENDOR_NUMBER_REQUIRED')]]"
           allowed-pattern="[0-9]"
           char-counter
           maxlength="11"

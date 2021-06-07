@@ -103,15 +103,21 @@ class InterventionsModule extends connect(store)(
       ></app-route>
 
       <app-route route="{{route}}" pattern="/new" active="{{newPageActive}}"></app-route>
-      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}" tail="{{subroute}}"></app-route>      
-      <app-route route="{{subroute}}" pattern="/:subtab" active="[[tabsActive]]" data="{{subRouteData}}"></app-route> 
+      <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"
+        tail="{{subroute}}"
+      ></app-route>
+      <app-route route="{{subroute}}" pattern="/:subtab" active="[[tabsActive]]" data="{{subRouteData}}"></app-route>
 
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
           <div slot="page-title">
             <template is="dom-if" if="[[listActive]]"> PD/SPDs </template>
             <template is="dom-if" if="[[newPageActive]]">
-              <span class="no-capitalization">[[_translate('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')]]</span>
+              <span class="no-capitalization">[[_getTranslation('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')]]</span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>
@@ -128,17 +134,17 @@ class InterventionsModule extends connect(store)(
               <paper-menu-button id="pdExportMenuBtn" close-on-activate>
                 <paper-button slot="dropdown-trigger">
                   <iron-icon icon="file-download"></iron-icon>
-                  [[_translate('INTERVENTIONS_LIST.EXPORT')]]
+                  [[_getTranslation('EXPORT')]]
                 </paper-button>
                 <paper-listbox slot="dropdown-content">
                   <paper-item on-tap="_exportPdBudget"
-                    >[[_translate('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')]]</paper-item
+                    >[[_getTranslation('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')]]</paper-item
                   >
                   <paper-item on-tap="_exportPdResult"
-                    >[[_translate('INTERVENTIONS_LIST.PD_RESULT_EXPORT')]]</paper-item
+                    >[[_getTranslation('INTERVENTIONS_LIST.PD_RESULT_EXPORT')]]</paper-item
                   >
                   <paper-item on-tap="_exportPdLocations"
-                    >[[_translate('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')]]</paper-item
+                    >[[_getTranslation('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')]]</paper-item
                   >
                 </paper-listbox>
               </paper-menu-button>
@@ -147,10 +153,10 @@ class InterventionsModule extends connect(store)(
             <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
-                [[_translate('INTERVENTIONS_LIST.ADD_NEW_PD')]]
+                [[_getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')]]
               </paper-button>
             </div>
-          </div>          
+          </div>
         </page-content-header>
 
         <div id="main">

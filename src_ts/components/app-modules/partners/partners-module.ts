@@ -35,6 +35,7 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
 import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
+import CommonMixin from '../../mixins/common-mixin.js';
 import {openDialog} from '../../utils/dialog';
 
 /**
@@ -50,7 +51,11 @@ import {openDialog} from '../../utils/dialog';
 class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
-    ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement))))
+    CommonMixin(
+      ScrollControlMixin(
+        ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))
+      )
+    )
   )
 ) {
   public static get template() {
@@ -89,14 +94,14 @@ class PartnersModule extends connect(store)(
             <a target="_blank" href$="[[csvDownloadUrl]]">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
-                Export
+                [[_getTranslation('EXPORT')]]
               </paper-button>
             </a>
           </div>
           <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
             <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
               <iron-icon icon="add"></iron-icon>
-              Import Partner
+              [[_getTranslation('IMPORT_PARTNER')]]
             </paper-button>
           </div>
         </div>
