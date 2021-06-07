@@ -8,8 +8,9 @@ import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import CommonMixin from '../../../../../mixins/common-mixin';
 
-class HactEditDialog extends EndpointsMixin(PolymerElement) {
+class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles}
@@ -58,7 +59,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       <etools-dialog
         id="editPartnersDialog"
         size="lg"
-        dialog-title="Edit HACT Assurance Plan"
+        dialog-title="[[_getTranslation('EDIT_HACT_ASSURANCE_PLAN')]]"
         ok-btn-text="Save"
         keep-dialog-open
         opened
@@ -74,13 +75,13 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
           <div class="avoid-scroll layout-horizontal space-between">
             <template is="dom-if" if="{{isGovPartner}}">
               <div class="layout-vertical col-3">
-                <div class="heading">Planned Programmatic Visits</div>
+                <div class="heading">[[_getTranslation('PLANNED_PROGRAMMATIC_VISITS')]]</div>
                 <div class="layout-horizontal space-around">
                   <paper-input
                     type="number"
                     allowed-pattern="[0-9]"
                     auto-validate
-                    error-message="Invalid"
+                    error-message="[[_getTranslation('INVALID')]]"
                     value="{{editableValues.planned_visits.programmatic_q1}}"
                     label="Q1"
                   ></paper-input>
@@ -89,7 +90,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
                     type="number"
                     allowed-pattern="[0-9]"
                     auto-validate
-                    error-message="Invalid"
+                    error-message="[[_getTranslation('INVALID')]]"
                     label="Q2"
                   ></paper-input>
                   <paper-input
@@ -97,14 +98,14 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
                     type="number"
                     allowed-pattern="[0-9]"
                     auto-validate
-                    error-message="Invalid"
+                    error-message="[[_getTranslation('INVALID')]]"
                     label="Q3"
                   ></paper-input>
                   <paper-input
                     type="number"
                     allowed-pattern="[0-9]"
                     auto-validate
-                    error-message="Invalid"
+                    error-message="[[_getTranslation('INVALID')]]"
                     value="{{editableValues.planned_visits.programmatic_q4}}"
                     label="Q4"
                   ></paper-input>
@@ -113,7 +114,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             </template>
 
             <div class="layout-vertical col-2">
-              <div class="heading">Follow-up Spot Checks</div>
+              <div class="heading">[[_getTranslation('FOLLOW_UP_SPOT_CHECKS')]]</div>
               <div class="layout-horizontal space-around">
                 <paper-input
                   value="{{editableValues.planned_engagement.spot_check_follow_up}}"
@@ -125,7 +126,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             </div>
 
             <div class="layout-vertical col-3">
-              <div class="heading">Planned Spot Checks</div>
+              <div class="heading">[[_getTranslation('PLANNED_SPOT_CHECKS')]]</div>
               <div class="layout-horizontal space-around">
                 <paper-input
                   type="number"
@@ -155,7 +156,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             </div>
 
             <div class="layout-veritcal col-4">
-              <div class="heading">Required Audits</div>
+              <div class="heading">[[_getTranslation('REQUIRED_AUDITS')]]</div>
               <etools-dropdown-multi
                 placeholder="&#8212;"
                 selected-values="{{selectedAudits}}"

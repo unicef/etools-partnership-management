@@ -164,5 +164,11 @@
   "OUTSTANDING_FINDINGS": "Outstanding Findings",
   "REPORT": "Report",
   "VIEW_REPORT": "View Report",
-  "PROGRAMMATIC_VISITS_S_CASE": "Programmatic Visits"
+  "PROGRAMMATIC_VISITS_S_CASE": "Programmatic Visits",
+  "EDIT_HACT_ASSURANCE_PLAN": "Edit HACT Assurance Plan",
+  "PLANNED_PROGRAMMATIC_VISITS": "Planned Programmatic Visits",
+  "INVALID": "Invalid",
+  "FOLLOW_UP_SPOT_CHECKS": "Follow-up Spot Check",
+  "PLANNED_SPOT_CHECKS": "Planned Spot Checks",
+  "REQUIRED_AUDITS": "Required Audits"
 }
