@@ -1,5 +1,5 @@
 /* eslint no-invalid-this: 0 */
-import {LitElement, customElement, property, CSSResultArray, TemplateResult, html} from 'lit-element';
+import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../store';
@@ -18,9 +18,7 @@ import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
-import {get as getTranslation, translate} from 'lit-translate';
-import {elevationStyles} from '../intervention-tab-pages/common/styles/elevation-styles';
-import {PaperTooltipElement} from '@polymer/paper-tooltip';
+import {get as getTranslation} from 'lit-translate';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -71,7 +69,6 @@ export class InterventionNew extends connect(store)(LitElement) {
       label: year + (-5 + index)
     }));
 
-  private tooltipHandler: any;
   protected render(): TemplateResult {
     return template.call(this);
   }
@@ -236,7 +233,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [ColumnStyles, NewInterventionStyles, elevationStyles];
+    return [ColumnStyles, NewInterventionStyles];
   }
 
   cancel() {
