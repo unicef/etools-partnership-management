@@ -37,6 +37,7 @@ import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.j
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../mixins/common-mixin.js';
 import {openDialog} from '../../utils/dialog';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -194,17 +195,17 @@ class PartnersModule extends connect(store)(
   partnerTabs: EtoolsTab[] = [
     {
       tab: 'overview',
-      tabLabel: 'Overview',
+      tabLabel: getTranslation('OVERVIEW'),
       hidden: false
     },
     {
       tab: 'details',
-      tabLabel: 'Partner Details',
+      tabLabel: getTranslation('PARTNER_DETAILS'),
       hidden: false
     },
     {
       tab: 'financial-assurance',
-      tabLabel: 'Assurance',
+      tabLabel: getTranslation('ASSURANCE'),
       hidden: false
     }
   ];
@@ -348,7 +349,7 @@ class PartnersModule extends connect(store)(
       loadingSource: 'partner-data'
     });
     fireEvent(this, 'toast', {
-      text: 'Partner successfully deleted',
+      text: this._getTranslation('PARTNER_SUCCESSFULLY_DELETED'),
       showCloseBtn: true
     });
     fireEvent(this, 'update-main-path', {

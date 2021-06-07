@@ -20,7 +20,8 @@
     "SAVING_DATA": "Saving data...",
     "ENTER_MESSAGE_HERE": "Enter Message Here",
     "CREATE": "Create",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "STATUS": "Status"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Enter initial details",
@@ -64,7 +65,6 @@
     "REFERENCE_NO": "Reference No.",
     "PARTNER_ORG_NAME": "Partner Org Name",
     "DOC_TYPE": "Doc Type",
-    "STATUS": "Status",
     "TITLE": "Title",
     "START_DATE": "Start Date",
     "END_DATE": "End Date",
@@ -102,5 +102,22 @@
   "IMPORT_PARTNER": "Import Partner",
   "VISION_VENDOR_NUMBER": "VISION Vendor Number",
   "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number",
-  "EXPORT": "Export"
+  "EXPORT": "Export",
+  "OVERVIEW": "Overview",
+  "PARTNER_DETAILS": "Partner Details",
+  "ASSURANCE": "Assurance",
+  "PARTNER_SUCCESSFULLY_DELETED": "Partner successfully deleted",
+  "TOTAL_CASH_TRANSFERS": "TOTAL CASH TRANSFERS",
+  "PROG_VISIT": "PROG.VISIT",
+  "SPOT_CHECK": "SPOT CHECK",
+  "AUDIT": "AUDIT",
+  "CURRENT_CP_CYCLE": "Current CP Cycle",
+  "CURRENT_YEAR_JAN_DEC": "Current Year (Jan - Dec)",
+  "PLANNED_MR_COMPLETED": "Planned / M.R. / Completed",
+  "REQUIRED_COMPLETED": "Required / Completed",
+  "PARTNERSHIP": "Partnership",
+  "START_DATE_END_DATE": "Start Date - End Date",
+  "UNICEF_CASH": "UNICEF Cash",
+  "FR_AMOUNT": "FR Amount",
+  "ACTUAL_DISBURSEMENT": "Actual Disbursement"
 }

@@ -194,7 +194,7 @@ class InterventionsList extends connect(store)(
             [[_getTranslation('INTERVENTIONS_LIST.DOC_TYPE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="status">
-            [[_getTranslation('INTERVENTIONS_LIST.STATUS')]]
+            [[_getTranslation('GENERAL.STATUS')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
             [[_getTranslation('INTERVENTIONS_LIST.TITLE')]]
@@ -670,7 +670,7 @@ class InterventionsList extends connect(store)(
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._getTranslation('INTERVENTIONS_LIST.STATUS'),
+        filterName: this._getTranslation('GENERAL.STATUS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
