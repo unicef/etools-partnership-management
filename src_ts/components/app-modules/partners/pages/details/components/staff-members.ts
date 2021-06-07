@@ -14,12 +14,13 @@ import './add-edit-staff-members';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {openDialog} from '../../../../../utils/dialog';
+import CommonMixin from '../../../../../mixins/common-mixin';
 
 /**
  * @polymer
  * @customElement
  */
-class StaffMembers extends PolymerElement {
+class StaffMembers extends CommonMixin(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
@@ -63,11 +64,13 @@ class StaffMembers extends PolymerElement {
 
       <etools-content-panel
         class="content-section"
-        panel-title="Partner Contacts ([[dataItems.length]])"
+        panel-title="[[_getTranslation('PARTNER_CONTACTS')]] ([[dataItems.length]])"
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive" checked="{{showInactive}}"> Show Inactive </paper-toggle-button>
+          <paper-toggle-button id="showInactive" checked="{{showInactive}}">
+            [[_getTranslation('SHOW_INACTIVE')]]
+          </paper-toggle-button>
           <div class="separator" hidden$="[[!editMode]]"></div>
           <paper-icon-button
             icon="add-box"
@@ -81,12 +84,14 @@ class StaffMembers extends PolymerElement {
 
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-2">Position</etools-data-table-column>
-            <etools-data-table-column class="col-2">First Name</etools-data-table-column>
-            <etools-data-table-column class="col-2">Last Name</etools-data-table-column>
-            <etools-data-table-column class="col-2">Phone Number</etools-data-table-column>
-            <etools-data-table-column class="col-2">Email Address</etools-data-table-column>
-            <etools-data-table-column class="col-2 center-align">Active Staff</etools-data-table-column>
+            <etools-data-table-column class="col-2"> [[_getTranslation('POSITION')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('FIRST_NAME')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('LAST_NAME')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('PHONE_NUMBER')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('EMAIL_ADDRESS')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2 center-align"
+              >[[_getTranslation('ACTIVE_STAFF')]]</etools-data-table-column
+            >
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -118,7 +123,7 @@ class StaffMembers extends PolymerElement {
         </div>
 
         <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>There are no staff members added.</p>
+          <p>[[_getTranslation('THERE_ARE_NO_STAFF_MEMBERS_ADDED')]]</p>
         </div>
       </etools-content-panel>
     `;

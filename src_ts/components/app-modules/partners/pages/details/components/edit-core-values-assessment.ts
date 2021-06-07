@@ -28,9 +28,9 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
       <etools-dialog
         id="cvaDialog"
-        dialog-title="Upload Core Values Assessment"
+        dialog-title="[[_getTranslation('UPLOAD_CORE_VALUES_ASSESSMENT')]]"
         size="md"
-        ok-btn-text="Save"
+        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
         keep-dialog-open
         opened
         on-close="_onClose"
@@ -39,20 +39,23 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
         disable-dismiss-btn="[[uploadInProgress]]"
       >
         <div class="layout-horizontal row-padding-v">
-          <etools-form-element-wrapper2 label="Date Last Assessed" value="[[getDateDisplayValue(item.date)]]">
+          <etools-form-element-wrapper2
+            label="[[_getTranslation('DATE_LAST_ASSESSED')]]"
+            value="[[getDateDisplayValue(item.date)]]"
+          >
           </etools-form-element-wrapper2>
         </div>
         <div class="layout-horizontal row-padding-v">
           <etools-upload
             id="attachment"
-            label="Core Values Assessment"
+            label="[[_getTranslation('CORE_VALUES_ASSESSMENTS')]]"
             accept=".doc,.docx,.pdf,.jpg,.png"
             file-url="[[item.attachment]]"
             upload-endpoint="[[uploadEndpoint]]"
             on-upload-finished="_uploadFinished"
             upload-in-progress="{{uploadInProgress}}"
             required
-            error-message="Assessment file is required"
+            error-message="[[_getTranslation('ASSESSMENT_FILE_IS_REQUIRED')]]"
           >
           </etools-upload>
         </div>
