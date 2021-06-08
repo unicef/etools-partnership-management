@@ -87,8 +87,8 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-3"> Assessment Type </etools-data-table-column>
             <etools-data-table-column class="col-2"> Date of Assessment </etools-data-table-column>
-            <etools-data-table-column class="col-6"> Report </etools-data-table-column>
-            <etools-data-table-column class="col-1 center-align"> Archived </etools-data-table-column>
+            <etools-data-table-column class="col-5"> Report </etools-data-table-column>
+            <etools-data-table-column class="col-2 center-align"> Archived </etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -100,7 +100,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-3"> [[item.type]] </span>
                 <span class="col-data col-2"> [[getDateDisplayValue(item.completed_date)]] </span>
-                <span class="col-data col-6">
+                <span class="col-data col-5">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word">
                     <!-- target="_blank" is there for IE -->
@@ -109,7 +109,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
                     </a>
                   </span>
                 </span>
-                <span class="col-data col-1 center-align">
+                <span class="col-data col-2 center-align">
                   <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
                 </span>
