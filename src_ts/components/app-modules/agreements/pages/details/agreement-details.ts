@@ -52,6 +52,7 @@ import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -123,27 +124,31 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <!-- Agreement Type -->
               <etools-dropdown
                 id="agreementType"
-                label="Agreement Type"
+                label="[[_getTranslation('AGREEMENT_TYPE')]]"
                 placeholder="&#8212;"
                 options="[[agreementTypes]]"
                 selected="{{agreement.agreement_type}}"
                 hide-search
                 readonly$="[[_isAgreementTypeReadonly(agreement)]]"
                 auto-validate
-                error-message="Please select agreement type"
+                error-message="[[_getTranslation('PLEASE_SELECT_AGREEMENT_TYPE')]]"
                 required
               >
               </etools-dropdown>
             </div>
             <div class="year-col" hidden$="[[!_showYearDropdown(agreement.status)]]">
-              <year-dropdown label="Ref. Year" selected-year="{{agreement.reference_number_year}}"> </year-dropdown>
+              <year-dropdown
+                label="[[_getTranslation('REF_YEAR')]]"
+                selected-year="{{agreement.reference_number_year}}"
+              >
+              </year-dropdown>
             </div>
           </div>
 
           <div class="col col-3">
             <!-- Reference Number -->
             <paper-input
-              label="Agreement Reference Number"
+              label="[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]"
               value="[[agreement.agreement_number]]"
               title$="[[agreement.agreement_number]]"
               hidden$="[[!agreement.id]]"
@@ -155,7 +160,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-3">
               <etools-form-element-wrapper2
-                label="Duration (Signed Date - CP End Date)"
+                label="[[_getTranslation('DURATION')]] ([[_getTranslation('SIGNED_DATE')]] - [[_getTranslation('CP_END_DATE')]])"
                 hidden$="[[!agreement.id]]"
                 value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]"
               >
@@ -169,18 +174,18 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             <!-- Partner name -->
             <etools-dropdown
               id="partner"
-              label="Partner Name"
+              label="[[_getTranslation('PARTNER_NAME')]]"
               placeholder="&#8212;"
               options="[[partnersDropdownData]]"
               selected="{{agreement.partner}}"
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
-              error-message="Please select a partner"
+              error-message="[[_getTranslation('PLEASE_SELECT_A_PARTNER')]]"
               required
             >
             </etools-dropdown>
             <etools-form-element-wrapper2
-              label="Partner Name"
+              label="[[_getTranslation('PARTNER_NAME')]]"
               required$="[[agreement.permissions.required.partner]]"
               hidden$="[[agreement.permissions.edit.partner]]"
               value="[[agreement.partner_name]]"
@@ -191,7 +196,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             <div class="col col-3">
               <datepicker-lite
                 id="startDateField"
-                label="Start date"
+                label="[[_getTranslation('START_DATE')]]"
                 value="{{agreement.start}}"
                 readonly$="[[!agreement.permissions.edit.start]]"
                 required$="[[agreement.permissions.required.start]]"
@@ -202,7 +207,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             <div class="col col-3">
               <datepicker-lite
                 id="endDateField"
-                label="End date"
+                label="[[_getTranslation('END_DATE')]]"
                 value="{{agreement.end}}"
                 readonly$="[[!agreement.permissions.edit.end]]"
                 required$="[[agreement.permissions.required.end]]"
@@ -232,7 +237,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <!-- Signed By Partner -->
               <etools-dropdown
                 id="signedByPartner"
-                label="Signed By Partner"
+                label="[[_getTranslation('SIGNED_BY_PARTNER')]]"
                 placeholder="&#8212;"
                 options="[[staffMembers]]"
                 option-value="id"
@@ -242,7 +247,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               >
               </etools-dropdown>
               <etools-form-element-wrapper2
-                label="Signed By Partner"
+                label="[[_getTranslation('SIGNED_BY_PARTNER')]]"
                 hidden$="[[agreement.permissions.edit.partner_manager]]"
                 value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]"
               >
@@ -252,7 +257,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <!-- Signed By Partner Date -->
               <datepicker-lite
                 id="signedByPartnerDateField"
-                label="Signed By Partner Date"
+                label="[[_getTranslation('SIGNED_BY_PARTNER_DATE')]]"
                 value="{{agreement.signed_by_partner_date}}"
                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
                 max-date="[[getCurrentDate()]]"
@@ -264,14 +269,15 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By UNICEF -->
-              <etools-form-element-wrapper2 value="Signed by UNICEF Authorized Officer"> </etools-form-element-wrapper2>
+              <etools-form-element-wrapper2 value="[[_getTranslation('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')]]">
+              </etools-form-element-wrapper2>
             </div>
 
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <datepicker-lite
                 id="signedByUnicefDateField"
-                label="Signed By UNICEF Date"
+                label="[[_getTranslation('SIGNED_BY_UNICEF_DATE')]]"
                 value="{{agreement.signed_by_unicef_date}}"
                 readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
                 max-date="[[getCurrentDate()]]"
@@ -286,20 +292,20 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           <!-- Partner Authorized Officers (partner staff members) -->
           <etools-dropdown-multi
             id="officers"
-            label="Partner Authorized Officers"
+            label="[[_getTranslation('PARTNER_AUTHORIZED_OFFICERS')]]"
             placeholder="&#8212;"
             options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
             option-value="id"
             option-label="name"
             selected-values="{{authorizedOfficers}}"
             hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
-            error-message="Please enter Partner Authorized Officer(s)"
+            error-message="[[_getTranslation('PLEASE_ENTER_PARTNER_AUTH_OFFICERS')]]"
             required$="[[agreement.permissions.required.authorized_officers]]"
             auto-validate$="[[enableEditForAuthorizedOfficers]]"
           >
           </etools-dropdown-multi>
           <etools-form-element-wrapper2
-            label="Partner Authorized Officers"
+            label="[[_getTranslation('PARTNER_AUTHORIZED_OFFICERS')]]"
             required$="[[agreement.permissions.required.authorized_officers]]"
             hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
             value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]"
@@ -313,7 +319,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         >
           <paper-button id="editAo" class="secondary-btn" on-tap="_enableAoEdit" hidden$="[[allowAoEditForSSFA]]">
             <iron-icon icon="create"></iron-icon>
-            <span>Amend Partner Authorized Officers</span>
+            <span>[[_getTranslation('AMEND_PARTNER_AUTHORIZED_OFFICERS')]]</span>
           </paper-button>
           <paper-button
             id="cancelAoEdit"
@@ -322,7 +328,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             hidden$="[[!allowAoEditForSSFA]]"
           >
             <iron-icon icon="cancel"></iron-icon>
-            <span>Cancel Partner Authorized Officers amendment</span>
+            <span>[[_getTranslation('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')]]</span>
           </paper-button>
         </div>
 
@@ -332,7 +338,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
             disabled$="[[!agreement.permissions.edit.special_conditions_pca]]"
           >
-            Special Conditions PCA
+            [[_getTranslation('SPECIAL_CONDITIONS_PCA')]]
           </paper-toggle-button>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
@@ -343,7 +349,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           >
             <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
               <!-- Generate PCA -->
-              <label slot="label" aria-hidden="true">PCA Agreement to Sign</label>
+              <label slot="label" aria-hidden="true">[[_getTranslation('PCA_AGREEMENT_TO_SIGN')]]</label>
               <paper-button
                 slot="input"
                 class="paper-input-input secondary-btn"
@@ -351,7 +357,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 on-tap="_openGeneratePCADialog"
               >
                 <iron-icon icon="refresh"></iron-icon>
-                GENERATE
+                [[_getTranslation('GENERATE')]]
               </paper-button>
             </paper-input-container>
           </div>
@@ -364,7 +370,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           </div>
           <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-upload
-              label="Signed Agreement"
+              label=" [[_getTranslation('SIGNED_AGREEMENT')]]"
               file-url="{{agreement.attachment}}"
               upload-endpoint="[[uploadEndpoint]]"
               on-upload-finished="_signedAgreementUploadFinished"
@@ -380,7 +386,11 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             </etools-upload>
           </div>
           <div class="col col-6" hidden$="[[_hideTerminationDoc(agreement.termination_doc, agreement.status)]]">
-            <etools-upload label="Termination Notice" file-url="[[agreement.termination_doc]]" readonly="true">
+            <etools-upload
+              label=" [[_getTranslation('TERMINATION_NOTICE')]]"
+              file-url="[[agreement.termination_doc]]"
+              readonly="true"
+            >
             </etools-upload>
           </div>
         </div>
@@ -439,7 +449,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   enableEditForAuthorizedOfficers = false;
 
   @property({type: String})
-  generatePCAMessage = 'Save before generating the PCA template';
+  generatePCAMessage = getTranslation('SAVE_BEFORE_GENERATING_PCA_TEMPLATE');
 
   @property({type: Boolean})
   allowAoEditForSSFA = false;

@@ -341,7 +341,7 @@ class AgreementsList extends connect(store)(
     // init list filter options
     this.initListFiltersData([
       new ListFilterOption({
-        filterName: 'CP Structure',
+        filterName: this._getTranslation('CP_STRUCTURE'),
         type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
@@ -353,14 +353,14 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Ends Before',
+        filterName: this._getTranslation('ENDS_BEFORE'),
         type: 'datepicker',
         selectedValue: '',
         path: 'endDate',
         selected: false
       }),
       new ListFilterOption({
-        filterName: 'Partner',
+        filterName: this._getTranslation('PARTNER'),
         type: 'etools-dropdown-multi',
         selectionOptions: partnersDropdownData,
         optionValue: 'value',
@@ -372,14 +372,14 @@ class AgreementsList extends connect(store)(
         hideSearch: false
       }),
       new ListFilterOption({
-        filterName: 'Starts After',
+        filterName: this._getTranslation('STARTS_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'startDate',
         selected: false
       }),
       new ListFilterOption({
-        filterName: 'Status',
+        filterName: this._getTranslation('STATUS'),
         type: 'etools-dropdown-multi',
         selectionOptions: agreementStatuses,
         optionValue: 'value',
@@ -391,7 +391,7 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Type',
+        filterName: this._getTranslation('TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: agreementTypes,
         optionValue: 'value',
@@ -403,7 +403,7 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Special Conditions PCA',
+        filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
         type: 'etools-dropdown',
         singleSelection: true,
         selectionOptions: [
@@ -474,31 +474,31 @@ class AgreementsList extends connect(store)(
     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(20), () => {
       const filtersValues = [
         {
-          filterName: 'Type',
+          filterName: this._getTranslation('TYPE'),
           selectedValue: this.selectedAgTypes
         },
         {
-          filterName: 'Status',
+          filterName: this._getTranslation('STATUS'),
           selectedValue: this.selectedAgStatuses
         },
         {
-          filterName: 'CP Structure',
+          filterName: this._getTranslation('CP_STRUCTURE'),
           selectedValue: this.selectedCPStructures
         },
         {
-          filterName: 'Partner',
+          filterName: this._getTranslation('PARTNER'),
           selectedValue: this.selectedPartners
         },
         {
-          filterName: 'Starts After',
+          filterName: this._getTranslation('STARTS_AFTER'),
           selectedValue: this.startDate
         },
         {
-          filterName: 'Ends Before',
+          filterName: this._getTranslation('ENDS_BEFORE'),
           selectedValue: this.endDate
         },
         {
-          filterName: 'Special Conditions PCA',
+          filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
           selectedValue: this.isSpecialConditionsPca,
           allowEmpty: true
         }
