@@ -69,15 +69,20 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
         }
       </style>
 
-      <etools-content-panel panel-title="Other Assessments ([[dataItems.length]])" class="content-section">
+      <etools-content-panel
+        panel-title="[[_getTranslation('OTHER_ASSESSMENTS')]] ([[dataItems.length]])"
+        class="content-section"
+      >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived" checked="{{showArchived}}"> Show archived </paper-toggle-button>
+          <paper-toggle-button id="showArchived" checked="{{showArchived}}">
+            [[_getTranslation('SHOW_ARCHIVED')]]
+          </paper-toggle-button>
           <div class="separator" hidden$="[[!editMode]]"></div>
           <paper-icon-button
             icon="add-box"
             disabled="[[!editMode]]"
             hidden$="[[!editMode]]"
-            title="Add other assessment"
+            title="[[_getTranslation('ADD_OTHER_ASSESSMENT')]]"
             on-tap="_addAssessment"
           >
           </paper-icon-button>
@@ -85,10 +90,14 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-3"> Assessment Type </etools-data-table-column>
-            <etools-data-table-column class="col-2"> Date of Assessment </etools-data-table-column>
-            <etools-data-table-column class="col-6"> Report </etools-data-table-column>
-            <etools-data-table-column class="col-1 center-align"> Archived </etools-data-table-column>
+            <etools-data-table-column class="col-3"> [[_getTranslation('ASSESSMENT_TYPE')]] </etools-data-table-column>
+            <etools-data-table-column class="col-2">
+              [[_getTranslation('DATE_OF_ASSESSMENT')]]
+            </etools-data-table-column>
+            <etools-data-table-column class="col-6"> [[_getTranslation('REPORT')]] </etools-data-table-column>
+            <etools-data-table-column class="col-1 center-align">
+              [[_getTranslation('ARCHIVED')]]
+            </etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -126,7 +135,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
         </div>
 
         <div class="row-h no-assessments-warning" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>There are no assessments added.</p>
+          <p>[[_getTranslation('THERE_ARE_NO_ASSESSMENTS_ADDED')]]</p>
         </div>
       </etools-content-panel>
     `;

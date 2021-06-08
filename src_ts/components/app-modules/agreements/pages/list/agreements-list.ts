@@ -146,10 +146,12 @@ class AgreementsList extends connect(store)(
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
             <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
-              Filters
+              [[_getTranslation('GENERAL.FILTERS')]]
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">CLEAR ALL</paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">
+                [[_getTranslation('GENERAL.CLEAR_ALL')]]</paper-button
+              >
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -170,15 +172,23 @@ class AgreementsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
-            Agreement Reference Number
+            [[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="partner_name" sortable>
-            Partner Full Name
+            [[_getTranslation('PARTNER_FULL_NAME')]]
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type">Type</etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_status">Status</etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="start" sortable>Start Date</etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="end" sortable>End Date</etools-data-table-column>
+          <etools-data-table-column class="col-2" field="partner_type"
+            >[[_getTranslation('TYPE')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="col-2" field="partner_status"
+            >[[_getTranslation('STATUS')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="flex-c" field="start" sortable
+            >[[_getTranslation('START_DATE')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="flex-c" field="end" sortable
+            >[[_getTranslation('END_DATE')]]</etools-data-table-column
+          >
         </etools-data-table-header>
 
         <template
@@ -203,7 +213,7 @@ class AgreementsList extends connect(store)(
               </span>
               <span
                 class="col-data col-4"
-                data-col-header-label="Partner Full Name"
+                data-col-header-label="[[_getTranslation('PARTNER_FULL_NAME')]]"
                 title="[[getDisplayValue(agreement.partner_name)]]"
               >
                 <span> [[getDisplayValue(agreement.partner_name)]] </span>
