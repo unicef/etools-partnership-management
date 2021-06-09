@@ -61,8 +61,13 @@ class InterventionsModule extends connect(store)(
       ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
-          display: block;
+          display: flex;
           min-height: calc(100vh - 150px);
+        }
+
+        :host > div,
+        intervention-tabs {
+          width: 100%;
         }
 
         .no-capitalization {
@@ -103,8 +108,14 @@ class InterventionsModule extends connect(store)(
       ></app-route>
 
       <app-route route="{{route}}" pattern="/new" active="{{newPageActive}}"></app-route>
-      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}" tail="{{subroute}}"></app-route>      
-      <app-route route="{{subroute}}" pattern="/:subtab" active="[[tabsActive]]" data="{{subRouteData}}"></app-route> 
+      <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"
+        tail="{{subroute}}"
+      ></app-route>
+      <app-route route="{{subroute}}" pattern="/:subtab" active="[[tabsActive]]" data="{{subRouteData}}"></app-route>
 
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
@@ -150,7 +161,7 @@ class InterventionsModule extends connect(store)(
                 [[_translate('INTERVENTIONS_LIST.ADD_NEW_PD')]]
               </paper-button>
             </div>
-          </div>          
+          </div>
         </page-content-header>
 
         <div id="main">
