@@ -8,6 +8,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import '../../data/agreement-termination';
 import {openDialog} from '../../../../utils/dialog';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -78,7 +79,7 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   ];
 
   @property({type: String})
-  deleteWarningMessage = 'Are you sure you want to delete this agreement?';
+  deleteWarningMessage = getTranslation('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT');
 
   static get observers() {
     return ['_handleStatusChange(status, agreementId)'];

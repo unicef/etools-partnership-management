@@ -12,12 +12,13 @@ import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
+import CommonMixin from '../mixins/common-mixin';
 
 /**
  * @polymer
  * @customElement
  */
-export class EtoolsCpStructure extends connect(store)(PolymerElement) {
+export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement)) {
   static get template() {
     return html`
       ${SharedStyles} ${requiredFieldStarredStyles}
@@ -38,7 +39,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
 
       <etools-dropdown
         id="cpStructure"
-        label="CP Structure"
+        label="[[_getTranslation('CP_STRUCTURE')]]"
         placeholder="&#8212;"
         options="[[sortedCountryProgrammes]]"
         option-value="id"
@@ -177,7 +178,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
         msg = 'PD/SPD ' + this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
-    return msg + ' has an old/expired CP Structure!';
+    return msg + this._getTranslation('HAS_AN_OLD_EXPIRED_CP_STRUCTURE');
   }
 
   resetCpDropdownInvalidState() {

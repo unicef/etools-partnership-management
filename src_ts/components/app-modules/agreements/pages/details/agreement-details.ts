@@ -117,7 +117,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         }
       </style>
 
-      <etools-content-panel class="content-section" panel-title="Agreement Details">
+      <etools-content-panel class="content-section" panel-title="[[_getTranslation('AGREEMENT_DETAILS')]]">
         <div class="row-h flex-c b-border row-second-bg">
           <div class="col col-6">
             <div class="flex-c padd-right">

@@ -556,7 +556,7 @@ class InterventionsList extends connect(store)(
     // IMPORTANT!!!
     this.initListFiltersData([
       new ListFilterOption({
-        filterName: this._getTranslation('INTERVENTIONS_LIST.CP_STRUCTURE'),
+        filterName: this._getTranslation('CP_STRUCTURE'),
         type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
