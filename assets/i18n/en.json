@@ -237,5 +237,11 @@
   "DOWNLOAD_TEMPLATE": "Download Template",
   "THERE_ARE_NO_AMENDMENTS_ADDED": "There are no amendments added.",
   "NOT_SAVED": "Not Saved",
-  "USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT": "Use right sidebar 'Save' button to save this amendment"
+  "USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT": "Use right sidebar 'Save' button to save this amendment",
+  "SETTINGS": "Settings",
+  "DISAGGREGATION_GROUP": "Disaggregation Groups",
+  "ADD_DISAGGREGATION": "Add Disaggregation",
+  "TERMINATE": "Terminate",
+  "NAME": "Name",
+  "ACTIVE": "Active"
 }

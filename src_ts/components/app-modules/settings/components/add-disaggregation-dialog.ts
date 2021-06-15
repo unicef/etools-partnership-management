@@ -21,6 +21,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
 import {fireEvent} from '../../../utils/fire-custom-event';
+import CommonMixin from '../../../mixins/common-mixin.js';
 
 /**
  * @polymer
@@ -29,7 +30,9 @@ import {fireEvent} from '../../../utils/fire-custom-event';
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(EndpointsMixin(PolymerElement))) {
+class AddDisaggregationDialog extends connect(store)(
+  CommonMixin(RepeatableDataSetsMixin(EndpointsMixin(PolymerElement)))
+) {
   static get template() {
     // language=HTML
     return html`
@@ -66,8 +69,8 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
         keep-dialog-open
         id="etoolsDialog"
         size="lg"
-        ok-btn-text="Save"
-        dialog-title="Add Disaggregation"
+        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
+        dialog-title="[[_getTranslation('ADD_DISAGGREGATION')]]"
         disable-confirm-btn="[[disableConfirmBtn]]"
         opened
         on-confirm-btn-clicked="_validateAndSaveDisaggregation"
@@ -88,7 +91,7 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
           </div>
           <div class="col col-8">
             <div class="layout-vertical">
-              <label class="paper-label">Disaggregation Group</label>
+              <label class="paper-label">[[_getTranslation('DISAGGREGATION_GROUP')]]</label>
               <div class="layout-horizontal groups">
                 <template is="dom-repeat" items="[[dataItems]]">
                   <paper-input class="newGroup" no-label-float label="New Group" value="{{item.value}}"> </paper-input>
@@ -102,7 +105,7 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
                   </paper-icon-button>
                 </template>
                 <paper-button class="secondary-btn" on-tap="_addNewGroup" title="Add Disaggregation Group"
-                  >+Add
+                  >+[[_getTranslation('GENERAL.ADD')]]
                 </paper-button>
               </div>
             </div>
