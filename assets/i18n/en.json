@@ -58,7 +58,6 @@
     "TABLE_TITLE": "PDs/SPDs",
     "SEARCH": "Search",
     "ADD_NEW_PD": "Add new PD/SPD",
-    "EXPORT": "Export",
     "PD_BUDGET_EXPORT": "PD Budget Export",
     "PD_RESULT_EXPORT": "PD Result Export",
     "PD_LOCATIONS_EXPORT": "PD Locations Export",
@@ -242,6 +241,19 @@
   "DISAGGREGATION_GROUP": "Disaggregation Groups",
   "ADD_DISAGGREGATION": "Add Disaggregation",
   "TERMINATE": "Terminate",
+  "TERMINATE_AGREEMENT": "Terminate Agreement",
   "NAME": "Name",
-  "ACTIVE": "Active"
+  "ACTIVE": "Active",
+  "TERMINATION_NOTICE_FILE_IS_REQUIRED": "Termination Notice file is required",
+  "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Once you hit save, the Agreement will be Terminated and this action can not be reversed",
+  "NEW_GROUP": "New Group",
+  "PLEASE_ADD_DISAGGREGATION": "Please ddd disaggregation",
+  "ADD_DISAGGREGATION_GROUP": "Add Disaggregation Group",
+  "DISAGGREGATION": "Disaggregation",
+  "PARTNER_REPORTS": "Partner Reports",
+  "ACCEPT_SEND_BACK": "Accept / Send Back",
+  "ACCEPT_REPORT": "Accept Report",
+  "SEND_BACK_TO_PARTNER": "Send Back to Partner",
+  "DOWNLOAD_REPORT": "Download Report",
+  "ADD_ACTION_POINTS": "Add Action Point"
 }

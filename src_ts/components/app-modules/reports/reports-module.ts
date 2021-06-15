@@ -33,6 +33,7 @@ import {store, RootState} from '../../../store';
 import {property} from '@polymer/decorators/lib/decorators';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';
+import CommonMixin from '../../mixins/common-mixin';
 declare const dayjs: any;
 
 /**
@@ -45,7 +46,9 @@ declare const dayjs: any;
  * @appliesMixin ScrollControlMixin
  */
 class ReportsModule extends connect(store)(
-  ScrollControlMixin(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))
+  ScrollControlMixin(
+    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(CommonMixin(ReportDetailsMixin(PolymerElement))))
+  )
 ) {
   static get is() {
     return 'reports-module';
@@ -108,7 +111,7 @@ class ReportsModule extends connect(store)(
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">Partner Reports</template>
+          <template is="dom-if" if="[[listActive]]">[[_getTranslation('PARTNER_REPORTS')]]</template>
           <template is="dom-if" if="[[tabsActive]]">
             <div class="secondary-title">
               <a target="_blank" href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
@@ -143,7 +146,7 @@ class ReportsModule extends connect(store)(
             <paper-menu-button id="export" close-on-activate horizontal-align="right">
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
-                Export
+                [[_getTranslation('EXPORT')]]
               </paper-button>
               <paper-listbox slot="dropdown-content">
                 <paper-item on-tap="_exportIndicatorsPDF">Export Indicators - PDF</paper-item>
@@ -156,18 +159,20 @@ class ReportsModule extends connect(store)(
             <report-status status="[[report.status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
 
             <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
-              <paper-button slot="dropdown-trigger" class="primary-btn">Accept / Send Back</paper-button>
+              <paper-button slot="dropdown-trigger" class="primary-btn"
+                >[[_getTranslation('ACCEPT_SEND_BACK')]]</paper-button
+              >
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_accept">Accept Report</paper-item>
-                <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
+                <paper-item on-tap="_accept">[[_getTranslation('ACCEPT_REPORT')]]</paper-item>
+                <paper-item on-tap="_sendBackToPartner">[[_getTranslation('SEND_BACK_TO_PARTNER')]]</paper-item>
               </paper-listbox>
             </paper-menu-button>
 
             <paper-menu-button close-on-activate horizontal-align="right">
               <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_downloadAnexC">Download Report</paper-item>
-                <paper-item on-tap="_goToActionPointModule">Add Action Point</paper-item>
+                <paper-item on-tap="_downloadAnexC">[[_getTranslation('DOWNLOAD_REPORT')]]</paper-item>
+                <paper-item on-tap="_goToActionPointModule">[[_getTranslation('ADD_ACTION_POINTS')]]</paper-item>
                 <paper-item on-tap="_downloadXls">Download XLS</paper-item>
                 <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
               </paper-listbox>

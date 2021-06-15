@@ -80,11 +80,11 @@ class AddDisaggregationDialog extends connect(store)(
           <div class="col col-4">
             <paper-input
               id="disaggregateByEl"
-              label="Disaggregation"
+              label="[[_getTranslation('DISAGGREGATION')]]"
               value="{{disaggregation.name}}"
               required
               auto-validate
-              error-message="Please add disaggregation"
+              error-message="[[_getTranslation('PLEASE_ADD_DISAGGREGATION')]]"
               placeholder="&#8212;"
             >
             </paper-input>
@@ -94,17 +94,26 @@ class AddDisaggregationDialog extends connect(store)(
               <label class="paper-label">[[_getTranslation('DISAGGREGATION_GROUP')]]</label>
               <div class="layout-horizontal groups">
                 <template is="dom-repeat" items="[[dataItems]]">
-                  <paper-input class="newGroup" no-label-float label="New Group" value="{{item.value}}"> </paper-input>
+                  <paper-input
+                    class="newGroup"
+                    no-label-float
+                    label="[[_getTranslation('NEW_GROUP')]]"
+                    value="{{item.value}}"
+                  >
+                  </paper-input>
                   <paper-icon-button
                     class="action delete no-padding"
                     icon="cancel"
                     on-tap="_openDeleteConfirmation"
                     data-args$="[[index]]"
-                    title="Delete"
+                    title="[[_getTranslation('GENERAL.DELETE')]]"
                   >
                   </paper-icon-button>
                 </template>
-                <paper-button class="secondary-btn" on-tap="_addNewGroup" title="Add Disaggregation Group"
+                <paper-button
+                  class="secondary-btn"
+                  on-tap="_addNewGroup"
+                  title="[[_getTranslation('ADD_DISAGGREGATION_GROUP')]]"
                   >+[[_getTranslation('GENERAL.ADD')]]
                 </paper-button>
               </div>
