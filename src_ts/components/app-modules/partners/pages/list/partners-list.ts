@@ -230,24 +230,16 @@ class PartnersList extends connect(store)(
                   </span>
                 </span>
               </span>
-              <span class="col-data flex-2" data-col-header-label="[[_getTranslation('PARTNER_TYPE')]]">
+              <span class="col-data flex-2" data-col-header-label="Partner Type">
                 [[_computeType(partner.cso_type, partner.partner_type)]]
               </span>
-              <span
-                class="col-data flex"
-                data-col-header-label="[[_getTranslation('HACT_RISK_RATING')]]"
-                style="text-transform: capitalize"
-              >
+              <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
                 [[getDisplayValue(partner.rating)]]
               </span>
-              <span
-                class="col-data flex"
-                data-col-header-label="[[_getTranslation('SEA_RISK_RATING')]]"
-                style="text-transform: capitalize"
-              >
+              <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
                 [[getDisplayValue(partner.sea_risk_rating_name)]]
               </span>
-              <span class="col-data flex" data-col-header-label="[[_getTranslation('LAST_PSEA_ASSESS_DATE')]]">
+              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date">
                 [[getDateDisplayValue(partner.psea_assessment_date)]]
               </span>
             </div>

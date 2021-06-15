@@ -213,7 +213,7 @@ class AgreementsList extends connect(store)(
               </span>
               <span
                 class="col-data col-4"
-                data-col-header-label="[[_getTranslation('PARTNER_FULL_NAME')]]"
+                data-col-header-label="Partner Full Name"
                 title="[[getDisplayValue(agreement.partner_name)]]"
               >
                 <span> [[getDisplayValue(agreement.partner_name)]] </span>
