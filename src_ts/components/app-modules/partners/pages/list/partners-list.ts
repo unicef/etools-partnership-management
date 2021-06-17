@@ -205,7 +205,7 @@ class PartnersList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data flex" data-col-header-label="Vendor No.">
+              <span class="col-data flex" data-col-header-label$="[[_getTranslation('VENDOR_NO')]]">
                 <a
                   class="vendor-nr truncate"
                   href$="[[currentModule]]/[[partner.id]]/details"
@@ -215,7 +215,7 @@ class PartnersList extends connect(store)(
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
-              <span class="col-data flex-3" data-col-header-label="Name (Short/Full)">
+              <span class="col-data flex-3" data-col-header-label$="[[_getTranslation('NAME_SHORT_FULL')]]">
                 <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
@@ -230,16 +230,24 @@ class PartnersList extends connect(store)(
                   </span>
                 </span>
               </span>
-              <span class="col-data flex-2" data-col-header-label="Partner Type">
+              <span class="col-data flex-2" data-col-header-label$="[[_getTranslation('PARTNER_TYPE')]]">
                 [[_computeType(partner.cso_type, partner.partner_type)]]
               </span>
-              <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
+              <span
+                class="col-data flex"
+                data-col-header-label$="[[_getTranslation('HACT_RISK_RATING')]]"
+                style="text-transform: capitalize"
+              >
                 [[getDisplayValue(partner.rating)]]
               </span>
-              <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
+              <span
+                class="col-data flex"
+                data-col-header-label$="[[_getTranslation('SEA_RISK_RATING')]]"
+                style="text-transform: capitalize"
+              >
                 [[getDisplayValue(partner.sea_risk_rating_name)]]
               </span>
-              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date">
+              <span class="col-data flex" data-col-header-label$="[[_getTranslation('LAST_PSEA_ASSESS_DATE')]]">
                 [[getDateDisplayValue(partner.psea_assessment_date)]]
               </span>
             </div>
