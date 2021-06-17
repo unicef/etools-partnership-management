@@ -218,7 +218,10 @@ class InterventionsList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-2" data-col-header-label="PD/SPD Reference Number">
+              <span
+                class="col-data col-2"
+                data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.REFERENCE_NO')]]"
+              >
                 <a
                   class="pd-ref truncate"
                   href="interventions/[[intervention.id]]/metadata"
@@ -230,26 +233,32 @@ class InterventionsList extends connect(store)(
               </span>
               <span
                 class="col-data col-3"
-                data-col-header-label="Partner Name"
+                data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.PARTNER_ORG_NAME')]]"
                 title="[[getDisplayValue(intervention.partner_name)]]"
               >
                 <span>[[getDisplayValue(intervention.partner_name)]]</span>
               </span>
-              <span class="col-data flex-c" data-col-header-label="Document Type">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.DOC_TYPE')]]">
                 [[getDisplayValue(intervention.document_type)]]
               </span>
-              <div class="flex-c capitalize col_type layout-vertical" data-col-header-label="Status">
+              <div
+                class="flex-c capitalize col_type layout-vertical"
+                data-col-header-label$="[[_getTranslation('GENERAL.STATUS')]]"
+              >
                 <div>[[mapStatus(intervention)]]</div>
                 <div>[[getDevelopementStatusDetails(intervention)]]</div>
               </div>
               <span
                 class="col-data col-2"
-                data-col-header-label="Title"
+                data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.TITLE')]]"
                 title="[[getDisplayValue(intervention.title)]]"
               >
                 [[getDisplayValue(intervention.title)]]
               </span>
-              <span class="col-data flex-c" data-col-header-label="Start Date">
+              <span
+                class="col-data flex-c"
+                data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.START_DATE')]]"
+              >
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon
@@ -262,7 +271,7 @@ class InterventionsList extends connect(store)(
                   <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                 </etools-info-tooltip>
               </span>
-              <span class="col-data flex-c" data-col-header-label="End Date">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('INTERVENTIONS_LIST.END_DATE')]]">
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon

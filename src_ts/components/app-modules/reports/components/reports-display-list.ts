@@ -87,20 +87,20 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
                                       of [[paginator.count]] results to show"
           >
-            <etools-data-table-column class="col-2">Report #</etools-data-table-column>
-            <etools-data-table-column class="flex-c">Partner</etools-data-table-column>
-            <etools-data-table-column class="flex-c">Report Status</etools-data-table-column>
-            <etools-data-table-column class="flex-c">Due Date</etools-data-table-column>
-            <etools-data-table-column class="flex-c">Reporting Period</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('REPORT_NUM')]]</etools-data-table-column>
+            <etools-data-table-column class="flex-c">[[_getTranslation('PARTNER')]]</etools-data-table-column>
+            <etools-data-table-column class="flex-c">[[_getTranslation('REPORT_STATUS')]]</etools-data-table-column>
+            <etools-data-table-column class="flex-c">[[_getTranslation('DUE_DATE')]]</etools-data-table-column>
+            <etools-data-table-column class="flex-c">[[_getTranslation('REPORTING_PERIOD')]]</etools-data-table-column>
             <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-              <etools-data-table-column class="col-2">PD/SPD ref.#</etools-data-table-column>
+              <etools-data-table-column class="col-2">[[_getTranslation('PD_SPD_REF_NUM')]]</etools-data-table-column>
             </template>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="[[reports]]" as="report" on-dom-change="_listDataChanged">
             <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]">
               <div slot="row-data">
-                <span class="col-data col-2" data-col-header-label="Report #">
+                <span class="col-data col-2" data-col-header-label$="[[_getTranslation('REPORT_NUM')]]">
                   <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
                     <a
                       class="view-report"
@@ -118,7 +118,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                     [[report.programme_document.title]]
                   </paper-tooltip>
                 </span>
-                <span class="col-data flex-c" data-col-header-label="Partner">
+                <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('PARTNER')]]">
                   <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
                     [[_displayOrDefault(report.partner_name)]]
                   </span>
@@ -127,17 +127,17 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                     [[report.partner_vendor_number]]
                   </paper-tooltip>
                 </span>
-                <span class="col-data flex-c" data-col-header-label="Report Status">
+                <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('REPORT_STATUS')]]">
                   <report-status status="[[report.status]]"></report-status>
                 </span>
-                <span class="col-data flex-c" data-col-header-label="Due Date">
+                <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('DUE_DATE')]]">
                   [[_displayOrDefault(report.due_date)]]
                 </span>
-                <span class="col-data flex-c" data-col-header-label="Reporting Period">
+                <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('REPORTING_PERIOD')]]">
                   [[getDisplayValue(report.reporting_period)]]
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-                  <span class="col-data col-2" data-col-header-label="PD/SPD ref.#">
+                  <span class="col-data col-2" data-col-header-label$="[[_getTranslation('PD_SPD_REF_NUM')]]">
                     <a
                       class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"
