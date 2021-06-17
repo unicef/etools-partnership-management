@@ -11,13 +11,14 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles'
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import CONSTANTS from '../../../../config/app-constants';
+import CommonMixin from '../../../mixins/common-mixin';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
-export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerElement) {
+export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixin(PolymerElement)) {
   static get template() {
     return html`
       ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
@@ -38,8 +39,8 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
         opened
         size="md"
         hidden$="[[warningOpened]]"
-        ok-btn-text="Terminate"
-        dialog-title="Terminate Agreement"
+        ok-btn-text="[[_getTranslation('TERMINATE')]]"
+        dialog-title="[[_getTranslation('TERMINATE_AGREEMENT')]]"
         on-close="_onClose"
         on-confirm-btn-clicked="_triggerAgreementTermination"
         disable-confirm-btn="[[uploadInProgress]]"
@@ -48,7 +49,7 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
         <div class="row-h flex-c">
           <etools-upload
             id="terminationNotice"
-            label="Termination Notice"
+            label="[[_getTranslation('TERMINATION_NOTICE')]]"
             accept=".doc,.docx,.pdf,.jpg,.png"
             file-url="[[termination.attachment_id]]"
             upload-endpoint="[[uploadEndpoint]]"
@@ -56,14 +57,12 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(PolymerEl
             required
             auto-validation
             upload-in-progress="{{uploadInProgress}}"
-            error-message="Termination Notice file is required"
+            error-message="[[_getTranslation('TERMINATION_NOTICE_FILE_IS_REQUIRED')]]"
           >
           </etools-upload>
         </div>
         <div class="row-h">
-          <etools-warn-message
-            messages="Once you hit save, the Agreement will be Terminated and this action can not be reversed"
-          >
+          <etools-warn-message messages="[[_getTranslation('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')]]">
           </etools-warn-message>
         </div>
       </etools-dialog>

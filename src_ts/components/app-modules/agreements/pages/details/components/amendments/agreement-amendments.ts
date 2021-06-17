@@ -83,7 +83,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-content-panel panel-title="Amendments ([[dataItems.length]])">
+      <etools-content-panel panel-title="[[_getTranslation('AMENDMENTS')]] ([[dataItems.length]])">
         <div slot="panel-btns">
           <paper-icon-button
             icon="add-box"
@@ -97,22 +97,26 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
           <!-- Amendments template download -->
-          <div id="download-template-msg">Use the amendment template for documenting changes and signing.</div>
+          <div id="download-template-msg">
+            [[_getTranslation('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')]]
+          </div>
           <!-- Download template btn -->
           <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
             <paper-button id="download-template-btn" class="secondary-btn">
               <iron-icon icon="file-download"></iron-icon>
-              Download template
+              [[_getTranslation('DOWNLOAD_TEMPLATE')]]
             </paper-button>
           </a>
         </div>
 
         <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header id="listHeader" no-collapse no-title>
-            <etools-data-table-column class="col-1">Agreement Reference Number</etools-data-table-column>
-            <etools-data-table-column class="col-4">Amendment Type</etools-data-table-column>
-            <etools-data-table-column class="col-2">Signed Date</etools-data-table-column>
-            <etools-data-table-column class="flex-c">Signed Amendment</etools-data-table-column>
+            <etools-data-table-column class="col-1"
+              >[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]</etools-data-table-column
+            >
+            <etools-data-table-column class="col-4">[[_getTranslation('AMENDMENT_TYPE')]]</etools-data-table-column>
+            <etools-data-table-column class="col-2">[[_getTranslation('SIGNED_DATE')]]</etools-data-table-column>
+            <etools-data-table-column class="flex-c">[[_getTranslation('SIGNED_AMENDMENT')]]</etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
@@ -122,8 +126,10 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
                   <template is="dom-if" if="[[item.id]]" restamp>[[item.number]]</template>
                   <template is="dom-if" if="[[!item.id]]" restamp>
                     <etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
-                      <span slot="field">Not saved</span>
-                      <span slot="message">Use right sidebar 'Save' button to save this amendment</span>
+                      <span slot="field">[[_getTranslation('NOT_SAVED')]]</span>
+                      <span slot="message"
+                        >[[_getTranslation('USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT')]]</span
+                      >
                     </etools-info-tooltip>
                   </template>
                 </span>
@@ -149,7 +155,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         </div>
 
         <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>There are no amendments added.</p>
+          <p>[[_getTranslation('THERE_ARE_NO_AMENDMENTS_ADDED')]]</p>
         </div>
       </etools-content-panel>
     `;

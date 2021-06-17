@@ -97,7 +97,7 @@ class InterventionsList extends connect(store)(
             id="query"
             class="filter"
             type="search"
-            placeholder="[[_translate('INTERVENTIONS_LIST.SEARCH')]]"
+            placeholder="[[_getTranslation('INTERVENTIONS_LIST.SEARCH')]]"
             autocomplete="off"
             value="{{q}}"
           >
@@ -159,11 +159,11 @@ class InterventionsList extends connect(store)(
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right" allow-outside-scroll>
             <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
-              [[_translate('GENERAL.FILTERS')]]
+              [[_getTranslation('GENERAL.FILTERS')]]
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
               <paper-button on-tap="clearAllFilters" class="secondary-btn"
-                >[[_translate('GENERAL.CLEAR_ALL')]]</paper-button
+                >[[_getTranslation('GENERAL.CLEAR_ALL')]]</paper-button
               >
             </div>
             <paper-listbox slot="dropdown-content" multi>
@@ -185,25 +185,25 @@ class InterventionsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
-            [[_translate('INTERVENTIONS_LIST.REFERENCE_NO')]]
+            [[_getTranslation('INTERVENTIONS_LIST.REFERENCE_NO')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-3" field="partner_name" sortable>
-            [[_translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')]]
+            [[_getTranslation('INTERVENTIONS_LIST.PARTNER_ORG_NAME')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="document_type">
-            [[_translate('INTERVENTIONS_LIST.DOC_TYPE')]]
+            [[_getTranslation('INTERVENTIONS_LIST.DOC_TYPE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="status">
-            [[_translate('INTERVENTIONS_LIST.STATUS')]]
+            [[_getTranslation('GENERAL.STATUS')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
-            [[_translate('INTERVENTIONS_LIST.TITLE')]]
+            [[_getTranslation('INTERVENTIONS_LIST.TITLE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="start" sortable>
-            [[_translate('INTERVENTIONS_LIST.START_DATE')]]
+            [[_getTranslation('INTERVENTIONS_LIST.START_DATE')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="end" sortable>
-            [[_translate('INTERVENTIONS_LIST.END_DATE')]]
+            [[_getTranslation('INTERVENTIONS_LIST.END_DATE')]]
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -556,7 +556,7 @@ class InterventionsList extends connect(store)(
     // IMPORTANT!!!
     this.initListFiltersData([
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.CP_STRUCTURE'),
+        filterName: this._getTranslation('CP_STRUCTURE'),
         type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
@@ -568,7 +568,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -579,7 +579,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.DONORS'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.DONORS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -590,7 +590,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.PARTNERS'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.PARTNERS'),
         type: 'etools-dropdown-multi',
         selectionOptions: partners,
         optionValue: 'value',
@@ -602,14 +602,14 @@ class InterventionsList extends connect(store)(
         hideSearch: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.ENDS_BEFORE'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.ENDS_BEFORE'),
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
         selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.GRANTS'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.GRANTS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -620,7 +620,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.OFFICES'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.OFFICES'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -632,7 +632,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.PD_TYPE'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.PD_TYPE'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -644,7 +644,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.SECTIONS'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.SECTIONS'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -656,21 +656,21 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.STARTS_AFTER'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.STARTS_AFTER'),
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
         selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.ENDS_AFTER'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.ENDS_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'endAfter',
         selected: false
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.STATUS'),
+        filterName: this._getTranslation('GENERAL.STATUS'),
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -682,7 +682,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
         type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
@@ -693,7 +693,7 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
-        filterName: this._translate('INTERVENTIONS_LIST.CONTINGENCY_PD'),
+        filterName: this._getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
         type: 'paper-toggle',
         selectedValue: this.contingency_pd,
         path: 'contingency_pd',

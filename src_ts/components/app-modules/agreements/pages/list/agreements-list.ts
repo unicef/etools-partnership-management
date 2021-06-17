@@ -146,10 +146,12 @@ class AgreementsList extends connect(store)(
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
             <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
-              Filters
+              [[_getTranslation('GENERAL.FILTERS')]]
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">CLEAR ALL</paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">
+                [[_getTranslation('GENERAL.CLEAR_ALL')]]</paper-button
+              >
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -170,15 +172,23 @@ class AgreementsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
-            Agreement Reference Number
+            [[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="partner_name" sortable>
-            Partner Full Name
+            [[_getTranslation('PARTNER_FULL_NAME')]]
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type">Type</etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_status">Status</etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="start" sortable>Start Date</etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="end" sortable>End Date</etools-data-table-column>
+          <etools-data-table-column class="col-2" field="partner_type"
+            >[[_getTranslation('TYPE')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="col-2" field="partner_status"
+            >[[_getTranslation('STATUS')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="flex-c" field="start" sortable
+            >[[_getTranslation('START_DATE')]]</etools-data-table-column
+          >
+          <etools-data-table-column class="flex-c" field="end" sortable
+            >[[_getTranslation('END_DATE')]]</etools-data-table-column
+          >
         </etools-data-table-header>
 
         <template
@@ -331,7 +341,7 @@ class AgreementsList extends connect(store)(
     // init list filter options
     this.initListFiltersData([
       new ListFilterOption({
-        filterName: 'CP Structure',
+        filterName: this._getTranslation('CP_STRUCTURE'),
         type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
@@ -343,14 +353,14 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Ends Before',
+        filterName: this._getTranslation('ENDS_BEFORE'),
         type: 'datepicker',
         selectedValue: '',
         path: 'endDate',
         selected: false
       }),
       new ListFilterOption({
-        filterName: 'Partner',
+        filterName: this._getTranslation('PARTNER'),
         type: 'etools-dropdown-multi',
         selectionOptions: partnersDropdownData,
         optionValue: 'value',
@@ -362,14 +372,14 @@ class AgreementsList extends connect(store)(
         hideSearch: false
       }),
       new ListFilterOption({
-        filterName: 'Starts After',
+        filterName: this._getTranslation('STARTS_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'startDate',
         selected: false
       }),
       new ListFilterOption({
-        filterName: 'Status',
+        filterName: this._getTranslation('STATUS'),
         type: 'etools-dropdown-multi',
         selectionOptions: agreementStatuses,
         optionValue: 'value',
@@ -381,7 +391,7 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Type',
+        filterName: this._getTranslation('TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: agreementTypes,
         optionValue: 'value',
@@ -393,7 +403,7 @@ class AgreementsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'Special Conditions PCA',
+        filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
         type: 'etools-dropdown',
         singleSelection: true,
         selectionOptions: [
@@ -464,31 +474,31 @@ class AgreementsList extends connect(store)(
     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(20), () => {
       const filtersValues = [
         {
-          filterName: 'Type',
+          filterName: this._getTranslation('TYPE'),
           selectedValue: this.selectedAgTypes
         },
         {
-          filterName: 'Status',
+          filterName: this._getTranslation('STATUS'),
           selectedValue: this.selectedAgStatuses
         },
         {
-          filterName: 'CP Structure',
+          filterName: this._getTranslation('CP_STRUCTURE'),
           selectedValue: this.selectedCPStructures
         },
         {
-          filterName: 'Partner',
+          filterName: this._getTranslation('PARTNER'),
           selectedValue: this.selectedPartners
         },
         {
-          filterName: 'Starts After',
+          filterName: this._getTranslation('STARTS_AFTER'),
           selectedValue: this.startDate
         },
         {
-          filterName: 'Ends Before',
+          filterName: this._getTranslation('ENDS_BEFORE'),
           selectedValue: this.endDate
         },
         {
-          filterName: 'Special Conditions PCA',
+          filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
           selectedValue: this.isSpecialConditionsPca,
           allowEmpty: true
         }

@@ -83,19 +83,23 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         }
       </style>
 
-      <etools-content-panel class="content-section" panel-title="Partner Details">
+      <etools-content-panel class="content-section" panel-title="[[_getTranslation('PARTNER_DETAILS')]]">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
+            <etools-form-element-wrapper2
+              label="[[_getTranslation('FULL_NAME')]]"
+              title$="[[partner.name]]"
+              value="[[partner.name]]"
+            >
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="Short Name" value="[[partner.short_name]]">
+            <etools-form-element-wrapper2 label="[[_getTranslation('SHORT_NAME')]]" value="[[partner.short_name]]">
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <paper-input
-              label="Alternate Name"
+              label="[[_getTranslation('ALTERNATE_NAME')]]"
               value="{{partner.alternate_name}}"
               placeholder="&#8212;"
               readonly$="[[!editMode]]"
@@ -105,16 +109,19 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="Vendor Number" value="[[partner.vendor_number]]">
+            <etools-form-element-wrapper2
+              label="[[_getTranslation('VENDOR_NUMBER')]]"
+              value="[[partner.vendor_number]]"
+            >
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="Partner Type" value="[[_partnerComputedType]]">
+            <etools-form-element-wrapper2 label="[[_getTranslation('PARTNER_TYPE')]]" value="[[_partnerComputedType]]">
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <etools-dropdown-multi
-              label="Shared Partner"
+              label="[[_getTranslation('SHARED_PARTNER')]]"
               options="[[sharedPartenerValues]]"
               selected-values="{{partner.shared_with}}"
               readonly$="[[!editMode]]"
@@ -124,18 +131,26 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         </div>
 
         <div class="row-h flex-c">
-          <etools-form-element-wrapper2 label="Address" title$="[[partner.address]]" value="[[partner.address]]">
+          <etools-form-element-wrapper2
+            label="[[_getTranslation('ADDRESS')]]"
+            title$="[[partner.address]]"
+            value="[[partner.address]]"
+          >
             <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
           </etools-form-element-wrapper2>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="Phone Number" value="[[partner.phone_number]]">
+            <etools-form-element-wrapper2 label="[[_getTranslation('PHONE_NUMBER')]]" value="[[partner.phone_number]]">
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
+            <etools-form-element-wrapper2
+              label="[[_getTranslation('EMAIL_ADDRESS')]]"
+              title$="[[partner.email]]"
+              value="[[partner.email]]"
+            >
               <iron-icon icon="communication:email" slot="prefix"></iron-icon>
             </etools-form-element-wrapper2>
           </div>
@@ -144,19 +159,22 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- HACT Risk rating -->
-            <etools-form-element-wrapper label="HACT Risk Rating" no-placeholder>
+            <etools-form-element-wrapper label="[[_getTranslation('HACT_RISK_RATING')]]" no-placeholder>
               <span class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <etools-form-element-wrapper2 label="Type of Assessment" value="[[partner.type_of_assessment]]">
+            <etools-form-element-wrapper2
+              label="[[_getTranslation('TYPE_OF_ASSESSMENT')]]"
+              value="[[partner.type_of_assessment]]"
+            >
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
             <etools-form-element-wrapper2
-              label="Date of Report"
+              label="[[_getTranslation('DATE_OF_REPORT')]]"
               value="[[getDateDisplayValue(partner.last_assessment_date)]]"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
@@ -167,7 +185,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- PSEA risk rating -->
-            <etools-form-element-wrapper2 label="SEA Risk Rating" no-placeholder>
+            <etools-form-element-wrapper2 label="[[_getTranslation('SEA_RISK_RATING')]]" no-placeholder>
               <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
                 [[getRiskRatingValue(partner.sea_risk_rating_name)]]
               </span>
@@ -177,7 +195,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           <div class="col col-4">
             <!--Last PSEA Assess. Date-->
             <etools-form-element-wrapper2
-              label="Last PSEA Assessment Date"
+              label="[[_getTranslation('LAST_PSEA_ASSESSMENT_DATE')]]"
               value="[[getDateDisplayValue(partner.psea_assessment_date)]]"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
@@ -186,21 +204,23 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
         </div>
       </etools-content-panel>
 
-      <etools-content-panel class="content-section" panel-title="Core Values Assessments">
+      <etools-content-panel class="content-section" panel-title="[[_getTranslation('CORE_VALUES_ASSESSMENTS')]]">
         <div slot="panel-btns" id="show-archived">
           <paper-toggle-button id="showArchived" checked="{{showArchivedAssessments}}">
-            Show Archived
+            [[_getTranslation('SHOW_ARCHIVED')]]
           </paper-toggle-button>
         </div>
 
         <div hidden$="[[_empty(partner.core_values_assessments)]]">
           <etools-data-table-header no-title no-collapse>
             <etools-data-table-column class="col-4">
-              <div>Date Last Assessed</div>
-              <div>(from VISION)</div>
+              <div>[[_getTranslation('DATE_LAST_ASSESSED')]]</div>
+              <div>([[_getTranslation('FROM_VISION')]])</div>
             </etools-data-table-column>
-            <etools-data-table-column class="col-6"> Core Values Assessment </etools-data-table-column>
-            <etools-data-table-column class="col-2"> Archived </etools-data-table-column>
+            <etools-data-table-column class="col-6">
+              [[_getTranslation('CORE_VALUES_ASSESSMENTS')]]
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2"> [[_getTranslation('ARCHIVED')]] </etools-data-table-column>
           </etools-data-table-header>
           <template is="dom-repeat" items="{{partner.core_values_assessments}}">
             <etools-data-table-row
@@ -227,7 +247,9 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 </span>
                 <icons-actions2
                   item$="[[item]]"
-                  hidden$="[[!_canEditCVA(item.attachment, item.archived, showCoreValuesAssessmentAttachment)]]"
+                  [[!_canEditCVA(item.attachment,
+                  item.archived,
+                  showCoreValuesAssessmentAttachment)]]
                   show-delete="[[showDelete]]"
                   on-edit="_editCoreValuesAssessment"
                 >
@@ -237,7 +259,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </template>
         </div>
         <div class="row-h" hidden$="[[!_empty(partner.core_values_assessments)]]">
-          There are no Core Value Assessments.
+          [[_getTranslation('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')]]
         </div>
       </etools-content-panel>
 

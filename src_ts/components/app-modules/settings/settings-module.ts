@@ -4,12 +4,13 @@ import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {fireEvent} from '../../utils/fire-custom-event';
+import CommonMixin from '../../mixins/common-mixin';
 
 /**
  * @polymer
  * @customElement
  */
-class SettingsModule extends PolymerElement {
+class SettingsModule extends CommonMixin(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
@@ -17,7 +18,7 @@ class SettingsModule extends PolymerElement {
       <style></style>
 
       <page-content-header>
-        <div slot="page-title">Settings</div>
+        <div slot="page-title">[[_getTranslation('SETTINGS')]]</div>
       </page-content-header>
 
       <div id="main">

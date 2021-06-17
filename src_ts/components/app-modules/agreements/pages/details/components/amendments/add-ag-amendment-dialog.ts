@@ -10,12 +10,13 @@ import {requiredFieldStarredStyles} from '../../../../../../styles/required-fiel
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
+import CommonMixin from '../../../../../../mixins/common-mixin.js';
 
 /**
  * @polymer
  * @customElement
  */
-class AddAgAmendmentDialog extends PolymerElement {
+class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   static get template() {
     return html`
       ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
@@ -27,8 +28,8 @@ class AddAgAmendmentDialog extends PolymerElement {
         opened
         size="md"
         hidden$="[[datePickerOpen]]"
-        ok-btn-text="Save"
-        dialog-title="Add Amendment"
+        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
+        dialog-title="[[_getTranslation('ADD_AMENDMENT')]]"
         on-close="_onClose"
         on-confirm-btn-clicked="_validateAndSaveAmendment"
         disable-confirm-btn="[[uploadInProgress]]"
@@ -41,8 +42,8 @@ class AddAgAmendmentDialog extends PolymerElement {
               id="signedDate"
               label="Signed Date"
               value="{{amendment.signed_date}}"
-              required-error-msg="Please select signed date"
-              max-date-error-msg="Date can not be in the future"
+              required-error-msg="[[_getTranslation('PLEASE_SELECT_SIGNED_DATE')]]"
+              max-date-error-msg="[[_getTranslation('DATE_CAN_NOT_BE_IN_THE_FUTURE')]]"
               open="{{datePickerOpen}}"
               auto-validate="[[autoValidate]]"
               max-date="[[getCurrentDate()]]"
@@ -56,7 +57,7 @@ class AddAgAmendmentDialog extends PolymerElement {
           <!-- Signed Agreement -->
           <etools-upload
             id="signedAmendment"
-            label="Signed Amendment"
+            label="[[_getTranslation('SIGNED_AMENDMENT')]]"
             accept=".doc,.docx,.pdf,.jpg,.png"
             file-url="[[amendment.signed_amendment_attachment]]"
             upload-endpoint="[[uploadEndpoint]]"
@@ -64,7 +65,7 @@ class AddAgAmendmentDialog extends PolymerElement {
             required
             upload-in-progress="{{uploadInProgress}}"
             auto-validate="[[autoValidate]]"
-            error-message="Signed Amendment file is required"
+            error-message="[[_getTranslation('SIGNED_AMENDMENT_FILE_IS_REQUIRED')]]"
           >
           </etools-upload>
         </div>
@@ -72,11 +73,11 @@ class AddAgAmendmentDialog extends PolymerElement {
         <div class="row-h flex-c">
           <etools-dropdown-multi
             id="amendmentTypes"
-            label="Amendment Types"
+            label="[[_getTranslation('AMENDMENT_TYPES')]]"
             options="[[amendmentTypes]]"
             selected-values="{{amendment.types}}"
             hide-search
-            error-message="Please select amendment type"
+            error-message="[[_getTranslation('PLEASE_SELECT_AMENDMENT_TYPE')]]"
             required
             auto-validate="[[autoValidate]]"
             trigger-value-change-event
@@ -89,13 +90,13 @@ class AddAgAmendmentDialog extends PolymerElement {
           <div class="row-h flex-c">
             <etools-dropdown-multi
               id="officers"
-              label="Authorized Officers"
+              label="[[_getTranslation('AUTHORIZED_OFFICERS')]]"
               placeholder="&#8212;"
               options="[[authorizedOfficersOptions]]"
               option-value="id"
               option-label="name"
               selected-values="{{authorizedOfficers}}"
-              error-message="Please enter Partner Authorized Officer(s)"
+              error-message="[[_getTranslation('PLS_ENTER_PARTNER_AUTH_OFFICERS')]]"
               required
               auto-validate
             >
