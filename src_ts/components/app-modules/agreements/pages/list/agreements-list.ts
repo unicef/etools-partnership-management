@@ -201,7 +201,7 @@ class AgreementsList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label="Agreement Reference Number">
+              <span class="col-data col-2" data-col-header-label$="[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]">
                 <a
                   class="ag-ref truncate"
                   href="agreements/[[agreement.id]]/details"
@@ -213,21 +213,21 @@ class AgreementsList extends connect(store)(
               </span>
               <span
                 class="col-data col-4"
-                data-col-header-label="Partner Full Name"
+                data-col-header-label$="[[_getTranslation('PARTNER_FULL_NAME')]]"
                 title="[[getDisplayValue(agreement.partner_name)]]"
               >
                 <span> [[getDisplayValue(agreement.partner_name)]] </span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Type">
+              <span class="col-data col-2" data-col-header-label$="[[_getTranslation('TYPE')]]">
                 [[getDisplayValue(agreement.agreement_type)]]
               </span>
-              <span class="col-data col-2 capitalize" data-col-header-label="Status">
+              <span class="col-data col-2 capitalize" data-col-header-label$="[[_getTranslation('STATUS')]]">
                 [[getDisplayValue(agreement.status)]]
               </span>
-              <span class="col-data flex-c" data-col-header-label="Start Date">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('START_DATE')]]">
                 [[_checkAndShowAgreementDate(agreement.start)]]
               </span>
-              <span class="col-data flex-c" data-col-header-label="End Date">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('END_DATE')]]">
                 [[_checkAndShowAgreementDate(agreement.end)]]
               </span>
             </div>
