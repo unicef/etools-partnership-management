@@ -380,7 +380,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <etools-data-table-column class="col-3 col">
             [[_getTranslation('OUTSTANDING_FINDINGS')]] <br />(USD)
           </etools-data-table-column>
-          <etools-data-table-column class="col"> [[_getTranslation('REPORT')]] </etools-data-table-column>
+          <etools-data-table-column class="col-2"> [[_getTranslation('REPORT')]] </etools-data-table-column>
         </div>
         <template is="dom-repeat" items="[[engagements]]">
           <div class="assessment-row panel-table-row layout-horizontal">
@@ -388,7 +388,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
             <div class="col-2">[[getDateDisplayValue(item.status_date)]]</div>
             <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
             <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
-            <a class="report col" target="_blank" href$="[[item.object_url]]">
+            <a class="report col-2" target="_blank" href$="[[item.object_url]]">
               <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
               [[_getTranslation('VIEW_REPORT')]]
             </a>

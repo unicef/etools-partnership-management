@@ -61,8 +61,13 @@ class InterventionsModule extends connect(store)(
       ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
-          display: block;
+          display: flex;
           min-height: calc(100vh - 150px);
+        }
+
+        :host > div,
+        intervention-tabs {
+          width: 100%;
         }
 
         .no-capitalization {
