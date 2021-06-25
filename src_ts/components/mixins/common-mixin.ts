@@ -1,9 +1,8 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {prettyDate} from '../utils/date-utils';
 import {PolymerElement} from '@polymer/polymer';
-import {get} from 'lit-translate';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -110,8 +109,12 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return field;
     }
 
-    _translate(textKey: string) {
-      return get(textKey);
+    _getTranslation(textKey: string) {
+      return getTranslation(textKey);
+    }
+
+    _translate(key: string) {
+      return translate(key);
     }
   }
 

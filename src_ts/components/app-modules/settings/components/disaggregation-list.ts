@@ -23,6 +23,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../utils/dialog';
+import CommonMixin from '../../../mixins/common-mixin';
 
 /**
  * @polymer
@@ -33,7 +34,7 @@ import {openDialog} from '../../../utils/dialog';
  * @appliesMixin FrontendPaginationMixin
  */
 class DisaggregationList extends connect(store)(
-  FrontendPaginationMixin(EnvironmentFlagsPolymerMixin(EndpointsMixin(PolymerElement)))
+  FrontendPaginationMixin(EnvironmentFlagsPolymerMixin(CommonMixin(EndpointsMixin(PolymerElement))))
 ) {
   static get template() {
     // language=HTML
@@ -68,11 +69,13 @@ class DisaggregationList extends connect(store)(
         </template>
         <div hidden$="[[_emptyList(filteredDisaggregations)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-4" field="name">Name</etools-data-table-column>
+            <etools-data-table-column class="col-4" field="name">[[_getTranslation('NAME')]]</etools-data-table-column>
             <etools-data-table-column class="col-6" field="disaggregation_values">
-              Disaggregation Groups
+              [[_getTranslation('DISAGGREGATION_GROUP')]]
             </etools-data-table-column>
-            <etools-data-table-column class="col-2" field="disaggregation_active">Active</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="disaggregation_active"
+              >[[_getTranslation('ACTIVE')]]</etools-data-table-column
+            >
           </etools-data-table-header>
           <template is="dom-repeat" items="[[dataItems]]">
             <etools-data-table-row no-collapse>

@@ -118,19 +118,19 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-5"><strong> TOTAL CASH TRANSFERS </strong></div>
-            <div class="col col-2"><strong> PROG.VISIT </strong></div>
-            <div class="col col-2"><strong> SPOT CHECK </strong></div>
-            <div class="col col-2"><strong> AUDIT </strong></div>
+            <div class="col col-5"><strong>[[_getTranslation('TOTAL_CASH_TRANSFERS')]] </strong></div>
+            <div class="col col-2"><strong> [[_getTranslation('PROG_VISIT')]] </strong></div>
+            <div class="col col-2"><strong> [[_getTranslation('SPOT_CHECK')]] </strong></div>
+            <div class="col col-2"><strong> [[_getTranslation('AUDIT')]] </strong></div>
           </div>
           <div class="row-h">
-            <div class="col col-1">HACT Risk Rating</div>
-            <div class="col col-2">Current CP Cycle</div>
-            <div class="col col-2">Current Year (Jan - Dec)</div>
-            <div class="col col-2">Planned / M.R. / Completed</div>
-            <div class="col col-2">Required / Completed</div>
-            <div class="col col-2">Required / Completed</div>
-            <div class="col col-1 center-align ">SEA risk rating</div>
+            <div class="col col-1">[[_getTranslation('HACT_RISK_RATING')]]</div>
+            <div class="col col-2">[[_getTranslation('CURRENT_CP_CYCLE')]]</div>
+            <div class="col col-2">[[_getTranslation('CURRENT_YEAR_JAN_DEC')]]</div>
+            <div class="col col-2">[[_getTranslation('PLANNED_MR_COMPLETED')]]</div>
+            <div class="col col-2">[[_getTranslation('REQUIRED_COMPLETED')]]</div>
+            <div class="col col-2">[[_getTranslation('REQUIRED_COMPLETED')]]</div>
+            <div class="col col-1 center-align ">[[_getTranslation('SEA_RISK_RATING')]]</div>
           </div>
         </div>
         <div class="hact-body">
@@ -169,12 +169,12 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         <template is="dom-if" if="[[partner.interventions.length]]">
           <div class="hact-heading">
             <div class="row-h">
-              <div class="col col-3 word-break left-align">Partnership</div>
-              <div class="col col-2 left-align">Start Date - End Date</div>
-              <div class="col col-2 right-align">UNICEF Cash</div>
-              <div class="col col-2 right-align">FR Amount</div>
-              <div class="col col-2 right-align">Actual Disbursement</div>
-              <div class="col">Status</div>
+              <div class="col col-3 word-break left-align">[[_getTranslation('PARTNERSHIP')]]</div>
+              <div class="col col-2 left-align">[[_getTranslation('START_DATE_END_DATE')]]</div>
+              <div class="col col-2 right-align">[[_getTranslation('UNICEF_CASH')]]</div>
+              <div class="col col-2 right-align">[[_getTranslation('FR_AMOUNT')]]</div>
+              <div class="col col-2 right-align">[[_getTranslation('ACTUAL_DISBURSEMENT')]]</div>
+              <div class="col">[[_getTranslation('GENERAL.STATUS')]]</div>
             </div>
           </div>
           <div class="hact-body">

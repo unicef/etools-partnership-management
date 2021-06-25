@@ -26,6 +26,8 @@ import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
+import CommonMixin from '../../mixins/common-mixin';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -36,7 +38,7 @@ import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins = ScrollControlMixin(
-  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(PolymerElement)))
+  CommonMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(PolymerElement))))
 );
 
 /**
@@ -66,7 +68,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       <page-content-header with-tabs-visible="[[_showPageTabs(activePage)]]">
         <div slot="page-title">
           <template is="dom-if" if="[[listActive]]">
-            <span>Agreements</span>
+            <span>[[_getTranslation('AGREEMENTS')]]</span>
           </template>
           <template is="dom-if" if="[[tabsActive]]">
             <span>[[_getAgreementDetailsTitle(agreement, newAgreementActive)]]</span>
@@ -78,14 +80,14 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
             <a target="_blank" href$="[[csvDownloadUrl]]">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
-                Export
+                [[_getTranslation('EXPORT')]]
               </paper-button>
             </a>
           </div>
           <div class="action" hidden$="[[!_showNewAgreementAddButton(listActive, permissions)]]">
             <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
               <iron-icon icon="add"></iron-icon>
-              Add New Agreement
+              [[_getTranslation('ADD_NEW_AGREEMENT')]]
             </paper-button>
           </div>
         </div>
@@ -172,7 +174,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   agreementsTabs: EtoolsTab[] = [
     {
       tab: 'details',
-      tabLabel: 'Agreement Details',
+      tabLabel: getTranslation('AGREEMENT_DETAILS'),
       hidden: false
     }
   ];
@@ -369,7 +371,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     }
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
-        text: 'Document can not be saved ' + 'because of missing data in Details tab',
+        text: this._getTranslation('DOCUMENT_CAN_NOT_BE_SAVED_BECAUSE_OF_MISSING_DATA_IN_DETAILS_TAB'),
         showCloseBtn: true
       });
       return false;

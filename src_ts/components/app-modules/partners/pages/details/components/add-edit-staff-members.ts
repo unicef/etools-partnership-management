@@ -14,13 +14,14 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
+class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -40,9 +41,9 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
       </style>
       <etools-dialog
         id="staffMemberDialog"
-        dialog-title="Partner Contact"
+        dialog-title="[[_getTranslation('PARTNER_CONTACT')]]"
         size="md"
-        ok-btn-text="Save"
+        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
         keep-dialog-open
         opened
         spinner-Text="Saving..."
@@ -53,43 +54,43 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
           <div class="col col-9">
             <paper-input
               id="title"
-              label="Position"
+              label="[[_getTranslation('POSITION')]]"
               value="{{item.title}}"
               placeholder="&#8212;"
               maxlength="100"
               required
               auto-validate
-              error-message="Position is required"
+              error-message="[[_getTranslation('POSITION_IS_REQUIRED')]]"
             ></paper-input>
           </div>
           <div class="col col-3 right-align">
-            <paper-checkbox checked="{{item.active}}"> Active Staff </paper-checkbox>
+            <paper-checkbox checked="{{item.active}}"> [[_getTranslation('ACTIVE_STAFF')]] </paper-checkbox>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
             <paper-input
               id="firstName"
-              label="First Name"
+              label="[[_getTranslation('FIRST_NAME')]]"
               value="{{item.first_name}}"
               placeholder="&#8212;"
               maxlength="30"
               required
               auto-validate
-              error-message="First name is required"
+              error-message="[[_getTranslation('FIRST_NAME_IS_REQUIRED')]]"
             >
             </paper-input>
           </div>
           <div class="col col-6">
             <paper-input
               id="lastName"
-              label="Last Name"
+              label="[[_getTranslation('LAST_NAME')]]"
               value="{{item.last_name}}"
               placeholder="&#8212;"
               maxlength="30"
               required
               auto-validate
-              error-message="Last name is required"
+              error-message="[[_getTranslation('LAST_NAME_IS_REQUIRED')]]"
             >
             </paper-input>
           </div>
@@ -98,7 +99,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
           <div class="col col-6">
             <paper-input
               id="email"
-              label="E-mail address"
+              label="[[_getTranslation('EMAIL_ADDRESS')]]"
               value="{{item.email}}"
               placeholder="&#8212;"
               readonly$="[[!_isNewStaffMember(item)]]"
@@ -106,7 +107,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
               type="email"
               required
               auto-validate
-              error-message="A valid & unused email address is required"
+              error-message="[[_getTranslation('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')]]"
             >
               <iron-icon slot="prefix" icon="communication:email"></iron-icon>
             </paper-input>
@@ -114,7 +115,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
           <div class="col col-6">
             <paper-input
               id="phone"
-              label="Phone number"
+              label="[[_getTranslation('PHONE_NUMBER')]]"
               value="{{item.phone}}"
               placeholder="&#8212;"
               maxlength="15"

@@ -10,17 +10,18 @@ import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../typings/etools-status.types';
 import {property} from '@polymer/decorators';
+import CommonMixin from '../../mixins/common-mixin';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
  * @polymer
  * @customElement
  */
-class EtoolsStatus extends connect(store)(PolymerElement) {
+class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
   static get template() {
     return html`
       ${etoolsStatusStyles}
-      <etools-content-panel panel-title="Status">
+      <etools-content-panel panel-title="[[_getTranslation('STATUS')]]">
         <div class="top-container">
           <template is="dom-repeat" items="[[availableStatuses]]" as="status">
             <div class="divider-line"></div>

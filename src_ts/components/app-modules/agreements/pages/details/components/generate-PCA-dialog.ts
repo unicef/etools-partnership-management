@@ -6,12 +6,14 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
+import CommonMixin from '../../../../../mixins/common-mixin';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  */
-class GeneratePcaDialog extends PolymerElement {
+class GeneratePcaDialog extends CommonMixin(PolymerElement) {
   static get template() {
     return html`
       <style>
@@ -23,14 +25,14 @@ class GeneratePcaDialog extends PolymerElement {
       <etools-dialog
         id="etoolsDialog"
         size="md"
-        ok-btn-text="Download"
-        dialog-title="Generate PCA"
+        ok-btn-text="[[_getTranslation('DOWNLOAD')]]"
+        dialog-title="[[_getTranslation('GENERATE_PCA')]]"
         keep-dialog-open
         on-close="_onClose"
         on-confirm-btn-clicked="_onConfirm"
         opened
       >
-        <paper-dropdown-menu label="Choose Template">
+        <paper-dropdown-menu label="[[_getTranslation('CHOOSE_TEMPLATE')]]">
           <paper-listbox slot="dropdown-content" attr-for-selected="item-value" selected="{{selectedTemplate}}">
             <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
               <paper-item item-value$="[[item.value]]">[[item.label]]</paper-item>
@@ -46,13 +48,13 @@ class GeneratePcaDialog extends PolymerElement {
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [
-    {value: 'english', label: 'English'},
-    {value: 'french', label: 'French'},
-    {value: 'portuguese', label: 'Portuguese'},
-    {value: 'russian', label: 'Russian'},
-    {value: 'spanish', label: 'Spanish'},
-    {value: 'ifrc_english', label: 'IFRC English'},
-    {value: 'ifrc_french', label: 'IFRC French'}
+    {value: 'english', label: getTranslation('ENGLISH')},
+    {value: 'french', label: getTranslation('FRENCH')},
+    {value: 'portuguese', label: getTranslation('PORTUGUESE')},
+    {value: 'russian', label: getTranslation('RUSSIAN')},
+    {value: 'spanish', label: getTranslation('SPANISH')},
+    {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
+    {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
   ];
 
   @property({type: String})

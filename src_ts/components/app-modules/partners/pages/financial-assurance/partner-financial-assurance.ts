@@ -193,34 +193,38 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
       <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
         <div class="row-h overview-header">
-          <etools-data-table-column class="col col-1"> HACT Risk Rating </etools-data-table-column>
+          <etools-data-table-column class="col col-1">
+            [[_getTranslation('HACT_RISK_RATING')]]
+          </etools-data-table-column>
           <etools-data-table-column class="col col-2">
-            Type of Assessment - Date of Assessment
+            [[_getTranslation('TYPE_OF_ASSESSMENT')]] - [[_getTranslation('DATE_OF_ASSESSMENT')]]
           </etools-data-table-column>
           <etools-data-table-column class="col col-1 center-align" title="Jan-Dec">
-            Cash Transfers (USD)
+            [[_getTranslation('CASH_TRANSFERS_USD')]]
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            PROG. VISIT<br />
-            Planned / MR / Completed
+            [[_getTranslation('PROG_VISIT')]]<br />
+            [[_getTranslation('PLANNED_MR_COMPLETED')]]
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            SPOT CHECKS <br />
-            Required / Completed
+            [[_getTranslation('SPOT_CHECKS')]] <br />
+            [[_getTranslation('REQUIRED_COMPLETED')]]
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            AUDIT <br />
-            Required / Completed
+            [[_getTranslation('AUDIT')]] <br />
+            [[_getTranslation('REQUIRED_COMPLETED')]]
           </etools-data-table-column>
-          <etools-data-table-column class="col col-1 center-align"> SEA Risk Rating </etools-data-table-column>
           <etools-data-table-column class="col col-1 center-align">
-            Last PSEA Assessment Date
+            [[_getTranslation('SEA_RISK_RATING')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="col col-1 center-align">
+            [[_getTranslation('LAST_PSEA_ASSESSMENT_DATE')]]
           </etools-data-table-column>
         </div>
 
         <div class="row-h overview-row">
           <div class="col col-4 vision">
-            <div class="from-vision">from VISION</div>
+            <div class="from-vision">[[_getTranslation('FROM_VISION')]]</div>
             <div class="col-3">
               <span class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
@@ -260,7 +264,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <div class="col col-1"></div>
           <div class="col col-3">
             <etools-dropdown
-              label="Basis For Risk Rating"
+              label="[[_getTranslation('BASIS_FOR_RISK_RATING')]]"
               options="[[basisOptions]]"
               selected="{{partner.basis_for_risk_rating}}"
               disabled="[[_disableBasisForRiskRating(editMode, partner.type_of_assessment, partner.rating)]]"
@@ -278,15 +282,15 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <div class="layout-horizontal">
             <div class="table-main col-4 no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
+                <div class="col-4 table-title">[[_getTranslation('PROGRAMMATIC_VISITS')]]</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
                 <div class="quarter">Q3</div>
                 <div class="quarter">Q4</div>
-                <div class="col-2 center-align">TOTAL</div>
+                <div class="col-2 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
               </div>
               <div class="row-h panel-table-row">
-                <div class="col-4">Planned</div>
+                <div class="col-4">[[_getTranslation('PLANNED')]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q1]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q2]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q3]]</div>
@@ -297,7 +301,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
               </div>
 
               <div class="row-h panel-table-row ">
-                <div class="col-4">Completed</div>
+                <div class="col-4">[[_getTranslation('COMPLETED')]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q1]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q2]]</div>
                 <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q3]]</div>
@@ -310,15 +314,15 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
             <div class="table-main col-4 margin-l no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="col-4 table-title">SPOT CHECKS</div>
+                <div class="col-4 table-title">[[_getTranslation('SPOT_CHECK')]]</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
                 <div class="quarter">Q3</div>
                 <div class="quarter">Q4</div>
-                <div class="col-2 center-align">TOTAL</div>
+                <div class="col-2 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
               </div>
               <div class="row-h panel-table-row">
-                <div class="col-4">Planned</div>
+                <div class="col-4">[[_getTranslation('PLANNED')]]</div>
                 <div class="quarter">[[partner.planned_engagement.spot_check_planned_q1]]</div>
                 <div class="quarter">[[partner.planned_engagement.spot_check_planned_q2]]</div>
                 <div class="quarter">[[partner.planned_engagement.spot_check_planned_q3]]</div>
@@ -329,7 +333,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
               </div>
 
               <div class="row-h panel-table-row">
-                <div class="col-4">Completed</div>
+                <div class="col-4">[[_getTranslation('COMPLETED')]]</div>
                 <div class="quarter">[[partner.hact_values.spot_checks.completed.q1]]</div>
                 <div class="quarter">[[partner.hact_values.spot_checks.completed.q2]]</div>
                 <div class="quarter">[[partner.hact_values.spot_checks.completed.q3]]</div>
@@ -342,17 +346,17 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
             <div class="table-main col-2 margin-l no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="flex-c table-title">AUDITS</div>
-                <div class="col-5 center-align">TOTAL</div>
+                <div class="flex-c table-title">[[_getTranslation('AUDITS')]]</div>
+                <div class="col-5 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
               </div>
               <div class="row-h panel-table-row ">
-                <div class="flex-c">Required</div>
+                <div class="flex-c">[[_getTranslation('REQUIRED')]]</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
                   [[partner.hact_min_requirements.audits]]
                 </div>
               </div>
               <div class="row-h panel-table-row ">
-                <div class="flex-c">Completed</div>
+                <div class="flex-c">[[_getTranslation('COMPLETED')]]</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
                   [[partner.hact_values.audits.completed]]
                 </div>
@@ -368,11 +372,15 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         panel-title="Assessments  and Assurance ([[allEngagements.length]])"
       >
         <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
-          <etools-data-table-column class="col-3"> Engagement Type </etools-data-table-column>
-          <etools-data-table-column class="col-2"> Date </etools-data-table-column>
-          <etools-data-table-column class="col-2"> Amount Tested <br />(USD) </etools-data-table-column>
-          <etools-data-table-column class="col-3 col"> Outstanding Findings <br />(USD) </etools-data-table-column>
-          <etools-data-table-column class="col"> Report </etools-data-table-column>
+          <etools-data-table-column class="col-3">[[_getTranslation('ENGAGEMENT_TYPE')]] </etools-data-table-column>
+          <etools-data-table-column class="col-2"> [[_getTranslation('DATE')]] </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            [[_getTranslation('AMOUNT_TESTED')]] <br />(USD)
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3 col">
+            [[_getTranslation('OUTSTANDING_FINDINGS')]] <br />(USD)
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2"> [[_getTranslation('REPORT')]] </etools-data-table-column>
         </div>
         <template is="dom-repeat" items="[[engagements]]">
           <div class="assessment-row panel-table-row layout-horizontal">
@@ -380,9 +388,9 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
             <div class="col-2">[[getDateDisplayValue(item.status_date)]]</div>
             <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
             <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
-            <a class="report col" target="_blank" href$="[[item.object_url]]">
+            <a class="report col-2" target="_blank" href$="[[item.object_url]]">
               <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
-              View Report
+              [[_getTranslation('VIEW_REPORT')]]
             </a>
           </div>
         </template>
@@ -395,7 +403,11 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         </etools-data-table-footer>
       </etools-content-panel>
 
-      <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
+      <etools-content-panel
+        id="monitoring-visits-panel"
+        class="content-section"
+        panel-title="[[_getTranslation('PROGRAMMATIC_VISITS_S_CASE')]]"
+      >
         <monitoring-visits-list2 partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list2>
       </etools-content-panel>
 

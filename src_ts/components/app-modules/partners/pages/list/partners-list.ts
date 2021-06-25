@@ -85,7 +85,14 @@ class PartnersList extends connect(store)(
 
       <div id="filters" class="paper-material" elevation="1">
         <div id="filters-fields">
-          <paper-input id="query" class="filter" type="search" autocomplete="off" value="{{q}}" placeholder="Search">
+          <paper-input
+            id="query"
+            class="filter"
+            type="search"
+            autocomplete="off"
+            value="{{q}}"
+            placeholder="[[_getTranslation('GENERAL.SEARCH')]]"
+          >
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
@@ -143,10 +150,12 @@ class PartnersList extends connect(store)(
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
             <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
-              Filters
+              [[_getTranslation('GENERAL.FILTERS')]]
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn"> CLEAR ALL </paper-button>
+              <paper-button on-tap="clearAllFilters" class="secondary-btn">
+                [[_getTranslation('GENERAL.CLEAR_ALL')]]
+              </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -166,12 +175,24 @@ class PartnersList extends connect(store)(
           id="listHeader"
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
-          <etools-data-table-column class="flex" field="vendor_number" sortable> Vendor No. </etools-data-table-column>
-          <etools-data-table-column class="flex-3" field="name" sortable> Name (Short/Full) </etools-data-table-column>
-          <etools-data-table-column class="flex-2" field="partner_type"> Partner Type </etools-data-table-column>
-          <etools-data-table-column class="flex" field="hact_rating"> HACT Risk Rating </etools-data-table-column>
-          <etools-data-table-column class="flex" field="sea_rating"> SEA Risk Rating </etools-data-table-column>
-          <etools-data-table-column class="flex" field="psea_date"> Last PSEA Assess. Date </etools-data-table-column>
+          <etools-data-table-column class="flex" field="vendor_number" sortable>
+            [[_getTranslation('VENDOR_NO')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-3" field="name" sortable>
+            [[_getTranslation('NAME_SHORT_FULL')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-2" field="partner_type">
+            [[_getTranslation('PARTNER_TYPE')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="hact_rating">
+            [[_getTranslation('HACT_RISK_RATING')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="sea_rating">
+            [[_getTranslation('SEA_RISK_RATING')]]
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="psea_date">
+            [[_getTranslation('LAST_PSEA_ASSESS_DATE')]]
+          </etools-data-table-column>
         </etools-data-table-header>
 
         <template
@@ -184,7 +205,7 @@ class PartnersList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data flex" data-col-header-label="Vendor No.">
+              <span class="col-data flex" data-col-header-label$="[[_getTranslation('VENDOR_NO')]]">
                 <a
                   class="vendor-nr truncate"
                   href$="[[currentModule]]/[[partner.id]]/details"
@@ -194,7 +215,7 @@ class PartnersList extends connect(store)(
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
-              <span class="col-data flex-3" data-col-header-label="Name (Short/Full)">
+              <span class="col-data flex-3" data-col-header-label$="[[_getTranslation('NAME_SHORT_FULL')]]">
                 <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
@@ -209,38 +230,46 @@ class PartnersList extends connect(store)(
                   </span>
                 </span>
               </span>
-              <span class="col-data flex-2" data-col-header-label="Partner Type">
+              <span class="col-data flex-2" data-col-header-label$="[[_getTranslation('PARTNER_TYPE')]]">
                 [[_computeType(partner.cso_type, partner.partner_type)]]
               </span>
-              <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
+              <span
+                class="col-data flex"
+                data-col-header-label$="[[_getTranslation('HACT_RISK_RATING')]]"
+                style="text-transform: capitalize"
+              >
                 [[getDisplayValue(partner.rating)]]
               </span>
-              <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
+              <span
+                class="col-data flex"
+                data-col-header-label$="[[_getTranslation('SEA_RISK_RATING')]]"
+                style="text-transform: capitalize"
+              >
                 [[getDisplayValue(partner.sea_risk_rating_name)]]
               </span>
-              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date">
+              <span class="col-data flex" data-col-header-label$="[[_getTranslation('LAST_PSEA_ASSESS_DATE')]]">
                 [[getDateDisplayValue(partner.psea_assessment_date)]]
               </span>
             </div>
             <div slot="row-data-details">
               <div class="row-details-content flex">
-                <span class="rdc-title">Shared Partner</span>
+                <span class="rdc-title">[[_getTranslation('SHARED_PARTNER')]]</span>
                 <span>[[getDisplayValue(partner.shared_with)]]</span>
               </div>
               <div class="row-details-content flex">
-                <span class="rdc-title">Email</span>
+                <span class="rdc-title">[[_getTranslation('EMAIL')]]</span>
                 <span>[[getDisplayValue(partner.email)]]</span>
               </div>
               <div class="row-details-content flex">
-                <span class="rdc-title">Phone Number</span>
+                <span class="rdc-title">[[_getTranslation('PHONE_NUMBER')]]</span>
                 <span>[[getDisplayValue(partner.phone_number)]]</span>
               </div>
               <div class="row-details-content flex">
-                <span class="rdc-title">Actual Cash Transfer for CP</span>
+                <span class="rdc-title">[[_getTranslation('ACTUAL_CASH_TRANSFER_FOR_CP')]]</span>
                 <span>$ [[displayCurrencyAmount(partner.total_ct_cp, '0')]]</span>
               </div>
               <div class="row-details-content flex">
-                <span class="rdc-title">Actual Cash Transfer for Current Year</span>
+                <span class="rdc-title">[[_getTranslation('ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR')]]</span>
                 <span>$ [[displayCurrencyAmount(partner.total_ct_ytd, '0')]]</span>
               </div>
             </div>
@@ -365,7 +394,7 @@ class PartnersList extends connect(store)(
     // init list filter options
     this.initListFiltersData([
       {
-        filterName: 'Partner Type',
+        filterName: this._getTranslation('PARTNER_TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: partnerTypes,
         selectedValue: [],
@@ -376,7 +405,7 @@ class PartnersList extends connect(store)(
         disabled: this.showOnlyGovernmentType || partnerTypes.length === 0
       },
       {
-        filterName: 'CSO Type',
+        filterName: this._getTranslation('CSO_TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: csoTypes,
         selectedValue: [],
@@ -387,7 +416,7 @@ class PartnersList extends connect(store)(
         disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
-        filterName: 'HACT Risk Rating',
+        filterName: this._getTranslation('HACT_RISK_RATING'),
         type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
         selectedValue: [],
@@ -398,7 +427,7 @@ class PartnersList extends connect(store)(
         disabled: riskRatings.length === 0
       },
       {
-        filterName: 'SEA Risk Rating',
+        filterName: this._getTranslation('SEA_RISK_RATING'),
         type: 'etools-dropdown-multi',
         selectionOptions: seaRiskRatings,
         selectedValue: [],
@@ -409,7 +438,7 @@ class PartnersList extends connect(store)(
         disabled: seaRiskRatings.length === 0
       },
       {
-        filterName: 'PSEA Assessment Date Before',
+        filterName: this._getTranslation('PSEA_ASSESSMENT_DATE_BEFORE'),
         type: 'datepicker',
         selectedValue: '',
         path: 'selectedPseaDateBefore',
@@ -417,7 +446,7 @@ class PartnersList extends connect(store)(
         disabled: false
       },
       {
-        filterName: 'PSEA Assessment Date After',
+        filterName: this._getTranslation('PSEA_ASSESSMENT_DATE_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'selectedPseaDateAfter',
@@ -425,7 +454,7 @@ class PartnersList extends connect(store)(
         disabled: false
       },
       {
-        filterName: 'Show hidden',
+        filterName: this._getTranslation('SHOW_HIDDEN'),
         type: 'paper-toggle',
         selectedValue: this.showHidden,
         path: 'showHidden',
@@ -439,39 +468,39 @@ class PartnersList extends connect(store)(
     this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer, timeOut.after(20), () => {
       const filtersValues = [
         {
-          filterName: 'Partner Type',
+          filterName: this._getTranslation('PARTNER_TYPE'),
           selectedValue: this.selectedPartnerTypes,
           disabled: this.showOnlyGovernmentType,
           allowEmpty: true,
           disableMenuOption: this.showOnlyGovernmentType
         },
         {
-          filterName: 'CSO Type',
+          filterName: this._getTranslation('CSO_TYPE'),
           selectedValue: this.selectedCsoTypes,
           allowEmpty: true
         },
         {
-          filterName: 'HACT Risk Rating',
+          filterName: this._getTranslation('HACT_RISK_RATING'),
           selectedValue: this.selectedRiskRatings,
           allowEmpty: true
         },
         {
-          filterName: 'SEA Risk Rating',
+          filterName: this._getTranslation('SEA_RISK_RATING'),
           selectedValue: this.selectedSEARiskRatings,
           allowEmpty: true
         },
         {
-          filterName: 'PSEA Assessment Date Before',
+          filterName: this._getTranslation('PSEA_ASSESSMENT_DATE_BEFORE'),
           selectedValue: this.selectedPseaDateBefore,
           allowEmpty: true
         },
         {
-          filterName: 'PSEA Assessment Date After',
+          filterName: this._getTranslation('PSEA_ASSESSMENT_DATE_AFTER'),
           selectedValue: this.selectedPseaDateAfter,
           allowEmpty: true
         },
         {
-          filterName: 'Show hidden',
+          filterName: this._getTranslation('SHOW_HIDDEN'),
           selectedValue: this.showHidden,
           allowEmpty: true
         }
