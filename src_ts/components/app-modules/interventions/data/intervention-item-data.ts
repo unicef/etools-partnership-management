@@ -352,6 +352,7 @@ class InterventionItemData extends connect(store)(
     dexieObject.document_type = responseDetail.document_type;
     dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
     dexieObject.contingency_pd = responseDetail.contingency_pd;
+    dexieObject.cfei_number = responseDetail.cfei_number;
 
     this._updateSections(dexieObject, responseDetail);
     this._updatePlannedBudgetInfo(dexieObject, responseDetail);
