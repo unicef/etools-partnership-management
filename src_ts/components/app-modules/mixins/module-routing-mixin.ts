@@ -113,12 +113,12 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           'metadata',
           'overview',
           'timing',
-          'results',
+          'workplan',
           'strategy',
           'attachments',
           'review',
           'progress',
-          'reports', 
+          'reports',
           'info'
         ].includes(page)
       ) {
