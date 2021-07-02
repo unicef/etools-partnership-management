@@ -353,6 +353,10 @@ class InterventionItemData extends connect(store)(
     dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
     dexieObject.contingency_pd = responseDetail.contingency_pd;
     dexieObject.cfei_number = responseDetail.cfei_number;
+    dexieObject.partner_accepted = responseDetail.partner_accepted;
+    dexieObject.unicef_accepted = responseDetail.unicef_accepted;
+    dexieObject.unicef_court = responseDetail.unicef_court;
+    dexieObject.date_sent_to_partner = responseDetail.date_sent_to_partner;
 
     this._updateSections(dexieObject, responseDetail);
     this._updatePlannedBudgetInfo(dexieObject, responseDetail);
