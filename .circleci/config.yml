@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Pull Submodule"
+          name: 'Pull Submodule'
           command: |
             git submodule init
             git submodule update --checkout
@@ -44,6 +44,7 @@ jobs:
             REVNO=${CIRCLE_SHA1}
             BUILDDATE=$(date -u +%F_%T)
             sed -i "0,/revNo/s//$REVNO/" package.json
+            sed -i "0,/revNo/s//$REVNO/" index.html
             sed -i "0,/bDate/s//$BUILDDATE/" package.json
       - run:
           name: Install Docker client
@@ -53,7 +54,7 @@ jobs:
             curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
-           # build and push Docker image
+          # build and push Docker image
       - run:
           name: Building the image
           no_output_timeout: 25m
@@ -87,3 +88,4 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - notify_deploy
