@@ -88,3 +88,4 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - notify_deploy
