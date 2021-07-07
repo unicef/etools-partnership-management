@@ -105,12 +105,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       fetch('version.json')
         .then((res) => res.json())
         .then((version) => {
-          if (version.revision != document.getElementById('buildRevNo').innerHTML) {
-            console.log(version);
-            console.log(document.getElementById('buildRevNo'));
+          if (version.revision != document.getElementById('buildRevNo').innerText) {
+            console.log('v ', version);
+            console.log('div ', document.getElementById('buildRevNo').innerText);
             let response = confirm('A new version of the app is available. Refresh page?');
             if (response) {
-              location.reload();
+              location.reload(true);
             }
           }
         });
