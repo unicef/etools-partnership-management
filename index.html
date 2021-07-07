@@ -110,7 +110,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             console.log('div ', document.getElementById('buildRevNo').innerText);
             let response = confirm('A new version of the app is available. Refresh page?');
             if (response) {
-              location.reload(true);
+              fetch(window.location.href, {
+                headers: {
+                  Pragma: 'no-cache',
+                  Expires: -1,
+                  'Cache-Control': 'no-cache'
+                }
+              }).then(() => location.reload(true));
             }
           }
         });
