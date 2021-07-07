@@ -80,7 +80,7 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - notify-deploy
+                - notify
       - build_and_deploy:
           filters:
             branches:
@@ -89,4 +89,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - notify_deploy
+                - notify
