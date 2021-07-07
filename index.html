@@ -101,6 +101,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
     <div id="buildRevNo" style="display: none">revNo</div>
+    <script>
+      fetch('version.json')
+        .then((res) => res.json())
+        .then((version) => {
+          if (version.revision != document.getElementById('buildRevNo').innerHTML) {
+            console.log(version);
+            console.log(document.getElementById('buildRevNo'));
+            let response = confirm('A new version of the app is available. Refresh page?');
+            if (response) {
+              location.reload();
+            }
+          }
+        });
+    </script>
     <app-shell></app-shell>
     <noscript> Please enable JavaScript to view this website. </noscript>
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
