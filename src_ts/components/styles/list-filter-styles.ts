@@ -77,7 +77,6 @@ export const listFilterStyles = html` <style>
     max-width: 126px;
     padding: 0;
     --paper-menu-button-content: {
-      overflow-y: auto;
       overflow-x: hidden !important;
     }
   }
