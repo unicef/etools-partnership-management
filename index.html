@@ -105,6 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       fetch('version.json')
         .then((res) => res.json())
         .then((version) => {
+          console.log('new version');
           console.log('v ', version.revision);
           console.log('div ', document.getElementById('buildRevNo').innerText);
           if (version.revision != document.getElementById('buildRevNo').innerText) {
