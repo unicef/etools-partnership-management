@@ -542,13 +542,7 @@ class AppShell extends connect(store)(
           cacheNames.forEach((cacheName) => {
             caches.delete(cacheName);
           });
-          fetch(window.location.href, {
-            headers: {
-              Pragma: 'no-cache',
-              Expires: -1,
-              'Cache-Control': 'no-cache'
-            }
-          }).then(() => location.reload());
+          location.reload();
         });
       }
     }
