@@ -50,7 +50,7 @@ const pmpEdpoints = {
     // cachingKey: 'partnerDetails'
   },
   partnerActivities: {
-    template: '/api/v1/field-monitoring/planning/activities/?partners__in=<%=id%>&status__in=completed&is_hact=true'
+    template: '/api/v1/field-monitoring/planning/activities/?hact_for_partner=<%=id%>'
   },
   createPartner: {
     template: '/api/v2/partners/add/?vendor=<%=vendor%>'
