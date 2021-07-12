@@ -66,3 +66,8 @@ export function arraysAreEqual(array1: [], array2: []) {
   }
   return isEmptyObject(differencesArray);
 }
+
+let unique = 1;
+export function getUniqueId() {
+  return `id-${unique++}`;
+}
