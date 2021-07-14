@@ -12,7 +12,7 @@ import {getUniqueId} from '../../../../../../utils/utils';
 import {property} from '@polymer/decorators/lib/decorators';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import {clone} from 'lodash-es';
+import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
