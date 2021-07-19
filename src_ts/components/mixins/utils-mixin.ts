@@ -103,7 +103,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         case 'ratio':
           return this._formatNumber(value, '-', 2, ',') + ':1';
         case 'number':
-          return this._formatNumber(value, '-', 0, ',');
+          return this._formatNumber(value, '-', 2, ',');
         default:
           return value;
       }
