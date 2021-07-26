@@ -79,6 +79,7 @@ export class Partner extends ModelsCommon {
   hidden = false;
   interventions: PartnerIntervention[] = [];
   last_assessment_date = ''; // TODO: update type to date
+  monitoring_activity_groups: number[][] = [];
   name = '';
   partner_type = '';
   partner_type_slug = ''; // TODO: if cannot be used => remove property
