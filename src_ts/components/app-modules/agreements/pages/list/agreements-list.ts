@@ -367,7 +367,7 @@ class AgreementsList extends connect(store)(
         optionLabel: 'label',
         selectedValue: [],
         path: 'selectedPartners',
-        selected: false,
+        selected: true,
         minWidth: '400px',
         hideSearch: false
       }),
