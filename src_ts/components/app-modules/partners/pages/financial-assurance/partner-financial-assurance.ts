@@ -34,6 +34,7 @@ import './components/hact-edit-dialog';
 import clone from 'lodash-es/clone';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import './components/monitoring-activities/monitoring-activities';
 
 /**
  * @polymer
@@ -410,6 +411,12 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       >
         <monitoring-visits-list2 partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list2>
       </etools-content-panel>
+
+      <monitoring-activities
+        is-readonly="[[!editMode]]"
+        activity-groups="[[partner.monitoring_activity_groups]]"
+        partner-id="[[partner.id]]"
+      ></monitoring-activities>
 
       <assessments-items
         id="assessmentsList"
