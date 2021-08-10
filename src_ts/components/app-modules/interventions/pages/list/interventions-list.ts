@@ -414,6 +414,12 @@ class InterventionsList extends connect(store)(
   })
   selectedUnicefFocalPoints: number[] = [];
 
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
+  selectedBudgetOwners: number[] = [];
+
   @property({type: Array})
   offices!: GenericObject[];
 
@@ -473,10 +479,10 @@ class InterventionsList extends connect(store)(
       '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
         'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
-        'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-        'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, ' +
-        'selectedCPStructures.length, contingency_pd, paginator.page, paginator.page_size, sortOrder, ' +
-        'requiredDataLoaded, initComplete)',
+        'selectedSections.length, selectedUnicefFocalPoints.length, selectedBudgetOwners.length, ' +
+        'selectedOffices.length, selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, ' +
+        'endDate, endAfter, selectedCPStructures.length, contingency_pd, paginator.page, paginator.page_size, ' +
+        'sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -702,6 +708,17 @@ class InterventionsList extends connect(store)(
         minWidth: '400px'
       }),
       new ListFilterOption({
+        filterName: this._getTranslation('INTERVENTIONS_LIST.BUDGET_OWNER'),
+        type: 'etools-dropdown-multi',
+        optionValue: 'id',
+        optionLabel: 'name',
+        selectionOptions: unicefUsersData,
+        selectedValue: [],
+        path: 'selectedBudgetOwners',
+        selected: false,
+        minWidth: '400px'
+      }),
+      new ListFilterOption({
         filterName: this._getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
         type: 'paper-toggle',
         selectedValue: this.contingency_pd,
@@ -735,6 +752,7 @@ class InterventionsList extends connect(store)(
       selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
       selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
       selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
+      selectedBudgetOwners: this._getFilterUrlValuesAsArray(urlQueryParams.budget_owner),
       selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
       selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
       startDate: urlQueryParams.start ? urlQueryParams.start : '',
@@ -798,6 +816,10 @@ class InterventionsList extends connect(store)(
           selectedValue: this.selectedUnicefFocalPoints
         },
         {
+          filterName: 'Budget Owner',
+          selectedValue: this.selectedBudgetOwners
+        },
+        {
           filterName: 'Starts After',
           selectedValue: this.startDate
         },
@@ -853,6 +875,7 @@ class InterventionsList extends connect(store)(
         this.selectedStatuses,
         this.selectedSections.map((s: number) => String(s)),
         this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
+        this.selectedBudgetOwners.map((bo: number) => String(bo)),
         this.selectedOffices.map((o: number) => String(o)),
         this.selectedCPStructures,
         this.contingency_pd,
@@ -881,6 +904,7 @@ class InterventionsList extends connect(store)(
       partners: this.selectedPartners.join('|'),
       grants: this.selectedGrants.join('|'),
       unicef_focal_points: this.selectedUnicefFocalPoints.join('|'),
+      budget_owner: this.selectedBudgetOwners.join('|'),
       cpStructures: this.selectedCPStructures.join('|'),
       start: this.startDate,
       end: this.endDate,
@@ -900,6 +924,7 @@ class InterventionsList extends connect(store)(
       partners: this.selectedPartners,
       grants: this.selectedGrants,
       unicef_focal_points: this.selectedUnicefFocalPoints,
+      budget_owner: this.selectedBudgetOwners,
       country_programme: this.selectedCPStructures,
       cp_outputs: this.selectedCpOutputs,
       start: this.startDate,
