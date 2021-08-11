@@ -64,6 +64,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     statuses: string[],
     sections: string[],
     unicefFocalPoints: string[],
+    budgetOwners: string[],
     offices: string[],
     cpStructures: string[],
     contingency_pd: boolean,
@@ -115,6 +116,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'sections', true, sections) ||
           !self._filterFound(intervention, 'offices', true, offices) ||
           !self._filterFound(intervention, 'unicef_focal_points', true, unicefFocalPoints) ||
+          !self._filterFound(intervention, 'budget_owner', false, budgetOwners) ||
           !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
           !self._filterFound(intervention, 'donors', true, donors) ||
           !self._filterFound(intervention, 'partner_name', false, partners) ||
