@@ -81,7 +81,8 @@
     "GRANTS": "Subventii",
     "OFFICES": "Birouri",
     "SECTIONS": "Sectiuni",
-    "UNICEF_FOCAL_POINT": "Persoane de interes ale UNICEF"
+    "UNICEF_FOCAL_POINT": "Persoane de interes ale UNICEF",
+    "BUDGET_OWNER": "Responsabil UNICEF al Bugetului"
   },
   "VENDOR_NO": "Vendor No.",
   "NAME_SHORT_FULL": "Name (Short/Full)",
