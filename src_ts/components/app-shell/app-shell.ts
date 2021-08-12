@@ -352,6 +352,8 @@ class AppShell extends connect(store)(
 
   public connectedCallback() {
     super.connectedCallback();
+
+    this.checkAppVersion();
     this.requestUserData();
     // trigger common data load requests
     // @ts-ignore
@@ -360,6 +362,18 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     this.createToastNotificationElement();
+  }
+
+  checkAppVersion() {
+    fetch('version.json')
+      .then((res) => res.json())
+      .then((version) => {
+        if (version.revision != document.getElementById('buildRevNo')!.innerText) {
+          console.log('version.json', version.revision);
+          console.log('buildRevNo ', document.getElementById('buildRevNo')!.innerText);
+          this._showConfirmNewVersionDialog();
+        }
+      });
   }
 
   updateReduxRouteDetails(appLocRoute: any) {
@@ -385,7 +399,7 @@ class AppShell extends connect(store)(
     }
 
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
-      this.selectedLanguage = state.activeLanguage!.activeLanguage;      
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }
   }
@@ -506,6 +520,31 @@ class AppShell extends connect(store)(
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
     store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
+  }
+
+  private _showConfirmNewVersionDialog() {
+    const msg = document.createElement('span');
+    msg.innerText = 'A new version of the app is available. Refresh page?';
+    const conf: any = {
+      size: 'md',
+      closeCallback: this._onConfirmNewVersion.bind(this),
+      content: msg
+    };
+    const confirmNewVersionDialog = createDynamicDialog(conf);
+    confirmNewVersionDialog.opened = true;
+  }
+
+  private _onConfirmNewVersion(e: CustomEvent) {
+    if (e.detail.confirmed) {
+      if (navigator.serviceWorker) {
+        caches.keys().then((cacheNames) => {
+          cacheNames.forEach((cacheName) => {
+            caches.delete(cacheName);
+          });
+          location.reload();
+        });
+      }
+    }
   }
 
   // @ts-ignore

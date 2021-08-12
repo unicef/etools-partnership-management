@@ -296,7 +296,7 @@ class InterventionsModule extends connect(store)(
       'metadata',
       'overview',
       'timing',
-      'results',
+      'workplan',
       'strategy',
       'attachments',
       'review',
