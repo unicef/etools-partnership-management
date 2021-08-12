@@ -20,9 +20,6 @@ export class InfoIconTooltip extends LitElement {
           }
         }
         .content-wrapper {
-          padding: 12px;
-          width: 100%;
-          max-width: 100vw;
           border-radius: 5px;
         }
 
@@ -40,11 +37,6 @@ export class InfoIconTooltip extends LitElement {
             white-space: normal;
             min-width: 90vw;
           }
-        }
-
-        .flex-row {
-          display: flex;
-          flex-direction: row;
         }
 
         .border {
@@ -66,7 +58,7 @@ export class InfoIconTooltip extends LitElement {
         position="top"
       >
         <div class="content-wrapper elevation" elevation="1">
-          <div class="tooltip border flex-row">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
+          <div class="tooltip border">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
         </div>
       </paper-tooltip>
     `;
