@@ -154,4 +154,3 @@ export const monitoringActivitiesStyles = html` <style include="data-table-style
     padding: 30px 24px;
   }
 </style>`;
-{"mode":"full","isActive":false}

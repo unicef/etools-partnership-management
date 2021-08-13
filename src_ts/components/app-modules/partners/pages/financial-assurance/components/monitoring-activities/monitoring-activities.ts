@@ -362,4 +362,3 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
 }
 
 window.customElements.define('monitoring-activities', MonitoringActivities);
-{"mode":"full","isActive":false}
