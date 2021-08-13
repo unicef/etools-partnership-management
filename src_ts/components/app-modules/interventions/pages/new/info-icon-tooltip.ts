@@ -24,6 +24,7 @@ export class InfoIconTooltip extends LitElement {
         }
 
         .tooltip {
+          user-select: text;
           padding: 12px;
           word-break: break-word;
           overflow-wrap: break-word;
