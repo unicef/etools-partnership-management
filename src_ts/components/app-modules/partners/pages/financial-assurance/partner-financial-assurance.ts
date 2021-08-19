@@ -33,6 +33,7 @@ import {PartnerAssessment} from '../../../../../models/partners.models';
 import {LabelAndValue} from '../../../../../typings/globals.types';
 import './components/hact-edit-dialog';
 import clone from 'lodash-es/clone';
+import './components/monitoring-activities/monitoring-activities';
 
 /**
  * @polymer
@@ -396,6 +397,12 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
         <monitoring-visits-list partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list>
       </etools-content-panel>
+
+      <monitoring-activities
+        is-readonly="[[!editMode]]"
+        activity-groups="[[partner.monitoring_activity_groups]]"
+        partner-id="[[partner.id]]"
+      ></monitoring-activities>
 
       <assessments-items
         id="assessmentsList"
