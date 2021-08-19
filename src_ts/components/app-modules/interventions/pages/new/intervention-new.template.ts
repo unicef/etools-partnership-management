@@ -155,7 +155,10 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <info-icon-tooltip slot="label-suffix"></info-icon-tooltip>
+            <info-icon-tooltip
+              slot="label-suffix"
+              .tooltip="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+            ></info-icon-tooltip>
           </etools-dropdown-multi>
         </div>
         <div class="col-4">

@@ -1,5 +1,5 @@
 import {PaperTooltipElement} from '@polymer/paper-tooltip';
-import {customElement, html, LitElement} from 'lit-element';
+import {customElement, html, LitElement, property} from 'lit-element';
 import {translate} from 'lit-translate';
 import '@polymer/paper-tooltip/paper-tooltip';
 import {elevationStyles} from '../intervention-tab-pages/common/styles/elevation-styles';
@@ -41,7 +41,7 @@ export class InfoIconTooltip extends LitElement {
         }
 
         .border {
-          border: 1px solid var(--primary-color);
+          border: 3px solid var(--primary-color);
         }
       </style>
       <iron-icon
@@ -51,7 +51,7 @@ export class InfoIconTooltip extends LitElement {
         @click="${this.showPartnerFocalPTooltip}"
       ></iron-icon>
       <paper-tooltip
-        id="partner-focal-p-tooltip"
+        id="tooltip"
         slot="label-suffix"
         for="info-icon"
         manual-mode
@@ -59,7 +59,7 @@ export class InfoIconTooltip extends LitElement {
         position="top"
       >
         <div class="content-wrapper elevation" elevation="1">
-          <div class="tooltip border">${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}</div>
+          <div class="tooltip border">${this.tooltip}</div>
         </div>
       </paper-tooltip>
     `;
@@ -67,8 +67,11 @@ export class InfoIconTooltip extends LitElement {
 
   private tooltipHandler: any;
 
+  @property({type: String})
+  tooltip = '';
+
   showPartnerFocalPTooltip() {
-    const tooltip = this.shadowRoot?.querySelector<PaperTooltipElement>('#partner-focal-p-tooltip')!;
+    const tooltip = this.shadowRoot?.querySelector<PaperTooltipElement>('#tooltip')!;
     tooltip.show();
 
     this.tooltipHandler = this.hidePartnerFocalPTooltip.bind(this, tooltip);
