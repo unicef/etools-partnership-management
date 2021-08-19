@@ -92,4 +92,3 @@ type GeojsonPoint = {
 };
 
 type CoordinatesArray = [number, number];
-{"mode":"full","isActive":false}

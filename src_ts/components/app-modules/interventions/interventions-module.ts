@@ -31,11 +31,10 @@ import InterventionItemData from './data/intervention-item-data.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
-import {setStore} from './pages/intervention-tab-pages/utils/redux-store-access';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../mixins/common-mixin';
 import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
-
+import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 // @ts-ignore
 setStore(store);
 
