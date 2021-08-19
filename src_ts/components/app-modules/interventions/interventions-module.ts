@@ -34,7 +34,7 @@ import get from 'lodash-es/get';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../mixins/common-mixin';
 import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
-import {setStore} from './etools-pages-common/utils/redux-store-access';
+import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 // @ts-ignore
 setStore(store);
 
