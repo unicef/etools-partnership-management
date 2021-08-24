@@ -92,7 +92,7 @@ import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 setRootPath(BASE_URL);
 
