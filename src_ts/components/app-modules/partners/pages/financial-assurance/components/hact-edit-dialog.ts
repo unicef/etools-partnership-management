@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../typings/globals.types';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
@@ -66,9 +66,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       >
         <div class="layout-vertical">
           <div class="layout-horizontal">
-            <div class="partner-name">
-              [[partner.name]]
-            </div>
+            <div class="partner-name">[[partner.name]]</div>
           </div>
 
           <div class="avoid-scroll layout-horizontal space-between">

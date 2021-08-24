@@ -6,7 +6,7 @@ import {GenericObject, Constructor} from '../../typings/globals.types.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {copy} from '../utils/utils.js';
 
 /**

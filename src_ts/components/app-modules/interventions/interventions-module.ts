@@ -36,7 +36,7 @@ import {property} from '@polymer/decorators';
 import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 
 /**
  * @polymer

@@ -16,7 +16,7 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 
 /**
  * @customElement
@@ -37,9 +37,7 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
       </div>
 
       <div class="row-h">
-        <paper-button class="secondary-btn" on-click="_openAddDialog">
-          ADD REQUIREMENTS
-        </paper-button>
+        <paper-button class="secondary-btn" on-click="_openAddDialog"> ADD REQUIREMENTS </paper-button>
       </div>
 
       <div class="flex-c" hidden$="[[_empty(reportingRequirements, reportingRequirements.length)]]">
