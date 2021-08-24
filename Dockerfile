@@ -9,9 +9,10 @@ RUN npm install -g typescript
 
 WORKDIR /tmp
 ADD package.json /tmp/
-ADD package-lock.json /tmp/
+# ADD package-lock.json /tmp/
 
-RUN npm install --no-save
+RUN npm install 
+#--no-save
 
 ADD . /code/
 WORKDIR /code
