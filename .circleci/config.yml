@@ -66,14 +66,17 @@ workflows:
   build_and_test:
     jobs:
       - test
+          filters:
+            branches:
+              ignore:
+                - master
+                - staging
+                - develop
       - build_and_deploy:
-          requires:
-            - test
           filters:
             branches:
               only:
                 - master
                 - staging
                 - develop
-                - upgrade--polymer3
-                - prepare-for-deploy
+                - fix-styles
