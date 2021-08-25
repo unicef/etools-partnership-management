@@ -238,5 +238,10 @@ export const SharedStyles = html`
       padding: 0;
       overflow: hidden;
     }
+
+    etools-content-panel::part(ecp-toggle-btn) {
+      color: var(--light-icon-color);
+      padding: 4px;
+    }
   </style>
 `;

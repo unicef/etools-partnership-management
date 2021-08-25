@@ -134,12 +134,7 @@ documentContainer.innerHTML = `
         /* etools-panel styles */
         --ecp-content-bg-color: var(--primary-background-color);
         --ecp-header-bg: var(--primary-color);
-        
-       
-        --ecp-expand-btn: {
-          color: var(--light-icon-color);
-          padding: 4px;
-        };
+            
   
         --toolbar-height: 60px;
         --side-bar-scrolling: visible;

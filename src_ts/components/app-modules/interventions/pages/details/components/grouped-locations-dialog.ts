@@ -27,11 +27,9 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
           display: none !important;
         }
 
-        etools-dialog {
-          --etools-dialog-scrollable: {
-            min-height: 300px;
-            font-size: 16px;
-          }
+        eetools-dialog::part(ed-scrollable) {
+          min-height: 300px;
+          font-size: 16px;
         }
 
         .adminLevelLoc {
@@ -80,9 +78,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
         >
         </etools-dropdown>
 
-        <div class="bordered-div" hidden$="[[!message]]">
-          [[message]]
-        </div>
+        <div class="bordered-div" hidden$="[[!message]]">[[message]]</div>
 
         <div class="row-padding-v" hidden$="[[adminLevel]]">
           <template is="dom-repeat" items="[[interventionLocations]]">
@@ -95,9 +91,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
               <div class="adminLevelLoc">[[item.adminLevelLocation.name]]</div>
               <div class="left-padding">
                 <template is="dom-repeat" items="[[item.subordinateLocations]]" as="subordinateLoc">
-                  <div class="child-bottom-padding">
-                    - [[subordinateLoc.name]]
-                  </div>
+                  <div class="child-bottom-padding">- [[subordinateLoc.name]]</div>
                 </template>
               </div>
             </div>

@@ -45,11 +45,10 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
       <style include="data-table-styles">
         :host {
           display: block;
-
-          --ecp-content: {
-            padding: 0;
-            overflow: hidden;
-          }
+        }
+        etools-content-panel::part(ecp-content) {
+          padding: 0;
+          overflow: hidden;
         }
 
         .attachment {
@@ -71,9 +70,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
       <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
         <div slot="panel-btns" class="cp-header-actions-bar" hidden$="[[newIntervention]]">
-          <paper-toggle-button id="showInvalid" checked="{{showInvalid}}">
-            Show invalid
-          </paper-toggle-button>
+          <paper-toggle-button id="showInvalid" checked="{{showInvalid}}"> Show invalid </paper-toggle-button>
           <div class="separator" hidden$="[[!permissions.edit.attachments]]"></div>
           <paper-icon-button
             icon="add-box"
@@ -87,18 +84,10 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
         <template is="dom-if" if="[[_showAttachmentsList(attachments.length)]]">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-2">
-              Date Uploaded
-            </etools-data-table-column>
-            <etools-data-table-column class="col-3">
-              Document Type
-            </etools-data-table-column>
-            <etools-data-table-column class="col-6">
-              Document
-            </etools-data-table-column>
-            <etools-data-table-column class="col-1 center-align">
-              Invalid
-            </etools-data-table-column>
+            <etools-data-table-column class="col-2"> Date Uploaded </etools-data-table-column>
+            <etools-data-table-column class="col-3"> Document Type </etools-data-table-column>
+            <etools-data-table-column class="col-6"> Document </etools-data-table-column>
+            <etools-data-table-column class="col-1 center-align"> Invalid </etools-data-table-column>
           </etools-data-table-header>
 
           <template is="dom-repeat" items="[[attachments]]">
@@ -108,12 +97,8 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
               hidden$="[[!_isVisible(item.active, showInvalid)]]"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-2">
-                  [[getDateDisplayValue(item.created)]]
-                </span>
-                <span class="col-data col-3">
-                  [[_getAttachmentType(item.type)]]
-                </span>
+                <span class="col-data col-2"> [[getDateDisplayValue(item.created)]] </span>
+                <span class="col-data col-3"> [[_getAttachmentType(item.type)]] </span>
                 <span class="col-data col-6">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word file-label">
@@ -144,9 +129,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
         <template is="dom-if" if="[[!_showAttachmentsList(attachments.length)]]">
           <div class="row-h">
             <p hidden$="[[newIntervention]]">There are no attachments added.</p>
-            <p hidden$="[[!newIntervention]]">
-              You must save this PD/SSFA before you can add attachments.
-            </p>
+            <p hidden$="[[!newIntervention]]">You must save this PD/SSFA before you can add attachments.</p>
           </div>
         </template>
       </etools-content-panel>
