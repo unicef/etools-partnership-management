@@ -78,11 +78,9 @@ class IndicatorDialog extends connect(store)(
           color: var(--primary-color);
         }
 
-        etools-dialog {
-          --etools-dialog-scrollable: {
-            min-height: 400px;
-            font-size: 16px;
-          }
+        eetools-dialog::part(ed-scrollable) {
+          min-height: 400px;
+          font-size: 16px;
         }
       </style>
 

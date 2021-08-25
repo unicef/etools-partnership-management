@@ -30,11 +30,10 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
       ${pmpCustomIcons} ${gridLayoutStyles} ${frWarningsStyles}
       <style include="data-table-styles">
         :host {
-          --list-column-label: {
-            margin-right: 0;
-          }
         }
-
+        etools-data-table-column::part(edt-list-column-label) {
+          margin-inline-end: 0;
+        }
         [hidden] {
           display: none !important;
         }

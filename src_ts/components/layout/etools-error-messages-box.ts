@@ -42,11 +42,12 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
 
         .errors-box {
           --ecp-header-bg: var(--error-box-heading-color);
-          --ecp-content: {
-            color: var(--error-box-text-color);
-            background-color: var(--error-box-bg-color);
-            border-color: var(--error-box-border-color);
-          }
+        }
+
+        etools-content-panel::part(ecp-content) {
+          color: var(--error-box-text-color);
+          background-color: var(--error-box-bg-color);
+          border-color: var(--error-box-border-color);
         }
 
         ul {
@@ -73,16 +74,12 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
         <ul>
           <template is="dom-repeat" items="[[errors]]">
             <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
-            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">
-              [[item]]
-            </li>
+            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">[[item]]</li>
           </template>
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors">
-            Ok
-          </paper-button>
+          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors"> Ok </paper-button>
         </div>
       </etools-content-panel>
     `;
