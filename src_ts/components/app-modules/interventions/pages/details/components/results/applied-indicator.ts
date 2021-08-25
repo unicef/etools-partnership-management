@@ -42,20 +42,21 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
             margin-right: -8px;
           }
           --list-row-wrapper-padding: 0 24px 0 0 !important;
-
-          --icon-wrapper: {
-            @apply --layout-horizontal;
-            @apply --layout-center;
-            @apply --layout-self-stretch;
-            min-height: 48px;
-            height: auto;
-            padding: 0 !important;
-            margin-right: 16px !important;
-            background-color: var(--collapse-icon-bg-color, var(--primary-color));
-            background-image: var(--collapse-icon-bg-image, none);
-            background-size: 5.66px 5.66px;
-          }
         }
+
+        etools-data-table-row::part(edt-icon-wrapper) {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          @apply --layout-self-stretch;
+          min-height: 48px;
+          height: auto;
+          padding: 0 !important;
+          margin-right: 16px !important;
+          background-color: var(--collapse-icon-bg-color, var(--primary-color));
+          background-image: var(--collapse-icon-bg-image, none);
+          background-size: 5.66px 5.66px;
+        }
+
         etools-data-table-row::part(edt-list-row-collapse-wrapper) {
           padding: 16px 24px 16px 24px !important;
           max-height: 220px;
