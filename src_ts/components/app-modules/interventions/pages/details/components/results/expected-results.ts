@@ -46,9 +46,9 @@ class ExpectedResults extends connect(store)(ResultsMixin(LowerResultsMixin(Repe
         :host {
           display: block;
           width: 100%;
-          --list-row-collapse-wrapper: {
-            padding: 0;
-          }
+        }
+        etools-data-table-row::part(edt-list-row-collapse-wrapper) {
+          padding: 0;
         }
 
         .ram-indicators-col {

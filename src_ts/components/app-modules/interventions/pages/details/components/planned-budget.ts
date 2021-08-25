@@ -40,14 +40,14 @@ class PlannedBudget extends connect(store)(FrNumbersConsistencyMixin(PolymerElem
         }
 
         :host {
-          --list-column-label: {
-            margin-right: 0;
-          }
           display: block;
           width: 100%;
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
           box-sizing: border-box;
+        }
+        etools-data-table-column::part(edt-list-column-label) {
+          margin-inline-end: 0;
         }
 
         #edit-btns paper-icon-button {
