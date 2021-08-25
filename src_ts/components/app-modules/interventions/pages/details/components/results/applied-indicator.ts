@@ -43,12 +43,6 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           }
           --list-row-wrapper-padding: 0 24px 0 0 !important;
 
-          --list-row-collapse-wrapper: {
-            padding: 16px 24px 16px 24px !important;
-            max-height: 220px;
-            overflow-y: auto;
-          }
-
           --icon-wrapper: {
             @apply --layout-horizontal;
             @apply --layout-center;
@@ -61,6 +55,11 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
             background-image: var(--collapse-icon-bg-image, none);
             background-size: 5.66px 5.66px;
           }
+        }
+        etools-data-table-row::part(edt-list-row-collapse-wrapper) {
+          padding: 16px 24px 16px 24px !important;
+          max-height: 220px;
+          overflow-y: auto;
         }
 
         .divider {
@@ -120,9 +119,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           <div class="layout-horizontal w100">
             <div class="col-4">
               <div class="header-text">Section / Cluster</div>
-              <div>
-                [[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]
-              </div>
+              <div>[[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]</div>
               <div class="divider"></div>
 
               <div hidden$="[[indicator.cluster_indicator_id]]">
@@ -130,9 +127,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
                 <template is="dom-repeat" items="[[disaggregationNames]]">
                   <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
                 </template>
-                <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">
-                  —
-                </div>
+                <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">—</div>
               </div>
             </div>
             <div class="col-8 padd-left">
