@@ -49,6 +49,9 @@ const pmpEdpoints = {
     // if this caching key is missing then the data will be cached with the url as key
     // cachingKey: 'partnerDetails'
   },
+  partnerActivities: {
+    template: '/api/v1/field-monitoring/planning/activities/?hact_for_partner=<%=id%>'
+  },
   createPartner: {
     template: '/api/v2/partners/add/?vendor=<%=vendor%>'
   },

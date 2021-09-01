@@ -69,10 +69,8 @@ class InterventionProgress extends connect(store)(
           margin-right: 24px;
         }
 
-        etools-data-table-row {
-          --list-row-collapse-wrapper: {
-            padding: 0;
-          }
+        etools-data-table-row::part(edt-list-row-collapse-wrapper) {
+          padding: 0;
         }
 
         .lower-result-status-date {
@@ -241,20 +239,14 @@ class InterventionProgress extends connect(store)(
 
           <div class="lower-results-table" hidden$="[[_emptyList(item.ll_outputs)]]">
             <etools-data-table-header id="listHeader" no-title>
-              <etools-data-table-column class="col-9">
-                PD Outputs or SSFA Expected Results
-              </etools-data-table-column>
-              <etools-data-table-column class="col-3">
-                Current progress (Last Reported on)
-              </etools-data-table-column>
+              <etools-data-table-column class="col-9"> PD Outputs or SSFA Expected Results </etools-data-table-column>
+              <etools-data-table-column class="col-3"> Current progress (Last Reported on) </etools-data-table-column>
             </etools-data-table-header>
 
             <template is="dom-repeat" items="[[item.ll_outputs]]" as="lowerResult">
               <etools-data-table-row>
                 <div slot="row-data">
-                  <span class="col-data col-9">
-                    [[lowerResult.title]]
-                  </span>
+                  <span class="col-data col-9"> [[lowerResult.title]] </span>
                   <span class="col-data col-3">
                     <report-status status="[[_getLowerResultStatus(lowerResult.id)]]"></report-status>
                     <span class="lower-result-status-date">[[_getLowerResultStatusDate(lowerResult.id)]]</span>

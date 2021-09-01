@@ -40,11 +40,10 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
             margin-top: -20px;
             box-sizing: border-box;
           }
-          --etools-dialog-title: {
-            margin-bottom: 0 !important;
-          }
         }
-
+        etools-dialog::part(ed-title) {
+          margin-bottom: 0 !important;
+        }
         paper-input {
           width: 250px;
         }

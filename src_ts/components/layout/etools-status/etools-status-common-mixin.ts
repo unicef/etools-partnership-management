@@ -8,7 +8,7 @@ import {Constructor} from '../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Status, StatusAction} from '../../../typings/etools-status.types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 declare const ShadyCSS: any;
 
 /**
