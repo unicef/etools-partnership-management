@@ -322,6 +322,7 @@ class InterventionsModule extends connect(store)(
       active: false,
       loadingSource: 'main-page'
     });
+    this.addEventListener('amendment-added', this.onAmendmentAdded as any);
     // this._showInterventionPageLoadingMessage();
   }
 
@@ -453,6 +454,10 @@ class InterventionsModule extends connect(store)(
         this.set('selectedInterventionId', id);
       }
     }, 0);
+  }
+
+  onAmendmentAdded(e: CustomEvent) {
+    this.updateDexieData(e.detail);
   }
 
   updateDexieData(intervention: Intervention) {
