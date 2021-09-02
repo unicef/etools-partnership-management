@@ -322,8 +322,6 @@ class InterventionsModule extends connect(store)(
       active: false,
       loadingSource: 'main-page'
     });
-    this.addEventListener('amendment-added', this.onAmendmentAdded as any);
-    this.addEventListener('amendment-deleted', this.onAmendmentDeleted as any);
     // this._showInterventionPageLoadingMessage();
   }
 
@@ -335,14 +333,21 @@ class InterventionsModule extends connect(store)(
   _initInterventionsModuleListeners() {
     this._interventionSaveErrors = this._interventionSaveErrors.bind(this);
     this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
-
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+
+    this.onAmendmentAdded = this.onAmendmentAdded.bind(this);
+    this.onAmendmentDeleted = this.onAmendmentDeleted.bind(this);
+    this.addEventListener('amendment-added', this.onAmendmentAdded as any);
+    this.addEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
 
   _removeInterventionsModuleListeners() {
     this.removeEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+
+    this.removeEventListener('amendment-added', this.onAmendmentAdded as any);
+    this.removeEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
 
   _interventionChanged(intervention: Intervention, permissions: UserPermissions) {
