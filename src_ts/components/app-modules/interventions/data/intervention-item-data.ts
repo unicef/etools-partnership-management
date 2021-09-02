@@ -471,6 +471,14 @@ class InterventionItemData extends connect(store)(
       });
   }
 
+  deleteInterventionFromDexie(id: string) {
+    window.EtoolsPmpApp.DexieDb.interventions
+      .where('id')
+      .equals(parseInt(id, 10))
+      .delete()
+      .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr));
+  }
+
   _handleInterventionDeleteSuccess(id: string) {
     window.EtoolsPmpApp.DexieDb.interventions
       .where('id')

@@ -323,6 +323,7 @@ class InterventionsModule extends connect(store)(
       loadingSource: 'main-page'
     });
     this.addEventListener('amendment-added', this.onAmendmentAdded as any);
+    this.addEventListener('amendment-deleted', this.onAmendmentDeleted as any);
     // this._showInterventionPageLoadingMessage();
   }
 
@@ -454,6 +455,10 @@ class InterventionsModule extends connect(store)(
         this.set('selectedInterventionId', id);
       }
     }, 0);
+  }
+
+  onAmendmentDeleted(e: CustomEvent) {
+    (this.$.interventionData as InterventionItemData).deleteInterventionFromDexie(e.detail.id);
   }
 
   onAmendmentAdded(e: CustomEvent) {
