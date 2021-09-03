@@ -68,8 +68,8 @@ import {DataRefreshDialog} from './header/data-refresh-dialog';
 import './footer/page-footer.js';
 
 import '../environment-flags/environment-flags';
-import '../app-modules/partners/data/partners-list-data.js';
-import '../app-modules/agreements/data/agreements-list-data.js';
+import '../pages/partners/data/partners-list-data.js';
+import '../pages/agreements/data/agreements-list-data.js';
 
 import './app-theme.js';
 import '../styles/app-mixins.js';
@@ -109,9 +109,9 @@ dayjs.extend(dayjs_plugin_isBetween);
 function fetchLangFiles(lang: string) {
   return Promise.allSettled([
     fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json()),
-    fetch(
-      `src/components/app-modules/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`
-    ).then((res: any) => res.json())
+    fetch(`src/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
+      res.json()
+    )
   ]).then((response: any) => {
     return Object.assign(response[0].value, response[1].value);
   });
@@ -301,7 +301,7 @@ class AppShell extends connect(store)(
   _prpModules: string[] = ['reports', 'settings'];
 
   @property({type: String})
-  _appModuleMainElUrlTmpl = '../app-modules/##module##/##main-el-name##-module.js';
+  _appModuleMainElUrlTmpl = '../pages/##module##/##main-el-name##-module.js';
 
   @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
   appLocRoute!: {

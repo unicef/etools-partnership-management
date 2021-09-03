@@ -33,7 +33,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
-import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
+import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../mixins/common-mixin.js';
 import {openDialog} from '../../utils/dialog';

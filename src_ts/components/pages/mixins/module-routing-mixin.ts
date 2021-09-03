@@ -203,9 +203,9 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         if (customElement instanceof PolymerElement === false) {
           /* Imports are resolved relative to the current module, in this case module-routing-mixin,
            * So non-absolute paths will be relative to
-           * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
+           * `http://localhost:8082/pmp/src/components/pages/mixins/`
            */
-          const pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
+          const pageUrl = getDomainByEnv() + '/src/components/pages/' + baseUrl + fileName + '.js';
           import(pageUrl)
             .then(() => {
               resolve();

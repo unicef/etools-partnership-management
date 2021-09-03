@@ -11,7 +11,7 @@ import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 
 import '../../layout/page-content-header';
-import '../../layout//page-content-header-slotted-styles';
+import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 
 import './components/report-status';
