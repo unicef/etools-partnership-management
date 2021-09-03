@@ -22,7 +22,7 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 
 import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../store';
+import {store, RootState} from '../../../../../redux/store';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';

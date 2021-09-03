@@ -1,12 +1,12 @@
 import {PolymerElement} from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import {store} from '../../../../store';
+import {store} from '../../../../redux/store';
 
 declare const dayjs: any;
 import Dexie from 'dexie';
 
 import {isEmptyObject} from '../../../utils/utils';
-import {setAgreements} from '../../../../actions/agreements';
+import {setAgreements} from '../../../../redux/actions/agreements';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';

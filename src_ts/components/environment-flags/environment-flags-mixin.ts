@@ -1,4 +1,4 @@
-import {RootState} from '../../store';
+import {RootState} from '../../redux/store';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {copy} from '../utils/utils';

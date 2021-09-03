@@ -198,7 +198,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     importPageElement(fileName: string, baseUrl: string) {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         const customElement = this.shadowRoot!.querySelector(fileName);
         if (customElement instanceof PolymerElement === false) {
           /* Imports are resolved relative to the current module, in this case module-routing-mixin,

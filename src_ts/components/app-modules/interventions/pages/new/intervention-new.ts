@@ -2,9 +2,9 @@
 import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {RootState, store} from '../../../../../store';
+import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '../../../../utils/utils';
-import {csoPartnersSelector} from '../../../../../reducers/partners';
+import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';

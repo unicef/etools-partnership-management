@@ -17,8 +17,8 @@ import {
   DECREASE_UPLOADS_IN_PROGRESS,
   DECREASE_UNSAVED_UPLOADS,
   INCREASE_UNSAVED_UPLOADS
-} from '../../../../../actions/upload-status';
-import {store, RootState} from '../../../../../store';
+} from '../../../../../redux/actions/upload-status';
+import {store, RootState} from '../../../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import '../../../../layout/etools-form-element-wrapper';
 import '../../../../layout/etools-cp-structure.js';
@@ -44,7 +44,7 @@ import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
-import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure';

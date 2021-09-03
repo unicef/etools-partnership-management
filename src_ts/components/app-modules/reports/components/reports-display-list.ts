@@ -13,7 +13,7 @@ import CommonMixin from '../../../mixins/common-mixin';
 import PaginationMixin from '../../../mixins/pagination-mixin';
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../store';
+import {store, RootState} from '../../../../redux/store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

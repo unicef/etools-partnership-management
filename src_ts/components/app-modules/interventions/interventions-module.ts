@@ -23,7 +23,7 @@ import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-s
 import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';

@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import {Reducer} from 'redux';
 import {UPDATE_DRAWER_STATE, AppAction} from '../actions/app.js';
 import {SHOW_TOAST, CLOSE_TOAST, UPDATE_ROUTE_DETAILS} from '../actions/actionsConstants.js';
-import {RouteDetails} from '../components/utils/router.js';
+import {RouteDetails} from '../../components/utils/router.js';
 
 export class AppState {
   page = '';

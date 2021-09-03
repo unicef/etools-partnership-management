@@ -14,7 +14,7 @@ import {navMenuStyles} from './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {property} from '@polymer/decorators';
 
 /**

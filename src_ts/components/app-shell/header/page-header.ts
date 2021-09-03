@@ -3,9 +3,9 @@ import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-l
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {_checkEnvironment} from '../../../config/config';
-import {updateDrawerState} from '../../../actions/app';
+import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
@@ -17,8 +17,8 @@ import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/e
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
-import {setLanguage} from '../../../actions/active-language.js';
-import {activeLanguage} from '../../../reducers/active-language.js';
+import {setLanguage} from '../../../redux/actions/active-language.js';
+import {activeLanguage} from '../../../redux/reducers/active-language.js';
 
 store.addReducers({
   activeLanguage

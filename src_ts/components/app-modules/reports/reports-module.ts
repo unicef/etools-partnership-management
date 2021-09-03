@@ -29,7 +29,7 @@ import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {isEmptyObject} from '../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {property} from '@polymer/decorators/lib/decorators';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';

@@ -13,8 +13,8 @@ import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
 
 import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {RootState, store} from '../../../../store';
-import {patchDisaggregation} from '../../../../actions/common-data';
+import {RootState, store} from '../../../../redux/store';
+import {patchDisaggregation} from '../../../../redux/actions/common-data';
 import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

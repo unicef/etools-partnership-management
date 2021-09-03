@@ -17,7 +17,7 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../store';
+import {store, RootState} from '../../../../../redux/store';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
@@ -34,7 +34,7 @@ import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {ListFilterOption} from '../../../../../typings/filter.types';
-import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {
   CpOutput,
   LabelAndValue,

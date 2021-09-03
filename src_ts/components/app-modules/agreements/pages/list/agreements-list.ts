@@ -1,5 +1,5 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from '../../../../../store';
+import {store, RootState} from '../../../../../redux/store';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import {PolymerElement, html} from '@polymer/polymer';
@@ -29,7 +29,7 @@ import {SharedStyles} from '../../../../styles/shared-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import '../../data/agreements-list-data.js';
-import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {property} from '@polymer/decorators';

@@ -6,7 +6,7 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/app-route/app-route';
 
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store} from '../../../store';
+import {store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
@@ -19,7 +19,7 @@ import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
-import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
+import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';

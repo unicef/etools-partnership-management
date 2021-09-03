@@ -10,7 +10,7 @@ declare const dayjs: any;
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../store';
+import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**

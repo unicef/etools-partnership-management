@@ -16,21 +16,21 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {store, RootState} from '../../store';
+import {store, RootState} from '../../redux/store';
 
 // These are the actions needed by this element.
 import {
   // navigate,
   updateDrawerState,
   updateStoreRouteDetails
-} from '../../actions/app.js';
+} from '../../redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
-import commonData from '../../reducers/common-data.js';
-import uploadStatus from '../../reducers/upload-status.js';
-import agreements from '../../reducers/agreements.js';
-import partners from '../../reducers/partners.js';
-import user from '../../reducers/user';
+import commonData from '../../redux/reducers/common-data.js';
+import uploadStatus from '../../redux/reducers/upload-status.js';
+import agreements from '../../redux/reducers/agreements.js';
+import partners from '../../redux/reducers/partners.js';
+import user from '../../redux/reducers/user';
 
 store.addReducers({
   // @ts-ignore
@@ -77,7 +77,7 @@ import UtilsMixin from '../mixins/utils-mixin.js';
 
 // import global config and dexie db config
 import '../../config/config.js';
-import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
+import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../redux/actions/upload-status.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);

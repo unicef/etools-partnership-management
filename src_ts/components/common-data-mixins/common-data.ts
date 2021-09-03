@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {store} from '../../store';
+import {store} from '../../redux/store';
 
-import * as commonDataActions from '../../actions/common-data.js';
+import * as commonDataActions from '../../redux/actions/common-data.js';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';

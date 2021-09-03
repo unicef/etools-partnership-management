@@ -1,5 +1,5 @@
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';

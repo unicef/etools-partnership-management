@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import {Action, ActionCreator} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
-import {RouteDetails} from '../components/utils/router';
+import {RouteDetails} from '../../components/utils/router';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {

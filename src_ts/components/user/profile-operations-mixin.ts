@@ -1,9 +1,9 @@
-import {store} from '../../store';
+import {store} from '../../redux/store';
 import {isEmptyObject} from '../utils/utils';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
-import {updateUserData} from '../../actions/user';
+import {updateUserData} from '../../redux/actions/user';
 import {fireEvent} from '../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

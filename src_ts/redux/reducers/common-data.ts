@@ -37,7 +37,7 @@ import {
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
-import {copy} from '../components/utils/utils';
+import {copy} from '../../components/utils/utils';
 import {
   Disaggregation,
   EnvFlags,

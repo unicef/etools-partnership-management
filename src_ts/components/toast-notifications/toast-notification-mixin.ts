@@ -4,7 +4,7 @@ import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
-import {store} from '../../store';
+import {store} from '../../redux/store';
 import get from 'lodash-es/get';
 
 /**

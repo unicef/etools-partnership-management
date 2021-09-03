@@ -15,7 +15,7 @@ import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import '../../../../../../mixins/common-mixin.js';
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../../../store';
+import {store, RootState} from '../../../../../../../redux/store';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';

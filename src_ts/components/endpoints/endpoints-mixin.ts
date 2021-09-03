@@ -1,5 +1,5 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {RootState} from '../../store';
+import {RootState} from '../../redux/store';
 
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
