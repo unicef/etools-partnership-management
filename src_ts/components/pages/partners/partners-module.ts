@@ -9,9 +9,9 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
-import ModuleRoutingMixin from '../mixins/module-routing-mixin';
+import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
-import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
+import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';

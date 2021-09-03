@@ -6,10 +6,10 @@ import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../redux/store';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin.js';
-import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
+import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
-import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
+import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin.js';
 
 import '../../common/components/etools-tabs';
 import '../../common/components/etools-error-messages-box';
