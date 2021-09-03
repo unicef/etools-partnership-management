@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '../../layout/page-content-header';
+import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';

@@ -13,11 +13,11 @@ import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
-import '../../layout/page-content-header';
-import '../../layout/page-content-header-slotted-styles';
-import '../../layout/etools-tabs';
-import '../../layout/etools-error-messages-box';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import '../../common/components/page-content-header';
+import '../../styles/page-content-header-slotted-styles';
+import '../../common/components/etools-tabs';
+import '../../common/components/etools-error-messages-box';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
 
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 

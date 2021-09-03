@@ -1,12 +1,12 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import {Status, StatusAction} from '../../../typings/etools-status.types';
+import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
 declare const ShadyCSS: any;

@@ -1,5 +1,5 @@
 import {html} from '@polymer/polymer';
-import {SharedStyles} from '../../styles/shared-styles';
+import {SharedStyles} from '../../../styles/shared-styles';
 
 export const etoolsStatusStyles = html`
   ${SharedStyles}

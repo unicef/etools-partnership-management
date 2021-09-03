@@ -5,14 +5,14 @@ import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import {store, RootState} from '../../redux/store';
-import {SharedStyles} from '../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../styles/required-field-styles';
-import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
+import {store, RootState} from '../../../redux/store';
+import {SharedStyles} from '../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
+import {isJsonStrMatch, isEmptyObject} from '../../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-import CommonMixin from '../common/mixins/common-mixin';
+import CommonMixin from '../../common/mixins/common-mixin';
 
 /**
  * @polymer

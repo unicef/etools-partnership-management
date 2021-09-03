@@ -11,10 +11,10 @@ import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
-import '../../layout/etools-tabs';
-import '../../layout/etools-error-messages-box.js';
-import '../../layout/page-content-header';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import '../../common/components/etools-tabs';
+import '../../common/components/etools-error-messages-box';
+import '../../common/components/page-content-header';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';

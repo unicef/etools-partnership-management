@@ -10,9 +10,9 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 
-import '../../layout/page-content-header';
-import '../../layout/page-content-header-slotted-styles';
-import '../../layout/etools-tabs';
+import '../../common/components/page-content-header';
+import '../../styles/page-content-header-slotted-styles';
+import '../../common/components/etools-tabs';
 
 import './components/report-status';
 import './components/report-rating-dialog';
@@ -24,7 +24,7 @@ import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {isEmptyObject} from '../../utils/utils';

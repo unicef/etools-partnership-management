@@ -14,7 +14,7 @@ import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
-import '../../layout/support-btn';
+import '../../common/components/support-btn';
 import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';

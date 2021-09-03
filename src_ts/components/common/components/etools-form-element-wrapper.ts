@@ -1,8 +1,8 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input-container.js';
 
-import {SharedStyles} from '../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../styles/required-field-styles';
+import {SharedStyles} from '../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
 import {property} from '@polymer/decorators';
 
 /**

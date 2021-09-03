@@ -2,13 +2,13 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import EndpointsMixin from '../endpoints/endpoints-mixin';
+import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
-import {fireEvent} from '../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @polymer

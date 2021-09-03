@@ -2,11 +2,11 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 declare const dayjs: any;
-import CommonMixin from '../common/mixins/common-mixin';
-import EndpointsMixin from '../endpoints/endpoints-mixin';
-import {isEmptyObject} from '../utils/utils';
-import {SharedStyles} from '../styles/shared-styles';
-import {gridLayoutStyles} from '../styles/grid-layout-styles';
+import CommonMixin from '../../common/mixins/common-mixin';
+import EndpointsMixin from '../../endpoints/endpoints-mixin';
+import {isEmptyObject} from '../../utils/utils';
+import {SharedStyles} from '../../styles/shared-styles';
+import {gridLayoutStyles} from '../../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

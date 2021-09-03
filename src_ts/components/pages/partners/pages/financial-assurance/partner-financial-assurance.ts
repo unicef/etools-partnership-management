@@ -26,7 +26,7 @@ declare const dayjs: any;
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
-import '../../../../layout/monitoring-visits-list';
+import '../../../../common/components/monitoring-visits-list';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../models/partners.models';

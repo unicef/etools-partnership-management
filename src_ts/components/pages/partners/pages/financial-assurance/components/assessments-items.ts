@@ -11,7 +11,7 @@ import CommonMixin from '../../../../../common/mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
-import '../../../../../layout/icons-actions';
+import '../../../../../common/components/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import {store} from '../../../../../../redux/store';

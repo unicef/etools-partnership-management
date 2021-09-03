@@ -4,7 +4,7 @@ import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
-import '../../../layout/etools-warn-message';
+import '../../../common/components/etools-warn-message';
 import {SharedStyles} from '../../../styles/shared-styles';
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';

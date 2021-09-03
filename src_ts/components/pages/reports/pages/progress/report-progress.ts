@@ -3,7 +3,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
 
-import '../../../../layout/etools-ram-indicators';
+import '../../../../common/components/etools-ram-indicators';
 
 import '../../components/report-status';
 import './components/report-overall';

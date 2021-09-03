@@ -7,9 +7,9 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {StatusAction} from '../../../typings/etools-status.types';
+import {StatusAction} from '../../../../typings/etools-status.types';
 
 /**
  * @polymer
