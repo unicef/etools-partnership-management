@@ -18,7 +18,7 @@ import {patchDisaggregation} from '../../../../redux/actions/common-data';
 import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {userIsPme} from '../../../user/user-permissions';
+import {userIsPme} from '../../../common/user/user-permissions';
 import {property} from '@polymer/decorators/lib/decorators';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';

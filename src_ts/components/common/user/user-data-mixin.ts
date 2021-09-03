@@ -1,11 +1,11 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {store} from '../../redux/store';
+import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
-import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import {updateUserData} from '../../redux/actions/user';
-import {isEmptyObject} from '../utils/utils';
-import {fireEvent} from '../utils/fire-custom-event';
+import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+import {updateUserData} from '../../../redux/actions/user';
+import {isEmptyObject} from '../../utils/utils';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

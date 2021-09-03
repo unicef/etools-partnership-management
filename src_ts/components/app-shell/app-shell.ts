@@ -59,7 +59,7 @@ import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from '../common/common-data.js';
 import ToastNotificationsMixin from '../common/toast-notifications/toast-notification-mixin.js';
 import ScrollControlMixin from '../common/mixins/scroll-control-mixin.js';
-import UserDataMixin from '../user/user-data-mixin';
+import UserDataMixin from '../common/user/user-data-mixin';
 
 import './menu/app-menu.js';
 import './header/page-header.js';
