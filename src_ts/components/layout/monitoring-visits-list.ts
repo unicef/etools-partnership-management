@@ -2,7 +2,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 declare const dayjs: any;
-import CommonMixin from '../mixins/common-mixin';
+import CommonMixin from '../common/mixins/common-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {isEmptyObject} from '../utils/utils';
 import {SharedStyles} from '../styles/shared-styles';

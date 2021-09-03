@@ -12,10 +12,10 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';
-import PaginationMixin from '../../../../mixins/pagination-mixin.js';
-import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
-import CommonMixin from '../../../../mixins/common-mixin.js';
+import AjaxServerErrorsMixin from '../../../../common/mixins/ajax-server-errors-mixin.js';
+import PaginationMixin from '../../../../common/mixins/pagination-mixin.js';
+import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin.js';
+import CommonMixin from '../../../../common/mixins/common-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';

@@ -1,6 +1,6 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
-import ListDataMixin from '../../../mixins/list-data-mixin';
+import ListDataMixin from '../../../common/mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';

@@ -1,4 +1,4 @@
-import {ListFilterOption, ListOrSelectedFilterOption} from '../../typings/filter.types';
+import {ListFilterOption, ListOrSelectedFilterOption} from '../../../typings/filter.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';

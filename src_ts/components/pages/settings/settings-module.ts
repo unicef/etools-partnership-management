@@ -4,7 +4,7 @@ import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {fireEvent} from '../../utils/fire-custom-event';
-import CommonMixin from '../../mixins/common-mixin';
+import CommonMixin from '../../common/mixins/common-mixin';
 
 /**
  * @polymer

@@ -7,7 +7,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {PolymerElement} from '@polymer/polymer';
-import EnvironmentFlagsPolymerMixin from '../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../common/environment-flags/environment-flags-mixin';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
 

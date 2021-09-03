@@ -10,7 +10,7 @@ import {store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
 import '../../layout/page-content-header';
@@ -35,7 +35,7 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
 import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../mixins/common-mixin.js';
+import CommonMixin from '../../common/mixins/common-mixin.js';
 import {openDialog} from '../../utils/dialog';
 import {get as getTranslation} from 'lit-translate';
 

@@ -1,6 +1,6 @@
 import '../disaggregation-table-row.js';
 import {PolymerElement, html} from '@polymer/polymer';
-import UtilsMixin from '../../../../../../../mixins/utils-mixin';
+import UtilsMixin from '../../../../../../../common/mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {property} from '@polymer/decorators';

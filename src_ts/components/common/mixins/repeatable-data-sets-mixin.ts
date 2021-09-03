@@ -1,12 +1,12 @@
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {copy} from '../utils/utils';
+import {copy} from '../../utils/utils';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 /**

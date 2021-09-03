@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin';
 import {get as getTranslation} from 'lit-translate';
 
 /**

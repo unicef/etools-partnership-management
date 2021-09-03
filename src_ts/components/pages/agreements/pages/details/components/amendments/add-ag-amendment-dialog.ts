@@ -10,7 +10,7 @@ import {requiredFieldStarredStyles} from '../../../../../../styles/required-fiel
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../../mixins/common-mixin.js';
+import CommonMixin from '../../../../../../common/mixins/common-mixin.js';
 
 /**
  * @polymer

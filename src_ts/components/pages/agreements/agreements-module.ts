@@ -5,7 +5,7 @@ import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../redux/store';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin.js';
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
@@ -26,7 +26,7 @@ import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../mixins/common-mixin';
+import CommonMixin from '../../common/mixins/common-mixin';
 import {get as getTranslation} from 'lit-translate';
 
 /**

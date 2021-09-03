@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
@@ -11,7 +11,7 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles'
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import CONSTANTS from '../../../../config/app-constants';
-import CommonMixin from '../../../mixins/common-mixin';
+import CommonMixin from '../../../common/mixins/common-mixin';
 
 /**
  * @polymer

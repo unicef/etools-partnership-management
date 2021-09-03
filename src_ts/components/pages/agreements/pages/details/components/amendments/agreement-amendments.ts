@@ -8,11 +8,11 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
-import CommonMixin from '../../../../../../mixins/common-mixin';
+import CommonMixin from '../../../../../../common/mixins/common-mixin';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../../styles/shared-styles';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles';
-import '../../../../../../mixins/common-mixin.js';
+import '../../../../../../common/mixins/common-mixin.js';
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../redux/store';

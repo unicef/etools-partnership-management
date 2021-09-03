@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import UtilsMixin from '../../../../../../mixins/utils-mixin';
+import UtilsMixin from '../../../../../../common/mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';

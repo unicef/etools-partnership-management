@@ -7,7 +7,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '../../../../layout/etools-form-element-wrapper';
 
 import './sent-bk-comments.js';
-import CommonMixin from '../../../../mixins/common-mixin.js';
+import CommonMixin from '../../../../common/mixins/common-mixin.js';
 import {PolymerElement, html} from '@polymer/polymer';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../config/app-constants.js';

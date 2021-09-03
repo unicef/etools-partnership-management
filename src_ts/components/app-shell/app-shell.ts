@@ -56,9 +56,9 @@ import {AppShellStyles} from './app-shell-styles';
 import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
 import 'etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
-import CommonDataMixin from '../common-data-mixins/common-data.js';
+import CommonDataMixin from '../common/common-data.js';
 import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
-import ScrollControlMixin from '../mixins/scroll-control-mixin.js';
+import ScrollControlMixin from '../common/mixins/scroll-control-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
 
 import './menu/app-menu.js';
@@ -67,13 +67,13 @@ import './header/data-refresh-dialog';
 import {DataRefreshDialog} from './header/data-refresh-dialog';
 import './footer/page-footer.js';
 
-import '../environment-flags/environment-flags';
+import '../common/environment-flags/environment-flags';
 import '../pages/partners/data/partners-list-data.js';
 import '../pages/agreements/data/agreements-list-data.js';
 
 import './app-theme.js';
 import '../styles/app-mixins.js';
-import UtilsMixin from '../mixins/utils-mixin.js';
+import UtilsMixin from '../common/mixins/utils-mixin.js';
 
 // import global config and dexie db config
 import '../../config/config.js';
@@ -83,7 +83,7 @@ import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../redux/acti
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from '../../config/config';
-import UploadsMixin from '../mixins/uploads-mixin.js';
+import UploadsMixin from '../common/mixins/uploads-mixin.js';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';

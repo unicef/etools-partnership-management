@@ -3,7 +3,7 @@ import {property} from '@polymer/decorators';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
+import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin.js';
 import {store} from '../../../../redux/store';
 import {deletePartner} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';

@@ -1,8 +1,8 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
-import EndpointsMixin from '../endpoints/endpoints-mixin';
+import AjaxServerErrorsMixin from '../../common/mixins/ajax-server-errors-mixin';
+import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

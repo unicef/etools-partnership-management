@@ -9,13 +9,13 @@ import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../styles/shared-styles';
-import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
+import FrontendPaginationMixin from '../../../common/mixins/frontend-pagination-mixin';
 
 import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../redux/store';
 import {patchDisaggregation} from '../../../../redux/actions/common-data';
-import EnvironmentFlagsPolymerMixin from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '../../../user/user-permissions';
@@ -23,7 +23,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../utils/dialog';
-import CommonMixin from '../../../mixins/common-mixin';
+import CommonMixin from '../../../common/mixins/common-mixin';
 
 /**
  * @polymer

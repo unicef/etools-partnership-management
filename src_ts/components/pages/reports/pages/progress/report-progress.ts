@@ -11,8 +11,8 @@ import './components/indicator-report-target';
 import './components/indicator-details';
 import './components/sr-details';
 
-import UtilsMixin from '../../../../mixins/utils-mixin';
-import CommonMixin from '../../../../mixins/common-mixin';
+import UtilsMixin from '../../../../common/mixins/utils-mixin';
+import CommonMixin from '../../../../common/mixins/common-mixin';
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../styles/shared-styles';

@@ -1,5 +1,5 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {fireEvent} from '../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event.js';
 import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

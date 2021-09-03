@@ -1,8 +1,8 @@
 import {property} from '@polymer/decorators';
-import {fireEvent} from '../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {PolymerElement} from '@polymer/polymer';
-import {updateAppState} from '../utils/navigation-helper';
-import {isEmptyObject} from '../utils/utils';
+import {updateAppState} from '../../utils/navigation-helper';
+import {isEmptyObject} from '../../utils/utils';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {

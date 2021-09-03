@@ -25,13 +25,10 @@ import '../../../../layout/etools-cp-structure.js';
 import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import CommonMixin from '../../../../mixins/common-mixin';
-import UploadsMixin from '../../../../mixins/uploads-mixin';
+import CommonMixin from '../../../../common/mixins/common-mixin';
+import UploadsMixin from '../../../../common/mixins/uploads-mixin';
 
-import '../../../../mixins/missing-dropdown-options-mixin.js';
-import '../../../../mixins/common-mixin.js';
 import '../../../../endpoints/endpoints.js';
-import '../../../../mixins/uploads-mixin.js';
 import '../../../partners/mixins/staff-members-data-mixin.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';

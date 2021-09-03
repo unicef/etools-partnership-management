@@ -12,7 +12,7 @@ import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-import CommonMixin from '../mixins/common-mixin';
+import CommonMixin from '../common/mixins/common-mixin';
 
 /**
  * @polymer

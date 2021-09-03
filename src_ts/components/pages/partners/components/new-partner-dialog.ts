@@ -4,7 +4,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import CommonMixin from '../../../mixins/common-mixin';
+import CommonMixin from '../../../common/mixins/common-mixin';
 
 /**
  * @polymer

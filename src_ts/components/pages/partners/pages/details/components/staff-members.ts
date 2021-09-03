@@ -14,7 +14,7 @@ import './add-edit-staff-members';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {openDialog} from '../../../../../utils/dialog';
-import CommonMixin from '../../../../../mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin';
 
 /**
  * @polymer

@@ -4,7 +4,7 @@ import '@unicef-polymer/etools-upload/etools-upload';
 
 import '../../../../../layout/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import CommonMixin from '../../../../../mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';

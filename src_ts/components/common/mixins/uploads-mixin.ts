@@ -1,6 +1,6 @@
-import pmpEdpoints from '../endpoints/endpoints.js';
-import {store, RootState} from '../../redux/store';
-import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../redux/actions/upload-status';
+import pmpEdpoints from '../../endpoints/endpoints.js';
+import {store, RootState} from '../../../redux/store';
+import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../../redux/actions/upload-status';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';

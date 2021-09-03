@@ -1,7 +1,7 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../common/environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';

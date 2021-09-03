@@ -14,7 +14,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import CommonMixin from '../../../../../mixins/common-mixin.js';
+import CommonMixin from '../../../../../common/mixins/common-mixin.js';
 
 /**
  * @polymer

@@ -1,4 +1,4 @@
-import UtilsMixin from '../../../../../mixins/utils-mixin.js';
+import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {PolymerElement, html} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';

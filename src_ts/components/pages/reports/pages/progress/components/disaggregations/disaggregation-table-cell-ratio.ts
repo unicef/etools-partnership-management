@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
 import './disaggregation-field.js';
-import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
+import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';

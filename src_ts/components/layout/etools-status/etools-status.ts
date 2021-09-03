@@ -10,7 +10,7 @@ import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../typings/etools-status.types';
 import {property} from '@polymer/decorators';
-import CommonMixin from '../../mixins/common-mixin';
+import CommonMixin from '../../common/mixins/common-mixin';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element

@@ -2,7 +2,7 @@ declare const dayjs: any;
 import Dexie from 'dexie';
 import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../redux/store';
-import ListDataMixin from '../../../mixins/list-data-mixin';
+import ListDataMixin from '../../../common/mixins/list-data-mixin';
 import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';

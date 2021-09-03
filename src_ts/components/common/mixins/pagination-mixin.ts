@@ -1,4 +1,4 @@
-import CONSTANTS from '../../config/app-constants';
+import CONSTANTS from '../../../config/app-constants';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';

@@ -8,7 +8,7 @@ import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin';
 
 class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
   static get template() {

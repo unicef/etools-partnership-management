@@ -20,7 +20,7 @@ import './components/report-reject-dialog';
 import {GenericObject, User} from '@unicef-polymer/etools-types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';
@@ -33,7 +33,7 @@ import {store, RootState} from '../../../redux/store';
 import {property} from '@polymer/decorators/lib/decorators';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';
-import CommonMixin from '../../mixins/common-mixin';
+import CommonMixin from '../../common/mixins/common-mixin';
 declare const dayjs: any;
 
 /**

@@ -1,5 +1,5 @@
 import {PolymerElement} from '@polymer/polymer';
-import ListDataMixin from '../../../mixins/list-data-mixin';
+import ListDataMixin from '../../../common/mixins/list-data-mixin';
 import {store} from '../../../../redux/store';
 
 declare const dayjs: any;

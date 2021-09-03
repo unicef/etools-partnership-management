@@ -20,10 +20,10 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import PaginationMixin from '../../../../mixins/pagination-mixin.js';
-import CommonMixin from '../../../../mixins/common-mixin.js';
-import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
-import ListFiltersMixin from '../../../../mixins/list-filters-mixin.js';
+import PaginationMixin from '../../../../common/mixins/pagination-mixin.js';
+import CommonMixin from '../../../../common/mixins/common-mixin.js';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin.js';
+import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin.js';
 
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 

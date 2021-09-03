@@ -18,11 +18,11 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
-import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
-import PaginationMixin from '../../../../mixins/pagination-mixin.js';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin.js';
+import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin';
+import PaginationMixin from '../../../../common/mixins/pagination-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
-import CommonMixin from '../../../../mixins/common-mixin';
+import CommonMixin from '../../../../common/mixins/common-mixin';
 import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
 
 import {SharedStyles} from '../../../../styles/shared-styles';

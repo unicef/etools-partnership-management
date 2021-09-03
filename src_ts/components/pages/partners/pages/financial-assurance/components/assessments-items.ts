@@ -7,7 +7,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import '../../../../../endpoints/endpoints.js';
-import CommonMixin from '../../../../../mixins/common-mixin.js';
+import CommonMixin from '../../../../../common/mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';

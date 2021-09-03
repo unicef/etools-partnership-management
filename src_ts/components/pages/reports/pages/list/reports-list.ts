@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '../../components/reports-display-list';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles';
-import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
+import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../redux/store';
 import {isJsonStrMatch, isEmptyObject} from '../../../../utils/utils';

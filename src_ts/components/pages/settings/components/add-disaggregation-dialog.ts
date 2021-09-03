@@ -5,7 +5,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
+import RepeatableDataSetsMixin from '../../../common/mixins/repeatable-data-sets-mixin.js';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {buttonsStyles} from '../../../styles/buttons-styles';
@@ -21,7 +21,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import CommonMixin from '../../../mixins/common-mixin.js';
+import CommonMixin from '../../../common/mixins/common-mixin';
 
 /**
  * @polymer

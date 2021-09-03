@@ -3,8 +3,8 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
-import CommonMixin from '../../../../mixins/common-mixin.js';
-import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
+import CommonMixin from '../../../../common/mixins/common-mixin.js';
+import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
