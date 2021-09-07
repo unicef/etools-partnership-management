@@ -301,7 +301,7 @@ class AppShell extends connect(store)(
   _prpModules: string[] = ['reports', 'settings'];
 
   @property({type: String})
-  _appModuleMainElUrlTmpl = '../pages/##module##/##main-el-name##-module.js';
+  _appModuleMainElUrlTmpl = './components/pages/##module##/##main-el-name##-module.js';
 
   @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
   appLocRoute!: {
