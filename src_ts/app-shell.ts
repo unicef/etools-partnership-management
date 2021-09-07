@@ -16,21 +16,21 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {store, RootState} from '../../redux/store';
+import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
 import {
   // navigate,
   updateDrawerState,
   updateStoreRouteDetails
-} from '../../redux/actions/app.js';
+} from './redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
-import commonData from '../../redux/reducers/common-data.js';
-import uploadStatus from '../../redux/reducers/upload-status.js';
-import agreements from '../../redux/reducers/agreements.js';
-import partners from '../../redux/reducers/partners.js';
-import user from '../../redux/reducers/user';
+import commonData from './redux/reducers/common-data.js';
+import uploadStatus from './redux/reducers/upload-status.js';
+import agreements from './redux/reducers/agreements.js';
+import partners from './redux/reducers/partners.js';
+import user from './redux/reducers/user';
 
 store.addReducers({
   // @ts-ignore
@@ -51,41 +51,41 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import '@polymer/app-route/app-route.js';
 
-import {AppShellStyles} from './app-shell-styles';
+import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
 import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
 import 'etools-piwik-analytics/etools-piwik-analytics.js';
-import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
-import CommonDataMixin from '../common/common-data.js';
-import ToastNotificationsMixin from '../common/toast-notifications/toast-notification-mixin.js';
-import ScrollControlMixin from '../common/mixins/scroll-control-mixin.js';
-import UserDataMixin from '../common/user/user-data-mixin';
+import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
+import CommonDataMixin from './components/common/common-data.js';
+import ToastNotificationsMixin from './components/common/toast-notifications/toast-notification-mixin.js';
+import ScrollControlMixin from './components/common/mixins/scroll-control-mixin.js';
+import UserDataMixin from './components/common/user/user-data-mixin';
 
-import './menu/app-menu.js';
-import './header/page-header.js';
-import './header/data-refresh-dialog';
-import {DataRefreshDialog} from './header/data-refresh-dialog';
-import './footer/page-footer.js';
+import './components/app-shell/menu/app-menu.js';
+import './components/app-shell/header/page-header.js';
+import './components/app-shell/header/data-refresh-dialog';
+import {DataRefreshDialog} from './components/app-shell/header/data-refresh-dialog';
+import './components/app-shell/footer/page-footer.js';
 
-import '../common/environment-flags/environment-flags';
-import '../pages/partners/data/partners-list-data.js';
-import '../pages/agreements/data/agreements-list-data.js';
+import './components/common/environment-flags/environment-flags';
+import './components/pages/partners/data/partners-list-data.js';
+import './components/pages/agreements/data/agreements-list-data.js';
 
-import './app-theme.js';
-import '../styles/app-mixins.js';
-import UtilsMixin from '../common/mixins/utils-mixin.js';
+import './components/app-shell/app-theme.js';
+import './components/styles/app-mixins.js';
+import UtilsMixin from './components/common/mixins/utils-mixin.js';
 
 // import global config and dexie db config
-import '../../config/config.js';
-import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../redux/actions/upload-status.js';
+import './config/config.js';
+import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from './redux/actions/upload-status.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
-import {BASE_URL} from '../../config/config';
-import UploadsMixin from '../common/mixins/uploads-mixin.js';
-import {fireEvent} from '../utils/fire-custom-event.js';
-import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
+import {BASE_URL} from './config/config';
+import UploadsMixin from './components/common/mixins/uploads-mixin.js';
+import {fireEvent} from './components/utils/fire-custom-event.js';
+import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
@@ -93,7 +93,7 @@ import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog'
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
-import {EtoolsRouter} from '../utils/routes.js';
+import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;

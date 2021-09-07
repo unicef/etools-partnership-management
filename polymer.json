@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/components/app-shell/app-shell.js",
+  "shell": "src/app-shell.js",
   "fragments": [
     "src/components/pages/partners/partners-module.js",
     "src/components/pages/partners/pages/list/partners-list.js",
