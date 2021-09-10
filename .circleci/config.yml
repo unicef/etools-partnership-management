@@ -1,10 +1,10 @@
 version: 2
 jobs:
-  test:
+  lint:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:11.9.0
+      - image: node:12.18.3
     steps:
       - checkout
       - run:
@@ -22,19 +22,21 @@ jobs:
           paths:
             - node_modules
       - run:
+          name: TsLint
+          command: npm run tsToJs
+      - run:
+          name: EsLint
+          command: npm run lint
+      - run:
           name: Polymer3 Build
           command: npm run build
           no_output_timeout: 25m
-      - run:
-          name: Run Tests
-          command: |
-            echo "skipping tests for now: xvfb-run polymer test --skip-selenium-install"
 
   build_and_deploy:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:11.9.0
+      - image: node:12.18.3
     steps:
       - checkout
       - setup_remote_docker
@@ -74,7 +76,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - test:
+      - lint:
           filters:
             branches:
               ignore:
