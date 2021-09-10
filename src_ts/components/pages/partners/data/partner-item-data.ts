@@ -160,7 +160,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
     this.set('_skipDefaultErrorHandler', false);
 
     if (typeof this.handleErrResponseAdditionalCallback === 'function') {
-      this.handleErrResponseAdditionalCallback.bind(this, formatServerErrorAsText(tryGetResponseError(response)))();
+      this.handleErrResponseAdditionalCallback.bind(this, formatServerErrorAsText(response))();
     }
     this.handleErrResponseAdditionalCallback = null;
     this.handleSuccResponseAdditionalCallback = null;
