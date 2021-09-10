@@ -79,4 +79,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - fix-styles
+                - err-detail
