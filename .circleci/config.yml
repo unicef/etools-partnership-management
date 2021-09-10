@@ -45,10 +45,8 @@ jobs:
           command: |
             REVNO=${CIRCLE_SHA1}
             BUILDDATE=$(date -u +%F_%T)
-            sed -i "0,/revNo/s//$REVNO/" package.json
             sed -i "0,/revNo/s//$REVNO/" index.html
             sed -i "0,/revNo/s//$REVNO/" version.json
-            sed -i "0,/bDate/s//$BUILDDATE/" package.json
             sed -i "0,/bDate/s//$BUILDDATE/" version.json
       - run:
           name: Install Docker client
@@ -92,4 +90,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - update-folder-structure
