@@ -273,6 +273,7 @@ class PartnersModule extends connect(store)(
     this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
     this.addEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
+    this.addEventListener('update-partner', this._updatePartner as any);
   }
 
   public _removeListeners() {
@@ -281,8 +282,12 @@ class PartnersModule extends connect(store)(
     this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
     this.removeEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
+    this.removeEventListener('update-partner', this._updatePartner as any);
   }
 
+  public _updatePartner(e: CustomEvent) {
+    this.partner = e.detail;
+  }
   public _partnerContactsUpdated(e: CustomEvent) {
     this.partner.updateStaffMembers(e.detail);
     this.notifyPath('partner.staff_members');

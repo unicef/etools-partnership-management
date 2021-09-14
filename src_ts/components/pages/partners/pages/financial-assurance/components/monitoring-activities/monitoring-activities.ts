@@ -15,6 +15,7 @@ import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import {clone} from 'lodash-es';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {Partner} from '../../../../../../../models/partners.models';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -306,6 +307,13 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
       .then((partner) => {
         this.originalGroups = partner.monitoring_activity_groups;
         this.editMode = false;
+        this.dispatchEvent(
+          new CustomEvent('update-partner', {
+            bubbles: true,
+            composed: true,
+            detail: new Partner(partner)
+          })
+        );
       })
       .catch((error: any) => {
         parseRequestErrorsAndShowAsToastMsgs(error, this);
