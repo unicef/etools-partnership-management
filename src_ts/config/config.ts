@@ -34,29 +34,11 @@ window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp
 
 export const BASE_URL = '/pmp/';
 
-const PROD_DOMAIN = 'etools.unicef.org';
-const STAGING_DOMAIN = 'etools-staging.unicef.org';
-const DEV_DOMAIN = 'etools-dev.unicef.org';
-const DEMO_DOMAIN = 'etools-demo.unicef.org';
-const LOCAL_DOMAIN = 'localhost:8082';
-export const AP_DOMAIN = '/ap/';
-
-export const isProductionServer = () => {
-  const location = window.location.href;
-  return location.indexOf(PROD_DOMAIN) > -1;
-};
-
-export const isStagingServer = () => {
-  const location = window.location.href;
-  return location.indexOf(STAGING_DOMAIN) > -1;
-};
-
-export const isDevServer = () => {
-  return window.location.href.indexOf(DEV_DOMAIN) > -1;
-};
-export const isDemoServer = () => {
-  return window.location.href.indexOf(DEMO_DOMAIN) > -1;
-};
+const STAGING_DOMAIN = 'etools-staging';
+const DEV_DOMAIN = 'etools-dev';
+const DEMO_DOMAIN = 'etools-demo';
+const LOCAL_DOMAIN = 'localhost';
+export const AP_DOMAIN = '/ap/'; //Auditor Portal/FAM base path
 
 export const _checkEnvironment = () => {
   const location = window.location.href;
@@ -79,7 +61,7 @@ export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
     switch (_checkEnvironment()) {
       case 'LOCAL':
-        return 'http://127.0.0.1:8081';
+        return 'http://prp.localhost:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
       case 'DEMO':
@@ -96,22 +78,7 @@ export const tokenEndpointsHost = (host: string) => {
 };
 
 export const getDomainByEnv = () => {
-  if (window.location.port === '8082') {
-    return 'http://localhost:8082/pmp';
-  }
-  if (isStagingServer()) {
-    return 'https://etools-staging.unicef.org/pmp';
-  }
-  if (isDevServer()) {
-    return 'https://etools-dev.unicef.org/pmp';
-  }
-  if (isDemoServer()) {
-    return 'https://etools-demo.unicef.org/pmp';
-  }
-  if (isProductionServer()) {
-    return 'https://etools.unicef.org/pmp';
-  }
-  return 'https://etools-dev.unicef.org/pmp';
+  return `${window.location.origin}/${BASE_URL.substr(0, BASE_URL.length - 1)}`;
 };
 
 export const tokenStorageKeys = {
