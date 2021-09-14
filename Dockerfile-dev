@@ -4,6 +4,9 @@ RUN apk add --update bash
 
 RUN apk add git
 RUN npm install -g --unsafe-perm polymer-cli
+# gulp needed when switching between epd and develop branch
+RUN npm install -g gulp 
+
 RUN npm install -g typescript
 
 WORKDIR /code
