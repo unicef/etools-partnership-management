@@ -38,8 +38,7 @@ const STAGING_DOMAIN = 'etools-staging';
 const DEV_DOMAIN = 'etools-dev';
 const DEMO_DOMAIN = 'etools-demo';
 const LOCAL_DOMAIN = 'localhost';
-export const AP_DOMAIN = '/ap/';
-
+export const AP_DOMAIN = '/ap/'; //Auditor Portal/FAM base path
 
 export const _checkEnvironment = () => {
   const location = window.location.href;
@@ -79,7 +78,7 @@ export const tokenEndpointsHost = (host: string) => {
 };
 
 export const getDomainByEnv = () => {
-  return window.location.protocol + window.location.host + BASE_URL.substr(0, BASE_URL.length - 1)
+  return `${window.location.origin}/${BASE_URL.substr(0, BASE_URL.length - 1)}`;
 };
 
 export const tokenStorageKeys = {
