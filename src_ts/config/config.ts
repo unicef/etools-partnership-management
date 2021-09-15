@@ -78,7 +78,7 @@ export const tokenEndpointsHost = (host: string) => {
 };
 
 export const getDomainByEnv = () => {
-  return `${window.location.origin}/${BASE_URL.substr(0, BASE_URL.length - 1)}`;
+  return `${window.location.origin}${BASE_URL.substr(0, BASE_URL.length - 1)}`;
 };
 
 export const tokenStorageKeys = {
