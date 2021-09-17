@@ -33,7 +33,7 @@ import {
   UPDATE_SEA_RISK_RATINGS,
   UPDATE_GENDER_EQUITY,
   UPDATE_RISK_TYPES,
-  UPDATE_CASH_TRANSFER_MODALITIES
+  UPDATE_CASH_TRANSFER_MODALITIES, UPDATE_PROVIDED_BY,
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
@@ -97,6 +97,7 @@ export class CommonDataState {
   ];
   locationTypes: {id: number; name: string; admin_level: any}[] = [];
   grants: GenericObject[] = [];
+  providedBy: GenericObject[] = [];
   donors: GenericObject[] = [];
   partnerRiskRatings: LabelAndValue[] = [];
   envFlags: EnvFlags | null = null;
@@ -273,6 +274,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         grants: action.grants
+      };
+
+    case UPDATE_PROVIDED_BY:
+      return {
+        ...state,
+        providedBy: action.providedBy
       };
 
     case UPDATE_PARTNER_RISK_RATINGS:

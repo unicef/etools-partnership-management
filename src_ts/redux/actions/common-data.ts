@@ -22,6 +22,7 @@ export const UPDATE_CP_OUTPUTS = 'UPDATE_CP_OUTPUTS';
 export const UPDATE_SIGNED_BY_UNICEF_USERS = 'UPDATE_SIGNED_BY_UNICEF_USERS';
 export const UPDATE_DONORS = 'UPDATE_DONORS';
 export const UPDATE_GRANTS = 'UPDATE_GRANTS';
+export const UPDATE_PROVIDED_BY = 'UPDATE_PROVIDED_BY';
 export const UPDATE_INTERVENTION_DOC_TYPES = 'UPDATE_INTERVENTION_DOC_TYPES';
 export const UPDATE_INTERVENTION_STATUSES = 'UPDATE_INTERVENTION_STATUSES';
 export const UPDATE_CURRENCIES = 'UPDATE_CURRENCIES';
@@ -81,6 +82,10 @@ export interface CommonDataActionUpdateDonors extends Action<'UPDATE_DONORS'> {
 
 export interface CommonDataActionUpdateGrants extends Action<'UPDATE_GRANTS'> {
   grants: GenericObject[];
+}
+
+export interface CommonDataActionUpdateProvidedBy extends Action<'UPDATE_PROVIDED_BY'> {
+  providedBy: GenericObject[];
 }
 
 export interface CommonDataActionUpdateInterventionDocTypes extends Action<'UPDATE_INTERVENTION_DOC_TYPES'> {
@@ -174,6 +179,7 @@ export type CommonDataAction =
   | CommonDataActionUpdateSignedByUnicefUsers
   | CommonDataActionUpdateDonors
   | CommonDataActionUpdateGrants
+  | CommonDataActionUpdateProvidedBy
   | CommonDataActionUpdateInterventionDocTypes
   | CommonDataActionUpdateInterventionStatuses
   | CommonDataActionUpdateCurrencies
@@ -266,6 +272,13 @@ export const updateGrants: ActionCreator<CommonDataActionUpdateGrants> = (grants
   return {
     type: UPDATE_GRANTS,
     grants
+  };
+};
+
+export const updateProvidedBy: ActionCreator<CommonDataActionUpdateProvidedBy> = (providedBy: GenericObject[]) => {
+  return {
+    type: UPDATE_PROVIDED_BY,
+    providedBy
   };
 };
 
