@@ -75,7 +75,7 @@
     "@unicef-polymer/etools-modules-common": "^0.0.2",
     "@unicef-polymer/etools-profile-dropdown": "^5.0.4",
     "@unicef-polymer/etools-table": "^1.2.1",
-    "@unicef-polymer/etools-types": "^1.10.0",
+    "@unicef-polymer/etools-types": "^1.11.2",
     "@unicef-polymer/etools-upload": "^3.5.1",
     "@webcomponents/webcomponentsjs": "^2.6.0",
     "browser-capabilities": "^1.1.3",

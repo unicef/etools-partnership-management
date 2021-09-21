@@ -43,7 +43,7 @@ export const NewInterventionStyles: CSSResult = css`
   }
 
   paper-toggle-button {
-    margin: 25px 0;
+    margin-top: 25px;
   }
 
   paper-button {
