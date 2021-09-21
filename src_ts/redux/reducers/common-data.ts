@@ -7,6 +7,7 @@ import {
   UPDATE_USER_COUNTRY_DATA,
   UPDATE_UNICEF_USERS,
   UPDATE_SECTIONS,
+  UPDATE_SITES,
   UPDATE_OFFICES,
   UPDATE_LOCATIONS,
   UPDATE_PARTNER_RISK_RATINGS,
@@ -157,6 +158,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         sections: action.sections
+      };
+
+    case UPDATE_SITES:
+      return {
+        ...state,
+        sites: action.sites
       };
 
     case UPDATE_LOCATIONS:
