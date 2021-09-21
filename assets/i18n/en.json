@@ -50,7 +50,8 @@
     "CFEI_EXPECTED_FORMAT_SHORT": "'CEF/3 letter country code/4 digit year/3 digit number'",
     "ON_SAVE_VALIDATION": "Please fill all required fields and fix any data format errors.",
     "START_DATE_ESTIMATED": "Start Date (Estimated)",
-    "END_DATE_ESTIMATED": "End Date (Estimated)"
+    "END_DATE_ESTIMATED": "End Date (Estimated)",
+    "ACTIVATION_PROTOCOL": "Activation Protocol"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Add Programme Document",

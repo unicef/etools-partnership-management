@@ -240,14 +240,27 @@ export function template(this: InterventionNew): TemplateResult {
             <div ?hidden="${!this.newIntervention.humanitarian_flag}">
               <paper-toggle-button
                 ?checked="${this.newIntervention.contingency_pd}"
-                @checked-changed="${({detail}: CustomEvent) =>
-                  this.setInterventionField('contingency_pd', detail.value)}"
+                @checked-changed="${({detail}: CustomEvent) => {
+                  this.setInterventionField('contingency_pd', detail.value);
+                  this.setInterventionField('activation_protocol', '');
+                }}"
               >
                 ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
               </paper-toggle-button>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="col-8" ?hidden="${!this.newIntervention.contingency_pd}">
+        <paper-input
+          label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
+          placeholder="&#8212;"
+          ?required="${this.newIntervention.contingency_pd}"
+          value="${this.newIntervention.activation_protocol || ''}"
+          @value-changed="${({detail}: CustomEvent) => this.setInterventionField('activation_protocol', detail.value)}"
+        >
+        </paper-input>
       </div>
 
       <div class="row">
