@@ -109,6 +109,11 @@ const pmpEdpoints = {
     exp: 6 * 60 * 60 * 1000,
     cachingKey: 'sections'
   },
+  sites: {
+    url: '/api/v1/field-monitoring/settings/sites/?page_size=all',
+    exp: 6 * 60 * 60 * 1000,
+    cachingKey: 'sites'
+  },
   ramIndicators: {
     template: '/api/v2/reports/results/<%=id%>/indicators/'
   },
