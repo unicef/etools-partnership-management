@@ -82,7 +82,12 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
                     icon="editor:drag-handle"
                     on-mousedown="startDrag"
                   ></iron-icon>
-                  [[activity.reference_number]]
+                  <template is="dom-if" if="[[!editMode]]">
+                    <a target="_blank" title="[[activity.id]]" href$="/fm/activities/[[activity.id]]/details">
+                      [[activity.reference_number]]
+                    </a>
+                  </template>
+                  <template is="dom-if" if="[[editMode]]">[[activity.reference_number]]</template>
                 </div>
                 <div class="flex-1 cell">[[activity.start_date]]</div>
                 <div class="flex-1 cell">[[activity.end_date]]</div>
