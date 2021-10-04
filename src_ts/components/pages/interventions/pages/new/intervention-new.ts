@@ -227,7 +227,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     });
     const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
     if (unppEL) {
-      valid = unppEL.validate();
+      valid = valid && unppEL.validate();
     }
     return valid;
   }
