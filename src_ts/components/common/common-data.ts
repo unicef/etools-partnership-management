@@ -143,6 +143,11 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         if (this._validReqResponseData(response.grants)) {
           store.dispatch(commonDataActions.updateGrants((response as any).grants));
         }
+
+        // set provided by
+        if (this._validReqResponseData(response.supply_item_provided_by)) {
+          store.dispatch(commonDataActions.updateProvidedBy((response as any).supply_item_provided_by));
+        }
       }
     }
 
