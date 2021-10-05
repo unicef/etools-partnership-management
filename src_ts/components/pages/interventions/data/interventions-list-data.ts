@@ -157,9 +157,13 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         if (
           searchString &&
           searchString.length &&
-          intervention.title!.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.title &&
+          intervention.title.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.partner_name &&
           intervention.partner_name!.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.number &&
           intervention.number!.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.cfei_number &&
           intervention.cfei_number!.toLowerCase().indexOf(searchString) < 0
         ) {
           return false;
