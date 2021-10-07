@@ -15,8 +15,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm wee
-          command: rm -rf node_modules/@unicef-polymer/etools-* & npm install
+          name: Install npm
+          command: npm ci
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -82,6 +82,7 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - circleci-tweaks
       - build_and_deploy:
           filters:
             branches:
@@ -90,3 +91,4 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - circleci-tweaks
