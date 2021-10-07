@@ -26,6 +26,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         'locations',
         'offices',
         'sections',
+        'sites',
         'unicefUsers',
         'userCountryDetails'
       ],
@@ -84,6 +85,8 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           return this._handleOfficesResponse;
         case 'sections':
           return this._handleSectionsResponse;
+        case 'sites':
+          return this._handleSitesResponse;
         case 'unicefUsers':
           return this._handleUnicefUsersResponse;
         case 'userCountryDetails':
@@ -139,6 +142,11 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         // set donors
         if (this._validReqResponseData(response.grants)) {
           store.dispatch(commonDataActions.updateGrants((response as any).grants));
+        }
+
+        // set provided by
+        if (this._validReqResponseData(response.supply_item_provided_by)) {
+          store.dispatch(commonDataActions.updateProvidedBy((response as any).supply_item_provided_by));
         }
       }
     }
@@ -237,6 +245,13 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (this._validReqResponseData(response)) {
         // set user country data
         store.dispatch(commonDataActions.updatePRPCountries(response));
+      }
+    }
+
+    protected _handleSitesResponse(response: any) {
+      if (this._validReqResponseData(response)) {
+        // set offices values
+        store.dispatch(commonDataActions.updateSites(response));
       }
     }
 

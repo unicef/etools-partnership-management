@@ -22,6 +22,7 @@ export const UPDATE_CP_OUTPUTS = 'UPDATE_CP_OUTPUTS';
 export const UPDATE_SIGNED_BY_UNICEF_USERS = 'UPDATE_SIGNED_BY_UNICEF_USERS';
 export const UPDATE_DONORS = 'UPDATE_DONORS';
 export const UPDATE_GRANTS = 'UPDATE_GRANTS';
+export const UPDATE_PROVIDED_BY = 'UPDATE_PROVIDED_BY';
 export const UPDATE_INTERVENTION_DOC_TYPES = 'UPDATE_INTERVENTION_DOC_TYPES';
 export const UPDATE_INTERVENTION_STATUSES = 'UPDATE_INTERVENTION_STATUSES';
 export const UPDATE_CURRENCIES = 'UPDATE_CURRENCIES';
@@ -40,6 +41,7 @@ export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
 export const UPDATE_OFFICES = 'UPDATE_OFFICES';
 export const UPDATE_PRP_COUNTRIES = 'UPDATE_PRP_COUNTRIES';
 export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
+export const UPDATE_SITES = 'UPDATE_SITES';
 export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
@@ -81,6 +83,10 @@ export interface CommonDataActionUpdateDonors extends Action<'UPDATE_DONORS'> {
 
 export interface CommonDataActionUpdateGrants extends Action<'UPDATE_GRANTS'> {
   grants: GenericObject[];
+}
+
+export interface CommonDataActionUpdateProvidedBy extends Action<'UPDATE_PROVIDED_BY'> {
+  providedBy: GenericObject[];
 }
 
 export interface CommonDataActionUpdateInterventionDocTypes extends Action<'UPDATE_INTERVENTION_DOC_TYPES'> {
@@ -152,6 +158,10 @@ export interface CommonDataActionUpdateSections extends Action<'UPDATE_SECTIONS'
   sections: GenericObject[];
 }
 
+export interface CommonDataActionUpdateSites extends Action<'UPDATE_SITES'> {
+  sites: GenericObject[];
+}
+
 export interface CommonDataActionUpdateUnicefUsers extends Action<'UPDATE_UNICEF_USERS'> {
   unicefUsersData: GenericObject[];
 }
@@ -174,6 +184,7 @@ export type CommonDataAction =
   | CommonDataActionUpdateSignedByUnicefUsers
   | CommonDataActionUpdateDonors
   | CommonDataActionUpdateGrants
+  | CommonDataActionUpdateProvidedBy
   | CommonDataActionUpdateInterventionDocTypes
   | CommonDataActionUpdateInterventionStatuses
   | CommonDataActionUpdateCurrencies
@@ -190,6 +201,7 @@ export type CommonDataAction =
   | CommonDataActionUpdateLocations
   | CommonDataActionUpdateOffices
   | CommonDataActionUpdateSections
+  | CommonDataActionUpdateSites
   | CommonDataActionUpdateUnicefUsers
   | CommonDataActionUpdateUserCountryData
   | CommonDataActionUpdatePRPCountries
@@ -266,6 +278,13 @@ export const updateGrants: ActionCreator<CommonDataActionUpdateGrants> = (grants
   return {
     type: UPDATE_GRANTS,
     grants
+  };
+};
+
+export const updateProvidedBy: ActionCreator<CommonDataActionUpdateProvidedBy> = (providedBy: GenericObject[]) => {
+  return {
+    type: UPDATE_PROVIDED_BY,
+    providedBy
   };
 };
 
@@ -414,6 +433,13 @@ export const updateSections: ActionCreator<CommonDataActionUpdateSections> = (se
   return {
     type: UPDATE_SECTIONS,
     sections
+  };
+};
+
+export const updateSites: ActionCreator<CommonDataActionUpdateSites> = (sites: GenericObject[]) => {
+  return {
+    type: UPDATE_SITES,
+    sites
   };
 };
 

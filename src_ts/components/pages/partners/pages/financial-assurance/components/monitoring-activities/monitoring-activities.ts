@@ -15,6 +15,7 @@ import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import {clone} from 'lodash-es';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {Partner} from '../../../../../../../models/partners.models';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -81,7 +82,12 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
                     icon="editor:drag-handle"
                     on-mousedown="startDrag"
                   ></iron-icon>
-                  [[activity.reference_number]]
+                  <template is="dom-if" if="[[!editMode]]">
+                    <a target="_blank" title="[[activity.id]]" href$="/fm/activities/[[activity.id]]/details">
+                      [[activity.reference_number]]
+                    </a>
+                  </template>
+                  <template is="dom-if" if="[[editMode]]">[[activity.reference_number]]</template>
                 </div>
                 <div class="flex-1 cell">[[activity.start_date]]</div>
                 <div class="flex-1 cell">[[activity.end_date]]</div>
@@ -306,6 +312,13 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
       .then((partner) => {
         this.originalGroups = partner.monitoring_activity_groups;
         this.editMode = false;
+        this.dispatchEvent(
+          new CustomEvent('update-partner', {
+            bubbles: true,
+            composed: true,
+            detail: new Partner(partner)
+          })
+        );
       })
       .catch((error: any) => {
         parseRequestErrorsAndShowAsToastMsgs(error, this);
