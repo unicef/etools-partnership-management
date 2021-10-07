@@ -81,7 +81,7 @@ workflows:
                 - master
                 - staging
                 - develop
-                - epd                
+                - epd
       - build_and_deploy:
           filters:
             branches:
@@ -89,4 +89,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - epd                
+                - epd
