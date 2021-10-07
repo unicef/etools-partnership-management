@@ -21,6 +21,7 @@ export class InfoIconTooltip extends LitElement {
         }
         .content-wrapper {
           border-radius: 5px;
+          margin-bottom: 22px;
         }
 
         .tooltip {
