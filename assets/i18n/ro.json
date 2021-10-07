@@ -50,7 +50,8 @@
     "CFEI_EXPECTED_FORMAT_SHORT": "'CEF/codul tarii - 3 litere/ anul - 4 cifre/ 3 cifre'",
     "ON_SAVE_VALIDATION": "Asigurati-va ca ati completat toate campurile necesare si ati reparat erorile de format ale datelor.",
     "START_DATE_ESTIMATED": "Data Start (Estimare)",
-    "END_DATE_ESTIMATED": "Data Finalizat (Estimare)"
+    "END_DATE_ESTIMATED": "Data Finalizat (Estimare)",
+    "ACTIVATION_PROTOCOL": "Protocol de activare"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Adauga Documentul Programului",

@@ -1,7 +1,7 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlagsPolymerMixin from '../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsPolymerMixin from '../../common/environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -14,7 +14,7 @@ import {navMenuStyles} from './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import {store, RootState} from '../../../redux/store';
 import {property} from '@polymer/decorators';
 
 /**
