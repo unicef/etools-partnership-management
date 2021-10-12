@@ -1,10 +1,10 @@
 version: 2
 jobs:
-  test:
+  lint:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:11.9.0
+      - image: node:12.18.3
     steps:
       - checkout
       - run:
@@ -15,26 +15,28 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm wee
-          command: rm -rf node_modules/@unicef-polymer/etools-* & npm install
+          name: Install npm
+          command: npm ci
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run:
+          name: TsLint
+          command: npm run tsToJs
+      - run:
+          name: EsLint
+          command: npm run lint
+      - run:
           name: Polymer3 Build
           command: npm run build
           no_output_timeout: 25m
-      - run:
-          name: Run Tests
-          command: |
-            echo "skipping tests for now: xvfb-run polymer test --skip-selenium-install"
 
   build_and_deploy:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:11.9.0
+      - image: node:12.18.3
     steps:
       - checkout
       - setup_remote_docker
@@ -43,10 +45,8 @@ jobs:
           command: |
             REVNO=${CIRCLE_SHA1}
             BUILDDATE=$(date -u +%F_%T)
-            sed -i "0,/revNo/s//$REVNO/" package.json
             sed -i "0,/revNo/s//$REVNO/" index.html
             sed -i "0,/revNo/s//$REVNO/" version.json
-            sed -i "0,/bDate/s//$BUILDDATE/" package.json
             sed -i "0,/bDate/s//$BUILDDATE/" version.json
       - run:
           name: Install Docker client
@@ -74,7 +74,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - test:
+      - lint:
           filters:
             branches:
               ignore:
@@ -82,6 +82,7 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - circleci-tweaks
       - build_and_deploy:
           filters:
             branches:
@@ -90,3 +91,4 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - circleci-tweaks

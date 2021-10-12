@@ -12,9 +12,9 @@ This an app shell for Unicef eTools apps, a starting point based on Polymer 3, R
 
 Check `package.json` `scripts` for more...
 
-#### TODO:
+#### Deploy
 
-- Update page header element to use etools-app-selector, countries dropdown, profile menu and refresh data button
-- Improve documentation
-- Update tests
-- Test build
+- Make sure the superproject points to the desired submodule commit
+- For deploy config (.circleci/config.yml):
+  `git submodule update --remote` - will use the last commit on the branch specified in .gitmodules for the submodule
+  `git submodule update --checkout`- will use the submodule reference tracked by the superproject. For this you have to commit the submodule reference in the superproject repo every time before deploy

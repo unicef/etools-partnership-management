@@ -54,7 +54,7 @@ import '@polymer/app-route/app-route.js';
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
 import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
-import 'etools-piwik-analytics/etools-piwik-analytics.js';
+import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
 import ToastNotificationsMixin from './components/common/toast-notifications/toast-notification-mixin.js';

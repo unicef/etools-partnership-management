@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
