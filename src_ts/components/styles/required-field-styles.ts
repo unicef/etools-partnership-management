@@ -35,5 +35,4 @@ export const requiredFieldStarredStyles = html` <style>
   etools-dropdown[required]::part(esmm-label) {
     @apply --required-star-style;
   }
-
 </style>`;

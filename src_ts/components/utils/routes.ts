@@ -16,27 +16,27 @@ EtoolsRouter.addRoute(
     };
   }
 )
-.addRoute(
-  new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}$`),
-  (params: RouteCallbackParams): RouteDetails => {
-    return {
-      routeName: 'interventions',
-      subRouteName: params.matchDetails[2], // tab name
-      path: params.matchDetails[0],
-      queryParams: params.queryParams,
-      params: {
-        interventionId: params.matchDetails[1]
-      }
-    };
-  }
-)
+  .addRoute(
+    new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}$`),
+    (params: RouteCallbackParams): RouteDetails => {
+      return {
+        routeName: 'interventions',
+        subRouteName: params.matchDetails[2], // tab name
+        path: params.matchDetails[0],
+        queryParams: params.queryParams,
+        params: {
+          interventionId: params.matchDetails[1]
+        }
+      };
+    }
+  )
   .addRoute(
     new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}\\/${routeParamRegex}$`),
     (params: RouteCallbackParams): RouteDetails => {
       return {
         routeName: 'interventions',
         subRouteName: params.matchDetails[2], // tab name
-        subSubRouteName: params.matchDetails[3], //sub tab name
+        subSubRouteName: params.matchDetails[3], // sub tab name
         path: params.matchDetails[0],
         queryParams: params.queryParams,
         params: {
