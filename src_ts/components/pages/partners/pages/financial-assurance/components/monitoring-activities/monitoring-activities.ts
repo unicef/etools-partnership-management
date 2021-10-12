@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/anchor-is-valid */
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../../styles/shared-styles';
