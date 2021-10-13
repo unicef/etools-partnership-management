@@ -64,6 +64,9 @@ export function template(this: InterventionNew): TemplateResult {
           font-size: 16px !important;
         }
       }
+      info-icon-tooltip {
+        --iit-font-size: 16px;
+      }
     </style>
 
     <iron-media-query
