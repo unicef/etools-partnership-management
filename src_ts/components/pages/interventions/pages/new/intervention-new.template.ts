@@ -7,6 +7,7 @@ import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
+import '@unicef-polymer/etools-modules-common/dist/components/info-icon-tooltip';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -156,10 +157,12 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <iron-icon id="info-icon" icon="info-outline" slot="label-suffix"></iron-icon>
-            <paper-tooltip slot="label-suffix" for="info-icon" position="top">
-              ${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}
-            </paper-tooltip>
+            <info-icon-tooltip
+              slot="label-suffix"
+              position="top"
+              offset="24"
+              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+            ></info-icon-tooltip>
           </etools-dropdown-multi>
         </div>
         <div class="col-4">
@@ -219,6 +222,11 @@ export function template(this: InterventionNew): TemplateResult {
             @focus="${this.resetError}"
             @click="${this.resetError}"
           >
+            <info-icon-tooltip
+              slot="label-suffix"
+              position="top"
+              .tooltipText="${translate('PROGRAMME_DOCUMENT_TOOLTIP')}"
+            ></info-icon-tooltip>
           </etools-dropdown>
         </div>
         <div class="col-8">
