@@ -225,7 +225,7 @@ export function template(this: InterventionNew): TemplateResult {
             <info-icon-tooltip
               slot="label-suffix"
               position="top"
-              .tooltipText="${translate('PROGRAMME_DOCUMENT_TOOLTIP')}"
+              .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
           </etools-dropdown>
         </div>

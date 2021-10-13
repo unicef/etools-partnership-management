@@ -149,6 +149,13 @@ export class InterventionNew extends connect(store)(LitElement) {
     }
     this.setInterventionField('document_type', type);
   }
+  getDocTypeTooltip() {
+    return (
+      getTranslation('PROGRAMME_DOCUMENT_TOOLTIP') +
+      '<br><br>' +
+      getTranslation('SIMPLIFIED_PROGRAMME_DOCUMENT_TOOLTIP')
+    );
+  }
 
   setInterventionField(field: keyof Intervention, value: any): void {
     if (value === undefined) {
