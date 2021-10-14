@@ -68,6 +68,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     offices: string[],
     cpStructures: string[],
     contingency_pd: boolean,
+    sent_to_partner: boolean,
     startDate: string,
     endDate: string,
     endAfter: string,
@@ -127,6 +128,10 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         }
 
         if (contingency_pd && !intervention.contingency_pd) {
+          return false;
+        }
+
+        if (sent_to_partner && !intervention.date_sent_to_partner) {
           return false;
         }
 

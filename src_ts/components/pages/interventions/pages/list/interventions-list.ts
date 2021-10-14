@@ -388,6 +388,12 @@ class InterventionsList extends connect(store)(
   contingency_pd!: boolean;
 
   @property({
+    type: Boolean,
+    observer: InterventionsList.prototype._filtersChanged
+  })
+  sent_to_partner!: boolean;
+
+  @property({
     type: Array,
     observer: InterventionsList.prototype._arrayFilterChanged
   })
@@ -474,15 +480,15 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-        'selectedSections.length, selectedOffices.length, contingency_pd' +
+        'selectedSections.length, selectedOffices.length, contingency_pd, sent_to_partner,' +
         'selectedCPStructures.length)', // used for non removable filters
       '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
         'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
         'selectedSections.length, selectedUnicefFocalPoints.length, selectedBudgetOwners.length, ' +
         'selectedOffices.length, selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, ' +
-        'endDate, endAfter, selectedCPStructures.length, contingency_pd, paginator.page, paginator.page_size, ' +
-        'sortOrder, requiredDataLoaded, initComplete)',
+        'endDate, endAfter, selectedCPStructures.length, contingency_pd, sent_to_partner, paginator.page,' +
+        'paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -724,6 +730,13 @@ class InterventionsList extends connect(store)(
         selectedValue: this.contingency_pd,
         path: 'contingency_pd',
         selected: true
+      }),
+      new ListFilterOption({
+        filterName: this._getTranslation('SENT_TO_PARTNER'),
+        type: 'paper-toggle',
+        selectedValue: this.sent_to_partner,
+        path: 'sent_to_partner',
+        selected: false
       })
     ]);
     this._updateSelectedFiltersValues();
@@ -758,7 +771,8 @@ class InterventionsList extends connect(store)(
       startDate: urlQueryParams.start ? urlQueryParams.start : '',
       endDate: urlQueryParams.end ? urlQueryParams.end : '',
       endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : '',
-      contingency_pd: urlQueryParams.contingency_pd ? true : false
+      contingency_pd: urlQueryParams.contingency_pd ? true : false,
+      sent_to_partner: urlQueryParams.sent_to_partner ? true : false
     });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
@@ -834,6 +848,10 @@ class InterventionsList extends connect(store)(
         {
           filterName: 'Contingency PD',
           selectedValue: this.contingency_pd
+        },
+        {
+          filterName: 'Contingency PD',
+          selectedValue: this.sent_to_partner
         }
       ];
       this.updateShownFilters(filtersValues);
@@ -879,6 +897,7 @@ class InterventionsList extends connect(store)(
         this.selectedOffices.map((o: number) => String(o)),
         this.selectedCPStructures,
         this.contingency_pd,
+        this.sent_to_partner,
         this.startDate,
         this.endDate,
         this.endAfter,
@@ -910,6 +929,7 @@ class InterventionsList extends connect(store)(
       end: this.endDate,
       endAfter: this.endAfter,
       contingency_pd: this.contingency_pd,
+      sent_to_partner: this.sent_to_partner,
       sort: this.sortOrder
     });
   }
@@ -930,6 +950,8 @@ class InterventionsList extends connect(store)(
       start: this.startDate,
       end: this.endDate,
       end_after: this.endAfter,
+      sent_to_partner: this.sent_to_partner,
+      contingency_pd: this.contingency_pd,
       search: this.q
     };
     return this._buildExportQueryString(params);
