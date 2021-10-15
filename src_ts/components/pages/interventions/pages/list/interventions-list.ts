@@ -790,67 +790,67 @@ class InterventionsList extends connect(store)(
     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(100), () => {
       const filtersValues = [
         {
-          filterName: 'Status',
+          filterName: this._getTranslation('GENERAL.STATUS'),
           selectedValue: this.selectedStatuses
         },
         {
-          filterName: 'PD/SPD Type',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.PD_TYPE'),
           selectedValue: this.selectedDocumentTypes
         },
         {
-          filterName: 'Sections',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.SECTIONS'),
           selectedValue: this.selectedSections
         },
         {
-          filterName: 'Offices',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.OFFICES'),
           selectedValue: this.selectedOffices
         },
         {
-          filterName: 'CP Structure',
+          filterName: this._getTranslation('CP_STRUCTURE'),
           selectedValue: this.selectedCPStructures
         },
         {
-          filterName: 'Country Programme Output',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
           selectedValue: this.selectedCpOutputs
         },
         {
-          filterName: 'Donors',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.DONORS'),
           selectedValue: this.selectedDonors
         },
         {
-          filterName: 'Partners',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.PARTNERS'),
           selectedValue: this.selectedPartners
         },
         {
-          filterName: 'Grants',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.GRANTS'),
           selectedValue: this.selectedGrants
         },
         {
-          filterName: 'UNICEF focal point',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
           selectedValue: this.selectedUnicefFocalPoints
         },
         {
-          filterName: 'Budget Owner',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.BUDGET_OWNER'),
           selectedValue: this.selectedBudgetOwners
         },
         {
-          filterName: 'Starts After',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.STARTS_AFTER'),
           selectedValue: this.startDate
         },
         {
-          filterName: 'Ends After',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.ENDS_AFTER'),
           selectedValue: this.endAfter
         },
         {
-          filterName: 'Ends Before',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.ENDS_BEFORE'),
           selectedValue: this.endDate
         },
         {
-          filterName: 'Contingency PD',
+          filterName: this._getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
           selectedValue: this.contingency_pd
         },
         {
-          filterName: 'Sent to Partner',
+          filterName: this._getTranslation('SENT_TO_PARTNER'),
           selectedValue: this.sent_to_partner
         }
       ];
