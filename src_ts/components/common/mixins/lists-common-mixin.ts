@@ -189,7 +189,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           if (params[pKey] instanceof Array && !isEmptyObject(params[pKey])) {
             qsParams.push(pKey + '=' + params[pKey].join(','));
           }
-          if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
+          if (['string', 'number', 'boolean'].indexOf(typeof params[pKey]) > -1) {
             const filterStrVal = String(params[pKey]).trim();
             qsParams.push(pKey + '=' + filterStrVal);
           }
@@ -200,7 +200,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _buildCsvExportUrl(params: GenericObject, endpointUrl: string) {
-      return endpointUrl + '?' + this._buildExportQueryString(params);
+      return endpointUrl + (endpointUrl.indexOf('?') > -1 ? '&' : '?') + this._buildExportQueryString(params);
     }
 
     _canFilterData() {

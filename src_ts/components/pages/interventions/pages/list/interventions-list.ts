@@ -850,7 +850,7 @@ class InterventionsList extends connect(store)(
           selectedValue: this.contingency_pd
         },
         {
-          filterName: 'Contingency PD',
+          filterName: 'Sent to Partner',
           selectedValue: this.sent_to_partner
         }
       ];
