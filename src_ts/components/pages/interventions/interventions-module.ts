@@ -580,7 +580,7 @@ class InterventionsModule extends connect(store)(
   }
 
   _exportPD(url: string) {
-    const csvDownloadUrl = url + '?' + this.csvDownloadQs;
+    const csvDownloadUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + this.csvDownloadQs;
     window.open(csvDownloadUrl, '_blank');
   }
 
