@@ -9,7 +9,7 @@ import {deletePartner} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {tryGetResponseError, formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 
 /**
  * @polymer

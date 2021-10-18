@@ -34,7 +34,8 @@ import {
   UPDATE_SEA_RISK_RATINGS,
   UPDATE_GENDER_EQUITY,
   UPDATE_RISK_TYPES,
-  UPDATE_CASH_TRANSFER_MODALITIES, UPDATE_PROVIDED_BY,
+  UPDATE_CASH_TRANSFER_MODALITIES,
+  UPDATE_PROVIDED_BY
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
