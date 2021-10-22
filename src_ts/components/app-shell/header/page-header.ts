@@ -14,7 +14,6 @@ import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
-import '../../common/components/support-btn';
 import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';
@@ -87,7 +86,6 @@ class PageHeader extends connect(store)(
             }
         }
 
-        support-btn,
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -151,10 +149,6 @@ class PageHeader extends connect(store)(
           line-height: 20px;
         }
 
-        support-btn {
-          margin-left: 24px;
-        }
-
         etools-profile-dropdown {
           margin-left: 16px;
         }
@@ -186,9 +180,7 @@ class PageHeader extends connect(store)(
           .titlebar img {
             margin: 0 8px 0 12px;
           }
-          support-btn {
-            margin-left: 4px;
-          }
+        
           etools-profile-dropdown{
             margin-left: 0px;
             width: 40px;
@@ -249,7 +241,6 @@ class PageHeader extends connect(store)(
               </countries-dropdown>
 
           </div>
-          <support-btn></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
