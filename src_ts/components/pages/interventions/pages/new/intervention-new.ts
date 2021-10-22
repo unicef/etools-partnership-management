@@ -83,7 +83,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   stateChanged(state: RootState): void {
     if (!isJsonStrMatch(this.agreementsList, state.agreements!.list)) {
-      this.agreementsList = ([...state.agreements!.list] as unknown) as StaticAgreement[];
+      this.agreementsList = [...state.agreements!.list] as unknown as StaticAgreement[];
     }
     if (!isJsonStrMatch(this.partnersDropdownData, csoPartnersSelector(state))) {
       this.partnersDropdownData = [...csoPartnersSelector(state)];

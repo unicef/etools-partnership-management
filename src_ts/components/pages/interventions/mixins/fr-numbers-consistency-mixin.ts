@@ -86,7 +86,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
         if (
           this.checkFrsAndUnicefCashAmountsConsistency(
             intervention.planned_budget!.unicef_cash_local as string,
-            (frsDetails.total_frs_amt as unknown) as string,
+            frsDetails.total_frs_amt as unknown as string,
             intervention,
             'interventionDetails',
             false,

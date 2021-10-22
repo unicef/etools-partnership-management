@@ -365,7 +365,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    const agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown) as AgreementDetails;
+    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails;
     if (!agreementDetailsEl) {
       return false;
     }

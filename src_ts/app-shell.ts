@@ -590,7 +590,7 @@ class AppShell extends connect(store)(
   }
 
   private _openDataRefreshDialog() {
-    ((this.$.dataRefreshDialog! as unknown) as DataRefreshDialog).open();
+    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {

@@ -114,7 +114,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
 
         if (
           !isEmptyObject(cpStructures) &&
-          cpStructures.indexOf((agreement.country_programme as unknown) as string) === -1
+          cpStructures.indexOf(agreement.country_programme as unknown as string) === -1
         ) {
           return false;
         }
