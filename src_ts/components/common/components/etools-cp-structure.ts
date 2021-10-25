@@ -164,7 +164,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement
     }
 
     return this.countryProgrammes.some((cp: CountryProgram) => {
-      return parseInt((cp.id as unknown) as string, 10) === parseInt(cpId, 10) && cp.expired;
+      return parseInt(cp.id as unknown as string, 10) === parseInt(cpId, 10) && cp.expired;
     });
   }
 

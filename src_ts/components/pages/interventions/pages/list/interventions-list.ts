@@ -877,7 +877,7 @@ class InterventionsList extends connect(store)(
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer, timeOut.after(this.debounceTime), () => {
-      const interventions = (this.shadowRoot!.querySelector('#interventions') as unknown) as InterventionsListData;
+      const interventions = this.shadowRoot!.querySelector('#interventions') as unknown as InterventionsListData;
       if (!interventions) {
         return;
       }

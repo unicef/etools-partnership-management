@@ -431,11 +431,9 @@ class ReportsModule extends connect(store)(
 
     params.export = type;
 
-    this.fireRequest(
-      'reportIndicatorsExport',
-      {},
-      {method: 'GET', handleAs: 'blob', params: params}
-    ).then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+    this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params}).then(
+      (blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type)
+    );
   }
 
   _downloadAnexC() {
