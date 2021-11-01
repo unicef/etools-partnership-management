@@ -92,7 +92,7 @@ class DisaggregationList extends connect(store)(
                     id="showActive-[[item.id]]"
                     disabled="[[!userIsPme(currentUser)]]"
                     checked="{{item.active}}"
-                    on-tap="_toggleActive"
+                    on-change="_disaggregationChange"
                   >
                   </paper-toggle-button>
                 </span>
@@ -201,6 +201,7 @@ class DisaggregationList extends connect(store)(
   }
 
   _toggleActive(e: any) {
+    const elDisaggregation = e.currentTarget as PaperToggleButtonElement;
     const requestParams = {
       method: 'PATCH',
       endpoint: this.getEndpoint('patchDisaggregations', {
@@ -215,8 +216,7 @@ class DisaggregationList extends connect(store)(
         this.broadcastPatchDisaggregToOtherTabs(response);
       })
       .catch((error: any) => {
-        (this.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e
-          .model.item.active;
+        elDisaggregation.checked = !e.model.item.active;
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
