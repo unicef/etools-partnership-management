@@ -200,7 +200,7 @@ class DisaggregationList extends connect(store)(
     return String(d.name).toLowerCase().search(q) > -1;
   }
 
-  _toggleActive(e: any) {
+  _disaggregationChange(e: any) {
     const elDisaggregation = e.currentTarget as PaperToggleButtonElement;
     const requestParams = {
       method: 'PATCH',
