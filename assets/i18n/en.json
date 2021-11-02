@@ -257,5 +257,6 @@
   "ACCEPT_REPORT": "Accept Report",
   "SEND_BACK_TO_PARTNER": "Send Back to Partner",
   "DOWNLOAD_REPORT": "Download Report",
-  "ADD_ACTION_POINTS": "Add Action Point"
+  "ADD_ACTION_POINTS": "Add Action Point",
+  "EDITABLE_BY": "Editable by"
 }

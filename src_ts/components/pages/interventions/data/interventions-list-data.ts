@@ -68,7 +68,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     offices: string[],
     cpStructures: string[],
     contingency_pd: boolean,
-    sent_to_partner: boolean,
+    editable_by: string,
     startDate: string,
     endDate: string,
     endAfter: string,
@@ -131,7 +131,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (sent_to_partner && !intervention.date_sent_to_partner) {
+        if (editable_by && (intervention.unicef_court || !intervention.date_sent_to_partner)) {
           return false;
         }
 
