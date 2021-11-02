@@ -180,7 +180,7 @@ class PageHeader extends connect(store)(
           .titlebar img {
             margin: 0 8px 0 12px;
           }
-        
+
           etools-profile-dropdown{
             margin-left: 0px;
             width: 40px;
@@ -302,7 +302,6 @@ class PageHeader extends connect(store)(
 
   languages: GenericObject[] = [
     {value: 'en', display_name: 'English'},
-    {value: 'ro', display_name: 'Romanian'},
     {value: 'ar', display_name: 'Arabic'}
   ];
 
@@ -316,6 +315,7 @@ class PageHeader extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
+    this.showLanguagesForDevDomains();
   }
 
   public stateChanged(state: RootState) {
@@ -357,6 +357,14 @@ class PageHeader extends connect(store)(
     // If not production environment, changing header color to red
     if (this.environment) {
       this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
+    }
+  }
+
+  protected showLanguagesForDevDomains() {
+    const location = window.location.host;
+    const domainsNotInProduction = ['localhost', 'etools-dev', 'etools-test'];
+    if (domainsNotInProduction.some((x) => location.indexOf(x) > -1)) {
+      this.languages.splice(1, 0, {value: 'ro', display_name: 'Romanian'});
     }
   }
 
