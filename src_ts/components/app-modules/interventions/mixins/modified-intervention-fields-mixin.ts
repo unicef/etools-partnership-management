@@ -77,7 +77,7 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
         'cfei_number'
       ];
       // @ts-ignore
-      if ((docType ? docType : this.intervention.docType) !== 'SSFA') {
+      if ((docType ? docType : this.intervention.document_type) !== 'SSFA') {
         updatableFields.push('reference_number_year');
         updatableFields.push('contingency_pd');
       }
