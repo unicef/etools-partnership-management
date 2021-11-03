@@ -135,7 +135,7 @@ class InterventionsList extends connect(store)(
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selecteds="{{filter.selectedValue}}"
+                selected="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-item-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
