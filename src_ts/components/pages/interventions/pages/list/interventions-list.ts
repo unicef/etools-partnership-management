@@ -143,6 +143,7 @@ class InterventionsList extends connect(store)(
                 min-width="[[filter.minWidth]]"
                 horizontal-align="left"
                 no-dynamic-align
+                enable-none-option
               >
               </etools-dropdown>
             </template>

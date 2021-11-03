@@ -131,8 +131,13 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (editable_by && (intervention.unicef_court || !intervention.date_sent_to_partner)) {
-          return false;
+        if (editable_by) {
+          if (editable_by === 'unicef' && !intervention.unicef_court) {
+            return false;
+          }
+          if (editable_by === 'partner' && (intervention.unicef_court || !intervention.date_sent_to_partner)) {
+            return false;
+          }
         }
 
         if (
