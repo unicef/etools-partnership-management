@@ -78,9 +78,13 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
       ];
       // @ts-ignore
       if ((docType ? docType : this.intervention.document_type) !== 'SSFA') {
-        updatableFields.push('reference_number_year');
+        // @ts-ignore
+        if (['', 'draft'].includes(this.intervention.status)) {
+          updatableFields.push('reference_number_year');
+        }
         updatableFields.push('contingency_pd');
       }
+
       const updatableObjectFields = [
         'offices',
         'unicef_focal_points',
