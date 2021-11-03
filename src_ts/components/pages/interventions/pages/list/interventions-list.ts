@@ -126,6 +126,27 @@ class InterventionsList extends connect(store)(
               </etools-dropdown-multi>
             </template>
 
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
+              <etools-dropdown
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selecteds="{{filter.selectedValue}}"
+                trigger-value-change-event
+                on-etools-selected-item-changed="filterValueChanged"
+                data-filter-path$="[[filter.path]]"
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
+                horizontal-align="left"
+                no-dynamic-align
+              >
+              </etools-dropdown>
+            </template>
+
             <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
               <datepicker-lite
                 id$="datepicker_[[filter.path]]"
@@ -742,6 +763,7 @@ class InterventionsList extends connect(store)(
         ],
         selectedValue: this.editable_by,
         path: 'editable_by',
+        hideSearch: true,
         selected: false
       })
     ]);
