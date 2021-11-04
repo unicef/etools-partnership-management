@@ -1,4 +1,4 @@
-type Partner = {
+export type Partner = {
   address: string;
   basis_for_risk_rating: string;
   blocked: boolean;
@@ -26,7 +26,7 @@ type Partner = {
   vendor_number: string;
 };
 
-type PartnerStaffMember = {
+export type PartnerStaffMember = {
   active: boolean;
   created: string;
   email: string;

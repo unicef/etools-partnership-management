@@ -1,4 +1,4 @@
-interface MonitoringActivity {
+export interface MonitoringActivity {
   id: number;
   reference_number: string;
   monitor_type: UserType;

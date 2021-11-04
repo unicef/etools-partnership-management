@@ -1,4 +1,4 @@
-FROM node:12-alpine3.12 as builder
+FROM node:12.22.7-alpine3.12 as builder
 RUN apk update
 RUN apk add --update bash
 
@@ -28,7 +28,7 @@ RUN git submodule init && git submodule update --checkout
 RUN npm run build
 
 
-FROM node:12-alpine3.12
+FROM node:12.22.7-alpine3.12
 RUN apk update
 RUN apk add --update bash
 
