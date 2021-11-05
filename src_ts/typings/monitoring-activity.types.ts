@@ -1,4 +1,5 @@
-export interface MonitoringActivity {
+// eslint-disable-next-line
+interface MonitoringActivity {
   id: number;
   reference_number: string;
   monitor_type: UserType;

@@ -1,4 +1,5 @@
-export type StaticAgreement = {
+// eslint-disable-next-line
+type StaticAgreement = {
   agreement_number: string;
   agreement_number_status: string;
   agreement_type: string;
