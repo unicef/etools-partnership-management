@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 interface MonitoringActivity {
   id: number;
   reference_number: string;

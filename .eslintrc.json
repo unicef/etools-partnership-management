@@ -5,8 +5,6 @@
     "plugin:lit/recommended",
     "google",
     "plugin:lit-a11y/recommended",
-    "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules
-    // from @typescript-eslint/eslint-plugin that would conflict with prettier
     "plugin:prettier/recommended" // Enables eslint-plugin-prettier and eslint-config-prettier.
     //This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
@@ -20,12 +18,7 @@
     "node": true,
     "es6": true
   },
-  "plugins": [
-    "@typescript-eslint",
-    "lit",
-    "prettier",
-    "lit-a11y"
-  ],
+  "plugins": ["@typescript-eslint", "lit", "prettier", "lit-a11y"],
   "rules": {
     "prettier/prettier": "error",
     "lit/attribute-value-entities": "off",
@@ -43,19 +36,14 @@
     "new-cap": [
       "error",
       {
-        "capIsNewExceptions": [
-          "GestureEventListeners"
-        ],
+        "capIsNewExceptions": ["GestureEventListeners"],
         "capIsNewExceptionPattern": "^Etools..|..Mixin$"
       }
     ],
     "no-var": "off",
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
-    "comma-dangle": [
-      "error",
-      "never"
-    ],
+    "comma-dangle": ["error", "never"],
     "max-len": [
       "error",
       {
@@ -73,9 +61,7 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
-    "@typescript-eslint/ban-types": [
-      "warn"
-    ],
+    "@typescript-eslint/ban-types": ["warn"],
     "@typescript-eslint/no-use-before-define": [
       "error",
       {

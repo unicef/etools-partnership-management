@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 type StaticAgreement = {
   agreement_number: string;
   agreement_number_status: string;

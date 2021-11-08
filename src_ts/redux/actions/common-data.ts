@@ -9,8 +9,6 @@
  */
 
 import {Action, ActionCreator} from 'redux';
-import {ThunkAction} from 'redux-thunk';
-import {RootState} from '../store';
 import {GenericObject, LabelAndValue} from '@unicef-polymer/etools-types';
 
 export const UPDATE_COUNTRY_PROGRAMMES = 'UPDATE_COUNTRY_PROGRAMMES';
@@ -206,9 +204,6 @@ export type CommonDataAction =
   | CommonDataActionUpdateUserCountryData
   | CommonDataActionUpdatePRPCountries
   | CommonDataActionUpdateEnvFlags;
-
-// @ts-ignore - for now
-type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
 
 export const updateCountryProgrammes: ActionCreator<CommonDataActionUpdateCountryProgrammes> = (
   countryProgrammes: GenericObject[]

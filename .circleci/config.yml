@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:12.18.3
+      - image: node:12.22.7
     steps:
       - checkout
       - run:
@@ -13,12 +13,12 @@ jobs:
             git submodule init
             git submodule update --checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Install npm
+          name: Install node modules
           command: npm ci
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
       - run:
@@ -36,7 +36,7 @@ jobs:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:12.18.3
+      - image: node:12.22.7
     steps:
       - checkout
       - setup_remote_docker

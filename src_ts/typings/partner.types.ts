@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 type Partner = {
   address: string;
   basis_for_risk_rating: string;
@@ -26,6 +27,7 @@ type Partner = {
   vendor_number: string;
 };
 
+// eslint-disable-next-line
 type PartnerStaffMember = {
   active: boolean;
   created: string;
