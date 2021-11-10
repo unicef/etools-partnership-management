@@ -37,6 +37,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PartnersListDataEl} from '../../data/partners-list-data.js';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 
 let _partnersLastNavigated = '';
 
@@ -57,8 +58,8 @@ class PartnersList extends connect(store)(
   static get template() {
     // language=HTML
     return html`
-      ${SharedStyles} ${listFilterStyles} ${partnerStatusStyles}
-      <style include="data-table-styles iron-flex iron-flex-factors paper-material-styles">
+      ${SharedStyles} ${listFilterStyles} ${partnerStatusStyles}${gridLayoutStyles}
+      <style include="data-table-styles paper-material-styles">
         .sm-status-wrapper {
           padding-left: 10px;
         }
@@ -175,22 +176,22 @@ class PartnersList extends connect(store)(
           id="listHeader"
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
-          <etools-data-table-column class="flex" field="vendor_number" sortable>
+          <etools-data-table-column class="flex-c" field="vendor_number" sortable>
             [[_getTranslation('VENDOR_NO')]]
           </etools-data-table-column>
-          <etools-data-table-column class="flex-3" field="name" sortable>
+          <etools-data-table-column class="col-3" field="name" sortable>
             [[_getTranslation('NAME_SHORT_FULL')]]
           </etools-data-table-column>
-          <etools-data-table-column class="flex-2" field="partner_type">
+          <etools-data-table-column class="col-2" field="partner_type">
             [[_getTranslation('PARTNER_TYPE')]]
           </etools-data-table-column>
-          <etools-data-table-column class="flex" field="hact_rating">
+          <etools-data-table-column class="flex-c" field="hact_rating">
             [[_getTranslation('HACT_RISK_RATING')]]
           </etools-data-table-column>
-          <etools-data-table-column class="flex" field="sea_rating">
+          <etools-data-table-column class="flex-c" field="sea_rating">
             [[_getTranslation('SEA_RISK_RATING')]]
           </etools-data-table-column>
-          <etools-data-table-column class="flex" field="psea_date">
+          <etools-data-table-column class="flex-c" field="psea_date">
             [[_getTranslation('LAST_PSEA_ASSESS_DATE')]]
           </etools-data-table-column>
         </etools-data-table-header>
@@ -205,7 +206,7 @@ class PartnersList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data flex" data-col-header-label$="[[_getTranslation('VENDOR_NO')]]">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('VENDOR_NO')]]">
                 <a
                   class="vendor-nr truncate"
                   href$="[[currentModule]]/[[partner.id]]/details"
@@ -215,7 +216,7 @@ class PartnersList extends connect(store)(
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
-              <span class="col-data flex-3" data-col-header-label$="[[_getTranslation('NAME_SHORT_FULL')]]">
+              <span class="col-data col-3" data-col-header-label$="[[_getTranslation('NAME_SHORT_FULL')]]">
                 <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
@@ -230,45 +231,45 @@ class PartnersList extends connect(store)(
                   </span>
                 </span>
               </span>
-              <span class="col-data flex-2" data-col-header-label$="[[_getTranslation('PARTNER_TYPE')]]">
+              <span class="col-data col-2" data-col-header-label$="[[_getTranslation('PARTNER_TYPE')]]">
                 [[_computeType(partner.cso_type, partner.partner_type)]]
               </span>
               <span
-                class="col-data flex"
+                class="col-data flex-c"
                 data-col-header-label$="[[_getTranslation('HACT_RISK_RATING')]]"
                 style="text-transform: capitalize"
               >
                 [[getDisplayValue(partner.rating)]]
               </span>
               <span
-                class="col-data flex"
+                class="col-data flex-c"
                 data-col-header-label$="[[_getTranslation('SEA_RISK_RATING')]]"
                 style="text-transform: capitalize"
               >
                 [[getDisplayValue(partner.sea_risk_rating_name)]]
               </span>
-              <span class="col-data flex" data-col-header-label$="[[_getTranslation('LAST_PSEA_ASSESS_DATE')]]">
+              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('LAST_PSEA_ASSESS_DATE')]]">
                 [[getDateDisplayValue(partner.psea_assessment_date)]]
               </span>
             </div>
             <div slot="row-data-details">
-              <div class="row-details-content flex">
+              <div class="row-details-content flex-c">
                 <span class="rdc-title">[[_getTranslation('SHARED_PARTNER')]]</span>
                 <span>[[getDisplayValue(partner.shared_with)]]</span>
               </div>
-              <div class="row-details-content flex">
+              <div class="row-details-content flex-c">
                 <span class="rdc-title">[[_getTranslation('EMAIL')]]</span>
                 <span>[[getDisplayValue(partner.email)]]</span>
               </div>
-              <div class="row-details-content flex">
+              <div class="row-details-content flex-c">
                 <span class="rdc-title">[[_getTranslation('PHONE_NUMBER')]]</span>
                 <span>[[getDisplayValue(partner.phone_number)]]</span>
               </div>
-              <div class="row-details-content flex">
+              <div class="row-details-content flex-c">
                 <span class="rdc-title">[[_getTranslation('ACTUAL_CASH_TRANSFER_FOR_CP')]]</span>
                 <span>$ [[displayCurrencyAmount(partner.total_ct_cp, '0')]]</span>
               </div>
-              <div class="row-details-content flex">
+              <div class="row-details-content flex-c">
                 <span class="rdc-title">[[_getTranslation('ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR')]]</span>
                 <span>$ [[displayCurrencyAmount(partner.total_ct_ytd, '0')]]</span>
               </div>
