@@ -68,12 +68,12 @@
     "@unicef-polymer/etools-data-table": "^5.1.1",
     "@unicef-polymer/etools-date-time": "2.2.0-rc.2",
     "@unicef-polymer/etools-dexie-caching": "^1.0.2",
-    "@unicef-polymer/etools-dialog": "^4.3.0",
+    "@unicef-polymer/etools-dialog": "5.0.0-rc.2",
     "@unicef-polymer/etools-dropdown": "^3.6.0",
     "@unicef-polymer/etools-info-tooltip": "^3.2.0-rc.1",
-    "@unicef-polymer/etools-loading": "^4.0.4",
-    "@unicef-polymer/etools-modules-common": "^0.0.9",
-    "@unicef-polymer/etools-profile-dropdown": "^5.1.0",
+    "@unicef-polymer/etools-loading": "5.0.0-rc.2",
+    "@unicef-polymer/etools-modules-common": "1.0.0-rc.1",
+    "@unicef-polymer/etools-profile-dropdown": "6.0.0-rc.1",
     "@unicef-polymer/etools-table": "^1.2.1",
     "@unicef-polymer/etools-types": "^1.11.2",
     "@unicef-polymer/etools-upload": "^3.5.1",
@@ -110,5 +110,8 @@
     "prettier": "~2.4.1",
     "polymer-cli": "^1.9.11",
     "typescript": "^3.9.9"
+  },
+  "resolutions": {
+    "@unicef-polymer/etools-loading": "5.0.0-rc.2"
   }
 }
