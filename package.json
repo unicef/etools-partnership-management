@@ -110,8 +110,5 @@
     "prettier": "~2.4.1",
     "polymer-cli": "^1.9.11",
     "typescript": "^3.9.9"
-  },
-  "resolutions": {
-    "@unicef-polymer/etools-loading": "5.0.0-rc.2"
   }
 }
