@@ -126,6 +126,28 @@ class InterventionsList extends connect(store)(
               </etools-dropdown-multi>
             </template>
 
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
+              <etools-dropdown
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected="{{filter.selectedValue}}"
+                trigger-value-change-event
+                on-etools-selected-item-changed="filterValueChanged"
+                data-filter-path$="[[filter.path]]"
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
+                horizontal-align="left"
+                no-dynamic-align
+                enable-none-option
+              >
+              </etools-dropdown>
+            </template>
+
             <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
               <datepicker-lite
                 id$="datepicker_[[filter.path]]"
@@ -388,10 +410,10 @@ class InterventionsList extends connect(store)(
   contingency_pd!: boolean;
 
   @property({
-    type: Boolean,
+    type: String,
     observer: InterventionsList.prototype._filtersChanged
   })
-  sent_to_partner!: boolean;
+  editable_by!: string;
 
   @property({
     type: Array,
@@ -480,14 +502,14 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-        'selectedSections.length, selectedOffices.length, contingency_pd, sent_to_partner,' +
+        'selectedSections.length, selectedOffices.length, contingency_pd, editable_by,' +
         'selectedCPStructures.length)', // used for non removable filters
       '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
         'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
         'selectedSections.length, selectedUnicefFocalPoints.length, selectedBudgetOwners.length, ' +
         'selectedOffices.length, selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, ' +
-        'endDate, endAfter, selectedCPStructures.length, contingency_pd, sent_to_partner, paginator.page,' +
+        'endDate, endAfter, selectedCPStructures.length, contingency_pd, editable_by, paginator.page,' +
         'paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
@@ -732,10 +754,17 @@ class InterventionsList extends connect(store)(
         selected: true
       }),
       new ListFilterOption({
-        filterName: this._getTranslation('SENT_TO_PARTNER'),
-        type: 'paper-toggle',
-        selectedValue: this.sent_to_partner,
-        path: 'sent_to_partner',
+        filterName: this._getTranslation('EDITABLE_BY'),
+        type: 'etools-dropdown',
+        optionValue: 'value',
+        optionLabel: 'label',
+        selectionOptions: [
+          {label: 'UNICEF', value: 'unicef'},
+          {label: this._getTranslation('PARTNER'), value: 'partner'}
+        ],
+        selectedValue: this.editable_by,
+        path: 'editable_by',
+        hideSearch: true,
         selected: false
       })
     ]);
@@ -772,7 +801,7 @@ class InterventionsList extends connect(store)(
       endDate: urlQueryParams.end ? urlQueryParams.end : '',
       endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : '',
       contingency_pd: urlQueryParams.contingency_pd ? true : false,
-      sent_to_partner: urlQueryParams.sent_to_partner ? true : false
+      editable_by: urlQueryParams.editable_by
     });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
@@ -850,8 +879,8 @@ class InterventionsList extends connect(store)(
           selectedValue: this.contingency_pd
         },
         {
-          filterName: this._getTranslation('SENT_TO_PARTNER'),
-          selectedValue: this.sent_to_partner
+          filterName: this._getTranslation('EDITABLE_BY'),
+          selectedValue: this.editable_by
         }
       ];
       this.updateShownFilters(filtersValues);
@@ -897,7 +926,7 @@ class InterventionsList extends connect(store)(
         this.selectedOffices.map((o: number) => String(o)),
         this.selectedCPStructures,
         this.contingency_pd,
-        this.sent_to_partner,
+        this.editable_by,
         this.startDate,
         this.endDate,
         this.endAfter,
@@ -929,7 +958,7 @@ class InterventionsList extends connect(store)(
       end: this.endDate,
       endAfter: this.endAfter,
       contingency_pd: this.contingency_pd,
-      sent_to_partner: this.sent_to_partner,
+      editable_by: this.editable_by,
       sort: this.sortOrder
     });
   }
@@ -950,7 +979,7 @@ class InterventionsList extends connect(store)(
       start: this.startDate,
       end: this.endDate,
       end_after: this.endAfter,
-      sent_to_partner: this.sent_to_partner,
+      editable_by: this.editable_by,
       contingency_pd: this.contingency_pd,
       search: this.q
     };
