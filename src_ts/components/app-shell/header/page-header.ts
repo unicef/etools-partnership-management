@@ -243,6 +243,7 @@ class PageHeader extends connect(store)(
           </div>
 
           <etools-profile-dropdown
+              title="Profile and Sign out"
               sections="[[allSections]]"
               offices="[[allOffices]]"
               users="[[allUsers]]"
@@ -250,7 +251,12 @@ class PageHeader extends connect(store)(
               on-save-profile="_saveProfile"
               on-sign-out="_signOut"></etools-profile-dropdown>
 
-          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
+          <paper-icon-button
+            title="Refresh"
+            id="refresh"
+            icon="refresh"
+            on-tap="_openDataRefreshDialog">
+          </paper-icon-button>
         </div>
       </app-toolbar>
     `;
