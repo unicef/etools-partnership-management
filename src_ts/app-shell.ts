@@ -190,7 +190,7 @@ class AppShell extends connect(store)(
         <!-- Main content -->
         <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
           <app-header slot="header" fixed shadow>
-            <page-header id="pageheader" title="eTools"></page-header>
+            <page-header id="pageheader"></page-header>
           </app-header>
 
           <!-- Main content -->
