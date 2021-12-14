@@ -1,25 +1,30 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
+import {PolymerElement} from '@polymer/polymer';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixin from '../../../../../common/mixins/common-mixin';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
-  static get template() {
+@customElement('edit-core-values-assessment')
+export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${requiredFieldStarredStyles}
+      ${requiredFieldStarredStyles}
       <style>
         :host {
           display: block;
@@ -28,34 +33,34 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
       <etools-dialog
         id="cvaDialog"
-        dialog-title="[[_getTranslation('UPLOAD_CORE_VALUES_ASSESSMENT')]]"
+        dialog-title="${translate('UPLOAD_CORE_VALUES_ASSESSMENT')}"
         size="md"
-        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
         opened
-        on-close="_onClose"
-        on-confirm-btn-clicked="_saveCoreValueAssessment"
-        disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]"
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._saveCoreValueAssessment}"
+        .disableConfirmBtn="${this.uploadInProgress}"
+        .disableDismissBtn="${this.uploadInProgress}"
       >
         <div class="layout-horizontal row-padding-v">
           <etools-form-element-wrapper2
-            label="[[_getTranslation('DATE_LAST_ASSESSED')]]"
-            value="[[getDateDisplayValue(item.date)]]"
+            label="${translate('DATE_LAST_ASSESSED')}"
+            .value="${this.getDateDisplayValue(this.item.date)}"
           >
           </etools-form-element-wrapper2>
         </div>
         <div class="layout-horizontal row-padding-v">
           <etools-upload
             id="attachment"
-            label="[[_getTranslation('CORE_VALUES_ASSESSMENTS')]]"
+            label="${translate('CORE_VALUES_ASSESSMENTS')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
-            file-url="[[item.attachment]]"
-            upload-endpoint="[[uploadEndpoint]]"
-            on-upload-finished="_uploadFinished"
-            upload-in-progress="{{uploadInProgress}}"
+            .fileUrl="${this.item.attachment}"
+            .uploadEndpoint="${this.uploadEndpoint}"
+            @upload-finished="${this._uploadFinished}"
+            .uploadInProgress="${this.uploadInProgress}"
             required
-            error-message="[[_getTranslation('ASSESSMENT_FILE_IS_REQUIRED')]]"
+            error-message="${translate('ASSESSMENT_FILE_IS_REQUIRED')}"
           >
           </etools-upload>
         </div>
@@ -97,11 +102,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set('item.attachment', uploadResponse.id);
+      this.item.attachment = uploadResponse.id;
     }
   }
 }
-
-window.customElements.define('edit-core-values-assessment', EditCoreValuesAssessment);
-
-export {EditCoreValuesAssessment as EditCoreValuesAssessmentEl};
