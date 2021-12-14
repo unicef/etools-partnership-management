@@ -146,8 +146,11 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           color: var(--primary-color, #0099ff);
           cursor: pointer;
           margin-left: -8px;
-          padding-left: 24px;
           align-items: center;
+        }
+
+        .report-header {
+          padding-left: 2px;
         }
 
         .margin-l {
@@ -381,7 +384,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <etools-data-table-column class="col-3 col">
             [[_getTranslation('OUTSTANDING_FINDINGS')]] <br />(USD)
           </etools-data-table-column>
-          <etools-data-table-column class="col-2"> [[_getTranslation('REPORT')]] </etools-data-table-column>
+          <etools-data-table-column class="col-2 report-header"> [[_getTranslation('REPORT')]] </etools-data-table-column>
         </div>
         <template is="dom-repeat" items="[[engagements]]">
           <div class="assessment-row panel-table-row layout-horizontal">
@@ -389,10 +392,12 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
             <div class="col-2">[[getDateDisplayValue(item.status_date)]]</div>
             <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
             <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
-            <a class="report col-2" target="_blank" href$="[[item.object_url]]">
-              <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
-              [[_getTranslation('VIEW_REPORT')]]
-            </a>
+            <div class="col-2">
+              <a class="report" target="_blank" href$="[[item.object_url]]">
+                <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
+                [[_getTranslation('VIEW_REPORT')]]
+              </a>
+            </div>
           </div>
         </template>
         <etools-data-table-footer
