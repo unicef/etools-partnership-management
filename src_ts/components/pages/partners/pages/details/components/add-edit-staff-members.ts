@@ -43,6 +43,10 @@ export class AddEditStaffMembers extends CommonMixin(EndpointsMixin(LitElement))
         .col:not(:first-of-type) {
           padding-left: 12px;
         }
+
+        .layout-horizontal:last-of-type {
+          padding-bottom: 16px;
+        }
       </style>
       <etools-dialog
         id="staffMemberDialog"
@@ -151,7 +155,6 @@ export class AddEditStaffMembers extends CommonMixin(EndpointsMixin(LitElement))
             </paper-input>
           </div>
         </div>
-       </br>
       </etools-dialog>
     `;
   }

@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-upload/etools-upload.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {requiredFieldStylesLit} from '../../../../../styles/required-field-styles-lit';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../redux/store';
@@ -29,10 +29,11 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 @customElement('assessment-dialog')
 export class AssessmentDialog extends connect(store)(EndpointsMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit, requiredFieldStylesLit];
+    return [gridLayoutStylesLit];
   }
   render() {
     return html`
+      ${RequiredFieldsStyles}
       <style>
         :host {
           display: block;

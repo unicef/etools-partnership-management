@@ -3,11 +3,11 @@ import {PolymerElement} from '@polymer/polymer';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixin from '../../../../../common/mixins/common-mixin';
-import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {translate} from 'lit-translate';
 
@@ -24,7 +24,7 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
   render() {
     // language=HTML
     return html`
-      ${requiredFieldStarredStyles}
+      ${RequiredFieldsStyles}
       <style>
         :host {
           display: block;
