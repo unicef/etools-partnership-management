@@ -282,7 +282,6 @@ export class HactEditDialog extends CommonMixin(EndpointsMixin(LitElement)) {
     const selectedAudits = this.auditMap.filter(hasAudit).map((a: any) => a.label);
     this.editableValues = editableValues;
     this.selectedAudits = selectedAudits;
-    // ??? this.setProperties({editableValues, selectedAudits});
   }
 
   _auditsChanged() {
