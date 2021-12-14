@@ -384,7 +384,9 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <etools-data-table-column class="col-3 col">
             [[_getTranslation('OUTSTANDING_FINDINGS')]] <br />(USD)
           </etools-data-table-column>
-          <etools-data-table-column class="col-2 report-header"> [[_getTranslation('REPORT')]] </etools-data-table-column>
+          <etools-data-table-column class="col-2 report-header">
+            [[_getTranslation('REPORT')]]
+          </etools-data-table-column>
         </div>
         <template is="dom-repeat" items="[[engagements]]">
           <div class="assessment-row panel-table-row layout-horizontal">
