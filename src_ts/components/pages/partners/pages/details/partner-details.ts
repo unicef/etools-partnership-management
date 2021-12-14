@@ -247,9 +247,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 </span>
                 <icons-actions2
                   item$="[[item]]"
-                  [[!_canEditCVA(item.attachment,
-                  item.archived,
-                  showCoreValuesAssessmentAttachment)]]
+                  show-edit="[[_canEditCVA(item.attachment, item.archived,
+                  showCoreValuesAssessmentAttachment)]]"
                   show-delete="[[showDelete]]"
                   on-edit="_editCoreValuesAssessment"
                 >
@@ -343,11 +342,11 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     });
   }
 
-  public _canEditCVA(attachment: any, archived: boolean) {
+  public _canEditCVA(attachment: any, archived: boolean, showCoreValuesAssessmentAttachment: boolean) {
     if (attachment || archived) {
       return false;
     }
-    return this.showCoreValuesAssessmentAttachment;
+    return showCoreValuesAssessmentAttachment;
   }
 
   public _partnerChanged(partner: any) {
