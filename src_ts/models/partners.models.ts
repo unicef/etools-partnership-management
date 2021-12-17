@@ -22,7 +22,9 @@ export class PartnerCoreValAssessment extends ModelsCommon {
   }
 }
 
-export class PartnerIntervention {}
+export class PartnerIntervention {
+  [key: string]: any;
+}
 
 export class PartnerPlannedEngagement {}
 
