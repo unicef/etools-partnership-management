@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../redux/store';
