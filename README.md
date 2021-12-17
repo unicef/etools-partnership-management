@@ -2,7 +2,7 @@
 
 # Etools Frontend Template App
 
-This an app shell for Unicef eTools apps, a starting point based on Polymer 3, Redux and Typescript.
+This an app shell for Unicef eTools apps, a starting point based on LitElement, Redux and Typescript.
 
 ## Install
 
