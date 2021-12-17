@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 declare const dayjs: any;

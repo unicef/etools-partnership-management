@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import {SharedStyles} from '../../styles/shared-styles';

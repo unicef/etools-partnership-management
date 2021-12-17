@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
