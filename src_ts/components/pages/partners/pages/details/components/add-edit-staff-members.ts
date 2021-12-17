@@ -1,31 +1,36 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 import '@unicef-polymer/etools-dialog/etools-dialog';
+import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import CommonMixin from '../../../../../common/mixins/common-mixin.js';
+import {translate} from 'lit-translate';
 
 /**
- * @polymer
  * @customElement
+ * @polymer
  * @appliesMixin EndpointsMixin
  */
-class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
-  static get template() {
+@customElement('add-edit-staff-members')
+export class AddEditStaffMembers extends CommonMixin(EndpointsMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${RequiredFieldsStyles}
       <style>
         paper-input {
           width: 100%;
@@ -38,59 +43,78 @@ class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
         .col:not(:first-of-type) {
           padding-left: 12px;
         }
+
+        .layout-horizontal:last-of-type {
+          padding-bottom: 16px;
+        }
       </style>
       <etools-dialog
         id="staffMemberDialog"
-        dialog-title="[[_getTranslation('PARTNER_CONTACT')]]"
+        dialog-title="${translate('PARTNER_CONTACT')}"
         size="md"
-        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
         opened
-        spinner-Text="Saving..."
-        on-close="_onClose"
-        on-confirm-btn-clicked="_savePartnerContact"
+        spinner-text="Saving..."
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._savePartnerContact}"
       >
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-9">
             <paper-input
               id="title"
-              label="[[_getTranslation('POSITION')]]"
-              value="{{item.title}}"
+              label="${translate('POSITION')}"
+              .value="${this.item.title}"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.item.title = detail.value;
+              }}"
               placeholder="&#8212;"
               maxlength="100"
               required
               auto-validate
-              error-message="[[_getTranslation('POSITION_IS_REQUIRED')]]"
+              .errorMessage="${translate('POSITION_IS_REQUIRED')}"
             ></paper-input>
           </div>
           <div class="col col-3 right-align">
-            <paper-checkbox checked="{{item.active}}"> [[_getTranslation('ACTIVE_STAFF')]] </paper-checkbox>
+            <paper-checkbox
+              ?checked="${this.item.active}"
+              @checked-changed="${({target}: CustomEvent) =>
+                (this.item.active = Boolean((target as PaperCheckboxElement).checked))}"
+            >
+              ${translate('ACTIVE_STAFF')}
+            </paper-checkbox>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
             <paper-input
               id="firstName"
-              label="[[_getTranslation('FIRST_NAME')]]"
-              value="{{item.first_name}}"
+              label="${translate('FIRST_NAME')}"
+              .value="${this.item.first_name}"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.item.first_name = detail.value;
+              }}"
               placeholder="&#8212;"
               maxlength="30"
               required
               auto-validate
-              error-message="[[_getTranslation('FIRST_NAME_IS_REQUIRED')]]"
+              .errorMessage="${translate('FIRST_NAME_IS_REQUIRED')}"
             >
             </paper-input>
           </div>
           <div class="col col-6">
             <paper-input
               id="lastName"
-              label="[[_getTranslation('LAST_NAME')]]"
-              value="{{item.last_name}}"
+              label="${translate('LAST_NAME')}"
+              .value="${this.item.last_name}"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.item.last_name = detail.value;
+              }}"
               placeholder="&#8212;"
               maxlength="30"
               required
               auto-validate
-              error-message="[[_getTranslation('LAST_NAME_IS_REQUIRED')]]"
+              .errorMessage="${translate('LAST_NAME_IS_REQUIRED')}"
             >
             </paper-input>
           </div>
@@ -99,15 +123,18 @@ class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
           <div class="col col-6">
             <paper-input
               id="email"
-              label="[[_getTranslation('EMAIL_ADDRESS')]]"
-              value="{{item.email}}"
+              label="${translate('EMAIL_ADDRESS')}"
+              .value="${this.item.email}"
               placeholder="&#8212;"
-              readonly$="[[!_isNewStaffMember(item)]]"
+              ?readonly="${!this._isNewStaffMember(this.item)}"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.item.email = detail.value;
+              }}"
               maxlength="50"
               type="email"
               required
               auto-validate
-              error-message="[[_getTranslation('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')]]"
+              .errorMessage="${translate('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')}"
             >
               <iron-icon slot="prefix" icon="communication:email"></iron-icon>
             </paper-input>
@@ -115,11 +142,14 @@ class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
           <div class="col col-6">
             <paper-input
               id="phone"
-              label="[[_getTranslation('PHONE_NUMBER')]]"
-              value="{{item.phone}}"
+              label="${translate('PHONE_NUMBER')}"
+              .value="${this.item.phone}"
               placeholder="&#8212;"
               maxlength="15"
               allowed-pattern="[0-9\\ \\.\\+\\-\\(\\)]"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.item.phone = detail.value;
+              }}"
             >
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
             </paper-input>
@@ -175,7 +205,7 @@ class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
 
   _savePartnerContact() {
     if (this.validate()) {
-      const dialog: EtoolsDialog = this.$.staffMemberDialog as EtoolsDialog;
+      const dialog = this.shadowRoot!.querySelector('#staffMemberDialog') as EtoolsDialog;
       const endpoint = this.getEndpoint('partnerDetails', {
         id: this.partnerId
       });
@@ -201,7 +231,3 @@ class AddEditStaffMembers extends CommonMixin(EndpointsMixin(PolymerElement)) {
     }
   }
 }
-
-window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
-
-export {AddEditStaffMembers as AddEditStaffMembersEl};

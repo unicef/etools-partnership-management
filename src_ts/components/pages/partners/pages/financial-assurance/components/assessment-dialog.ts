@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -7,8 +7,8 @@ import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../redux/store';
@@ -16,7 +16,6 @@ import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
@@ -27,15 +26,18 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-  static get template() {
+@customElement('assessment-dialog')
+export class AssessmentDialog extends connect(store)(EndpointsMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     return html`
-      ${gridLayoutStyles} ${requiredFieldStarredStyles}
+      ${RequiredFieldsStyles}
       <style>
         :host {
           display: block;
         }
-
         .padd-left {
           padding-left: 48px !important;
         }
@@ -49,10 +51,10 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         ok-btn-text="Save"
         dialog-title="Assessment"
         opened
-        on-close="_onClose"
-        on-confirm-btn-clicked="_validateAndSaveAssessment"
-        disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]"
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._validateAndSaveAssessment}"
+        ?disable-confirm-btn="${this.uploadInProgress}"
+        ?disable-dismiss-btn="${this.uploadInProgress}"
       >
         <div class="row-h flex-c">
           <div class="col col-4">
@@ -60,8 +62,15 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
               id="assessmentType"
               label="Assessment Type"
               placeholder="&#8212;"
-              options="[[assessmentTypes]]"
-              selected="{{assessment.type}}"
+              .options="${this.assessmentTypes}"
+              .selected="${this.assessment.type}"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => {
+                if (!detail.selectedItem) {
+                  return;
+                }
+                this.assessment.type = detail.selectedItem ? detail.selectedItem.value : '';
+              }}"
+              trigger-value-change-event
               error-message="Please select Assessment Type"
               hide-search
               required
@@ -72,10 +81,14 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
             <datepicker-lite
               id="dateSubmitted"
               label="Date of Assessment"
-              value="{{assessment.completed_date}}"
+              .value="${this.assessment.completed_date}"
+              fire-date-has-changed
+              @date-has-changed="${(e: CustomEvent) => {
+                this.assessment.completed_date = e.detail.date;
+              }}"
               auto-validate
               max-date-error-msg="Date can not be in the future"
-              max-date="[[getCurrentDate()]]"
+              .maxDate="${this.getCurrentDate()}"
               required
               selected-date-display-format="D MMM YYYY"
             >
@@ -87,18 +100,20 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
             id="report"
             label="Report"
             accept=".doc,.docx,.pdf,.jpg,.png"
-            file-url="[[assessment.report_attachment]]"
-            upload-endpoint="[[uploadEndpoint]]"
-            on-upload-finished="_uploadFinished"
+            .fileUrl="${this.assessment.report_attachment}"
+            .uploadEndpoint="${this.uploadEndpoint}"
+            @upload-finished="${this._uploadFinished}"
             required
-            readonly="[[_hasId(assessment.id)]]"
-            show-change="[[!_hasId(assessment.id)]]"
+            ?readonly="${this._hasId(this.assessment.id)}"
+            .showChange="${!this._hasId(this.assessment.id)}"
             error-message="Please select the report file"
           >
           </etools-upload>
         </div>
         <div class="row-h">
-          <paper-checkbox checked="[[!assessment.active]]" on-change="_archivedChanged">Archived</paper-checkbox>
+          <paper-checkbox ?checked="${!this.assessment.active}" @checked-changed="${this._archivedChanged}"
+            >Archived</paper-checkbox
+          >
         </div>
       </etools-dialog>
     `;
@@ -147,15 +162,14 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      // @ts-ignore
-      this.set('assessment.report_attachment', uploadResponse.id);
+      this.assessment.report_attachment = uploadResponse.id;
+      this.assessment = {...this.assessment};
     }
   }
 
   resetValidations() {
     this._validationSelectors.forEach((selector) => {
-      // @ts-ignore
-      const el = this.shadowRoot.querySelector(selector);
+      const el = this.shadowRoot!.querySelector(selector);
       if (el) {
         (el as any).invalid = false;
       }
@@ -165,8 +179,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector) => {
-      // @ts-ignore
-      const el = this.shadowRoot.querySelector(selector);
+      const el = this.shadowRoot!.querySelector(selector);
       if (el && !(el as any).validate()) {
         isValid = false;
       }
@@ -247,11 +260,11 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   startSpinner() {
-    (this.$.assessmentDialog as EtoolsDialog).startSpinner();
+    (this.shadowRoot!.querySelector('#assessmentDialog') as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    (this.$.assessmentDialog as EtoolsDialog).stopSpinner();
+    (this.shadowRoot!.querySelector('#assessmentDialog') as EtoolsDialog).stopSpinner();
   }
 
   _onClose(): void {
@@ -263,13 +276,10 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _archivedChanged(e: CustomEvent) {
-    this.set('assessment.active', !(e.target as PaperCheckboxElement).checked);
+    this.assessment.active = !(e.target as PaperCheckboxElement).checked;
   }
 
   getCurrentDate() {
     return new Date();
   }
 }
-
-window.customElements.define('assessment-dialog', AssessmentDialog);
-export {AssessmentDialog};

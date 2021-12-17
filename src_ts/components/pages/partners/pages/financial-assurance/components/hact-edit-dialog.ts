@@ -1,19 +1,24 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import {LitElement, html, customElement, property} from 'lit-element';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../../../../common/mixins/common-mixin';
+import {translate} from 'lit-translate';
 
-class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
-  static get template() {
+@customElement('hact-edit-dialog')
+export class HactEditDialog extends CommonMixin(EndpointsMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     return html`
-      ${gridLayoutStyles}
       <style>
         :host {
           display: block;
@@ -54,70 +59,93 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
         .avoid-scroll {
           min-height: 120px;
         }
+
+        .space-around {
+          justify-content: space-around;
+        }
+
+        .space-between {
+          justify-content: space-between;
+        }
       </style>
 
       <etools-dialog
         id="editPartnersDialog"
         size="lg"
-        dialog-title="[[_getTranslation('EDIT_HACT_ASSURANCE_PLAN')]]"
+        dialog-title="${translate('EDIT_HACT_ASSURANCE_PLAN')}"
         ok-btn-text="Save"
         keep-dialog-open
         opened
-        on-close="_onClose"
+        @close="${this._onClose}"
         spinner-text="Saving..."
-        on-confirm-btn-clicked="_saveChanges"
+        @confirm-btn-clicked="${this._saveChanges}"
       >
         <div class="layout-vertical">
           <div class="layout-horizontal">
-            <div class="partner-name">[[partner.name]]</div>
+            <div class="partner-name">${this.partner.name}</div>
           </div>
 
           <div class="avoid-scroll layout-horizontal space-between">
-            <template is="dom-if" if="{{isGovPartner}}">
-              <div class="layout-vertical col-3">
-                <div class="heading">[[_getTranslation('PLANNED_PROGRAMMATIC_VISITS')]]</div>
-                <div class="layout-horizontal space-around">
-                  <paper-input
-                    type="number"
-                    allowed-pattern="[0-9]"
-                    auto-validate
-                    error-message="[[_getTranslation('INVALID')]]"
-                    value="{{editableValues.planned_visits.programmatic_q1}}"
-                    label="Q1"
-                  ></paper-input>
-                  <paper-input
-                    value="{{editableValues.planned_visits.programmatic_q2}}"
-                    type="number"
-                    allowed-pattern="[0-9]"
-                    auto-validate
-                    error-message="[[_getTranslation('INVALID')]]"
-                    label="Q2"
-                  ></paper-input>
-                  <paper-input
-                    value="{{editableValues.planned_visits.programmatic_q3}}"
-                    type="number"
-                    allowed-pattern="[0-9]"
-                    auto-validate
-                    error-message="[[_getTranslation('INVALID')]]"
-                    label="Q3"
-                  ></paper-input>
-                  <paper-input
-                    type="number"
-                    allowed-pattern="[0-9]"
-                    auto-validate
-                    error-message="[[_getTranslation('INVALID')]]"
-                    value="{{editableValues.planned_visits.programmatic_q4}}"
-                    label="Q4"
-                  ></paper-input>
-                </div>
-              </div>
-            </template>
+            ${this.isGovPartner
+              ? html` <div class="layout-vertical col-3">
+                  <div class="heading">${translate('PLANNED_PROGRAMMATIC_VISITS')}</div>
+                  <div class="layout-horizontal space-around">
+                    <paper-input
+                      type="number"
+                      allowed-pattern="[0-9]"
+                      auto-validate
+                      error-message="${translate('INVALID')}"
+                      .value="${this.editableValues.planned_visits.programmatic_q1}"
+                      @value-changed="${({detail}: CustomEvent) => {
+                        this.editableValues.planned_visits.programmatic_q1 = detail.value;
+                      }}"
+                      label="Q1"
+                    ></paper-input>
+                    <paper-input
+                      .value="${this.editableValues.planned_visits.programmatic_q2}"
+                      @value-changed="${({detail}: CustomEvent) => {
+                        this.editableValues.planned_visits.programmatic_q2 = detail.value;
+                      }}"
+                      type="number"
+                      allowed-pattern="[0-9]"
+                      auto-validate
+                      error-message="${translate('INVALID')}"
+                      label="Q2"
+                    ></paper-input>
+                    <paper-input
+                      .value="${this.editableValues.planned_visits.programmatic_q3}"
+                      @value-changed="${({detail}: CustomEvent) => {
+                        this.editableValues.planned_visits.programmatic_q3 = detail.value;
+                      }}"
+                      type="number"
+                      allowed-pattern="[0-9]"
+                      auto-validate
+                      error-message="${translate('INVALID')}"
+                      label="Q3"
+                    ></paper-input>
+                    <paper-input
+                      type="number"
+                      allowed-pattern="[0-9]"
+                      auto-validate
+                      error-message="${translate('INVALID')}"
+                      .value="${this.editableValues.planned_visits.programmatic_q4}"
+                      @value-changed="${({detail}: CustomEvent) => {
+                        this.editableValues.planned_visits.programmatic_q4 = detail.value;
+                      }}"
+                      label="Q4"
+                    ></paper-input>
+                  </div>
+                </div>`
+              : html``}
 
             <div class="layout-vertical col-2">
-              <div class="heading">[[_getTranslation('FOLLOW_UP_SPOT_CHECKS')]]</div>
+              <div class="heading">${translate('FOLLOW_UP_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
                 <paper-input
-                  value="{{editableValues.planned_engagement.spot_check_follow_up}}"
+                  .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
+                  @value-changed="${({detail}: CustomEvent) => {
+                    this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
+                  }}"
                   type="number"
                   allowed-pattern="[0-9]"
                 >
@@ -126,43 +154,57 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
             </div>
 
             <div class="layout-vertical col-3">
-              <div class="heading">[[_getTranslation('PLANNED_SPOT_CHECKS')]]</div>
+              <div class="heading">${translate('PLANNED_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
                 <paper-input
                   type="number"
                   allowed-pattern="[0-9]"
-                  value="{{editableValues.planned_engagement.spot_check_planned_q1}}"
+                  .value="${this.editableValues.planned_engagement.spot_check_planned_q1}"
+                  @value-changed="${({detail}: CustomEvent) => {
+                    this.editableValues.planned_engagement.spot_check_planned_q1 = detail.value;
+                  }}"
                   label="Q1"
                 ></paper-input>
                 <paper-input
                   type="number"
                   allowed-pattern="[0-9]"
-                  value="{{editableValues.planned_engagement.spot_check_planned_q2}}"
+                  .value="${this.editableValues.planned_engagement.spot_check_planned_q2}"
+                  @value-changed="${({detail}: CustomEvent) => {
+                    this.editableValues.planned_engagement.spot_check_planned_q2 = detail.value;
+                  }}"
                   label="Q2"
                 ></paper-input>
                 <paper-input
                   type="number"
                   allowed-pattern="[0-9]"
-                  value="{{editableValues.planned_engagement.spot_check_planned_q3}}"
+                  .value="${this.editableValues.planned_engagement.spot_check_planned_q3}"
+                  @value-changed="${({detail}: CustomEvent) => {
+                    this.editableValues.planned_engagement.spot_check_planned_q3 = detail.value;
+                  }}"
                   label="Q3"
                 ></paper-input>
                 <paper-input
                   type="number"
                   allowed-pattern="[0-9]"
-                  value="{{editableValues.planned_engagement.spot_check_planned_q4}}"
+                  .value="${this.editableValues.planned_engagement.spot_check_planned_q4}"
+                  @value-changed="${({detail}: CustomEvent) => {
+                    this.editableValues.planned_engagement.spot_check_planned_q4 = detail.value;
+                  }}"
                   label="Q4"
                 ></paper-input>
               </div>
             </div>
 
             <div class="layout-veritcal col-4">
-              <div class="heading">[[_getTranslation('REQUIRED_AUDITS')]]</div>
+              <div class="heading">${translate('REQUIRED_AUDITS')}</div>
               <etools-dropdown-multi
                 placeholder="&#8212;"
-                selected-values="{{selectedAudits}}"
-                options="[[auditOptions]]"
+                .selectedValues="${this.selectedAudits}"
+                .options="${this.auditOptions}"
+                option-label="label"
+                option-value="value"
                 trigger-value-change-event
-                on-etools-selected-items-changed="_auditsChanged"
+                @etools-selected-items-changed="${this._auditsChanged}"
               >
               </etools-dropdown-multi>
             </div>
@@ -172,7 +214,7 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
     `;
   }
 
-  @property({type: Object, observer: '_partnerChanged'})
+  @property({type: Object})
   partner!: GenericObject;
 
   @property({type: Boolean})
@@ -213,13 +255,14 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
     const {partner}: any = data;
 
     this.partner = partner;
+    this._partnerChanged(this.partner);
   }
 
   _partnerChanged(partner: any) {
     if (!partner) {
       return;
     }
-    this.set('isGovPartner', this.partner.partner_type_slug === 'Gov');
+    this.isGovPartner = this.partner.partner_type_slug === 'Gov';
 
     const editableValues = {planned_engagement: {}, planned_visits: {}};
     editableValues.planned_engagement = clone(partner.planned_engagement);
@@ -234,26 +277,27 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
       };
       editableValues.planned_visits = planned_visits;
     }
-
     const hasAudit = (auditType: any) => partner.planned_engagement[auditType.prop];
     // const selectedAudits = compose(map(prop('label')), filter(hasAudit))(this.auditMap);
     const selectedAudits = this.auditMap.filter(hasAudit).map((a: any) => a.label);
-    this.setProperties({editableValues, selectedAudits});
+    this.editableValues = editableValues;
+    this.selectedAudits = selectedAudits;
   }
 
   _auditsChanged() {
-    this.auditMap.map((audit: any) =>
-      this.set(`editableValues.planned_engagement.${audit.prop}`, this.selectedAudits.includes(audit.label))
+    this.auditMap.map(
+      (audit: any) =>
+        (this.editableValues.planned_engagement[`${audit.prop}`] = this.selectedAudits.includes(audit.label))
     );
   }
 
   _saveChanges() {
-    (this.$.editPartnersDialog as EtoolsDialog).startSpinner();
+    (this.shadowRoot!.querySelector('#editPartnersDialog') as EtoolsDialog).startSpinner();
     this.savePartnerDetails(this.editableValues, this.partner.id);
   }
 
   _handleSaveResponse(resp: any) {
-    (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
+    (this.shadowRoot!.querySelector('#editPartnersDialog') as EtoolsDialog).stopSpinner();
     fireEvent(this, 'dialog-closed', {confirmed: true, response: resp});
   }
 
@@ -272,10 +316,8 @@ class HactEditDialog extends CommonMixin(EndpointsMixin(PolymerElement)) {
         window.EtoolsPmpApp.DexieDb.partners.put(resp).then(() => this._handleSaveResponse(resp));
       })
       .catch((err: any) => {
-        (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
+        (this.shadowRoot!.querySelector('#editPartnersDialog') as EtoolsDialog).stopSpinner();
         parseRequestErrorsAndShowAsToastMsgs(err, this, false);
       });
   }
 }
-
-window.customElements.define('hact-edit-dialog', HactEditDialog);
