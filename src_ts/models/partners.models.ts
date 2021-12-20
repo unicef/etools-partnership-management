@@ -15,6 +15,8 @@ export class PartnerCoreValAssessment extends ModelsCommon {
   id: number | null = null;
   date = ''; // TODO: use a date object
   attachment: string | number = '';
+  archived?: boolean;
+  active = true;
 
   constructor(data: GenericObject) {
     super();

@@ -240,11 +240,13 @@ export class PartnerOverview extends EtoolsCurrency(
                             partnership.all_currencies_are_consistent,
                             partnership.unicef_cash,
                             partnership.frs_total_frs_amt,
-                            partnership,
-                            'interventionsList'
+                            partnership as any
                           )}"
                         >
-                          <span slot="field" class="${this.getFrsValueNAClass(partnership.fr_currencies_are_consistent)}">
+                          <span
+                            slot="field"
+                            class="${this.getFrsValueNAClass(partnership.fr_currencies_are_consistent)}"
+                          >
                             <span class="amount-currency">${partnership.fr_currency}</span>
                             <span
                               >${this.getFrsTotal(
@@ -254,10 +256,7 @@ export class PartnerOverview extends EtoolsCurrency(
                             >
                           </span>
                           <iron-icon
-                            icon="${this.getFrsCurrencyTooltipIcon(
-                              partnership.fr_currencies_are_consistent,
-                              partnership.fr_currencies_are_consistent
-                            )}"
+                            icon="${this.getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)}"
                             slot="custom-icon"
                           ></iron-icon>
                           <span slot="message">
