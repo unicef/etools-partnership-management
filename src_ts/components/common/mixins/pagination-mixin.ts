@@ -39,19 +39,19 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (reqResponse && reqResponse.count) {
         const count = parseInt(reqResponse.count, 10);
         if (!isNaN(count)) {
-          this.set('paginator.count', count);
+          this.paginator.count = count;
           return;
         }
       }
-      this.set('paginator.count', 0);
+      this.paginator.count = 0;
     }
 
     setPageSize(size: number) {
-      this.set('paginator.page_size', size);
+      this.paginator.page_size = size;
     }
 
     setPageNumber(page: number) {
-      this.set('paginator.page', page);
+      this.paginator.page = page;
     }
 
     resetPageNumber() {

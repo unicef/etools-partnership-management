@@ -4,6 +4,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {updateAppState} from '../../utils/navigation-helper';
 import {isEmptyObject} from '../../utils/utils';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
+import get from 'lodash-es/get';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ListsCommonClass extends baseClass {
@@ -56,30 +57,30 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     // When the list data rows are changing check and close any details opened
     _listDataChanged() {
-      const rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
+      const rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement> as any;
       if (rows && rows.length) {
         for (let i = 0; i < rows.length; i++) {
           // @ts-ignore
           if (rows[i].detailsOpened) {
-            rows[i].set('detailsOpened', false);
+            rows[i].detailsOpened = false;
           }
         }
       }
     }
 
     _sortOrderChanged(e: CustomEvent) {
-      this.set('debounceTime', 150);
-      this.set('sortOrder', e.detail);
+      this.debounceTime = 150;
+      this.sortOrder = e.detail;
     }
 
     // List fade in fade out effect
     _listChanged(filteredList: any, oldFilteredList: any) {
-      const classList = this.$.list.classList;
+      const classList = this.shadowRoot!.querySelector('#list')?.classList!;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
       }
       if (typeof oldFilteredList === 'undefined') {
-        this.set('showQueryLoading', true);
+        this.showQueryLoading = true;
       }
     }
 
@@ -93,20 +94,20 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       event.stopImmediatePropagation();
 
       const listDataPath = (event.target as any).getAttribute('list-data-path');
-      const list = this.get(listDataPath);
+      const list = get(this, listDataPath);
 
       if (typeof list === 'undefined' || (Array.isArray(list) && list.length === 0)) {
-        this.set('forceDataRefresh', true);
+        this.forceDataRefresh = true;
       }
       // recheck params to trigger agreements filtering
-      this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
-      this.set('requiredDataLoaded', true);
+      this.initComplete = false; // TODO : 2 flags that seem very similar..great..
+      this.requiredDataLoaded = true;
       // @ts-ignore
       this._init(this.active);
     }
 
     listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
-      this.set('stampListData', true);
+      this.stampListData = true;
       if (active) {
         fireEvent(this, 'global-loading', {
           message: loadingMsg,
@@ -114,7 +115,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           loadingSource: loadingSource
         });
       } else {
-        this.set('showQueryLoading', true);
+        this.showQueryLoading = true;
       }
     }
 
@@ -226,7 +227,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           // re-filter list data
           // this will only execute when [list-data]-loaded event is received
           filterData();
-          this.set('forceDataRefresh', false);
+          this.forceDataRefresh = false;
         }
       }
     }

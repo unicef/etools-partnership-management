@@ -369,7 +369,7 @@ class PartnersModule extends connect(store)(
       return;
     }
     if (this.route && this.route.prefix.indexOf('partners') > -1) {
-      this.set('selectedPartnerId', id);
+      this.selectedPartnerId = id;
     }
   }
 
@@ -425,7 +425,7 @@ class PartnersModule extends connect(store)(
       });
 
       // keep a copy of loaded partner to be able to check changed data
-      this.set('originalPartnerData', new Partner(partner));
+      this.originalPartnerData = new Partner(partner);
     }
     fireEvent(this, 'clear-server-errors');
   }
@@ -460,12 +460,12 @@ class PartnersModule extends connect(store)(
     return changes;
   }
 
-  public _handleTabSelectAction(e: CustomEvent) {
-    this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+  public _handleTabSelectAction(_e: CustomEvent) {
+    // this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
   }
 
   public _handlePartnerSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+    // this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
   }
 
   /**

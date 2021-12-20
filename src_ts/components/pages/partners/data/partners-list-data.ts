@@ -153,7 +153,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       Dexie.ignoreTransaction(function () {
         queryResult.count(function (count: number) {
           // @ts-ignore
-          self._setTotalResults(count);
+          self.dispatchEvent(new CustomEvent('total-results-changed', {detail: count}));
         });
       });
 
@@ -164,7 +164,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
     })
       .then(function (result: any[]) {
         // @ts-ignore
-        self._setFilteredPartners(result);
+        self.dispatchEvent(new CustomEvent('filtered-partners-changed', {detail: result}));
         fireEvent(self, 'global-loading', {
           active: false,
           loadingSource: 'partners-list'
