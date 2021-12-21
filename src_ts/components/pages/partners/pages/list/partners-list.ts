@@ -24,23 +24,22 @@ import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit'
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import CommonMixin from '../../../../common/mixins/common-mixin.js';
-import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin.js';
-import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin.js';
 
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 
 import '../../data/partners-list-data.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
-import {PartnersListDataEl} from '../../data/partners-list-data.js';
+import {PartnersListData} from '../../data/partners-list-data';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {customElement, html, LitElement, PropertyValues} from 'lit-element';
-import {get, translate} from 'lit-translate';
+import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin-lit';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
+import EndpointsMixin from '../../../../endpoints/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 
 let _partnersLastNavigated = '';
@@ -85,19 +84,17 @@ export class PartnersList extends connect(store)(
       html`
         <partners-list-data
           id="partners"
-          .filtered-partners="${this.filteredPartners}"
-          .total-results="${this.paginator.count}"
+          .filteredPartners="${this.filteredPartners}"
+          .totalResults="${this.paginator.count}"
           @partners-loaded="${this._requiredDataHasBeenLoaded}"
           @filtered-partners-changed="${(e: CustomEvent) => {
             this.filteredPartners = e.detail;
           }}"
           @total-results-changed="${(e: CustomEvent) => {
-            console.log(e.detail);
             this.paginator = {...this.paginator, count: e.detail};
-            console.log(this.paginator);
           }}"
           list-data-path="filteredPartners"
-          fire-data-loaded
+          fireDataLoaded
         >
         </partners-list-data>
       `}
@@ -110,6 +107,7 @@ export class PartnersList extends connect(store)(
             type="search"
             autocomplete="off"
             .value="${this.q}"
+            @value-changed="${({detail}: CustomEvent) => (this.q = detail.value)}"
             placeholder="${translate('GENERAL.SEARCH')}"
           >
             <iron-icon icon="search" slot="prefix"></iron-icon>
@@ -117,46 +115,49 @@ export class PartnersList extends connect(store)(
 
           ${this.selectedFilters?.map(
             (filter) => html`
-              ${this.filterTypeIs('etools-dropdown-multi', filter.type) &&
-              html` <etools-dropdown-multi
-                class="filter"
-                label="${filter.filterName}"
-                placeholder="Select"
-                ?disabled="${filter.disabled}"
-                options="${filter.selectionOptions}"
-                selected-values="${filter.selectedValue}"
-                data-filter-path="${filter.path}"
-                on-etools-selected-items-changed="esmmValueChanged"
-                trigger-value-change-event
-                hide-search="${filter.hideSearch}"
-                min-width="${filter.minWidth}"
-                horizontal-align="left"
-                no-dynamic-align
-              >
-              </etools-dropdown-multi>`}
-              ${this.filterTypeIs('datepicker', filter.type) &&
-              html` <datepicker-lite
-                id="datepicker_${filter.path}"
-                class="filter date"
-                label="${filter.filterName}"
-                placeholder="&#8212;"
-                value="${filter.selectedValue}"
-                on-date-has-changed="_filterDateHasChanged"
-                data-filter-path="${filter.path}"
-                fire-date-has-changed
-                selected-date-display-format="D MMM YYYY"
-              >
-              </datepicker-lite>`}
-              ${this.filterTypeIs('paper-toggle', filter.type) &&
-              html` <div id="hiddenToggle" class="filter">
-                ${filter.filterName}
-                <paper-toggle-button
-                  id="toggleFilter"
-                  ?checked="${filter.selectedValue}"
-                  data-filter-path="${filter.path}"
-                  on-iron-change="toggleValueChanged"
-                ></paper-toggle-button>
-              </div>`}
+              ${this.filterTypeIs('etools-dropdown-multi', filter.type)
+                ? html` <etools-dropdown-multi
+                    class="filter"
+                    label="${filter.filterName}"
+                    placeholder="Select"
+                    ?disabled="${filter.disabled}"
+                    .options="${filter.selectionOptions}"
+                    .selected-values="${filter.selectedValue}"
+                    data-filter-path="${filter.path}"
+                    @etools-selected-items-changed="${this.esmmValueChanged}"
+                    trigger-value-change-event
+                    hide-search="${filter.hideSearch}"
+                    min-width="${filter.minWidth}"
+                    horizontal-align="left"
+                    no-dynamic-align
+                  >
+                  </etools-dropdown-multi>`
+                : ''}
+              ${this.filterTypeIs('datepicker', filter.type)
+                ? html` <datepicker-lite
+                    id="datepicker_${filter.path}"
+                    class="filter date"
+                    label="${filter.filterName}"
+                    placeholder="&#8212;"
+                    value="${filter.selectedValue}"
+                    @date-has-changed="${this._filterDateHasChanged}"
+                    data-filter-path="${filter.path}"
+                    fire-date-has-changed
+                    selected-date-display-format="D MMM YYYY"
+                  >
+                  </datepicker-lite>`
+                : ''}
+              ${this.filterTypeIs('paper-toggle', filter.type)
+                ? html` <div id="hiddenToggle" class="filter">
+                    ${filter.filterName}
+                    <paper-toggle-button
+                      id="toggleFilter"
+                      ?checked="${filter.selectedValue}"
+                      data-filter-path="${filter.path}"
+                      @iron-change="${this.toggleValueChanged}"
+                    ></paper-toggle-button>
+                  </div>`
+                : ''}
             `
           )}
         </div>
@@ -168,14 +169,20 @@ export class PartnersList extends connect(store)(
               ${translate('GENERAL.FILTERS')}
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">
+              <paper-button @tap="${this.clearAllFilters}" class="secondary-btn">
                 ${translate('GENERAL.CLEAR_ALL')}
               </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               ${this.listFilterOptions?.map(
-                (item) => html`
-                  <paper-icon-item on-tap="selectFilter" ?disabled="${item.disabled}" ?selected="${item.selected}">
+                (item, index) => html`
+                  <paper-icon-item
+                    @tap="${() => {
+                      this.selectFilter(item, index);
+                    }}"
+                    .disabled="${item.disabled}"
+                    .selected="${item.selected}"
+                  >
                     <iron-icon icon="check" slot="item-icon" ?hidden="${!item.selected}"></iron-icon>
                     <paper-item-body>${item.filterName}</paper-item-body>
                   </paper-icon-item>
@@ -223,7 +230,7 @@ export class PartnersList extends connect(store)(
                   class="vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
                   title="${this.getDisplayValue(partner.vendor_number)}"
-                  on-click="_triggerPartnerLoadingMsg"
+                  @click="${this._triggerPartnerLoadingMsg}"
                 >
                   ${this.getDisplayValue(partner.vendor_number)}
                 </a>
@@ -304,7 +311,7 @@ export class PartnersList extends connect(store)(
     `;
   }
 
-  @property({type: Array, notify: true})
+  @property({type: Array})
   filteredPartners: any[] = [];
 
   @property({type: Array})
@@ -378,13 +385,10 @@ export class PartnersList extends connect(store)(
   }
 
   updated(changedProperties: PropertyValues) {
-    console.log('helloo', changedProperties, this.filteredPartners);
-
     if (changedProperties.has('filteredPartners')) {
-      console.log(this.filteredPartners);
       this._listChanged(this.filteredPartners, changedProperties.get('filteredPartners'));
     }
-    console.log('helloo2');
+
     if (changedProperties.has('showOnlyGovernmentType')) {
       this._showOnlyGovernmentTypeFlagChanged(this.showOnlyGovernmentType);
     }
@@ -416,12 +420,10 @@ export class PartnersList extends connect(store)(
       changedProperties.has('requiredDataLoaded') ||
       changedProperties.has('initComplete')
     ) {
-      console.log('xx');
       this._updateUrlAndData();
     }
 
     if (changedProperties.has('active')) {
-      console.log('Active: ', this.active);
       this._init(this.active);
     }
   }
@@ -447,7 +449,7 @@ export class PartnersList extends connect(store)(
     // init list filter options
     this.initListFiltersData([
       {
-        filterName: translate('PARTNER_TYPE'),
+        filterName: this._translate('PARTNER_TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: partnerTypes,
         selectedValue: [],
@@ -458,7 +460,7 @@ export class PartnersList extends connect(store)(
         disabled: this.showOnlyGovernmentType || partnerTypes.length === 0
       },
       {
-        filterName: translate('CSO_TYPE'),
+        filterName: this._translate('CSO_TYPE'),
         type: 'etools-dropdown-multi',
         selectionOptions: csoTypes,
         selectedValue: [],
@@ -469,7 +471,7 @@ export class PartnersList extends connect(store)(
         disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
-        filterName: translate('HACT_RISK_RATING'),
+        filterName: this._translate('HACT_RISK_RATING'),
         type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
         selectedValue: [],
@@ -480,7 +482,7 @@ export class PartnersList extends connect(store)(
         disabled: riskRatings.length === 0
       },
       {
-        filterName: translate('SEA_RISK_RATING'),
+        filterName: this._translate('SEA_RISK_RATING'),
         type: 'etools-dropdown-multi',
         selectionOptions: seaRiskRatings,
         selectedValue: [],
@@ -491,7 +493,7 @@ export class PartnersList extends connect(store)(
         disabled: seaRiskRatings.length === 0
       },
       {
-        filterName: translate('PSEA_ASSESSMENT_DATE_BEFORE'),
+        filterName: this._translate('PSEA_ASSESSMENT_DATE_BEFORE'),
         type: 'datepicker',
         selectedValue: '',
         path: 'selectedPseaDateBefore',
@@ -499,7 +501,7 @@ export class PartnersList extends connect(store)(
         disabled: false
       },
       {
-        filterName: translate('PSEA_ASSESSMENT_DATE_AFTER'),
+        filterName: this._translate('PSEA_ASSESSMENT_DATE_AFTER'),
         type: 'datepicker',
         selectedValue: '',
         path: 'selectedPseaDateAfter',
@@ -507,7 +509,7 @@ export class PartnersList extends connect(store)(
         disabled: false
       },
       {
-        filterName: translate('SHOW_HIDDEN'),
+        filterName: this._translate('SHOW_HIDDEN'),
         type: 'paper-toggle',
         selectedValue: this.showHidden,
         path: 'showHidden',
@@ -521,39 +523,39 @@ export class PartnersList extends connect(store)(
     this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer, timeOut.after(20), () => {
       const filtersValues = [
         {
-          filterName: get('PARTNER_TYPE'),
+          filterName: this._translate('PARTNER_TYPE'),
           selectedValue: this.selectedPartnerTypes,
           disabled: this.showOnlyGovernmentType,
           allowEmpty: true,
           disableMenuOption: this.showOnlyGovernmentType
         },
         {
-          filterName: get('CSO_TYPE'),
+          filterName: this._translate('CSO_TYPE'),
           selectedValue: this.selectedCsoTypes,
           allowEmpty: true
         },
         {
-          filterName: get('HACT_RISK_RATING'),
+          filterName: this._translate('HACT_RISK_RATING'),
           selectedValue: this.selectedRiskRatings,
           allowEmpty: true
         },
         {
-          filterName: get('SEA_RISK_RATING'),
+          filterName: this._translate('SEA_RISK_RATING'),
           selectedValue: this.selectedSEARiskRatings,
           allowEmpty: true
         },
         {
-          filterName: get('PSEA_ASSESSMENT_DATE_BEFORE'),
+          filterName: this._translate('PSEA_ASSESSMENT_DATE_BEFORE'),
           selectedValue: this.selectedPseaDateBefore,
           allowEmpty: true
         },
         {
-          filterName: get('PSEA_ASSESSMENT_DATE_AFTER'),
+          filterName: this._translate('PSEA_ASSESSMENT_DATE_AFTER'),
           selectedValue: this.selectedPseaDateAfter,
           allowEmpty: true
         },
         {
-          filterName: get('SHOW_HIDDEN'),
+          filterName: this._translate('SHOW_HIDDEN'),
           selectedValue: this.showHidden,
           allowEmpty: true
         }
@@ -599,14 +601,11 @@ export class PartnersList extends connect(store)(
     this.sortOrder = result;
     this.initComplete = true;
     this._updateSelectedFiltersValues();
-
-    console.log('aaaa');
   }
 
   // Updates URL state with new query string, and launches query
   public _updateUrlAndData() {
     if (this._canFilterData()) {
-      console.log('yeeey');
       this.csvDownloadUrl = this._buildCsvDownloadUrl();
       const qs = this._buildQueryString();
 
@@ -634,7 +633,7 @@ export class PartnersList extends connect(store)(
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
-    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListDataEl;
+    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListData;
 
     if (!partners) {
       return;

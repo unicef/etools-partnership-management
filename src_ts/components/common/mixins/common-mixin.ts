@@ -63,9 +63,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     /**
      * Prepare date string and return it in a user readable format
      */
-    getDateDisplayValue(dateString?: string | null) {
-      if (!dateString) return '';
-
+    getDateDisplayValue(dateString: string) {
       const formatedDate = prettyDate(dateString);
       return formatedDate ? formatedDate : '-';
     }

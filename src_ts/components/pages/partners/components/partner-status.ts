@@ -95,7 +95,6 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   }
 
   firstUpdated() {
-    console.log('bbbbbb');
     this.deleteWarningDialogContent = document.createElement('div');
     this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
     this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
@@ -251,8 +250,6 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         this.possibleStatuses[key].hidden = false;
       }
     }
-
-    console.log(activeStatus, this.possibleStatuses, this.possibleActions);
   }
   _showSyncedStatus() {
     return (
