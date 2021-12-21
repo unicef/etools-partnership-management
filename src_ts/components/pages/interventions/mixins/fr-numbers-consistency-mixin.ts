@@ -228,7 +228,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       return frsCurrencyMatch ? frs[0].currency : 'N/A';
     }
 
-    getFrsTotal(frsCurrencyMatch: boolean, totalAmt: string, negateCurrencyMatchFlagFirst: boolean) {
+    getFrsTotal(frsCurrencyMatch: boolean, totalAmt: string, negateCurrencyMatchFlagFirst?: boolean) {
       frsCurrencyMatch = negateCurrencyMatchFlagFirst ? !frsCurrencyMatch : frsCurrencyMatch;
       return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
     }
@@ -258,7 +258,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       return 'pmp-custom-icons:not-equal';
     }
 
-    getFrsValueNAClass(valIsAvailable: boolean, negateFlagValFirst: boolean) {
+    getFrsValueNAClass(valIsAvailable: boolean, negateFlagValFirst?: boolean) {
       const isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
       return isAvailable ? '' : 'fr-val-not-available';
     }

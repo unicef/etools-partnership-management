@@ -2,7 +2,6 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../redux/store';
-import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-media-query/iron-media-query.js';
 
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
@@ -27,7 +26,6 @@ import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin.js';
 
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 
-import {SharedStyles} from '../../../../styles/shared-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles';
 
@@ -37,7 +35,10 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PartnersListDataEl} from '../../data/partners-list-data.js';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {customElement, html, LitElement} from 'lit-element';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 
 let _partnersLastNavigated = '';
 
@@ -52,15 +53,20 @@ let _partnersLastNavigated = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends connect(store)(
-  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(EtoolsCurrency(PolymerElement))))))
+@customElement('partners-list')
+export class PartnersList extends connect(store)(
+  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(EtoolsCurrency(LitElement))))))
 ) {
-  static get template() {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
     // language=HTML
     return html`
-      ${SharedStyles} ${listFilterStyles} ${partnerStatusStyles}${gridLayoutStyles}
-      <style include="data-table-styles paper-material-styles">
-        .sm-status-wrapper {
+      ${listFilterStyles} ${partnerStatusStyles}
+      <style>
+        ${sharedStyles} ${dataTableStylesLit} .sm-status-wrapper {
           padding-left: 10px;
         }
 
@@ -667,5 +673,3 @@ class PartnersList extends connect(store)(
     fireEvent(this, 'trigger-partner-loading-msg');
   }
 }
-
-window.customElements.define('partners-list', PartnersList);

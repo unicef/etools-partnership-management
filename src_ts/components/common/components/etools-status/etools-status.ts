@@ -127,7 +127,7 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
         this.actions.forEach((elem: StatusAction) => {
           hidden = elem.hidden && hidden;
         });
-        this.set('hideActions', hidden);
+        this.hideActions = hidden;
       }
     );
   }
@@ -160,12 +160,12 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   _computeAvailableStatuses(statuses: Status[]) {
-    this.set('availableStatuses', []);
+    this.availableStatuses = [];
     setTimeout(() => {
       const filteredStatuses = statuses.filter((elem) => {
         return !elem.hidden;
       });
-      this.set('availableStatuses', filteredStatuses);
+      this.availableStatuses = filteredStatuses;
     }, 0);
   }
 }

@@ -1,32 +1,35 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
+
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
-
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-data-table/etools-data-table';
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../styles/shared-styles';
-import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 
 import '../../../../../common/components/icons-actions';
 import './add-edit-staff-members';
-import {property} from '@polymer/decorators';
+import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {openDialog} from '../../../../../utils/dialog';
-import CommonMixin from '../../../../../common/mixins/common-mixin';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 
 /**
  * @polymer
  * @customElement
  */
-class StaffMembers extends CommonMixin(PolymerElement) {
-  static get template() {
-    // language=HTML
+@customElement('staff-members')
+export class StaffMembers extends LitElement {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
     return html`
-      ${gridLayoutStyles} ${SharedStyles} ${etoolsCpHeaderActionsBarStyles}
-      <style include="data-table-styles">
-        [hidden] {
+      <style>
+        ${sharedStyles} ${dataTableStylesLit} ${etoolsCpHeaderActionsBarStyles} [hidden] {
           display: none !important;
         }
 
@@ -61,69 +64,66 @@ class StaffMembers extends CommonMixin(PolymerElement) {
           --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
       </style>
-
       <etools-content-panel
         class="content-section"
-        panel-title="[[_getTranslation('PARTNER_CONTACTS')]] ([[dataItems.length]])"
+        panel-title="${translate('PARTNER_CONTACTS')} (${this.dataItems?.length})"
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive" checked="{{showInactive}}">
-            [[_getTranslation('SHOW_INACTIVE')]]
+          <paper-toggle-button id="showInactive" ?checked="${this.showInactive}">
+            ${translate('SHOW_INACTIVE')}
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!editMode]]"></div>
+          <div class="separator" ?hidden="${!this.editMode}"></div>
           <paper-icon-button
             icon="add-box"
-            disabled="[[!editMode]]"
-            hidden$="[[!editMode]]"
+            ?disabled="${!this.editMode}"
+            ?hidden="${!this.editMode}"
             title="Add"
-            on-click="_addPartnerContact"
+            @click="${this._addPartnerContact}"
           >
           </paper-icon-button>
         </div>
 
-        <div hidden$="[[_emptyList(dataItems.length)]]">
+        <div ?hidden="${this._emptyList(this.dataItems?.length)}">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-2"> [[_getTranslation('POSITION')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2">[[_getTranslation('FIRST_NAME')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2">[[_getTranslation('LAST_NAME')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2">[[_getTranslation('PHONE_NUMBER')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2">[[_getTranslation('EMAIL_ADDRESS')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2 center-align"
-              >[[_getTranslation('ACTIVE_STAFF')]]</etools-data-table-column
-            >
+            <etools-data-table-column class="col-2">${translate('POSITION')}</etools-data-table-column>
+            <etools-data-table-column class="col-2">${translate('FIRST_NAME')}</etools-data-table-column>
+            <etools-data-table-column class="col-2">${translate('LAST_NAME')}</etools-data-table-column>
+            <etools-data-table-column class="col-2">${translate('PHONE_NUMBER')}</etools-data-table-column>
+            <etools-data-table-column class="col-2">${translate('EMAIL_ADDRESS')}</etools-data-table-column>
+            <etools-data-table-column class="col-2 center-align">${translate('ACTIVE_STAFF')}</etools-data-table-column>
           </etools-data-table-header>
 
-          <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row
+          ${this.dataItems?.map(
+            (item) => html`<etools-data-table-row
               secondary-bg-on-hover
               no-collapse
-              hidden$="[[!_isVisible(item.active, showInactive)]]"
+              ?hidden="${!this._isVisible(item.active, this.showInactive)}"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-2">[[_displayValue(item.title)]]</span>
-                <span class="col-data col-2">[[_displayValue(item.first_name)]]</span>
-                <span class="col-data col-2">[[_displayValue(item.last_name)]]</span>
-                <span class="col-data col-2">[[_displayValue(item.phone)]]</span>
-                <span class="col-data col-2">[[_displayValue(item.email)]]</span>
+                <span class="col-data col-2">${this._displayValue(item.title)}</span>
+                <span class="col-data col-2">${this._displayValue(item.first_name)}</span>
+                <span class="col-data col-2">${this._displayValue(item.last_name)}</span>
+                <span class="col-data col-2">${this._displayValue(item.phone)}</span>
+                <span class="col-data col-2">${this._displayValue(item.email)}</span>
                 <span class="col-data col-2 center-align">
-                  <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
-                  <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
+                  <span ?hidden="${item.active}" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="check" ?hidden="${!item.active}"></iron-icon>
                 </span>
                 <icons-actions2
-                  item$="[[item]]"
-                  hidden$="[[!editMode]]"
-                  show-delete="[[showDelete]]"
-                  on-edit="_editPartnerContact"
+                  .item="${item}"
+                  ?hidden="${!this.editMode}"
+                  .showDelete="${this.showDelete}"
+                  @edit="${this._editPartnerContact}"
                 >
                 </icons-actions2>
               </div>
-            </etools-data-table-row>
-          </template>
+            </etools-data-table-row>`
+          )}
         </div>
 
-        <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>[[_getTranslation('THERE_ARE_NO_STAFF_MEMBERS_ADDED')]]</p>
+        <div class="row-h" ?hidden="${!this._emptyList(this.dataItems?.length)}">
+          <p>${translate('THERE_ARE_NO_STAFF_MEMBERS_ADDED')}</p>
         </div>
       </etools-content-panel>
     `;
@@ -165,9 +165,8 @@ class StaffMembers extends CommonMixin(PolymerElement) {
     this.openAddEditDialog(new StaffMember({}));
   }
 
-  _editPartnerContact(e: Event) {
-    const item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
-    this.openAddEditDialog(item);
+  _editPartnerContact(e: CustomEvent) {
+    this.openAddEditDialog(e.detail);
   }
 
   openAddEditDialog(item?: any) {
@@ -197,5 +196,3 @@ class StaffMembers extends CommonMixin(PolymerElement) {
     return value ? value : '—';
   }
 }
-
-window.customElements.define('staff-members', StaffMembers);

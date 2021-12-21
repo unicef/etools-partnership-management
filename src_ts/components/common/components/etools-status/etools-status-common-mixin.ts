@@ -98,7 +98,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
 
     _setResizeHandler() {
       window.onresize = () => {
-        this.updateStyles();
+        // this.updateStyles();
         this._resetScrollHandler();
         this._setScrollHandler();
       };
@@ -203,15 +203,15 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     _setAllActionsToHidden() {
       const possibleActions = this.possibleActions;
       possibleActions.forEach((_elem: any, index: number) => {
-        this.set(['possibleActions', index, 'hidden'], true);
+        this.possibleActions[index].hidden, true;
       });
     }
 
     _setAllStatusesToHidden() {
       const possibleStatuses = this.possibleStatuses;
       possibleStatuses.forEach((_elem: any, index: number) => {
-        this.set(['possibleStatuses', index, 'hidden'], true);
-        this.set(['possibleStatuses', index, 'completed'], false);
+        this.possibleStatuses[index].hidden = true;
+        this.possibleStatuses[index].completed = false;
       });
     }
 
@@ -219,7 +219,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       if (!this._statusChangeIsValid(newStatus)) {
         return;
       }
-      this.set('newStatus', newStatus);
+      this.newStatus = newStatus;
       this._computeWarningMessage(newStatus);
       this._showStatusChangeConfirmationDialog();
     }
@@ -257,7 +257,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
 
     _computeWarningMessage(_newStatus: string) {
       // children might want to overwrite this
-      this.set('warningMessage', this._getDefaultWarningMessage());
+      this.warningMessage = this._getDefaultWarningMessage();
     }
 
     _getDefaultWarningMessage() {

@@ -29,7 +29,6 @@ class IconsActions extends PolymerElement {
           -ms-flex-align: center;
           -webkit-align-items: center;
           align-items: center;
-          background-color: var(--list-second-bg-color);
           position: absolute;
           right: 0;
           top: 0;
@@ -48,7 +47,7 @@ class IconsActions extends PolymerElement {
   }
 
   @property({type: Object})
-  itemDetails!: GenericObject;
+  item!: GenericObject;
 
   @property({type: Boolean})
   showEdit = true;
@@ -60,15 +59,15 @@ class IconsActions extends PolymerElement {
   showDeactivate = false;
 
   _onEdit() {
-    fireEvent(this, 'edit');
+    fireEvent(this, 'edit', this.item);
   }
 
   _onDelete() {
-    fireEvent(this, 'delete');
+    fireEvent(this, 'delete', this.item);
   }
 
   _onDeactivate() {
-    fireEvent(this, 'deactivate');
+    fireEvent(this, 'deactivate', this.item);
   }
 }
 
