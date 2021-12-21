@@ -28,8 +28,10 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
      */
     initListFiltersData(filterOptions: ListFilterOption[]) {
       // init add filter menu options
-      this.listFilterOptions = filterOptions;
-      this.selectedFilters = [];
+      this.setProperties({
+        listFilterOptions: filterOptions,
+        selectedFilters: []
+      });
     }
 
     _isAlreadySelected(filter: any) {
@@ -46,7 +48,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!this._isAlreadySelected(selectedOption)) {
         // add
         this.push('selectedFilters', JSON.parse(JSON.stringify(selectedOption)));
-        this.listFilterOptions[idxInFilterOptions].selected = true;
+        this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
       } else {
         // remove
         const idxInSelFilters = this.selectedFilters.findIndex((f: any) => f.filterName === selectedOption.filterName);
@@ -97,7 +99,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     untickFilter(idx: number) {
-      this.listFilterOptions[idx].selected = false;
+      this.set(['listFilterOptions', idx, 'selected'], false);
     }
 
     clearAllFilters() {
@@ -236,7 +238,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         ) {
           // filter not selected => select filter
           this.push('selectedFilters', JSON.parse(JSON.stringify(filterObj)));
-          this.listFilterOptions[idxInFilterOptions].selected = true;
+          this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
         }
 
         if (this._validFilterSelectedValue(filterToUpdate.selectedValue, filterObj.type, filterObj.allowEmpty)) {
@@ -281,17 +283,17 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       idxInFilterOptions: number
     ) {
       // if (filter.hasOwnProperty('disabled')) {
-      //   this.selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
+      //   this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
       // }
       if (Object.prototype.hasOwnProperty.call(filter, 'disabled')) {
-        this.selectedFilters[idxInSelFilters].disabled = filter.disabled;
+        this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
       }
 
       if (typeof filter.disableMenuOption !== 'boolean') {
         return;
       }
 
-      this.listFilterOptions[idxInFilterOptions].disabled = filter.disableMenuOption;
+      this.set(['listFilterOptions', idxInFilterOptions, 'disabled'], filter.disableMenuOption);
       this.notifyPath('listFilterOptions.' + idxInFilterOptions + '.disabled');
     }
 
