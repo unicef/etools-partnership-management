@@ -1,14 +1,13 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
-import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../redux/store';
-import ListDataMixin from '../../../common/mixins/list-data-mixin';
 import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {customElement, LitElement, property} from 'lit-element';
+import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
 
 /**
  * @polymer
@@ -16,27 +15,23 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @mixinFunction
  * @appliesMixin ListDataMixin
  */
-class PartnersListData extends ListDataMixin(PolymerElement) {
+
+@customElement('partners-list-data')
+export class PartnersListData extends ListDataMixin(LitElement) {
   @property({type: String})
   endpointName = 'partners';
 
   @property({type: String})
   dataLoadedEventName = 'partners-loaded';
 
-  @property({type: Array, readOnly: true, notify: true})
+  @property({type: Array})
   filteredPartners!: any[];
 
-  @property({type: Number, readOnly: true, notify: true})
+  @property({type: Number})
   totalResults!: number;
 
   @property({type: Object})
   currentQuery: GenericObject | null = null;
-
-  @property({type: Array, notify: true})
-  partnersDropdownData: any[] = []; // TODO - seems to not be used anymore
-
-  @property({type: Array, notify: true})
-  partnersFilteredDropdownData: any[] = []; // TODO - seems to not be used anymore
 
   @property({type: Boolean})
   prepareDropdownData = false;
@@ -153,7 +148,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       Dexie.ignoreTransaction(function () {
         queryResult.count(function (count: number) {
           // @ts-ignore
-          self._setTotalResults(count);
+          fireEvent(self, 'total-results-changed', count);
         });
       });
 
@@ -164,7 +159,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
     })
       .then(function (result: any[]) {
         // @ts-ignore
-        self._setFilteredPartners(result);
+        fireEvent(self, 'filtered-partners-changed', result);
         fireEvent(self, 'global-loading', {
           active: false,
           loadingSource: 'partners-list'
@@ -179,7 +174,3 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       });
   }
 }
-
-window.customElements.define('partners-list-data', PartnersListData);
-
-export {PartnersListData as PartnersListDataEl};
