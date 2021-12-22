@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, property, PropertyValues, customElement} from 'lit-element';
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
@@ -9,35 +9,34 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
-import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin';
-import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
-import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin';
+import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
+import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
+import CommonMixin from '../../common/mixins/common-mixin-lit';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
 import '../../common/components/etools-tabs';
 import '../../common/components/etools-error-messages-box';
-import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
-import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {SharedStyles} from '../../styles/shared-styles';
-import {buttonsStyles} from '../../styles/buttons-styles';
+import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {isEmptyObject} from '../../utils/utils';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
 import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../common/mixins/common-mixin.js';
 import {openDialog} from '../../utils/dialog';
-import {get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -49,21 +48,21 @@ import {get as getTranslation} from 'lit-translate';
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin StaffMembersDataMixin
  */
-class PartnersModule extends connect(store)(
+
+@customElement('partners-module')
+export class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
     CommonMixin(
-      ScrollControlMixin(
-        ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))
-      )
+      ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(LitElement))))
     )
   )
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
@@ -71,50 +70,53 @@ class PartnersModule extends connect(store)(
       </style>
 
       <app-route
-        route="{{route}}"
+        .route="${this.route}"
         pattern="/list"
-        query-params="{{listPageQueryParams}}"
-        active="{{listActive}}"
+        query-params="${this.listPageQueryParams}"
+        .active="${this.listActive}"
       ></app-route>
 
-      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
+      <app-route
+        route="${this.route}"
+        pattern="/:id/:tab"
+        active="${this.tabsActive}"
+        data="${this.routeData}"
+      ></app-route>
 
-      <page-content-header with-tabs-visible="[[tabsActive]]">
+      <page-content-header with-tabs-visible="${this.tabsActive}">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
-            <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
-          </template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <span>[[partner.name]]</span>
-          </template>
+          ${!this.listActive
+            ? html` <span ?hidden="${this.showOnlyGovernmentType}">Partners</span>
+                <span ?hidden="${!this.showOnlyGovernmentType}">Government Partners</span>`
+            : ''}
+          ${!this.tabsActive ? html`<span>${this.partner.name}</span>` : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions">
-          <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]">
+          <div class="action" ?hidden="${!this.listActive}">
+            <a target="_blank" href="${this.csvDownloadUrl}">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
-                [[_getTranslation('EXPORT')]]
+                ${translate('EXPORT')}
               </paper-button>
             </a>
           </div>
-          <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
-            <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+          <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
+            <paper-button class="primary-btn with-prefix" @click="${this._openNewPartnerDialog}">
               <iron-icon icon="add"></iron-icon>
-              [[_getTranslation('IMPORT_PARTNER')]]
+              ${translate('IMPORT_PARTNER')}
             </paper-button>
           </div>
         </div>
 
-        <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-          <etools-tabs
-            slot="tabs"
-            tabs="[[partnerTabs]]"
-            active-tab="{{routeData.tab}}"
-            on-iron-select="_handleTabSelectAction"
-          ></etools-tabs>
-        </template>
+        ${this._showPageTabs(this.activePage)
+          ? html` <etools-tabs
+              slot="tabs"
+              tabs="${this.partnerTabs}"
+              active-tab="${this.routeData.tab}"
+              @iron-select="${this._handleTabSelectAction}"
+            ></etools-tabs>`
+          : ''}
       </page-content-header>
 
       <div id="main">
@@ -122,69 +124,69 @@ class PartnersModule extends connect(store)(
           <etools-error-messages-box
             id="errorsBox"
             title="Errors Saving Partner"
-            errors="{{serverErrors}}"
+            .errors="${this.serverErrors}"
           ></etools-error-messages-box>
-          <iron-pages id="partnersPages" selected="{{activePage}}" attr-for-selected="name" role="main">
-            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <partners-list
-                id="list"
-                name="list"
-                show-only-government-type="[[showOnlyGovernmentType]]"
-                current-module="[[currentModule]]"
-                active="[[listActive]]"
-                csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[preservedListQueryParams]]"
-              >
-              </partners-list>
-            </template>
-
-            <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
-              <partner-overview name="overview" partner="[[partner]]"></partner-overview>
-            </template>
-
-            <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-              <partner-details
-                id="partnerDetails"
-                name="details"
-                partner="[[partner]]"
-                edit-mode="[[_hasEditPermissions(permissions)]]"
-              ></partner-details>
-            </template>
-
-            <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
-              <partner-financial-assurance
-                id="financialAssurance"
-                partner="[[partner]]"
-                edit-mode="[[_hasEditPermissions(permissions)]]"
-                name="financial-assurance"
-              >
-              </partner-financial-assurance>
-            </template>
+          <iron-pages id="partnersPages" .selected="${this.activePage}" attr-for-selected="name" role="main">
+            ${this._pageEquals(this.activePage, 'list')
+              ? html`<partners-list
+                  id="list"
+                  name="list"
+                  show-only-government-type="${this.showOnlyGovernmentType}"
+                  current-module="${this.currentModule}"
+                  active="${this.listActive}"
+                  csv-download-url="${this.csvDownloadUrl}"
+                  url-params="${this.preservedListQueryParams}"
+                >
+                </partners-list>`
+              : ''}
+            ${this._pageEquals(this.activePage, 'overview')
+              ? html`<partner-overview name="overview" .partner="${this.partner}"></partner-overview>`
+              : ''}
+            ${this._pageEquals(this.activePage, 'details')
+              ? html` <partner-details
+                  id="partnerDetails"
+                  name="details"
+                  .partner="${this.partner}"
+                  .edit-mode="${this._hasEditPermissions(this.permissions)}"
+                ></partner-details>`
+              : ''}
+            ${this._pageEquals(this.activePage, 'financial-assurance')
+              ? html`<partner-financial-assurance
+                  id="financialAssurance"
+                  .partner="${this.partner}"
+                  edit-mode="${this._hasEditPermissions(this.permissions)}"
+                  name="financial-assurance"
+                >
+                </partner-financial-assurance>`
+              : ''}
           </iron-pages>
         </div>
         <!-- page content end -->
 
         <!-- sidebar content start -->
-        <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
-          <div id="sidebar">
-            <partner-status
-              on-save-partner="_validateAndTriggerPartnerSave"
-              on-delete-partner="_deletePartner"
-              active="[[!listActive]]"
-              partner="[[partner]]"
-              edit-mode$="[[_hasEditPermissions(permissions)]]"
-            >
-            </partner-status>
-          </div>
-          <!-- sidebar content end -->
-        </template>
+        ${!this._showSidebarStatus(this.listActive, this.tabAttached, this.partner)
+          ? html` <div id="sidebar">
+              <partner-status
+                @save-partner="${this._validateAndTriggerPartnerSave}"
+                @delete-partner="${this._deletePartner}"
+                .active="${!this.listActive}"
+                .partner="${this.partner}"
+                edit-mode="${this._hasEditPermissions(this.permissions)}"
+              >
+              </partner-status>
+            </div>`
+          : ''}
+        <!-- sidebar content end -->
       </div>
       <!-- main container end -->
 
       <partner-item-data
         id="partnerData"
-        partner-id="[[selectedPartnerId]]"
-        partner="{{partner}}"
+        .partner-id="${this.selectedPartnerId}"
+        .partner="${this.partner}"
+        @partner-changed="${(e: CustomEvent) => {
+          this.partner = {...e.detail};
+        }}"
         error-event-name="partner-save-error"
       >
       </partner-item-data>
@@ -219,7 +221,7 @@ class PartnersModule extends connect(store)(
   @property({type: Number})
   selectedPartnerId: number | null = null;
 
-  @property({type: Object, observer: '_partnerChanged'})
+  @property({type: Object})
   partner!: Partner;
 
   @property({type: Object})
@@ -234,17 +236,11 @@ class PartnersModule extends connect(store)(
   @property({type: Object})
   originalPartnerData!: Partner;
 
-  public static get observers() {
-    return ['_pageChanged(listActive, tabsActive, routeData, currentModule)', '_observeRouteDataId(routeData.id)'];
-  }
-
-  public ready() {
-    super.ready();
-    this._initListeners();
-  }
-
   public connectedCallback() {
     super.connectedCallback();
+
+    this._initListeners();
+
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,
@@ -285,12 +281,31 @@ class PartnersModule extends connect(store)(
     this.removeEventListener('update-partner', this._updatePartner as any);
   }
 
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('partner')) {
+      this._partnerChanged(this.partner);
+    }
+    if (changedProperties.has('routeData')) {
+      this._observeRouteDataId(this.routeData.id);
+    }
+
+    if (
+      changedProperties.has('listActive') ||
+      changedProperties.has('tabsActive') ||
+      changedProperties.has('routeData') ||
+      changedProperties.has('currentModule')
+    ) {
+      this._pageChanged(this.listActive, this.tabsActive, this.routeData, this.currentModule);
+    }
+  }
+
   public _updatePartner(e: CustomEvent) {
     this.partner = e.detail;
   }
   public _partnerContactsUpdated(e: CustomEvent) {
     this.partner.updateStaffMembers(e.detail);
-    this.notifyPath('partner.staff_members');
+    this.partner = {...this.partner};
+    //@dci this.notifyPath('partner.staff_members');
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
@@ -479,5 +494,3 @@ class PartnersModule extends connect(store)(
     });
   }
 }
-
-window.customElements.define('partners-module', PartnersModule);

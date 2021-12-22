@@ -225,7 +225,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
       const assessmentIndex = Number((e.target as any).getAttribute('data-args-index')); // TODO - who is e.target
       const uploadResponse = JSON.parse(e.detail.success);
       // @dci this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
-      this.dataItems[assessmentIndex] = uploadResponse.id;
+      this.dataItems[assessmentIndex].report_attachment = uploadResponse.id;
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
