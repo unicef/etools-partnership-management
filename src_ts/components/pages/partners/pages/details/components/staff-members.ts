@@ -1,4 +1,4 @@
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html, customElement, property, PropertyValues} from 'lit-element';
 
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
@@ -144,8 +144,10 @@ export class StaffMembers extends LitElement {
   @property({type: Number})
   partnerId: number | null = null;
 
-  static get observers() {
-    return ['dataItemsChanged(dataItems, dataItems.*)'];
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('dataItems')) {
+      this.dataItemsChanged();
+    }
   }
 
   dataItemsChanged() {

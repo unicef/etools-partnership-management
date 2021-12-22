@@ -1,5 +1,4 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import {PolymerElement} from '@polymer/polymer';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -72,7 +71,7 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
   item: any = {};
 
   @property({type: Object})
-  parent!: PolymerElement;
+  parent!: LitElement;
 
   @property({type: String})
   uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;

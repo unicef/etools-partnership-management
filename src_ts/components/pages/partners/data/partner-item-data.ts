@@ -1,9 +1,8 @@
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import {LitElement, property, customElement, PropertyValues} from 'lit-element';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin.js';
+import EndpointsMixin from '../../../endpoints/endpoints-mixin-lit';
+import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
 import {deletePartner} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
@@ -18,7 +17,8 @@ import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-pa
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
-export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
+@customElement('partner-item-data')
+export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(LitElement)) {
   @property({type: Object})
   partnerEndpoints = {
     DETAILS: 'partnerDetails',
@@ -26,10 +26,10 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
     DELETE: 'deletePartner'
   };
 
-  @property({type: Object, readOnly: true, notify: true})
+  @property({type: Object})
   partner!: Partner;
 
-  @property({type: Number, notify: true, observer: '_partnerIdChanged'})
+  @property({type: Number})
   partnerId: number | null = null;
 
   @property({type: Number})
@@ -48,9 +48,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
 
   _partnerIdChanged(newId: any) {
     if (newId) {
-      // set an empty partner
-      // @ts-ignore
-      this._setPartner({});
+      fireEvent(this, 'partner-changed', {});
       // set the new endpoint
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
@@ -62,6 +60,12 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
           id: newId
         })
       });
+    }
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('partnerId')) {
+      this._partnerIdChanged(this.partnerId);
     }
   }
 
@@ -78,16 +82,15 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
       });
   }
 
-  public _handleSuccResponse(response: any, ajaxMethod: any) {
+  _handleSuccResponse(response: any, ajaxMethod: any) {
     const partner = new Partner(response);
-    // @ts-ignore
-    this._setPartner(partner);
+    fireEvent(this, 'partner-changed', partner);
 
     if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
       this.handleSuccResponseAdditionalCallback.bind(this, partner)();
       // reset callback
-      this.set('handleSuccResponseAdditionalCallback', null);
-      this.set('handleErrResponseAdditionalCallback', null);
+      this.handleSuccResponseAdditionalCallback = null;
+      this.handleErrResponseAdditionalCallback = null;
     }
 
     if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
@@ -157,7 +160,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
     } else {
       this.handleErrorResponse(response, ajaxMethod, true);
     }
-    this.set('_skipDefaultErrorHandler', false);
+    this._skipDefaultErrorHandler = false;
 
     if (typeof this.handleErrResponseAdditionalCallback === 'function') {
       this.handleErrResponseAdditionalCallback.bind(this, formatServerErrorAsText(response))();
@@ -183,7 +186,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
     this.handleSuccResponseAdditionalCallback = successCallback;
     this.handleErrResponseAdditionalCallback = errorCallback;
 
-    this.set('_skipDefaultErrorHandler', true);
+    this._skipDefaultErrorHandler = true;
     const endpoint = this.getEndpoint(this.partnerEndpoints.CREATE, vendorNoObj);
     this._triggerPartnerRequest({
       method: 'POST',
@@ -237,7 +240,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
         }
         // set additional callback if any
         if (callback) {
-          this.set('handleSuccResponseAdditionalCallback', callback);
+          this.handleSuccResponseAdditionalCallback = callback;
         }
 
         fireEvent(this, 'global-loading', {
@@ -261,5 +264,3 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(Polyme
     }
   }
 }
-
-window.customElements.define('partner-item-data', PartnerItemData);
