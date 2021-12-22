@@ -7,7 +7,8 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import '../../../../../endpoints/endpoints.js';
-import CommonMixin from '../../../../../common/mixins/common-mixin.js';
+// import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '../../../../../styles/shared-styles-lit';
@@ -78,21 +79,21 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         class="content-section"
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived" checked="{{showArchived}}">
+          <paper-toggle-button id="showArchived" ?checked="${this.showArchived}">
             ${translate('SHOW_ARCHIVED')}
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!editMode]]"></div>
+          <div class="separator" ?hidden="${!this.editMode}"></div>
           <paper-icon-button
             icon="add-box"
-            disabled="[[!editMode]]"
-            hidden$="[[!editMode]]"
+            ?disabled="${!this.editMode}"
+            ?hidden="${!this.editMode}"
             title="${translate('ADD_OTHER_ASSESSMENT')}"
-            on-tap="_addAssessment"
+            @click="${this._addAssessment}"
           >
           </paper-icon-button>
         </div>
 
-        <div hidden$="[[_emptyList(dataItems.length)]]">
+        <div ?hidden="${this._emptyList(this.dataItems.length)}">
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-3"> ${translate('ASSESSMENT_TYPE')} </etools-data-table-column>
             <etools-data-table-column class="col-2"> ${translate('DATE_OF_ASSESSMENT')} </etools-data-table-column>
@@ -156,7 +157,6 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
 
   set editMode(editMode) {
     this._editMode = editMode;
-    // this._editModeChanged(this._editMode);
   }
 
   @property({type: Boolean, reflect: true})
@@ -213,10 +213,6 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         this.assessmentUpdated(response);
       }
     });
-  }
-
-  _editModeChanged() {
-    this.updateStyles();
   }
 
   _uploadFinished(e: CustomEvent) {

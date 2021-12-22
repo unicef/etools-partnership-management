@@ -1,11 +1,11 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
-import CommonMixin from '../../../../common/mixins/common-mixin';
+import CommonMixin from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
-import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin-lit';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';

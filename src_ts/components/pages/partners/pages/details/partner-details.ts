@@ -5,8 +5,8 @@ import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
-import CommonMixin from '../../../../common/mixins/common-mixin.js';
-import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin.js';
+import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 import {connectStore} from '@unicef-polymer/etools-modules-common/dist/mixins/connect-store-mixin';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';

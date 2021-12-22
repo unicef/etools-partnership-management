@@ -1,4 +1,4 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
+import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../redux/store';
@@ -32,7 +32,6 @@ import {isJsonStrMatch} from '../../../../utils/utils';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PartnersListData} from '../../data/partners-list-data';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';

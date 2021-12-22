@@ -6,7 +6,7 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import CommonMixin from '../../../../../common/mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {translate} from 'lit-translate';
 

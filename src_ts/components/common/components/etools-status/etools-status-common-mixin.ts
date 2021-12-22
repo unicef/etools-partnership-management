@@ -203,7 +203,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     _setAllActionsToHidden() {
       const possibleActions = this.possibleActions;
       possibleActions.forEach((_elem: any, index: number) => {
-        this.possibleActions[index].hidden, true;
+        this.possibleActions[index].hidden = true;
       });
     }
 

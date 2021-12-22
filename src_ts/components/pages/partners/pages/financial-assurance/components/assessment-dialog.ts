@@ -5,7 +5,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';

@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 
-import {LitElement, property} from 'lit-element';
+import {LitElement, property, PropertyValues} from 'lit-element';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -37,7 +37,7 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: String})
     moduleName!: string;
 
-    @property({type: String, notify: true, observer: '_activePageChanged'})
+    @property({type: String})
     activePage!: string;
 
     /**
@@ -51,9 +51,8 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: Boolean})
     tabAttached = false;
 
-
-  public connectedCallback() {
-    super.connectedCallback();
+    public connectedCallback() {
+      super.connectedCallback();
 
       this._requestedTabContentHasBeenAttached = this._requestedTabContentHasBeenAttached.bind(this);
       this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
@@ -62,6 +61,12 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     disconnectedCallback() {
       super.disconnectedCallback();
       this.removeEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
+    }
+
+    updated(changedProperties: PropertyValues) {
+      if (changedProperties.has('activePage')) {
+        this._activePageChanged(this.activePage);
+      }
     }
 
     _activePageChanged(currentModule: string | undefined, previousPage: string) {

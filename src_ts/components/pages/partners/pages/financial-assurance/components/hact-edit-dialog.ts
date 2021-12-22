@@ -3,13 +3,13 @@ import {fireEvent} from '../../../../../utils/fire-custom-event';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import '@polymer/paper-input/paper-input';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../common/mixins/common-mixin';
+import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 
 @customElement('hact-edit-dialog')

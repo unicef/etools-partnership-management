@@ -13,6 +13,7 @@ import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import CommonMixin from '../../common/mixins/common-mixin-lit';
+import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
@@ -33,7 +34,6 @@ import './components/partner-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
-import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';

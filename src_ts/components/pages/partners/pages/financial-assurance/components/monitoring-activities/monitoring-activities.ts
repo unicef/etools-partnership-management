@@ -11,11 +11,12 @@ import '@polymer/paper-button';
 import '@polymer/iron-icons/editor-icons';
 import {getUniqueId} from '../../../../../../utils/utils';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
+import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin-lit';
 import {clone} from 'lodash-es';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {Partner} from '../../../../../../../models/partners.models';
+import {AnyObject} from '@unicef-polymer/etools-types';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -53,7 +54,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
 
         <etools-loading .active="${this.loading}"></etools-loading>
 
-        ${!this.activities.length
+        ${!(this.activities || []).length
           ? html`<div class="no-activities">There are no activities</div>`
           : html` <div class="row panel-row-tall layout-horizontal">
               <etools-data-table-column class="flex-2 cell">Reference #</etools-data-table-column>
@@ -82,7 +83,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
               >
                 <div class="flex-2 cell">
                   <iron-icon
-                    ?hidden$="${!this.editMode}"
+                    ?hidden="${!this.editMode}"
                     class="flex-none"
                     icon="editor:drag-handle"
                     on-mousedown="startDrag"
@@ -103,7 +104,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
           </div>`
         )}
 
-        <div class="actions" ?hidden$="${!this.editMode}">
+        <div class="actions" ?hidden="${!this.editMode}">
           <paper-button @click="${this.cancelEdit}">Cancel</paper-button>
           <paper-button raised class="save" @click="${this.saveGroups}">Save</paper-button>
         </div>
@@ -139,11 +140,12 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
 
   @property({type: Array})
   activities: MonitoringActivity[] | null = null;
-  groups: number[][] | null = null;
-  originalGroups: number[][] | null = null;
 
   @property({type: Object})
   mappedGroups: ActivitiesGroup[] = [];
+
+  groups: number[][] | null = null;
+  originalGroups: number[][] | null = null;
 
   private offset: any = {
     x: 0,
@@ -175,7 +177,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
     });
   }
 
-  showEditBtn(activities: MonitoringActivity[], isReadonly: boolean): boolean {
+  showEditBtn(activities: MonitoringActivity[] | null, isReadonly: boolean): boolean {
     return Boolean(activities?.length) && !isReadonly;
   }
 

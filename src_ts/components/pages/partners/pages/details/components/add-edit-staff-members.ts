@@ -11,10 +11,10 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import CommonMixin from '../../../../../common/mixins/common-mixin.js';
+import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 
 /**
