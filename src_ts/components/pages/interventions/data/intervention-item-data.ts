@@ -505,12 +505,12 @@ class InterventionItemData extends connect(store)(
   }
 
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
-    // Agreement dexie deleted issue
-    logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+    // Intervention dexie deleted issue
+    logError('Intervention delete from local dexie db failed!', 'intervention-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text:
-        'The agreement was deleted from server database, but there was an issue on cleaning ' +
-        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+        'The intervention was deleted from server database, but there was an issue on cleaning ' +
+        'intervention data from browser cache. Use refresh data functionality to update cached intervention data.',
       showCloseBtn: true
     });
   }
