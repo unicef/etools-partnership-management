@@ -90,4 +90,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - migrations
+                - use-migrated-components
