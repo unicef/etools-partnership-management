@@ -71,25 +71,42 @@ export class PartnersModule extends connect(store)(
 
       <app-route
         .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          this.route = detail.value;
+        }}"
         pattern="/list"
-        query-params="${this.listPageQueryParams}"
+        .queryParams="${this.listPageQueryParams}"
+        @query-params-changed="${({detail}: CustomEvent) => {
+          this.listPageQueryParams = detail.value;
+        }}"
         .active="${this.listActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.listActive = detail.value;
+        }}"
       ></app-route>
 
       <app-route
-        route="${this.route}"
+        .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          this.route = detail.value;
+        }}"
+        @data-changed="${({detail}: CustomEvent) => {
+          this.routeData = detail.value;
+        }}"
         pattern="/:id/:tab"
-        active="${this.tabsActive}"
-        data="${this.routeData}"
+        .active="${this.tabsActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.tabsActive = detail.value;
+        }}"
       ></app-route>
 
-      <page-content-header with-tabs-visible="${this.tabsActive}">
+      <page-content-header .withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
           ${!this.listActive
             ? html` <span ?hidden="${this.showOnlyGovernmentType}">Partners</span>
                 <span ?hidden="${!this.showOnlyGovernmentType}">Government Partners</span>`
             : ''}
-          ${!this.tabsActive ? html`<span>${this.partner.name}</span>` : ''}
+          ${!this.tabsActive ? html`<span>${(this.partner || {}).name}</span>` : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions">
@@ -112,8 +129,8 @@ export class PartnersModule extends connect(store)(
         ${this._showPageTabs(this.activePage)
           ? html` <etools-tabs
               slot="tabs"
-              tabs="${this.partnerTabs}"
-              active-tab="${this.routeData.tab}"
+              .tabs="${this.partnerTabs}"
+              .activeTab="${(this.routeData || {}).tab}"
               @iron-select="${this._handleTabSelectAction}"
             ></etools-tabs>`
           : ''}
@@ -131,11 +148,11 @@ export class PartnersModule extends connect(store)(
               ? html`<partners-list
                   id="list"
                   name="list"
-                  show-only-government-type="${this.showOnlyGovernmentType}"
-                  current-module="${this.currentModule}"
-                  active="${this.listActive}"
-                  csv-download-url="${this.csvDownloadUrl}"
-                  url-params="${this.preservedListQueryParams}"
+                  .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
+                  .currentModule="${this.currentModule}"
+                  .active="${this.listActive}"
+                  .csvDownloadUrl="${this.csvDownloadUrl}"
+                  .urlParams="${this.preservedListQueryParams}"
                 >
                 </partners-list>`
               : ''}
@@ -147,14 +164,14 @@ export class PartnersModule extends connect(store)(
                   id="partnerDetails"
                   name="details"
                   .partner="${this.partner}"
-                  .edit-mode="${this._hasEditPermissions(this.permissions)}"
+                  .editMode="${this._hasEditPermissions(this.permissions)}"
                 ></partner-details>`
               : ''}
             ${this._pageEquals(this.activePage, 'financial-assurance')
               ? html`<partner-financial-assurance
                   id="financialAssurance"
                   .partner="${this.partner}"
-                  edit-mode="${this._hasEditPermissions(this.permissions)}"
+                  .editMode="${this._hasEditPermissions(this.permissions)}"
                   name="financial-assurance"
                 >
                 </partner-financial-assurance>`
@@ -164,14 +181,14 @@ export class PartnersModule extends connect(store)(
         <!-- page content end -->
 
         <!-- sidebar content start -->
-        ${!this._showSidebarStatus(this.listActive, this.tabAttached, this.partner)
+        ${this._showSidebarStatus(this.listActive, this.tabAttached, this.partner)
           ? html` <div id="sidebar">
               <partner-status
                 @save-partner="${this._validateAndTriggerPartnerSave}"
                 @delete-partner="${this._deletePartner}"
                 .active="${!this.listActive}"
                 .partner="${this.partner}"
-                edit-mode="${this._hasEditPermissions(this.permissions)}"
+                .editMode="${this._hasEditPermissions(this.permissions)}"
               >
               </partner-status>
             </div>`
@@ -182,7 +199,7 @@ export class PartnersModule extends connect(store)(
 
       <partner-item-data
         id="partnerData"
-        .partner-id="${this.selectedPartnerId}"
+        .partnerId="${this.selectedPartnerId}"
         .partner="${this.partner}"
         @partner-changed="${(e: CustomEvent) => {
           this.partner = {...e.detail};
@@ -305,7 +322,7 @@ export class PartnersModule extends connect(store)(
   public _partnerContactsUpdated(e: CustomEvent) {
     this.partner.updateStaffMembers(e.detail);
     this.partner = {...this.partner};
-    //@dci this.notifyPath('partner.staff_members');
+    // @dci this.notifyPath('partner.staff_members');
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {

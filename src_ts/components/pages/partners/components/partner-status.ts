@@ -80,7 +80,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   ];
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('partner') || changedProperties.has('possibleStatuses')) {
+    if ((changedProperties.has('partner') || changedProperties.has('possibleStatuses')) && this.partner) {
       this._partnerStatusChanged(
         this.partner.vision_synced,
         this.partner.deleted_flag,
@@ -89,7 +89,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       );
     }
 
-    if (changedProperties.has('partner') || changedProperties.has('editMode')) {
+    if ((changedProperties.has('partner') || changedProperties.has('editMode')) && this.partner) {
       this._computeAvailableActions(this.partner.hidden, this.editMode);
     }
   }

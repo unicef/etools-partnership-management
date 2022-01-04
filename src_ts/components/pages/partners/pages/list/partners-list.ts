@@ -433,10 +433,12 @@ export class PartnersList extends connect(store)(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
+    }, 100);
     this.listAttachedCallback(this.active, 'Loading...', 'partners-list');
   }
 

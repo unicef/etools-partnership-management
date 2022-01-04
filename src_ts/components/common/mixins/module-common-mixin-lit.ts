@@ -85,7 +85,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
     }
 
     _showPageTabs(page: string) {
-      return page !== 'list';
+      return page && page !== 'list';
     }
 
     _showTabChangeLoadingMsg(e: CustomEvent | null, loadingSource: string, tabPrefix: string, tab?: string) {

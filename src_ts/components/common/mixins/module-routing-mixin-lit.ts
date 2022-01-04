@@ -2,7 +2,7 @@
 
 import {LitElement, property, PropertyValues} from 'lit-element';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {getDomainByEnv} from '../../../config/config';
+import {BASE_URL, getDomainByEnv} from '../../../config/config';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Route} from '../../../typings/route.types';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
@@ -32,7 +32,7 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     subRouteData: any;
 
     @property({type: String})
-    rootPath!: string;
+    rootPath = BASE_URL;
 
     @property({type: String})
     moduleName!: string;
@@ -187,7 +187,6 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
         );
 
         const fileName = importFilenamePrefix + page;
-
         this.importPageElement(fileName, baseUrl)
           .then(() => {
             this._handleSuccessfulImport(page, successfulImportCallback);
@@ -205,7 +204,7 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     importPageElement(fileName: string, baseUrl: string) {
       return new Promise<void>((resolve, reject) => {
         const customElement = this.shadowRoot!.querySelector(fileName);
-        if (customElement instanceof PolymerElement === false) {
+        if (customElement instanceof LitElement === false) {
           /* Imports are resolved relative to the current module, in this case module-routing-mixin,
            * So non-absolute paths will be relative to
            * `http://localhost:8082/pmp/src/components/pages/mixins/`
