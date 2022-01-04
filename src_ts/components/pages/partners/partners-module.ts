@@ -492,8 +492,14 @@ export class PartnersModule extends connect(store)(
     return changes;
   }
 
-  public _handleTabSelectAction(_e: CustomEvent) {
+  public _handleTabSelectAction(e: CustomEvent) {
     // this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+    const newTabName: string = e.detail.item.getAttribute('name');
+    if (!this.partner || newTabName == this.activePage) {
+      return;
+    }
+    const newPath = `partners/${this.partner!.id}/${newTabName}`;
+    fireEvent(this, 'update-main-path', {path: newPath});
   }
 
   public _handlePartnerSelectionLoadingMsg() {
