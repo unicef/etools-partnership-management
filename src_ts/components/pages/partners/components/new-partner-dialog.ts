@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/no-autofocus */
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
