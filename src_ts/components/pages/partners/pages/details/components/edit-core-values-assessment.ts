@@ -53,6 +53,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
             file-url="[[item.attachment]]"
             upload-endpoint="[[uploadEndpoint]]"
             on-upload-finished="_uploadFinished"
+            on-delete-file="_fileDeleted"
             upload-in-progress="{{uploadInProgress}}"
             required
             error-message="[[_getTranslation('ASSESSMENT_FILE_IS_REQUIRED')]]"
@@ -99,6 +100,10 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
       const uploadResponse = e.detail.success;
       this.set('item.attachment', uploadResponse.id);
     }
+  }
+
+  _fileDeleted() {
+    this.set('item.attachment', null);
   }
 }
 

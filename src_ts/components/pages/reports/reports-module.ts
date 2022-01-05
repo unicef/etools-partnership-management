@@ -466,7 +466,7 @@ class ReportsModule extends connect(store)(
 
   _handleBlobDataReceivedAndStartDownload(blob: Blob, filename: string) {
     if (window.navigator.userAgent.indexOf('Trident/') > -1) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       // create a blob url representing the data
       const url = window.URL.createObjectURL(blob);
