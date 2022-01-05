@@ -37,6 +37,7 @@ import {PartnerItemData} from './data/partner-item-data';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
  * @polymer
@@ -202,7 +203,7 @@ export class PartnersModule extends connect(store)(
         .partnerId="${this.selectedPartnerId}"
         .partner="${this.partner}"
         @partner-changed="${(e: CustomEvent) => {
-          this.partner = {...e.detail};
+          this.partner = cloneDeep(e.detail);
         }}"
         error-event-name="partner-save-error"
       >
@@ -317,12 +318,11 @@ export class PartnersModule extends connect(store)(
   }
 
   public _updatePartner(e: CustomEvent) {
-    this.partner = e.detail;
+    this.partner = cloneDeep(e.detail);
   }
   public _partnerContactsUpdated(e: CustomEvent) {
     this.partner.updateStaffMembers(e.detail);
-    this.partner = {...this.partner};
-    // @dci this.notifyPath('partner.staff_members');
+    this.partner = cloneDeep(this.partner);
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {

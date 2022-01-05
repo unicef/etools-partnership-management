@@ -219,7 +219,11 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
 
       <etools-content-panel class="content-section" panel-title="${translate('CORE_VALUES_ASSESSMENTS')}">
         <div slot="panel-btns" id="show-archived">
-          <paper-toggle-button id="showArchived" checked="${this.showArchivedAssessments}">
+          <paper-toggle-button
+            id="showArchived"
+            ?checked="${this.showArchivedAssessments}"
+            @iron-change="${this.showArchivedChange}"
+          >
             ${translate('SHOW_ARCHIVED')}
           </paper-toggle-button>
         </div>
@@ -354,6 +358,13 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
         parent: this
       }
     });
+  }
+
+  showArchivedChange(e: CustomEvent) {
+    if (!e.detail) {
+      return;
+    }
+    this.showArchivedAssessments = (e.currentTarget as HTMLInputElement).checked;
   }
 
   public _canEditCVA(showCoreValuesAssessmentAttachment: boolean, attachment: any, archived?: boolean) {

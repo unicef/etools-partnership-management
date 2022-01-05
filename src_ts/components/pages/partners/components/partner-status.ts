@@ -1,6 +1,6 @@
 import '../../../common/components/etools-status/etools-status.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin';
+import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
 import {fireEvent} from '../../../utils/fire-custom-event';
@@ -11,7 +11,6 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 
 /**
- * @polymer
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
@@ -79,6 +78,11 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     }
   ];
 
+  connectedCallback() {
+    super.connectedCallback();
+    setTimeout(this.setPossibleStatuses.bind(this), 0);
+  }
+
   updated(changedProperties: PropertyValues) {
     if ((changedProperties.has('partner') || changedProperties.has('possibleStatuses')) && this.partner) {
       this._partnerStatusChanged(
@@ -112,7 +116,6 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     });
 
     this._handleStickyScroll();
-    setTimeout(this.setPossibleStatuses.bind(this), 0);
   }
 
   disconnectedCallback() {
@@ -175,13 +178,6 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     this._forceScollPositionRecalculation();
   }
 
-  // TODO: polymer 3 - remove, might not be needed
-  // _isHidden(hidden: boolean) {
-  //   if (typeof hidden === 'undefined' || hidden === null) {
-  //     return true;
-  //   }
-  //   return hidden;
-  // }
   _showDeleteConfirmationDialog() {
     if (!this.warningDialog) {
       logWarn('warningDialog not created!', 'pmp partner status change');
@@ -226,7 +222,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   _computeAvailableStatuses() {
     let activeStatus;
     this._setAllStatusesToHidden();
-    if (!this.partner) {
+    if (!this.partner || !this.possibleStatuses.length) {
       return;
     }
     switch (true) {
@@ -243,13 +239,13 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         activeStatus = CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION;
         break;
     }
-
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
       if (this.possibleStatuses[key].label === activeStatus) {
         this.possibleStatuses[key].completed = true;
         this.possibleStatuses[key].hidden = false;
       }
     }
+    this.requestUpdate();
   }
   _showSyncedStatus() {
     return (

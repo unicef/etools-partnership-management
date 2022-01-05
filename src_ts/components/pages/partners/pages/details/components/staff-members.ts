@@ -70,7 +70,11 @@ export class StaffMembers extends LitElement {
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive" ?checked="${this.showInactive}">
+          <paper-toggle-button
+            id="showInactive"
+            ?checked="${this.showInactive}"
+            @iron-change="${this.showInactiveChange}"
+          >
             ${translate('SHOW_INACTIVE')}
           </paper-toggle-button>
           <div class="separator" ?hidden="${!this.editMode}"></div>
@@ -161,6 +165,13 @@ export class StaffMembers extends LitElement {
     this.dataItems.sort((a: any, b: any) => {
       return b.active - a.active;
     });
+  }
+
+  showInactiveChange(e: CustomEvent) {
+    if (!e.detail) {
+      return;
+    }
+    this.showInactive = (e.currentTarget as HTMLInputElement).checked;
   }
 
   _addPartnerContact() {

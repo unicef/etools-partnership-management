@@ -59,7 +59,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     // language=HTML
     return html`
       ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
-      <style include="data-table-styles">
+      <style>
         :host {
           --paper-input-container-input-webkit-spinner: {
             -webkit-appearance: none;
@@ -73,7 +73,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
-          padding: 0 24px 0 48px;
+          padding: 0 24px 0 48px !important;
         }
 
         .overview-header etools-data-table-column {
@@ -81,7 +81,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .overview-row {
-          padding-left: 48px;
+          padding-left: 48px !important;
         }
 
         .vision {
@@ -94,7 +94,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           margin-left: -24px;
           padding-left: 24px;
           line-height: normal;
-          box-sizing: content-box;
+          box-sizing: content-box !important;
         }
 
         .from-vision {

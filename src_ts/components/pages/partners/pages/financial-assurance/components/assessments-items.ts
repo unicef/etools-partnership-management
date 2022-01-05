@@ -4,10 +4,9 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table';
 
 import '../../../../../endpoints/endpoints.js';
-// import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -37,7 +36,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
     // language=HTML
     return html`
       ${sharedStyles} ${etoolsCpHeaderActionsBarStyles}
-      <style include="data-table-styles">
+      <style>
         [hidden] {
           display: none !important;
         }
@@ -72,6 +71,23 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           --paper-toggle-button-label-color: var(--primary-text-color);
           --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
+        *[slot='row-data'] {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+        div[slot='row-data'] {
+          position: relative;
+          padding: 12px 0;
+          margin: 0;
+        }
+        *[slot='row-data'] .col-data {
+          display: inline-flex;
+          line-height: 24px;
+          align-items: center;
+        }
+        a {
+          color: var(--list-primary-color, #0099ff);
+        }
       </style>
 
       <etools-content-panel
@@ -79,7 +95,11 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         class="content-section"
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived" ?checked="${this.showArchived}">
+          <paper-toggle-button
+            id="showArchived"
+            ?checked="${this.showArchived}"
+            @iron-change="${this.showArchivedChange}"
+          >
             ${translate('SHOW_ARCHIVED')}
           </paper-toggle-button>
           <div class="separator" ?hidden="${!this.editMode}"></div>
@@ -108,9 +128,9 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                 no-collapse
                 ?hidden="${!this._isVisible(item.active, this.showArchived)}"
               >
-                <div slot="row-data" class="p-relative">
-                  <span class="col-data col-3"> ${item.type} </span>
-                  <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date)} </span>
+                <div slot="row-data" class="layout-horizontal p-relative">
+                  <span class="col-data col-3"> ${item.type || ''} </span>
+                  <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date || '')} </span>
                   <span class="col-data col-5">
                     <iron-icon icon="attachment" class="attachment"></iron-icon>
                     <span class="break-word">
@@ -125,7 +145,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                     <iron-icon icon="check" ?hidden="${item.active}"></iron-icon>
                   </span>
                   <icons-actions2
-                    .itemId="${item.id}"
+                    item-id="${item.id}"
                     ?hidden="${!this.editMode}"
                     @edit="${this._editAssessment}"
                     .showDelete="${this.showDelete}"
@@ -220,10 +240,16 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
     if (e.detail.success) {
       const assessmentIndex = Number((e.target as any).getAttribute('data-args-index')); // TODO - who is e.target
       const uploadResponse = JSON.parse(e.detail.success);
-      // @dci this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
       this.dataItems[assessmentIndex].report_attachment = uploadResponse.id;
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
+  }
+
+  showArchivedChange(e: CustomEvent) {
+    if (!e.detail) {
+      return;
+    }
+    this.showArchived = (e.currentTarget as HTMLInputElement).checked;
   }
 
   _isVisible(active: boolean, showArchived: boolean) {

@@ -5,7 +5,7 @@ export const riskRatingStyles = html` <style>
   :host {
     --risk-rating-field: {
       display: inline-block;
-      height: 22px;
+      min-height: 22px;
       padding: 0 4px;
       border-left: var(--risk-rating-significant-color);
       /* TODO: capitalize might not be applied, iron-input bug */

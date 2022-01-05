@@ -114,7 +114,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
      * "other" can be any property that must be defined before the method
      * is executed (main item displayed on the page, activePage)
      */
-    _showSidebarStatus(listPageActive: boolean, tabAttached: boolean, other?: boolean) {
+    _showSidebarStatus(listPageActive: boolean, tabAttached: boolean, other?: any) {
       const showStatus = !listPageActive && !!tabAttached;
       return !other ? showStatus : showStatus && other;
     }

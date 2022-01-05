@@ -3,6 +3,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-content-panel';
 import '@unicef-polymer/etools-loading';
@@ -61,7 +62,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
               <etools-data-table-column class="flex-1 cell">Start Date</etools-data-table-column>
               <etools-data-table-column class="flex-1 cell">End Date</etools-data-table-column>
               <etools-data-table-column class="flex-2 cell">Location (Site)</etools-data-table-column>
-            </div>`})
+            </div>`}
         ${(this.mappedGroups || []).map(
           (item: AnyObject) => html` <div
             class="activities ${this.groupedClass(item.activities.length)}"
@@ -170,11 +171,15 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
     this.loading = true;
     sendRequest({
       endpoint: this.getEndpoint('partnerActivities', {id: this._partnerId})
-    }).then((response: any) => {
-      this.activities = response.results;
-      this.mapActivitiesToGroups();
-      this.loading = false;
-    });
+    })
+      .then((response: any) => {
+        this.activities = response.results;
+        this.mapActivitiesToGroups();
+      })
+      .catch((err: any) => {
+        logError('Partner Activities list data request failed!', 'partnerActivities', err);
+      })
+      .finally(() => (this.loading = false));
   }
 
   showEditBtn(activities: MonitoringActivity[] | null, isReadonly: boolean): boolean {

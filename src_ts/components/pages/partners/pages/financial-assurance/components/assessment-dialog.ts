@@ -20,6 +20,7 @@ import {PartnerAssessment} from '../../../../../../models/partners.models.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
+import {formatDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
 
 /**
  * @polymer
@@ -84,7 +85,7 @@ export class AssessmentDialog extends connect(store)(EndpointsMixin(LitElement))
               .value="${this.assessment.completed_date}"
               fire-date-has-changed
               @date-has-changed="${(e: CustomEvent) => {
-                this.assessment.completed_date = e.detail.date;
+                this.assessment.completed_date = e.detail.date ? formatDate(e.detail.date, 'YYYY-MM-DD') : null;
               }}"
               auto-validate
               max-date-error-msg="Date can not be in the future"
