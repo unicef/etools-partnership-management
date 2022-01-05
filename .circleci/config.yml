@@ -95,4 +95,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - 27678_relative_git_submodules
