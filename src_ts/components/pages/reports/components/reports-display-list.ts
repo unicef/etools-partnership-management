@@ -324,7 +324,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     if (rows && rows.length) {
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].detailsOpened) {
-          rows[i].set('detailsOpened', false);
+          rows[i]['detailsOpened'] = false;
         }
       }
     }
