@@ -42,7 +42,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       </style>
 
       <etools-status
-        .statuses="${this.possibleStatuses}"
+        .statuses="${this.statuses}"
         .actions="${this.possibleActions}"
         @partner-delete="${this._showDeleteConfirmationDialog}"
       >
@@ -61,6 +61,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   @property({type: Array})
   possibleStatuses: Status[] = [];
+
+  @property({type: Array})
+  statuses: Status[] = [];
 
   @property({type: Array})
   possibleActions: StatusAction[] = [
@@ -245,7 +248,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         this.possibleStatuses[key].hidden = false;
       }
     }
-    this.requestUpdate();
+    this.statuses = [...this.possibleStatuses];
   }
   _showSyncedStatus() {
     return (
