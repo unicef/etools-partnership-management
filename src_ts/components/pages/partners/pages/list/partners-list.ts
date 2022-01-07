@@ -121,7 +121,7 @@ export class PartnersList extends connect(store)(
                     placeholder="Select"
                     ?disabled="${filter.disabled}"
                     .options="${filter.selectionOptions}"
-                    .selected-values="${filter.selectedValue}"
+                    .selectedValues="${filter.selectedValue}"
                     data-filter-path="${filter.path}"
                     @etools-selected-items-changed="${this.esmmValueChanged}"
                     trigger-value-change-event
@@ -138,7 +138,7 @@ export class PartnersList extends connect(store)(
                     class="filter date"
                     label="${filter.filterName}"
                     placeholder="&#8212;"
-                    value="${filter.selectedValue}"
+                    .value="${filter.selectedValue}"
                     @date-has-changed="${this._filterDateHasChanged}"
                     data-filter-path="${filter.path}"
                     fire-date-has-changed

@@ -129,14 +129,16 @@ function ListFiltersMixin<T extends Constructor<LitElement>>(baseClass: T) {
         case 'etools-dropdown-multi':
         case 'dropdown':
         case 'etools-dropdown':
-          set(this, [...filterPath, 'selectedValue'], filter.singleSelection ? null : []);
+          set(this, filter.path, filter.singleSelection ? null : []);
+          // set(this, [...filterPath, 'selectedValue'], filter.singleSelection ? null : []);
           break;
         case 'datepicker':
-          set(this, [...filterPath, 'selectedValue'], '');
+          set(this, filter.path, '');
+          // set(this, [...filterPath, 'selectedValue'], '');
           break;
         case 'paper-toggle':
-          set(this, [...filterPath, 'selectedValue'], false);
-          // this.notifyPath([...filterPath, 'selectedValue'].join('.'));
+          set(this, filter.path, false);
+          // set(this, [...filterPath, 'selectedValue'], false);
           break;
         default:
           break;
