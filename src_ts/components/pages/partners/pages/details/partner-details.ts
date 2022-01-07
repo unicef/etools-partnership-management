@@ -7,7 +7,6 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import CommonMixin from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
-import {connectStore} from '@unicef-polymer/etools-modules-common/dist/mixins/connect-store-mixin';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
@@ -16,7 +15,7 @@ import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
 import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
-import {RootState} from '../../../../../redux/store';
+import {RootState, store} from '../../../../../redux/store';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
@@ -35,6 +34,8 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 
 import {translate} from 'lit-translate';
+import {connect} from 'pwa-helpers/connect-mixin';
+import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 
 declare const dayjs: any;
 
@@ -47,7 +48,7 @@ declare const dayjs: any;
  */
 
 @customElement('partner-details')
-export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(LitElement))) {
+export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -136,6 +137,10 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
               .options="${this.sharedPartenerValues}"
               .selectedValues="${this.partner.shared_with}"
               ?readonly="${!this.editMode}"
+              trigger-value-change-event
+              @etools-selected-items-changed="${({detail}: CustomEvent) => {
+                this.selectedItemsChanged(detail, 'shared_with', 'value', 'partner');
+              }}"
             >
             </etools-dropdown-multi>
           </div>
