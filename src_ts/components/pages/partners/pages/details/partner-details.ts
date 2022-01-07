@@ -228,7 +228,7 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
           </paper-toggle-button>
         </div>
 
-        <div ?hidden="${this._empty(this.partner.core_values_assessments)}">
+        <div ?hidden="${!this._shouldDisplayCVAList()}">
           <etools-data-table-header no-title no-collapse>
             <etools-data-table-column class="col-4">
               <div>${translate('DATE_LAST_ASSESSED')}</div>
@@ -241,11 +241,7 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
           ${this.partner?.core_values_assessments?.map(
             (item) => html` <etools-data-table-row
               no-collapse
-              ?secondary-bg-on-hover="${this._canEditCVA(
-                this.showCoreValuesAssessmentAttachment,
-                item.attachment,
-                item.archived
-              )}"
+              ?secondary-bg-on-hover="${this._canEditCVA(item.attachment, item.archived)}"
               ?hidden="${!this._shouldShowCVA(item.archived, this.showArchivedAssessments)}"
             >
               <div slot="row-data" class="p-relative">
@@ -266,11 +262,7 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
                 </span>
                 <icons-actions2
                   .item="${item}"
-                  .showEdit="${this._canEditCVA(
-                    this.showCoreValuesAssessmentAttachment,
-                    item.attachment,
-                    item.archived
-                  )}"
+                  .showEdit="${this._canEditCVA(item.attachment, item.archived)}"
                   .showDelete="${this.showDelete}"
                   @edit="${this._editCoreValuesAssessment}"
                 >
@@ -279,7 +271,7 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
             </etools-data-table-row>`
           )}
         </div>
-        <div class="row-h" ?hidden="${!this._empty(this.partner.core_values_assessments)}">
+        <div class="row-h" ?hidden="${this._shouldDisplayCVAList()}">
           ${translate('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')}
         </div>
       </etools-content-panel>
@@ -367,11 +359,8 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
     this.showArchivedAssessments = (e.currentTarget as HTMLInputElement).checked;
   }
 
-  public _canEditCVA(showCoreValuesAssessmentAttachment: boolean, attachment: any, archived?: boolean) {
-    if (attachment || archived) {
-      return false;
-    }
-    return showCoreValuesAssessmentAttachment;
+  public _canEditCVA(attachment: any, archived?: boolean) {
+    return !attachment && !archived;
   }
 
   updated(changedProperties: PropertyValues) {
@@ -462,5 +451,9 @@ export class PartnerDetails extends connectStore(CommonMixin(RiskRatingMixin(Lit
 
   public _empty(val: any) {
     return isEmptyObject(val);
+  }
+
+  public _shouldDisplayCVAList() {
+    return !this._empty(this.partner.core_values_assessments) && this.showCoreValuesAssessmentAttachment;
   }
 }
