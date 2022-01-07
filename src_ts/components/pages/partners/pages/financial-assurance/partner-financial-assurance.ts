@@ -36,6 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
+import {cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -397,7 +398,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('REPORT')} </etools-data-table-column>
         </div>
-        ${this.engagements.map(
+        ${this.paginatedEngagements.map(
           (item) => html`
             <div class="assessment-row panel-table-row layout-horizontal">
               <div class="col-3">${this._displayType(item.engagement_type)}</div>
@@ -450,7 +451,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   auditorPortalBasePath: string = AP_DOMAIN;
 
   @property({type: Array})
-  engagements: any[] = [];
+  paginatedEngagements: any[] = [];
 
   @property({type: Array})
   allEngagements: any[] = [];
@@ -540,7 +541,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
   public _init(engagements: any) {
     this.allEngagements = engagements;
-    this.engagements = [];
+    this.paginatedEngagements = [];
     this.paginator = JSON.parse(
       JSON.stringify({
         count: engagements.length,
@@ -574,7 +575,9 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
     sendRequest(requestOptions)
-      .then((results: any) => this._init(results))
+      .then((results: any) => {
+        this._init(results);
+      })
       // @ts-ignore
       .catch((err: any) => this.handleErrorResponse(err));
 
@@ -606,11 +609,11 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     if (!this.allEngagements) {
       return;
     }
-    let engagements = this.allEngagements;
+    let engagements = cloneDeep(this.allEngagements);
     engagements = engagements
       .sort((a, b) => dayjs(b.status_date) - dayjs(a.status_date))
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    this.engagements = engagements;
+    this.paginatedEngagements = engagements;
   }
 
   public _getYear() {
@@ -674,5 +677,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     const basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
 
     this.basisOptions.push({value: basisVal, label: basisVal});
+  }
+
+  // Override from PaginationMixin
+  paginatorChanged() {
+    this._paginate(this.paginator.page, this.paginator.page_size);
   }
 }
