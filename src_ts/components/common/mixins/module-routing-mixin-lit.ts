@@ -69,7 +69,7 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
       }
     }
 
-    _activePageChanged(currentModule: string | undefined, previousPage: string) {
+    _activePageChanged(currentModule: string | undefined, previousPage?: string) {
       if (typeof currentModule === 'undefined') {
         return;
       }
@@ -87,7 +87,7 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
     /*
      * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
      */
-    _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage: string) {
+    _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage?: string) {
       const selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
       if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
         this.tabAttached = false;

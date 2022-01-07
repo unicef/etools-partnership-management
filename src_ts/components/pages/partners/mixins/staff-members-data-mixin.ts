@@ -14,7 +14,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
 function StaffMembersDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class StaffMembersDataClass extends EndpointsMixin(baseClass) {
     @property({type: Array})
-    staffMembers!: [];
+    staffMembers!: MinimalStaffMember[];
 
     @property({type: String})
     staffLoadingMsgSource = 'staff-m';

@@ -228,10 +228,10 @@ export class PartnersList extends connect(store)(
                 <a
                   class="vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
-                  title="${this.getDisplayValue(partner.vendor_number)}"
+                  title="${this.getDisplayValue(partner.vendor_number, ',', false)}"
                   @click="${this._triggerPartnerLoadingMsg}"
                 >
-                  ${this.getDisplayValue(partner.vendor_number)}
+                  ${this.getDisplayValue(partner.vendor_number, ',', false)}
                 </a>
               </span>
               <span class="col-data col-3" data-col-header-label="${translate('NAME_SHORT_FULL')}">
@@ -257,14 +257,14 @@ export class PartnersList extends connect(store)(
                 data-col-header-label="${translate('HACT_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
-                ${this.getDisplayValue(partner.rating)}
+                ${this.getDisplayValue(partner.rating, ',', false)}
               </span>
               <span
                 class="col-data flex-c"
                 data-col-header-label="${translate('SEA_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
-                ${this.getDisplayValue(partner.sea_risk_rating_name)}
+                ${this.getDisplayValue(partner.sea_risk_rating_name, ',', false)}
               </span>
               <span class="col-data flex-c" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
                 ${this.getDateDisplayValue(partner.psea_assessment_date)}
@@ -273,15 +273,15 @@ export class PartnersList extends connect(store)(
             <div slot="row-data-details">
               <div class="row-details-content flex-c">
                 <span class="rdc-title">${translate('SHARED_PARTNER')}</span>
-                <span>${this.getDisplayValue(partner.shared_with)}</span>
+                <span>${this.getDisplayValue(partner.shared_with, ',', false)}</span>
               </div>
               <div class="row-details-content flex-c">
                 <span class="rdc-title">${translate('EMAIL')}</span>
-                <span>${this.getDisplayValue(partner.email)}</span>
+                <span>${this.getDisplayValue(partner.email, ',', false)}</span>
               </div>
               <div class="row-details-content flex-c">
                 <span class="rdc-title">${translate('PHONE_NUMBER')}</span>
-                <span>${this.getDisplayValue(partner.phone_number)}</span>
+                <span>${this.getDisplayValue(partner.phone_number, ',', false)}</span>
               </div>
               <div class="row-details-content flex-c">
                 <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CP')}</span>
