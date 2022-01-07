@@ -397,12 +397,17 @@ export class PartnersList extends connect(store)(
     }
 
     if (
-      changedProperties.has('partnerTypes') ||
-      changedProperties.has('csoTypes') ||
-      changedProperties.has('seaRiskRatings') ||
-      changedProperties.has('showOnlyGovernmentType')
+      changedProperties.has('q') ||
+      changedProperties.has('selectedPartnerTypes') ||
+      changedProperties.has('selectedCsoTypes') ||
+      changedProperties.has('selectedRiskRatings') ||
+      changedProperties.has('selectedSEARiskRatings') ||
+      changedProperties.has('selectedPseaDateBefore') ||
+      changedProperties.has('selectedPseaDateAfter') ||
+      changedProperties.has('showHidden')
     ) {
       this.resetPageNumber();
+      return;
     }
 
     if (
@@ -607,7 +612,8 @@ export class PartnersList extends connect(store)(
   // Updates URL state with new query string, and launches query
   public _updateUrlAndData() {
     if (this._canFilterData()) {
-      this.csvDownloadUrl = this._buildCsvDownloadUrl();
+      const csvDownloadUrl = this._buildCsvDownloadUrl();
+      fireEvent(this, 'csvDownloadUrl-changed', csvDownloadUrl);
       const qs = this._buildQueryString();
 
       this._updateUrlAndDislayedData(
