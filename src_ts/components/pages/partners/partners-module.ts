@@ -103,11 +103,11 @@ export class PartnersModule extends connect(store)(
 
       <page-content-header .withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
-          ${!this.listActive
+          ${this.listActive
             ? html` <span ?hidden="${this.showOnlyGovernmentType}">Partners</span>
                 <span ?hidden="${!this.showOnlyGovernmentType}">Government Partners</span>`
             : ''}
-          ${!this.tabsActive ? html`<span>${(this.partner || {}).name}</span>` : ''}
+          ${this.tabsActive ? html`<span>${(this.partner || {}).name}</span>` : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions">
