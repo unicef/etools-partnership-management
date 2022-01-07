@@ -61,7 +61,8 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         for (let i = 0; i < rows.length; i++) {
           // @ts-ignore
           if (rows[i].detailsOpened) {
-            rows[i].set('detailsOpened', false);
+            // @ts-ignore
+            rows[i]['detailsOpened'] = false;
           }
         }
       }
