@@ -111,11 +111,8 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       okBtnText: 'Yes',
       cancelBtnText: 'No',
       closeCallback: this._dialogConfirmationCallback,
-      content: this.deleteWarningDialogContent
-    });
-
-    this.warningDialog.updateStyles({
-      '--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'
+      content: this.deleteWarningDialogContent,
+      id: 'delWarning'
     });
 
     this._handleStickyScroll();
