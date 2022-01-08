@@ -244,7 +244,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           <div class="col col-2 center-align hact-values">
             <strong>
               ${this.partner.hact_values?.programmatic_visits.planned.total} /
-              <span class="green"> ${this.partner.hact_min_requirements.programmatic_visits}</span>
+              <span class="green"> ${this.partner.hact_min_requirements?.programmatic_visits}</span>
               / ${this.partner.hact_values?.programmatic_visits.completed.total}
             </strong>
           </div>
