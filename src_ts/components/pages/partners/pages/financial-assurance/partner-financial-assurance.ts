@@ -243,9 +243,9 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           </div>
           <div class="col col-2 center-align hact-values">
             <strong>
-              ${this.partner.hact_values.programmatic_visits.planned.total} /
+              ${this.partner.hact_values?.programmatic_visits.planned.total} /
               <span class="green"> ${this.partner.hact_min_requirements.programmatic_visits}</span>
-              / ${this.partner.hact_values.programmatic_visits.completed.total}
+              / ${this.partner.hact_values?.programmatic_visits.completed.total}
             </strong>
           </div>
           <div class="col col-2 center-align hact-values">
@@ -309,23 +309,23 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               </div>
               <div class="row-h panel-table-row">
                 <div class="col-4">${translate('PLANNED')}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.planned.q1}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.planned.q2}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.planned.q3}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.planned.q4}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.planned.q1}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.planned.q2}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.planned.q3}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.planned.q4}</div>
                 <div class="col-2 darker-bg layout-horizontal totals">
-                  <strong>${this.partner.hact_values.programmatic_visits.planned.total}</strong>
+                  <strong>${this.partner.hact_values?.programmatic_visits.planned.total}</strong>
                 </div>
               </div>
 
               <div class="row-h panel-table-row ">
                 <div class="col-4">${translate('COMPLETED')}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.completed.q1}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.completed.q2}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.completed.q3}</div>
-                <div class="quarter">${this.partner.hact_values.programmatic_visits.completed.q4}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.completed.q1}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.completed.q2}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.completed.q3}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits.completed.q4}</div>
                 <div class="col-2 darker-bg totals layout-horizontal center-align">
-                  <strong>${this.partner.hact_values.programmatic_visits.completed.total}</strong>
+                  <strong>${this.partner.hact_values?.programmatic_visits.completed.total}</strong>
                 </div>
               </div>
             </div>
