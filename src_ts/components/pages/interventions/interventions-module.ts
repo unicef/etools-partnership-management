@@ -35,6 +35,14 @@ import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-p
 import CommonMixin from '../../common/mixins/common-mixin';
 import EnvironmentFlagsPolymerMixin from '../../common/environment-flags/environment-flags-mixin';
 import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import './pages/list/interventions-list';
+import './pages/intervention-tab-pages/intervention-metadata/intervention-metadata';
+import './pages/intervention-tab-pages/intervention-strategy/intervention-strategy';
+import './pages/intervention-tab-pages/intervention-review/intervention-review';
+import './pages/intervention-tab-pages/intervention-timing/intervention-timing';
+import './pages/intervention-tab-pages/intervention-workplan/intervention-workplan';
+import './pages/intervention-tab-pages/intervention-progress/intervention-progress';
+import './pages/new/intervention-new';
 // @ts-ignore
 setStore(store);
 

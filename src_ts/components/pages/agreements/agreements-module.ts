@@ -28,6 +28,8 @@ import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../common/mixins/common-mixin';
 import {get as getTranslation} from 'lit-translate';
+import './pages/list/agreements-list';
+//import './pages/details/agreement-details';
 
 /**
  * @polymer

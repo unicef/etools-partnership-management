@@ -38,6 +38,10 @@ import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
+import './pages/details/partner-details';
+import './pages/financial-assurance/partner-financial-assurance';
+import './pages/overview/partner-overview';
+import './pages/list/partners-list';
 
 /**
  * @polymer
