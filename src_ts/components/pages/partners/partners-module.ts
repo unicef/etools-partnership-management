@@ -145,38 +145,38 @@ export class PartnersModule extends connect(store)(
             .errors="${this.serverErrors}"
           ></etools-error-messages-box>
           <iron-pages id="partnersPages" .selected="${this.activePage}" attr-for-selected="name" role="main">
-            ${this._pageEquals(this.activePage, 'list')
-              ? html`<partners-list
-                  id="list"
-                  name="list"
-                  .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
-                  .currentModule="${this.currentModule}"
-                  .active="${this.listActive}"
-                  .csvDownloadUrl="${this.csvDownloadUrl}"
-                  .urlParams="${this.preservedListQueryParams}"
-                >
-                </partners-list>`
-              : ''}
-            ${this._pageEquals(this.activePage, 'overview')
-              ? html`<partner-overview name="overview" .partner="${this.partner}"></partner-overview>`
-              : ''}
-            ${this._pageEquals(this.activePage, 'details')
-              ? html` <partner-details
-                  id="partnerDetails"
-                  name="details"
-                  .partner="${this.partner}"
-                  .editMode="${this._hasEditPermissions(this.permissions)}"
-                ></partner-details>`
-              : ''}
-            ${this._pageEquals(this.activePage, 'financial-assurance')
-              ? html`<partner-financial-assurance
-                  id="financialAssurance"
-                  .partner="${this.partner}"
-                  .editMode="${this._hasEditPermissions(this.permissions)}"
-                  name="financial-assurance"
-                >
-                </partner-financial-assurance>`
-              : ''}
+            <partners-list
+              id="list"
+              name="list"
+              ?hidden="${!this._pageEquals(this.activePage, 'list')}"
+              .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
+              .currentModule="${this.currentModule}"
+              .active="${this.listActive}"
+              .csvDownloadUrl="${this.csvDownloadUrl}"
+              .urlParams="${this.preservedListQueryParams}"
+            >
+            </partners-list>
+            <partner-overview
+              ?hidden="${!this._pageEquals(this.activePage, 'overview')}"
+              name="overview"
+              .partner="${this.partner}"
+            ></partner-overview>
+            <partner-details
+              id="partnerDetails"
+              ?hidden="${!this._pageEquals(this.activePage, 'details')}"
+              name="details"
+              .partner="${this.partner}"
+              .editMode="${this._hasEditPermissions(this.permissions)}"
+            ></partner-details>
+
+            <partner-financial-assurance
+              id="financialAssurance"
+              ?hidden="${!this._pageEquals(this.activePage, 'financial-assurance')}"
+              .partner="${this.partner}"
+              .editMode="${this._hasEditPermissions(this.permissions)}"
+              name="financial-assurance"
+            >
+            </partner-financial-assurance>
           </iron-pages>
         </div>
         <!-- page content end -->
@@ -493,7 +493,7 @@ export class PartnersModule extends connect(store)(
   }
 
   public _handleTabSelectAction(e: CustomEvent) {
-    // this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+    this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
     const newTabName: string = e.detail.item.getAttribute('name');
     if (!this.partner || newTabName == this.activePage) {
       return;
@@ -503,7 +503,7 @@ export class PartnersModule extends connect(store)(
   }
 
   public _handlePartnerSelectionLoadingMsg() {
-    // this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+    this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
   }
 
   /**

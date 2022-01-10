@@ -90,7 +90,6 @@ export class Router {
     const path = appLocRoute.path;
     let routeDetails: RouteDetails | null = null;
     const locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
-    logInfo(locationPath, 'Router.getRouteDetails.locationPath: ');
 
     const qs = appLocRoute.__queryParams;
 

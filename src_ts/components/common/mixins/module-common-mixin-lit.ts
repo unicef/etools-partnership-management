@@ -94,7 +94,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
       const tabEl = this.shadowRoot!.querySelector(selector);
 
       if (tabEl) {
-        if (tabEl instanceof PolymerElement) {
+        if (tabEl instanceof PolymerElement || tabEl instanceof LitElement) {
           // tab element already loaded, no need for loading messages
           return;
         }
