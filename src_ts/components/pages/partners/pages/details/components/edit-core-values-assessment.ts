@@ -9,6 +9,7 @@ import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {translate} from 'lit-translate';
+import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
 
 /**
  * @polymer
@@ -90,7 +91,7 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
   }
 
   _saveCoreValueAssessment() {
-    const attach = this.shadowRoot!.querySelector('#attachment') as any;
+    const attach = this.shadowRoot!.querySelector('#attachment') as unknown as EtoolsUpload;
     if (!attach || !attach.validate()) {
       return;
     }
@@ -101,7 +102,7 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.item.attachment = uploadResponse.id;
+      this.item = {...this.item, attachment: uploadResponse.id};
     }
   }
 }
