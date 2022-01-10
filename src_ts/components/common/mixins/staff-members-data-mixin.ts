@@ -1,9 +1,9 @@
 import {LitElement, property} from 'lit-element';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin-lit';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import EndpointsMixin from '../../endpoints/endpoints-mixin-lit';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {MinimalStaffMember} from '../../../../models/partners.models';
+import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 /**

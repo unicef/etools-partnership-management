@@ -23,11 +23,11 @@ import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import AgreementItemData from './data/agreement-item-data.js';
-import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../common/mixins/common-mixin';
 import {get as getTranslation} from 'lit-translate';
+import {AgreementDetails} from './pages/details/agreement-details';
 
 /**
  * @polymer

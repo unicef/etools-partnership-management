@@ -99,7 +99,10 @@ function CommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
       if (!useValidate) {
         useValidate = false;
       }
-      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {
+        validate(): boolean;
+        invalid: boolean;
+      };
       if (field) {
         if (useValidate) {
           field.validate();

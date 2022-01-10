@@ -13,6 +13,10 @@ export const listFilterStyles = html` <style>
     height: auto;
   }
 
+  #filters.paper-material[elevation='1'] {
+    background-color: var(--list-secondary-color, #ffffff);
+  }
+
   #filters-fields {
     display: flex;
     flex-direction: row;

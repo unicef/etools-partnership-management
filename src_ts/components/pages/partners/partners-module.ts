@@ -13,7 +13,6 @@ import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import CommonMixin from '../../common/mixins/common-mixin-lit';
-import StaffMembersDataMixin from './mixins/staff-members-data-mixin.js';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
@@ -38,6 +37,7 @@ import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
+import StaffMembersDataMixin from '../../common/mixins/staff-members-data-mixin';
 
 /**
  * @polymer

@@ -9,7 +9,6 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
-import CommonMixin from '../../mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 
 /**
