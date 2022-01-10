@@ -1,9 +1,10 @@
-import {LitElement, property} from 'lit-element';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin-lit';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import EndpointsMixin from '../..//endpoints/endpoints-mixin.js';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {MinimalStaffMember} from '../../../../models/partners.models';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
@@ -11,17 +12,17 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function StaffMembersDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class StaffMembersDataClass extends EndpointsMixin(baseClass) {
     @property({type: Array})
-    staffMembers!: MinimalStaffMember[];
+    staffMembers!: [];
 
     @property({type: String})
     staffLoadingMsgSource = 'staff-m';
 
     // This method will be used in the main element as observer for agreement.partner
     // or in other partner id changed observer
-    getPartnerStaffMembers(newId: number) {
+    public getPartnerStaffMembers(newId: number) {
       if (newId > 0) {
         fireEvent(this, 'global-loading', {
           message: 'Loading...',
@@ -46,7 +47,7 @@ function StaffMembersDataMixin<T extends Constructor<LitElement>>(baseClass: T) 
       }
     }
 
-    _handleStaffMembersResponse(res: any) {
+    public _handleStaffMembersResponse(res: any) {
       if (res instanceof Array && res.length) {
         const activeStaffMembers = res
           .map(function (sMember) {
@@ -55,7 +56,7 @@ function StaffMembersDataMixin<T extends Constructor<LitElement>>(baseClass: T) 
           .filter(function (sMember) {
             return sMember.active;
           });
-        this.staffMembers = activeStaffMembers;
+        this.set('staffMembers', activeStaffMembers);
       }
       fireEvent(this, 'global-loading', {
         active: false,

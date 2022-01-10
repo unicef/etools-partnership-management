@@ -218,7 +218,6 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
         this.possibleStatuses[index].hidden = true;
         this.possibleStatuses[index].completed = false;
       });
-      this.status
     }
 
     _updateStatus(newStatus: string) {

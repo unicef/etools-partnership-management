@@ -17,11 +17,18 @@ import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin-lit';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
+import EndpointsMixin from '../../../../endpoints/endpoints-mixin-lit';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
@@ -35,11 +42,6 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
-import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
-import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin-lit';
-import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin-lit';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 
 let _partnersLastNavigated = '';
 
@@ -67,7 +69,7 @@ export class PartnersList extends connect(store)(
     return html`
       ${listFilterStyles} ${partnerStatusStyles}
       <style>
-        ${sharedStyles} ${dataTableStylesLit} .sm-status-wrapper {
+        ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} .sm-status-wrapper {
           padding-left: 10px;
         }
 
@@ -77,7 +79,7 @@ export class PartnersList extends connect(store)(
         }
       </style>
 
-      <iron-media-query query="(max-width: 767px)" .query-matches="${this.lowResolutionLayout}"></iron-media-query>
+      <iron-media-query query="(max-width: 767px)" .queryMatches="${this.lowResolutionLayout}"></iron-media-query>
 
       ${this.stampListData &&
       html`
@@ -99,7 +101,7 @@ export class PartnersList extends connect(store)(
         </partners-list-data>
       `}
 
-      <div id="filters" class="paper-material" elevation="1">
+      <div id="filters" class="paper-material elevation" elevation="1">
         <div id="filters-fields">
           <paper-input
             id="query"
@@ -126,8 +128,8 @@ export class PartnersList extends connect(store)(
                     data-filter-path="${filter.path}"
                     @etools-selected-items-changed="${this.esmmValueChanged}"
                     trigger-value-change-event
-                    hide-search="${filter.hideSearch}"
-                    min-width="${filter.minWidth}"
+                    .hideSearch="${filter.hideSearch}"
+                    .minWidth="${filter.minWidth}"
                     horizontal-align="left"
                     no-dynamic-align
                   >
@@ -180,8 +182,8 @@ export class PartnersList extends connect(store)(
                     @tap="${() => {
                       this.selectFilter(item, index);
                     }}"
-                    .disabled="${item.disabled}"
-                    .selected="${item.selected}"
+                    ?disabled="${item.disabled}"
+                    ?selected="${item.selected}"
                   >
                     <iron-icon icon="check" slot="item-icon" ?hidden="${!item.selected}"></iron-icon>
                     <paper-item-body>${item.filterName}</paper-item-body>
@@ -192,9 +194,9 @@ export class PartnersList extends connect(store)(
           </paper-menu-button>
         </div>
       </div>
-      <div id="list" elevation="1" class="paper-material hidden">
+      <div id="list" elevation="1" class="paper-material elevation hidden">
         <etools-data-table-header
-          .low-resolution-layout="${this.lowResolutionLayout}"
+          low-resolution-layout="${this.lowResolutionLayout}"
           id="listHeader"
           label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator
             .count} results to show"
@@ -221,8 +223,8 @@ export class PartnersList extends connect(store)(
 
         ${this.filteredPartners.map(
           (partner: Partner) => html` <etools-data-table-row
-            .low-resolution-layout="${this.lowResolutionLayout}"
-            .details-opened="${this.detailsOpened}"
+            low-resolution-layout="${this.lowResolutionLayout}"
+            details-opened="${this.detailsOpened}"
           >
             <div slot="row-data">
               <span class="col-data flex-c" data-col-header-label="${translate('VENDOR_NO')}">

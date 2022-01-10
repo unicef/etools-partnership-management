@@ -611,7 +611,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     }
     let engagements = cloneDeep(this.allEngagements);
     engagements = engagements
-      .sort((a, b) => dayjs(b.status_date) - dayjs(a.status_date))
+      .sort((a: any, b: any) => dayjs(b.status_date) - dayjs(a.status_date))
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.paginatedEngagements = engagements;
   }

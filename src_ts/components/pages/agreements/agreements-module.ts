@@ -23,7 +23,6 @@ import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import AgreementItemData from './data/agreement-item-data.js';
-import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../common/mixins/common-mixin';
@@ -365,7 +364,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails;
+    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as any;
     if (!agreementDetailsEl) {
       return false;
     }
