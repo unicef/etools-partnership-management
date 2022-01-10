@@ -37,7 +37,7 @@ import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
-import StaffMembersDataMixin from '../../common/mixins/staff-members-data-mixin';
+import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 
 /**
  * @polymer
@@ -55,7 +55,7 @@ export class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
     CommonMixin(
-      ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(LitElement))))
+      ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixinLit(LitElement))))
     )
   )
 ) {
@@ -153,8 +153,8 @@ export class PartnersModule extends connect(store)(
               .currentModule="${this.currentModule}"
               .active="${this.listActive}"
               @csvDownloadUrl-changed=${(e: any) => {
-                    this.csvDownloadUrl = e.detail;
-                  }}
+                this.csvDownloadUrl = e.detail;
+              }}
               .urlParams="${this.preservedListQueryParams}"
             >
             </partners-list>

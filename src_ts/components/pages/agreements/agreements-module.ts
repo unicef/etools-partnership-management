@@ -27,7 +27,6 @@ import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../common/mixins/common-mixin';
 import {get as getTranslation} from 'lit-translate';
-import {AgreementDetails} from './pages/details/agreement-details';
 
 /**
  * @polymer
@@ -365,7 +364,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails;
+    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as any;
     if (!agreementDetailsEl) {
       return false;
     }

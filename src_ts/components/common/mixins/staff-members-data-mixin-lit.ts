@@ -1,9 +1,8 @@
-import EndpointsMixin from '../..//endpoints/endpoints-mixin.js';
+import {LitElement, property} from 'lit-element';
+import EndpointsMixin from '../../endpoints/endpoints-mixin-lit';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
 import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 
@@ -12,17 +11,17 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class StaffMembersDataClass extends EndpointsMixin(baseClass) {
     @property({type: Array})
-    staffMembers!: [];
+    staffMembers!: MinimalStaffMember[];
 
     @property({type: String})
     staffLoadingMsgSource = 'staff-m';
 
     // This method will be used in the main element as observer for agreement.partner
     // or in other partner id changed observer
-    public getPartnerStaffMembers(newId: number) {
+    getPartnerStaffMembers(newId: number) {
       if (newId > 0) {
         fireEvent(this, 'global-loading', {
           message: 'Loading...',
@@ -47,7 +46,7 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
       }
     }
 
-    public _handleStaffMembersResponse(res: any) {
+    _handleStaffMembersResponse(res: any) {
       if (res instanceof Array && res.length) {
         const activeStaffMembers = res
           .map(function (sMember) {
@@ -56,7 +55,7 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
           .filter(function (sMember) {
             return sMember.active;
           });
-        this.set('staffMembers', activeStaffMembers);
+        this.staffMembers = activeStaffMembers;
       }
       fireEvent(this, 'global-loading', {
         active: false,
@@ -67,4 +66,4 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
   return StaffMembersDataClass;
 }
 
-export default StaffMembersDataMixin;
+export default StaffMembersDataMixinLit;

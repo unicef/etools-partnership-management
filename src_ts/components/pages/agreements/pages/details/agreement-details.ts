@@ -40,7 +40,6 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
@@ -51,6 +50,7 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown'
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 import {get as getTranslation} from 'lit-translate';
+import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin';
 
 /**
  * @polymer
@@ -60,7 +60,7 @@ import {get as getTranslation} from 'lit-translate';
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
   static get template() {
     return html`
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
@@ -822,5 +822,3 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 }
 
 window.customElements.define('agreement-details', AgreementDetails);
-
-export default AgreementDetails;
