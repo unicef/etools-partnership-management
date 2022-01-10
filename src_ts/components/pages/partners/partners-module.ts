@@ -112,7 +112,7 @@ export class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" href="${this.csvDownloadUrl}">
+            <a target="_blank" .href="${this.csvDownloadUrl}">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
@@ -152,7 +152,9 @@ export class PartnersModule extends connect(store)(
               .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
               .currentModule="${this.currentModule}"
               .active="${this.listActive}"
-              .csvDownloadUrl="${this.csvDownloadUrl}"
+              @csvDownloadUrl-changed=${(e: any) => {
+                    this.csvDownloadUrl = e.detail;
+                  }}
               .urlParams="${this.preservedListQueryParams}"
             >
             </partners-list>

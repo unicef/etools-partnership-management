@@ -122,7 +122,7 @@ export class PartnersList extends connect(store)(
                     placeholder="Select"
                     ?disabled="${filter.disabled}"
                     .options="${filter.selectionOptions}"
-                    .selected-values="${filter.selectedValue}"
+                    .selectedValues="${filter.selectedValue}"
                     data-filter-path="${filter.path}"
                     @etools-selected-items-changed="${this.esmmValueChanged}"
                     trigger-value-change-event
@@ -139,7 +139,7 @@ export class PartnersList extends connect(store)(
                     class="filter date"
                     label="${filter.filterName}"
                     placeholder="&#8212;"
-                    value="${filter.selectedValue}"
+                    .value="${filter.selectedValue}"
                     @date-has-changed="${this._filterDateHasChanged}"
                     data-filter-path="${filter.path}"
                     fire-date-has-changed
@@ -398,12 +398,17 @@ export class PartnersList extends connect(store)(
     }
 
     if (
-      changedProperties.has('partnerTypes') ||
-      changedProperties.has('csoTypes') ||
-      changedProperties.has('seaRiskRatings') ||
-      changedProperties.has('showOnlyGovernmentType')
+      changedProperties.has('q') ||
+      changedProperties.has('selectedPartnerTypes') ||
+      changedProperties.has('selectedCsoTypes') ||
+      changedProperties.has('selectedRiskRatings') ||
+      changedProperties.has('selectedSEARiskRatings') ||
+      changedProperties.has('selectedPseaDateBefore') ||
+      changedProperties.has('selectedPseaDateAfter') ||
+      changedProperties.has('showHidden')
     ) {
       this.resetPageNumber();
+      return;
     }
 
     if (
@@ -608,7 +613,8 @@ export class PartnersList extends connect(store)(
   // Updates URL state with new query string, and launches query
   public _updateUrlAndData() {
     if (this._canFilterData()) {
-      this.csvDownloadUrl = this._buildCsvDownloadUrl();
+      const csvDownloadUrl = this._buildCsvDownloadUrl();
+      fireEvent(this, 'csvDownloadUrl-changed', csvDownloadUrl);
       const qs = this._buildQueryString();
 
       this._updateUrlAndDislayedData(
