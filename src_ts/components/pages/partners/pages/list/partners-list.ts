@@ -364,6 +364,7 @@ export class PartnersList extends connect(store)(
 
   private _updateShownFilterDebouncer!: Debouncer;
   private _actionsChangedDebouncer!: Debouncer;
+  private _dataChangedDebouncer!: Debouncer;
 
   stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -412,16 +413,7 @@ export class PartnersList extends connect(store)(
     }
 
     if (
-      changedProperties.has('q') ||
-      changedProperties.has('selectedPartnerTypes') ||
-      changedProperties.has('selectedCsoTypes') ||
-      changedProperties.has('selectedRiskRatings') ||
-      changedProperties.has('selectedSEARiskRatings') ||
-      changedProperties.has('selectedPseaDateBefore') ||
-      changedProperties.has('selectedPseaDateAfter') ||
-      changedProperties.has('paginator') ||
       changedProperties.has('sortOrder') ||
-      changedProperties.has('showHidden') ||
       changedProperties.has('requiredDataLoaded') ||
       changedProperties.has('initComplete')
     ) {
@@ -610,21 +602,28 @@ export class PartnersList extends connect(store)(
     this._updateSelectedFiltersValues();
   }
 
+  paginatorChanged() {
+    this._updateUrlAndData();
+  }
+
   // Updates URL state with new query string, and launches query
   public _updateUrlAndData() {
     if (this._canFilterData()) {
-      const csvDownloadUrl = this._buildCsvDownloadUrl();
-      fireEvent(this, 'csvDownloadUrl-changed', csvDownloadUrl);
-      const qs = this._buildQueryString();
+      this._dataChangedDebouncer = Debouncer.debounce(this._dataChangedDebouncer, timeOut.after(400), () => {
+        console.log('inside _updateUrlAndData....');
+        const csvDownloadUrl = this._buildCsvDownloadUrl();
+        fireEvent(this, 'csvDownloadUrl-changed', csvDownloadUrl);
+        const qs = this._buildQueryString();
 
-      this._updateUrlAndDislayedData(
-        this.currentModule + '/list',
-        _partnersLastNavigated,
-        qs,
-        this._filterListData.bind(this)
-      );
+        this._updateUrlAndDislayedData(
+          this.currentModule + '/list',
+          _partnersLastNavigated,
+          qs,
+          this._filterListData.bind(this)
+        );
 
-      _partnersLastNavigated = qs || _partnersLastNavigated;
+        _partnersLastNavigated = qs || _partnersLastNavigated;
+      });
     }
   }
 
