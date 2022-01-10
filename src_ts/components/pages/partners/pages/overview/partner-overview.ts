@@ -192,7 +192,7 @@ export class PartnerOverview extends EtoolsCurrency(
                   (partnership) => html`
                     <div class="row-h">
                       <div class="col col-3 block word-break">
-                        <a class="primary" href="interventions/${partnership.id}/details">
+                        <a class="primary" href="interventions/${partnership.id}/metadata">
                           <strong>${partnership.number}</strong> </a
                         ><br />
                         <span> ${partnership.title} </span>
