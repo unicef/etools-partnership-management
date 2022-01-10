@@ -7,7 +7,7 @@ import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
-import '@unicef-polymer/etools-modules-common/dist/components/info-icon-tooltip';
+import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
