@@ -84,13 +84,14 @@ export class PartnersList extends connect(store)(
         <partners-list-data
           id="partners"
           .filteredPartners="${this.filteredPartners}"
-          .totalResults="${this.paginator.count}"
           @partners-loaded="${this._requiredDataHasBeenLoaded}"
           @filtered-partners-changed="${(e: CustomEvent) => {
             this.filteredPartners = e.detail;
           }}"
           @total-results-changed="${(e: CustomEvent) => {
             this.paginator = {...this.paginator, count: e.detail};
+            // etools-data-table-footer is not displayed without this:
+            setTimeout(() => this.requestUpdate());
           }}"
           list-data-path="filteredPartners"
           fireDataLoaded

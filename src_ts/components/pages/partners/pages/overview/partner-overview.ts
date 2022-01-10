@@ -151,9 +151,9 @@ export class PartnerOverview extends EtoolsCurrency(
             </div>
             <div class="col col-2 center-align">
               <strong>
-                ${this.partner.hact_values.programmatic_visits.planned.total} /
+                ${this.partner.hact_values?.programmatic_visits.planned.total} /
                 <span class="green">${this.partner.hact_min_requirements.programmatic_visits}</span>
-                / ${this.partner.hact_values.programmatic_visits.completed.total}
+                / ${this.partner.hact_values?.programmatic_visits.completed.total}
               </strong>
             </div>
             <div class="col col-2 center-align">
@@ -192,7 +192,7 @@ export class PartnerOverview extends EtoolsCurrency(
                   (partnership) => html`
                     <div class="row-h">
                       <div class="col col-3 block word-break">
-                        <a class="primary" href="interventions/${partnership.id}/details">
+                        <a class="primary" href="interventions/${partnership.id}/metadata">
                           <strong>${partnership.number}</strong> </a
                         ><br />
                         <span> ${partnership.title} </span>
