@@ -78,7 +78,9 @@ export class PartnersModule extends connect(store)(
         pattern="/list"
         .queryParams="${this.listPageQueryParams}"
         @query-params-changed="${({detail}: CustomEvent) => {
-          this.listPageQueryParams = detail.value;
+          setTimeout(() => {
+            this.listPageQueryParams = detail.value;
+          }, 100);
         }}"
         .active="${this.listActive}"
         @active-changed="${({detail}: CustomEvent) => {

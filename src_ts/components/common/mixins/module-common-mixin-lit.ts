@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig;
-import {LitElement, property, PropertyValues} from 'lit-element';
+import {LitElement, property} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -14,9 +14,17 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
  */
 function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ModuleMainElCommonFunctionalityClass extends baseClass {
+    _listPageQueryParams!: GenericObject;
     /* Gets updated by app-route */
+    get listPageQueryParams() {
+      return this._listPageQueryParams;
+    }
+
     @property({type: Object})
-    listPageQueryParams!: GenericObject;
+    set listPageQueryParams(newVal) {
+      this._listPageQueryParams = newVal;
+      this._handleQueryParams(this.listPageQueryParams);
+    }
 
     /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
         otherwise preservedListQueryParams holds on to it's previous data.
@@ -44,12 +52,6 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
       this.addEventListener('reload-list', this._reloadListData as any);
     }
 
-    updated(changedProperties: PropertyValues) {
-      if (changedProperties.has('listPageQueryParams')) {
-        this._handleQueryParams(this.listPageQueryParams);
-      }
-    }
-
     disconnectedCallback() {
       super.disconnectedCallback();
       this.removeEventListener('clear-server-errors', this._clearServerErrors);
@@ -67,10 +69,10 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
 
     _handleQueryParams(params: ListQueryParams) {
       if (
-        params !== null &&
+        params &&
         Object.keys(params).length &&
         // @ts-ignore
-        this.routeData.tab !== 'reports'
+        (!this.routeData || this.routeData.tab !== 'reports')
       ) {
         this.preservedListQueryParams = params;
       }
