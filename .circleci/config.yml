@@ -95,3 +95,4 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - use-migrated-components
