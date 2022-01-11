@@ -58,6 +58,11 @@ jobs:
             mv /tmp/docker/* /usr/bin
           # build and push Docker image
       - run:
+          name: 'Pull Submodule'
+          command: |
+            git submodule init
+            git submodule update --checkout
+      - run:
           name: Building the image
           no_output_timeout: 25m
           command: |
@@ -90,4 +95,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - migrations
+                - use-migrated-components

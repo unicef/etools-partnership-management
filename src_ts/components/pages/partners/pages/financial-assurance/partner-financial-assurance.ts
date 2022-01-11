@@ -152,8 +152,11 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           color: var(--primary-color, #0099ff);
           cursor: pointer;
           margin-left: -8px;
-          padding-left: 24px;
           align-items: center;
+        }
+
+        .report-header {
+          padding-left: 2px;
         }
 
         .margin-l {

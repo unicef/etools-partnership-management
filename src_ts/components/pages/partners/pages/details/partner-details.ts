@@ -244,7 +244,7 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
           </etools-data-table-header>
 
           ${this.partner?.core_values_assessments?.map(
-            (item) => html` <etools-data-table-row
+            (item: any) => html` <etools-data-table-row
               no-collapse
               ?secondary-bg-on-hover="${this._canEditCVA(item.attachment, item.archived)}"
               ?hidden="${!this._shouldShowCVA(item.archived, this.showArchivedAssessments)}"
