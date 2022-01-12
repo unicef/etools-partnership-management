@@ -79,7 +79,13 @@ export class PartnersList extends connect(store)(
         }
       </style>
 
-      <iron-media-query query="(max-width: 767px)" .queryMatches="${this.lowResolutionLayout}"></iron-media-query>
+      <iron-media-query
+        query="(max-width: 767px)"
+        .queryMatches="${this.lowResolutionLayout}"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></iron-media-query>
 
       ${this.stampListData &&
       html`
@@ -196,7 +202,7 @@ export class PartnersList extends connect(store)(
       </div>
       <div id="list" elevation="1" class="paper-material elevation hidden">
         <etools-data-table-header
-          low-resolution-layout="${this.lowResolutionLayout}"
+          .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
           label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator
             .count} results to show"
@@ -223,8 +229,8 @@ export class PartnersList extends connect(store)(
 
         ${this.filteredPartners.map(
           (partner: Partner) => html` <etools-data-table-row
-            low-resolution-layout="${this.lowResolutionLayout}"
-            details-opened="${this.detailsOpened}"
+            .lowResolutionLayout="${this.lowResolutionLayout}"
+            .detailsOpened="${this.detailsOpened}"
           >
             <div slot="row-data">
               <span class="col-data flex-c" data-col-header-label="${translate('VENDOR_NO')}">
