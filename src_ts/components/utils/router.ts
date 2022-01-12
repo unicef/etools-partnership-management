@@ -1,5 +1,3 @@
-import {logInfo} from '@unicef-polymer/etools-behaviors/etools-logging';
-
 export interface RouteQueryParam {
   [key: string]: string;
 }

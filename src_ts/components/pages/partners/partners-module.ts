@@ -52,12 +52,13 @@ import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mix
 
 @customElement('partners-module')
 export class PartnersModule extends connect(store)(
-  // eslint-disable-next-line new-cap
+  // eslint-disable new-cap
   GestureEventListeners(
     CommonMixin(
       ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixinLit(LitElement))))
     )
   )
+  // eslint-enable new-cap
 ) {
   render() {
     // main template

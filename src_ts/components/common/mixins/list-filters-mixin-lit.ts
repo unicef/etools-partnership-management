@@ -124,7 +124,7 @@ function ListFiltersMixin<T extends Constructor<LitElement>>(baseClass: T) {
      * filterPath can be ['selectedFilters', idx] or
      * ['listFilterOptions', idx]
      */
-    clearSelectedValueInFilter(filter: ListFilterOption, filterPath: [string, number]) {
+    clearSelectedValueInFilter(filter: ListFilterOption, _filterPath: [string, number]) {
       switch (filter.type) {
         case 'etools-dropdown-multi':
         case 'dropdown':
