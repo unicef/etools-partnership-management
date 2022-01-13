@@ -11,6 +11,7 @@ export const riskRatingStyles = html` <style>
       /* TODO: capitalize might not be applied, iron-input bug */
       text-transform: capitalize;
       box-sizing: border-box;
+      text-align: left;
     }
 
     --risk-rating-low: {
