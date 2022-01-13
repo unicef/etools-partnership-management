@@ -210,7 +210,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </paper-toggle-button>
         </div>
 
-        <div hidden$="[[!_shouldDisplayCVAList(partner)]]">
+        <div hidden$="[[!_shouldDisplayCVAList(partner.core_values_assessments, showCoreValuesAssessmentAttachment)]]">
           <etools-data-table-header no-title no-collapse>
             <etools-data-table-column class="col-4">
               <div>[[_getTranslation('DATE_LAST_ASSESSED')]]</div>
@@ -254,7 +254,10 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
             </etools-data-table-row>
           </template>
         </div>
-        <div class="row-h" hidden$="[[_shouldDisplayCVAList(partner)]]">
+        <div
+          class="row-h"
+          hidden$="[[_shouldDisplayCVAList(partner.core_values_assessments, showCoreValuesAssessmentAttachment)]]"
+        >
           [[_getTranslation('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')]]
         </div>
       </etools-content-panel>
