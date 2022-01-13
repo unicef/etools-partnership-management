@@ -59,6 +59,7 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
             .uploadEndpoint="${this.uploadEndpoint}"
             @upload-finished="${this._uploadFinished}"
             .uploadInProgress="${this.uploadInProgress}"
+            @delete-file="${this._fileDeleted}"
             required
             error-message="${translate('ASSESSMENT_FILE_IS_REQUIRED')}"
           >
@@ -104,5 +105,10 @@ export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
       const uploadResponse = e.detail.success;
       this.item = {...this.item, attachment: uploadResponse.id};
     }
+  }
+
+  _fileDeleted() {
+    this.item.attachment = null;
+    this.requestUpdate();
   }
 }
