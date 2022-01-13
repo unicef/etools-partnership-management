@@ -1,4 +1,4 @@
 [submodule "src_ts/components/pages/interventions/pages/intervention-tab-pages"]
 	path = src_ts/components/pages/interventions/pages/intervention-tab-pages
-	url = https://github.com/unicef/intervention-tab-pages.git
+	url = ../intervention-tab-pages.git
 	branch = master

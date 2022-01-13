@@ -22,9 +22,6 @@ WORKDIR /code
 
 RUN cp -a /tmp/node_modules /code/node_modules
 
-# Necessary for circle ci
-RUN git submodule init && git submodule update --checkout
-
 RUN npm run build
 
 

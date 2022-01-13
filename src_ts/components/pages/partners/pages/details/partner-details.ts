@@ -210,7 +210,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </paper-toggle-button>
         </div>
 
-        <div hidden$="[[_empty(partner.core_values_assessments)]]">
+        <div hidden$="[[!_shouldDisplayCVAList(partner)]]">
           <etools-data-table-header no-title no-collapse>
             <etools-data-table-column class="col-4">
               <div>[[_getTranslation('DATE_LAST_ASSESSED')]]</div>
@@ -224,8 +224,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           <template is="dom-repeat" items="{{partner.core_values_assessments}}">
             <etools-data-table-row
               no-collapse
-              secondary-bg-on-hover$="[[_canEditCVA(item.attachment, item.archived,
-                                        showCoreValuesAssessmentAttachment)]]"
+              secondary-bg-on-hover$="[[_canEditCVA(item.attachment, item.archived)]]"
               hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]"
             >
               <div slot="row-data" class="p-relative">
@@ -246,8 +245,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 </span>
                 <icons-actions2
                   item$="[[item]]"
-                  show-edit="[[_canEditCVA(item.attachment, item.archived,
-                  showCoreValuesAssessmentAttachment)]]"
+                  show-edit="[[_canEditCVA(item.attachment, item.archived)]]"
                   show-delete="[[showDelete]]"
                   on-edit="_editCoreValuesAssessment"
                 >
@@ -256,7 +254,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
             </etools-data-table-row>
           </template>
         </div>
-        <div class="row-h" hidden$="[[!_empty(partner.core_values_assessments)]]">
+        <div class="row-h" hidden$="[[_shouldDisplayCVAList(partner)]]">
           [[_getTranslation('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')]]
         </div>
       </etools-content-panel>
@@ -341,11 +339,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     });
   }
 
-  public _canEditCVA(attachment: any, archived: boolean, showCoreValuesAssessmentAttachment: boolean) {
-    if (attachment || archived) {
-      return false;
-    }
-    return showCoreValuesAssessmentAttachment;
+  public _canEditCVA(attachment: any, archived: boolean) {
+    return !attachment && !archived;
   }
 
   public _partnerChanged(partner: any) {
@@ -433,6 +428,10 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
   public _empty(val: any) {
     return isEmptyObject(val);
+  }
+
+  public _shouldDisplayCVAList() {
+    return !this._empty(this.partner.core_values_assessments) && this.showCoreValuesAssessmentAttachment;
   }
 }
 
