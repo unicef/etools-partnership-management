@@ -13,6 +13,15 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
     params: null
   };
 })
+  .addRoute(new RegExp('^partners/list$'), (params: RouteCallbackParams): RouteDetails => {
+    return {
+      routeName: 'partners',
+      subRouteName: 'list',
+      path: params.matchDetails[0],
+      queryParams: params.queryParams,
+      params: null
+    };
+  })
   .addRoute(
     new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}$`),
     (params: RouteCallbackParams): RouteDetails => {

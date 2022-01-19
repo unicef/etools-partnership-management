@@ -158,7 +158,6 @@ export class PartnersModule extends connect(store)(
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;
               }}
-              .urlParams="${this.preservedListQueryParams}"
             >
             </partners-list>
             <partner-overview

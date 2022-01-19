@@ -27,14 +27,11 @@ export class PartnersListData extends ListDataMixin(LitElement) {
   @property({type: Array})
   filteredPartners!: any[];
 
-  @property({type: Number})
-  totalResults!: number;
-
   @property({type: Object})
   currentQuery: GenericObject | null = null;
 
-  @property({type: Boolean})
-  prepareDropdownData = false;
+  // @property({type: Boolean})
+  // prepareDropdownData = false;
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -145,12 +142,12 @@ export class PartnersListData extends ListDataMixin(LitElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      Dexie.ignoreTransaction(function () {
-        queryResult.count(function (count: number) {
-          // @ts-ignore
-          fireEvent(self, 'total-results-changed', count);
-        });
-      });
+      // Dexie.ignoreTransaction(function () {
+      //   queryResult.count(function (count: number) {
+      //     // @ts-ignore
+      //     fireEvent(self, 'total-results-changed', count);
+      //   });
+      // });
 
       return queryResult
         .offset((pageNumber - 1) * pageSize)
@@ -159,7 +156,7 @@ export class PartnersListData extends ListDataMixin(LitElement) {
     })
       .then(function (result: any[]) {
         // @ts-ignore
-        fireEvent(self, 'filtered-partners-changed', result);
+        fireEvent(self, 'filtered-partners-changed', {data: result, totalLength: self.totalResults});
         fireEvent(self, 'global-loading', {
           active: false,
           loadingSource: 'partners-list'
