@@ -125,7 +125,7 @@ export class PartnersModule extends connect(store)(
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
             <paper-button class="primary-btn with-prefix" @click="${this._openNewPartnerDialog}">
               <iron-icon icon="add"></iron-icon>
-              ${translate('IMPORT_PARTNER')}
+              ${translate('IMPORT_SYNC_PARTNER')}
             </paper-button>
           </div>
         </div>
