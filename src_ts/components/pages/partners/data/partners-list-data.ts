@@ -53,7 +53,7 @@ export class PartnersListData extends ListDataMixin(LitElement) {
     pageNumber: number,
     pageSize: number,
     showHidden: boolean,
-    showQueryLoading: boolean
+    showQueryLoading = false
   ) {
     // If an active query transaction exists, abort it and start
     // a new one
@@ -142,12 +142,12 @@ export class PartnersListData extends ListDataMixin(LitElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      // Dexie.ignoreTransaction(function () {
-      //   queryResult.count(function (count: number) {
-      //     // @ts-ignore
-      //     fireEvent(self, 'total-results-changed', count);
-      //   });
-      // });
+      Dexie.ignoreTransaction(function () {
+        queryResult.count(function (count: number) {
+          // @ts-ignore
+          fireEvent(self, 'total-results-changed', count);
+        });
+      });
 
       return queryResult
         .offset((pageNumber - 1) * pageSize)
@@ -156,7 +156,7 @@ export class PartnersListData extends ListDataMixin(LitElement) {
     })
       .then(function (result: any[]) {
         // @ts-ignore
-        fireEvent(self, 'filtered-partners-changed', {data: result, totalLength: self.totalResults});
+        fireEvent(self, 'filtered-partners-changed', result);
         fireEvent(self, 'global-loading', {
           active: false,
           loadingSource: 'partners-list'

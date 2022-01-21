@@ -33,9 +33,6 @@ function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: Boolean})
     fireDataLoaded = false;
 
-    @property({type: Number})
-    totalResults!: number;
-
     @property({type: Object})
     _refreshInterval: number | null = null;
 
@@ -77,7 +74,6 @@ function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     _requestListData() {
       sendRequest(this.options)
         .then((resp: any) => {
-          this.totalResults = resp.length;
           this._handleMyResponse(resp);
         })
         .catch((error: any) => {

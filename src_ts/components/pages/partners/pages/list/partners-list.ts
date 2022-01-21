@@ -38,7 +38,7 @@ import pick from 'lodash-es/pick';
 import {buildUrlQueryString} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
-import {PartnerFilterKeys, partnerFilters} from './partners-filters';
+import {getPartnerFilters, PartnerFilterKeys, setShowOnlyGovernmentType} from './partners-filters';
 import {
   updateFilterSelectionOptions,
   updateFiltersSelectedValues
@@ -47,6 +47,7 @@ import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/fi
 import {EtoolsRouter} from '../../../../utils/routes';
 import debounce from 'lodash-es/debounce';
 import {reduxConnect} from './redux-connect';
+import {CommonDataState} from '../../../../../redux/reducers/common-data';
 
 /**
  * @polymer
@@ -113,8 +114,10 @@ export class PartnersList extends reduxConnect(store)(
       <partners-list-data
         id="partners"
         @filtered-partners-changed="${(e: CustomEvent) => {
-          this.filteredPartners = e.detail.data;
-          this.paginator = {...this.paginator, count: e.detail.totalLength};
+          this.filteredPartners = e.detail;
+        }}"
+        @total-results-changed="${(e: CustomEvent) => {
+          this.paginator = {...this.paginator, count: e.detail};
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
@@ -131,8 +134,8 @@ export class PartnersList extends reduxConnect(store)(
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
-          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator
-            .count} results to show"
+          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count ||
+          0} results to show"
         >
           <etools-data-table-column class="flex-c" field="vendor_number" sortable>
             ${translate('VENDOR_NO')}
@@ -237,7 +240,6 @@ export class PartnersList extends reduxConnect(store)(
           .pageNumber="${this.paginator.page}"
           .totalResults="${this.paginator.count}"
           .visibleRange="${this.paginator.visible_range}"
-          @visible-range-changed="${this.visibleRangeChanged}"
           @page-size-changed="${this.pageSizeChanged}"
           @page-number-changed="${this.pageNumberChanged}"
         >
@@ -256,20 +258,29 @@ export class PartnersList extends reduxConnect(store)(
   lowResolutionLayout = false;
 
   @property({type: Object})
-  routeDetails!: RouteDetails;
+  routeDetails!: RouteDetails | null;
 
   /**
    * Used to preserve previously selected filters and pagination when navigating away from the list and comming back
    * & to initialize pagination
    */
   @property({type: Object})
-  prevQueryStringObj: GenericObject = {size: 20, page: 1, sort: 'name.asc'};
+  prevQueryStringObj: GenericObject = {size: 10, page: 1, sort: 'name.asc'};
 
   @property({type: Array})
   allFilters!: EtoolsFilter[];
 
+  private _showOnlyGovernmentType = false;
   @property({type: Boolean})
-  showOnlyGovernmentType = false;
+  get showOnlyGovernmentType() {
+    return this._showOnlyGovernmentType;
+  }
+
+  set showOnlyGovernmentType(val) {
+    this._showOnlyGovernmentType = val;
+    setShowOnlyGovernmentType(val);
+    this.requestUpdate();
+  }
 
   @property({type: Array})
   _governmentLockedPartnerTypes: string[] = ['Government'];
@@ -285,32 +296,81 @@ export class PartnersList extends reduxConnect(store)(
       loadingSource: 'partners-page'
     });
 
-    this.onParamsChange = debounce(this.onParamsChange.bind(this), 600);
-    this.subscribeToReduxStore();
+    this.loadFilteredPartners = debounce(this.loadFilteredPartners.bind(this), 600);
+
+    // Makig sure stateChnged in triggered only after showOnlyGovernmentType has been set
+    setTimeout(() => this.subscribeToReduxStore());
   }
 
   stateChanged(state: RootState): void {
     const stateRouteDetails = get(state, 'app.routeDetails');
-    if (!(stateRouteDetails.routeName === 'partners' && stateRouteDetails.subRouteName === 'list')) {
+    if (
+      !(
+        (stateRouteDetails.routeName === 'partners' || stateRouteDetails.routeName === 'government-partners') &&
+        stateRouteDetails.subRouteName === 'list'
+      )
+    ) {
+      // this.routeDetails = null;
       return;
     }
-    if (
-      JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails) ||
-      state.interventions?.shouldReGetList
-    ) {
-      if (
-        (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
-        this.prevQueryStringObj
-      ) {
-        this.routeDetails = stateRouteDetails;
-        this.updateCurrentParams(this.prevQueryStringObj);
+
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+      return;
+    }
+
+    if (stateRouteDetails.routeName === 'government-partners') {
+      this.prevQueryStringObj.partner_types = 'Government';
+    }
+
+    this.initFiltersForDisplay(state.commonData!);
+
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+      if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
       this.routeDetails = stateRouteDetails;
-      this.onParamsChange();
+      this.resetSelectedValuesInFilters();
+      this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
+      this.loadListData();
     }
+  }
 
-    this.initFiltersForDisplay(state);
+  /**
+   *  On first page access/page refresh
+   */
+  initializePaginatorFromUrl(queryParams: any) {
+    if (queryParams.page) {
+      this.paginator.page = Number(queryParams.page);
+    }
+    if (queryParams.size) {
+      this.paginator.page_size = Number(queryParams.size);
+    }
+  }
+  filteringParamsHaveChanged(stateRouteDetails: any) {
+    return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
+  }
+
+  shouldReGetListBecauseOfEditsOnItems() {
+    // return state.partners.shouldReGetList;  TODO -NOT Implemented
+    return false;
+  }
+
+  /**
+   * - When the page hasn't been visited before (or on page refresh),
+   *  the url is initialized with prevQueryStringObj's default value
+   * - When you apply a set of filters , then go to the details page, then come back to list,
+   * you should have the same set of filters applied on the list
+   */
+  hadToinitializeUrlWithPrevQueryString(stateRouteDetails: any) {
+    if (
+      (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
+      this.prevQueryStringObj
+    ) {
+      this.routeDetails = stateRouteDetails;
+      this.updateCurrentParams(this.prevQueryStringObj);
+      return true;
+    }
+    return false;
   }
 
   // Override from lists-common-mixin
@@ -323,66 +383,68 @@ export class PartnersList extends reduxConnect(store)(
     this.updateCurrentParams({page: this.paginator.page, size: this.paginator.page_size});
   }
 
-  private initFiltersForDisplay(state: RootState) {
-    if (!this.allFilters && this.dataRequiredByFiltersHasBeenLoaded(state)) {
-      const availableFilters = [...partnerFilters];
-      this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
-
-      // update filter selection and assign the result to etools-filters(trigger render)
-      const currentParams: RouteQueryParams = state.app!.routeDetails.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(currentParams, availableFilters);
+  /**
+   * Should execute only once, after all common data is loaded
+   */
+  private initFiltersForDisplay(commonData: CommonDataState) {
+    if (!this.allFilters) {
+      const availableFilters = [...getPartnerFilters()];
+      this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
+      this.allFilters = availableFilters;
     }
   }
-  private populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.partner_types, state.commonData!.partnerTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, state.commonData!.csoTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.risk_ratings, state.commonData!.partnerRiskRatings);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.sea_risk_ratings, state.commonData!.seaRiskRatings);
+
+  private resetSelectedValuesInFilters() {
+    if (this.allFilters) {
+      // update filter selection and assign the result to etools-filters(trigger render)
+      const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
+    }
+  }
+
+  private populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
+    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.partner_types, commonData!.partnerTypes);
+    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, commonData!.csoTypes);
+    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.risk_ratings, commonData!.partnerRiskRatings);
+    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.sea_risk_ratings, commonData!.seaRiskRatings);
   }
 
   private dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return !!(
-      state.commonData?.commonDataIsLoaded &&
-      this.routeDetails?.queryParams &&
-      Object.keys(this.routeDetails?.queryParams).length > 0
-    );
+    return Boolean(state.commonData?.commonDataIsLoaded);
   }
 
-  onParamsChange(): void {
-    // const currentParams: GenericObject<any> = this.routeDetails?.queryParams || {};
-    // const paramsValid: boolean = this.paramsInitialized || this.initializeAndValidateParams(currentParams);
-
-    // if (paramsValid) {
-    // get data as params are valid
-    //   this.showLoading = true;
-    // ----TODO----------- this.getListData(forceReGet); ------
-    //   }
-
-    this.loadFilteredPartners(this.routeDetails);
+  loadListData() {
+    fireEvent(this, 'global-loading', {
+      message: 'Loading...',
+      active: true,
+      loadingSource: 'partners-list'
+    });
+    this.loadFilteredPartners();
   }
 
-  loadFilteredPartners(routeDetails: RouteDetails) {
+  loadFilteredPartners() {
     const partners = this.shadowRoot!.querySelector('#partners') as PartnersListData;
     if (!partners) {
       return;
     }
+    const queryParams = this.routeDetails?.queryParams;
 
-    const sortOrder = routeDetails.queryParams?.sort ? routeDetails.queryParams?.sort?.split('.') : [];
+    const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
 
     partners.query(
       sortOrder[0],
       sortOrder[1],
-      routeDetails.queryParams?.q?.toLowerCase() || '',
-      this.getSelectedPartnerTypes(routeDetails.queryParams?.partner_types || ''),
-      this.getFilterUrlValuesAsArray(routeDetails.queryParams?.cso_types || ''),
-      this.getFilterUrlValuesAsArray(routeDetails.queryParams?.risk_ratings || ''),
-      this.getFilterUrlValuesAsArray(routeDetails.queryParams?.sea_risk_ratings || ''),
-      routeDetails.queryParams?.psea_assessment_date_before || '',
-      routeDetails.queryParams?.psea_assessment_date_after || '',
-      this.paginator.page,
-      this.paginator.page_size,
-      Boolean(routeDetails.queryParams?.showHidden || false),
-      true
+      queryParams?.q?.toLowerCase() || '',
+      this.getSelectedPartnerTypes(queryParams?.partner_types || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.cso_types || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.risk_ratings || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.sea_risk_ratings || ''),
+      queryParams?.psea_assessment_date_before || '',
+      queryParams?.psea_assessment_date_after || '',
+      queryParams?.page ? Number(queryParams.page) : 1,
+      queryParams?.size ? Number(queryParams.size) : 10,
+      Boolean(queryParams?.showHidden || false),
+      false
     );
   }
 
