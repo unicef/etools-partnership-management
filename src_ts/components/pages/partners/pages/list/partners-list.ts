@@ -446,7 +446,7 @@ export class PartnersList extends reduxConnect(store)(
       queryParams?.psea_assessment_date_after || '',
       queryParams?.page ? Number(queryParams.page) : 1,
       queryParams?.size ? Number(queryParams.size) : 10,
-      Boolean(queryParams?.showHidden || false),
+      Boolean(queryParams?.hidden || false),
       false
     );
   }
