@@ -341,7 +341,10 @@ export class PartnersList extends reduxConnect(store)(
   initializePaginatorFromUrl(queryParams: any) {
     if (queryParams.page) {
       this.paginator.page = Number(queryParams.page);
+    } else {
+      this.paginator.page = 1;
     }
+
     if (queryParams.size) {
       this.paginator.page_size = Number(queryParams.size);
     }
@@ -434,7 +437,7 @@ export class PartnersList extends reduxConnect(store)(
     partners.query(
       sortOrder[0],
       sortOrder[1],
-      queryParams?.q?.toLowerCase() || '',
+      queryParams?.search?.toLowerCase() || '',
       this.getSelectedPartnerTypes(queryParams?.partner_types || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cso_types || ''),
       this.getFilterUrlValuesAsArray(queryParams?.risk_ratings || ''),
@@ -469,11 +472,11 @@ export class PartnersList extends reduxConnect(store)(
   private getSelectedPartnerTypes(selectedPartnerTypes: any) {
     return this.showOnlyGovernmentType
       ? this._governmentLockedPartnerTypes
-      : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
+      : this.getFilterUrlValuesAsArray(selectedPartnerTypes);
   }
 
   getFilterUrlValuesAsArray(types: string) {
-    return types ? types.split('|') : [];
+    return types ? types.split(',') : [];
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
