@@ -6,7 +6,7 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/app-route/app-route';
 
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store} from '../../../redux/store';
+import {RootState, store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
@@ -33,11 +33,13 @@ import './components/partner-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
-import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
+import {EtoolsTab, RouteDetails, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
+import './pages/list/partners-list';
+import './pages/list/governments-list';
 
 /**
  * @polymer
@@ -68,6 +70,9 @@ export class PartnersModule extends connect(store)(
       <style>
         :host {
           display: block;
+        }
+        section {
+          background-color: #eeeeee;
         }
       </style>
 
@@ -147,19 +152,32 @@ export class PartnersModule extends connect(store)(
             title="Errors Saving Partner"
             .errors="${this.serverErrors}"
           ></etools-error-messages-box>
-          <iron-pages id="partnersPages" .selected="${this.activePage}" attr-for-selected="name" role="main">
+          <section id="partnersPages" role="main">
             <partners-list
               id="list"
               name="list"
-              ?hidden="${!this._pageEquals(this.activePage, 'list')}"
+              ?hidden="${!(
+                this._pageEquals(this.activePage, 'list') && this.partnersListActive(this.listActive, this.route)
+              )}"
               .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
               .currentModule="${this.currentModule}"
-              .active="${this.listActive}"
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;
               }}
             >
             </partners-list>
+            <governments-list
+              id="g-list"
+              name="g-list"
+              ?hidden="${!(
+                this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.route)
+              )}"
+              .currentModule="${this.currentModule}"
+              @csvDownloadUrl-changed=${(e: any) => {
+                this.csvDownloadUrl = e.detail;
+              }}
+            >
+            </governments-list>
             <partner-overview
               ?hidden="${!this._pageEquals(this.activePage, 'overview')}"
               name="overview"
@@ -181,7 +199,7 @@ export class PartnersModule extends connect(store)(
               name="financial-assurance"
             >
             </partner-financial-assurance>
-          </iron-pages>
+          </section>
         </div>
         <!-- page content end -->
 
@@ -258,6 +276,9 @@ export class PartnersModule extends connect(store)(
   @property({type: Object})
   originalPartnerData!: Partner;
 
+  @property({type: Object})
+  reduxRouteDetails?: RouteDetails;
+
   public connectedCallback() {
     super.connectedCallback();
 
@@ -272,6 +293,10 @@ export class PartnersModule extends connect(store)(
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
     this._showPartnersPageLoadingMessage();
+  }
+
+  stateChanged(state: RootState) {
+    this.reduxRouteDetails = state.app?.routeDetails;
   }
 
   public disconnectedCallback() {
@@ -344,14 +369,17 @@ export class PartnersModule extends connect(store)(
     }
 
     this.scrollToTopOnCondition(!listActive);
-
+    const page: string = listActive ? 'list' : routeData.tab;
     const fileImportDetails = {
-      filenamePrefix: 'partner',
+      filenamePrefix: listActive
+        ? this.route.prefix.indexOf('government-partners') > -1
+          ? 'government'
+          : 'partner'
+        : 'partner',
       importErrMsg: 'Partners page import error occurred',
       errMsgPrefixTmpl: '[partner(s) ##page##]',
       loadingMsgSource: 'partners-page'
     };
-    const page: string = listActive ? 'list' : routeData.tab;
     this.setActivePage(page, fileImportDetails);
   }
 
@@ -519,5 +547,13 @@ export class PartnersModule extends connect(store)(
       active: true,
       loadingSource: 'partners-page'
     });
+  }
+
+  govListActive(listActive: boolean, route: any) {
+    return listActive && route.prefix.indexOf('government-partners') > -1;
+  }
+
+  partnersListActive(listActive: boolean, route: any) {
+    return listActive && route.prefix.indexOf('/partners') > -1;
   }
 }

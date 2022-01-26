@@ -46,12 +46,10 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected getCommonData(endpointsNames: string[]) {
-      console.log(endpointsNames);
       const promisses = endpointsNames.map((endpointName: string) => {
         // @ts-ignore
         return sendRequest({endpoint: {url: pmpEdpoints[endpointName].url}});
       });
-      console.log(promisses);
       Promise.allSettled(promisses).then((response: any[]) => {
         store.dispatch({
           type: SET_ALL_STATIC_DATA,

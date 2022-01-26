@@ -141,41 +141,41 @@ export class PartnerOverview extends EtoolsCurrency(
         <div class="hact-body">
           <div class="row-h">
             <div class="col col-1">
-              <div class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${this.getRiskRatingValue(this.partner.rating)}
+              <div class="${this.getRiskRatingClass(this.partner?.rating)}">
+                ${this.getRiskRatingValue(this.partner?.rating)}
               </div>
             </div>
-            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner.total_ct_cp, '0', 0)}</div>
+            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 0)}</div>
             <div class="col col-2 center-align block">
-              $${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}
+              $${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 0)}
             </div>
             <div class="col col-2 center-align">
               <strong>
-                ${this.partner.hact_values?.programmatic_visits.planned.total} /
-                <span class="green">${this.partner.hact_min_requirements.programmatic_visits}</span>
-                / ${this.partner.hact_values?.programmatic_visits.completed.total}
+                ${this.partner?.hact_values?.programmatic_visits.planned.total} /
+                <span class="green">${this.partner?.hact_min_requirements.programmatic_visits}</span>
+                / ${this.partner?.hact_values?.programmatic_visits.completed.total}
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green">${this.partner.hact_min_requirements.spot_checks} </span>
-                / ${this.partner.hact_values.spot_checks.completed.total}
+                <span class="green">${this.partner?.hact_min_requirements.spot_checks} </span>
+                / ${this.partner?.hact_values.spot_checks.completed.total}
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green">${this._getMinReqAudits(this.partner.planned_engagement)} </span>
-                / ${this.partner.hact_values.audits.completed}
+                <span class="green">${this._getMinReqAudits(this.partner?.planned_engagement)} </span>
+                / ${this.partner?.hact_values.audits.completed}
               </strong>
             </div>
             <div class="col col-1 center-align">
-              <div class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-                ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
+              <div class="${this.getRiskRatingClass(this.partner?.sea_risk_rating_name)}">
+                ${this.getRiskRatingValue(this.partner?.sea_risk_rating_name, 1)}
               </div>
             </div>
           </div>
         </div>
-        ${this.partner.interventions.length
+        ${this.partner?.interventions.length
           ? html`
               <div class="hact-heading">
                 <div class="row-h">
@@ -188,7 +188,7 @@ export class PartnerOverview extends EtoolsCurrency(
                 </div>
               </div>
               <div class="hact-body">
-                ${this.partner.interventions.map(
+                ${this.partner?.interventions.map(
                   (partnership) => html`
                     <div class="row-h">
                       <div class="col col-3 block word-break">

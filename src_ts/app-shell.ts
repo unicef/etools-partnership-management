@@ -96,6 +96,7 @@ import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
+import debounce from 'lodash-es/debounce';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -352,6 +353,7 @@ class AppShell extends connect(store)(
   }
 
   public connectedCallback() {
+    this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
     super.connectedCallback();
 
     this.checkAppVersion();
