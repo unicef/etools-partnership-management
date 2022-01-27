@@ -27,14 +27,10 @@ export const selectedValueTypeByFilterKey: AnyObject = {
 
 setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
 
-function sorryAttemptToFixThisStupidThing(val: string) {
-  return getTranslation(val);
-}
-
 export function getPartnerFilters() {
   return [
     {
-      filterName: sorryAttemptToFixThisStupidThing('GENERAL.SEARCH_RECORDS'),
+      filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
       filterKey: PartnerFilterKeys.search,
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
