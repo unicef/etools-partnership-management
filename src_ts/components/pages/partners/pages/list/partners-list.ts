@@ -1,4 +1,4 @@
-import {LitElement, customElement, html, property} from 'lit-element';
+import {customElement} from 'lit-element';
 import {store, RootState} from '../../../../../redux/store';
 
 import {fireEvent} from '../../../../utils/fire-custom-event';

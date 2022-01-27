@@ -1,5 +1,5 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
-import {translate, get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from 'lit-translate';
 import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-modules-common/dist/list/filters';
 import {EtoolsFilterTypes} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
 

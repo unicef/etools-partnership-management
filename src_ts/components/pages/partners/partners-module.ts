@@ -57,6 +57,7 @@ export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   GestureEventListeners(
     CommonMixin(
+      // eslint-disable-next-line new-cap
       ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixinLit(LitElement))))
     )
   )
