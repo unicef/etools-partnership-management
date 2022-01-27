@@ -88,7 +88,7 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
     this.set('selectedOverallStatus', this.isSRReport ? 'Met' : '');
     this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
-    (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
+    (this.$.reportRatingDialog as EtoolsDialog).opened = true;
   }
 
   _onClose(): void {
