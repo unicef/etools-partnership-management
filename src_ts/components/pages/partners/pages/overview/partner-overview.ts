@@ -3,7 +3,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin-lit';
 
@@ -28,7 +28,7 @@ import {translate} from 'lit-translate';
  */
 @customElement('partner-overview')
 export class PartnerOverview extends EtoolsCurrency(
-  CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement)))
+  CommonMixinLit(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement)))
 ) {
   static get styles() {
     return [gridLayoutStylesLit, frWarningsStyles];

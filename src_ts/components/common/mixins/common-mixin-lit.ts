@@ -9,7 +9,7 @@ import {PolymerElement} from '@polymer/polymer';
  * @polymer
  * @mixinFunction
  */
-function CommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function CommonMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class CommonClass extends baseClass {
     /**
      * Prepare and return the string value we have to display on the interface.
@@ -125,4 +125,4 @@ function CommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
   return CommonClass;
 }
 
-export default CommonMixin;
+export default CommonMixinLit;

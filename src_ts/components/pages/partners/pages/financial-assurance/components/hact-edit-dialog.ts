@@ -8,13 +8,13 @@ import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 
 @customElement('hact-edit-dialog')
-export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
+export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }

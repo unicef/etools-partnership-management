@@ -6,7 +6,7 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {translate} from 'lit-translate';
 import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
@@ -17,7 +17,7 @@ import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
  * @appliesMixin CommonMixin
  */
 @customElement('edit-core-values-assessment')
-export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
+export class EditCoreValuesAssessment extends CommonMixinLit(LitElement) {
   static get styles() {
     return [gridLayoutStylesLit];
   }

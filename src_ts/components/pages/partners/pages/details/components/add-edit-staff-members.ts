@@ -13,7 +13,7 @@ import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
@@ -24,7 +24,7 @@ import pmpEdpoints from '../../../../../endpoints/endpoints';
  * @appliesMixin EndpointsMixin
  */
 @customElement('add-edit-staff-members')
-export class AddEditStaffMembers extends CommonMixin(EndpointsLitMixin(LitElement)) {
+export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }

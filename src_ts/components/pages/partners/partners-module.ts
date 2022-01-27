@@ -12,7 +12,7 @@ import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-l
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
-import CommonMixin from '../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
@@ -56,7 +56,7 @@ import './pages/list/governments-list';
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   GestureEventListeners(
-    CommonMixin(
+    CommonMixinLit(
       // eslint-disable-next-line new-cap
       ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixinLit(LitElement))))
     )

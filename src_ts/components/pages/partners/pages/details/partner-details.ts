@@ -5,7 +5,7 @@ import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -48,7 +48,7 @@ declare const dayjs: any;
  */
 
 @customElement('partner-details')
-export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
+export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
