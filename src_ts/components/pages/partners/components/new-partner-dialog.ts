@@ -18,7 +18,7 @@ export class NewPartnerDialog extends CommonMixin(PolymerElement) {
         size="md"
         ok-btn-text="Save"
         disable-confirm-btn="[[vendorNumberIsEmpty]]"
-        dialog-title="[[_getTranslation('IMPORT_PARTNER')]]"
+        dialog-title="[[_getTranslation('IMPORT_SYNC_PARTNER')]]"
         keep-dialog-open
         opened
         on-close="_onClose"

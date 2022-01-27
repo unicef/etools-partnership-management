@@ -101,7 +101,7 @@ class PartnersModule extends connect(store)(
           <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
             <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
               <iron-icon icon="add"></iron-icon>
-              [[_getTranslation('IMPORT_PARTNER')]]
+              [[_getTranslation('IMPORT_SYNC_PARTNER')]]
             </paper-button>
           </div>
         </div>
