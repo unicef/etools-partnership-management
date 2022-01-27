@@ -20,7 +20,6 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin-lit';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -42,6 +41,8 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../endpoints/endpoints';
 
 let _partnersLastNavigated = '';
 
@@ -58,7 +59,7 @@ let _partnersLastNavigated = '';
  */
 @customElement('partners-list')
 export class PartnersList extends connect(store)(
-  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(EtoolsCurrency(LitElement))))))
+  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))))
 ) {
   static get styles() {
     return [gridLayoutStylesLit];
@@ -693,7 +694,7 @@ export class PartnersList extends connect(store)(
   }
 
   public _buildCsvDownloadUrl() {
-    const endpointUrl = this.getEndpoint('partners').url;
+    const endpointUrl = this.getEndpoint(pmpEdpoints, 'partners').url;
     const params = {
       search: this.q,
       partner_type: this.selectedPartnerTypes,

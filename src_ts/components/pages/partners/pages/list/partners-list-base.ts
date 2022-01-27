@@ -1,7 +1,6 @@
 import {html, LitElement, property} from 'lit-element';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
@@ -48,9 +47,11 @@ import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {RootState} from '../../../../../redux/store';
 import get from 'lodash-es/get';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../endpoints/endpoints';
 
 export class PartnersListBase extends CommonMixin(
-  ListsCommonMixin(PaginationMixin(EndpointsMixin(EtoolsCurrency(LitElement))))
+  ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
 ) {
   static get styles() {
     return [gridLayoutStylesLit];
@@ -432,7 +433,7 @@ export class PartnersListBase extends CommonMixin(
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
     const exportParams = omit(queryStringObj, ['page', 'size']);
-    return this._buildCsvExportUrl(exportParams, this.getEndpoint('partners').url);
+    return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'partners').url);
   }
 
   filtersChange(e: CustomEvent) {

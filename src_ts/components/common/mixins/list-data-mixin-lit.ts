@@ -4,8 +4,9 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement, property, PropertyValues} from 'lit-element';
-import EndpointsMixin from '../../endpoints/endpoints-mixin-lit';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin-lit';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -14,7 +15,7 @@ import AjaxServerErrorsMixin from './ajax-server-errors-mixin-lit';
  * @appliesMixin AjaxServerErrors
  */
 function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
-  class ListDataClass extends EndpointsMixin(AjaxServerErrorsMixin(baseClass)) {
+  class ListDataClass extends EndpointsLitMixin(AjaxServerErrorsMixin(baseClass)) {
     @property({type: Object})
     options: {
       endpoint: EtoolsRequestEndpoint;
@@ -66,7 +67,7 @@ function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       if (!this.endpointName) {
         logWarn('Please specify an endpointName property', 'list-data-mixin');
       } else {
-        this.options.endpoint = this.getEndpoint(this.endpointName);
+        this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
         this._requestListData();
       }
     }

@@ -1,10 +1,11 @@
 import {LitElement, property} from 'lit-element';
-import EndpointsMixin from '../../endpoints/endpoints-mixin-lit';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -12,7 +13,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @appliesMixin EndpointsMixin
  */
 function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
-  class StaffMembersDataClass extends EndpointsMixin(baseClass) {
+  class StaffMembersDataClass extends EndpointsLitMixin(baseClass) {
     @property({type: Array})
     staffMembers!: MinimalStaffMember[];
 
@@ -28,7 +29,7 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
           active: true,
           loadingSource: this.staffLoadingMsgSource
         });
-        const endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
+        const endpoint = this.getEndpoint(pmpEdpoints, 'partnerStaffMembers', {id: newId});
 
         sendRequest({
           endpoint: endpoint

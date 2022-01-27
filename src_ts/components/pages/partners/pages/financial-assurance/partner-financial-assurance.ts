@@ -44,7 +44,7 @@ import {cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils'
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
- * @appliesMixin EndpointsMixin
+ * @appliesMixin EndpointsLitMixin
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin

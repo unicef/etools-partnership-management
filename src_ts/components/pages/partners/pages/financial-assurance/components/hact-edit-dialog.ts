@@ -3,7 +3,6 @@ import {fireEvent} from '../../../../../utils/fire-custom-event';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import '@polymer/paper-input/paper-input';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -11,9 +10,11 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/
 import {GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../../endpoints/endpoints';
 
 @customElement('hact-edit-dialog')
-export class HactEditDialog extends CommonMixin(EndpointsMixin(LitElement)) {
+export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -308,7 +309,7 @@ export class HactEditDialog extends CommonMixin(EndpointsMixin(LitElement)) {
   savePartnerDetails(body: any, partnerId: string) {
     const params = {
       method: 'PATCH',
-      endpoint: this.getEndpoint('partnerDetails', {id: partnerId}),
+      endpoint: this.getEndpoint(pmpEdpoints, 'partnerDetails', {id: partnerId}),
       body
     };
     sendRequest(params)
