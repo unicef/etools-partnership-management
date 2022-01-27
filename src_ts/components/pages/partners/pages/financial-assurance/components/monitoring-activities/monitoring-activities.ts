@@ -13,7 +13,7 @@ import '@polymer/iron-icons/editor-icons';
 import {getUniqueId} from '../../../../../../utils/utils';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin-lit';
-import {clone} from 'lodash-es';
+import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {Partner} from '../../../../../../../models/partners.models';
