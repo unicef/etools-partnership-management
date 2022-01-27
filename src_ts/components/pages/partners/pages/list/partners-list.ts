@@ -5,7 +5,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {PartnersListBase} from './partners-list-base';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {partnerFilters} from './partners-filters';
+import {getPartnerFilters} from './partners-filters';
 
 /**
  * @polymer
@@ -40,7 +40,7 @@ export class PartnersList extends connect(store)(PartnersListBase) {
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
-    const availableFilters = JSON.parse(JSON.stringify(partnerFilters));
+    const availableFilters = JSON.parse(JSON.stringify(getPartnerFilters()));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
   }

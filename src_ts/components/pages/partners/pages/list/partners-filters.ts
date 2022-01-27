@@ -31,80 +31,82 @@ function sorryAttemptToFixThisStupidThing(val: string) {
   return getTranslation(val);
 }
 
-export const partnerFilters = [
-  {
-    filterName: sorryAttemptToFixThisStupidThing('GENERAL.SEARCH_RECORDS'),
-    filterKey: PartnerFilterKeys.search,
-    type: EtoolsFilterTypes.Search,
-    selectedValue: '',
-    selected: true
-  },
-  {
-    filterName: getTranslation('PARTNER_TYPE'),
-    filterKey: PartnerFilterKeys.partner_types,
-    type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
-    selectedValue: [],
-    selected: true,
-    minWidth: '350px',
-    hideSearch: true,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('CSO_TYPE'),
-    filterKey: PartnerFilterKeys.cso_types,
-    type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
-    selectedValue: [],
-    selected: true,
-    minWidth: '350px',
-    hideSearch: false,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('HACT_RISK_RATING'),
-    filterKey: PartnerFilterKeys.risk_ratings,
-    type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
-    selectedValue: [],
-    selected: true,
-    minWidth: '160px',
-    hideSearch: false,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('SEA_RISK_RATING'),
-    filterKey: PartnerFilterKeys.sea_risk_ratings,
-    type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
-    selectedValue: [],
-    selected: false,
-    minWidth: '160px',
-    hideSearch: true,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('PSEA_ASSESSMENT_DATE_BEFORE'),
-    filterKey: PartnerFilterKeys.psea_assessment_date_before,
-    type: EtoolsFilterTypes.Date,
-    selectedValue: '',
-    path: 'selectedPseaDateBefore',
-    selected: false,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('PSEA_ASSESSMENT_DATE_AFTER'),
-    filterKey: PartnerFilterKeys.psea_assessment_date_after,
-    type: EtoolsFilterTypes.Date,
-    selectedValue: '',
-    selected: false,
-    disabled: false
-  },
-  {
-    filterName: getTranslation('SHOW_HIDDEN'),
-    filterKey: PartnerFilterKeys.hidden,
-    type: EtoolsFilterTypes.Toggle,
-    selectedValue: false,
-    selected: true
-  }
-];
+export function getPartnerFilters() {
+  return [
+    {
+      filterName: sorryAttemptToFixThisStupidThing('GENERAL.SEARCH_RECORDS'),
+      filterKey: PartnerFilterKeys.search,
+      type: EtoolsFilterTypes.Search,
+      selectedValue: '',
+      selected: true
+    },
+    {
+      filterName: getTranslation('PARTNER_TYPE'),
+      filterKey: PartnerFilterKeys.partner_types,
+      type: EtoolsFilterTypes.DropdownMulti,
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '350px',
+      hideSearch: true,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('CSO_TYPE'),
+      filterKey: PartnerFilterKeys.cso_types,
+      type: EtoolsFilterTypes.DropdownMulti,
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '350px',
+      hideSearch: false,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('HACT_RISK_RATING'),
+      filterKey: PartnerFilterKeys.risk_ratings,
+      type: EtoolsFilterTypes.DropdownMulti,
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '160px',
+      hideSearch: false,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('SEA_RISK_RATING'),
+      filterKey: PartnerFilterKeys.sea_risk_ratings,
+      type: EtoolsFilterTypes.DropdownMulti,
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '160px',
+      hideSearch: true,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('PSEA_ASSESSMENT_DATE_BEFORE'),
+      filterKey: PartnerFilterKeys.psea_assessment_date_before,
+      type: EtoolsFilterTypes.Date,
+      selectedValue: '',
+      path: 'selectedPseaDateBefore',
+      selected: false,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('PSEA_ASSESSMENT_DATE_AFTER'),
+      filterKey: PartnerFilterKeys.psea_assessment_date_after,
+      type: EtoolsFilterTypes.Date,
+      selectedValue: '',
+      selected: false,
+      disabled: false
+    },
+    {
+      filterName: getTranslation('SHOW_HIDDEN'),
+      filterKey: PartnerFilterKeys.hidden,
+      type: EtoolsFilterTypes.Toggle,
+      selectedValue: false,
+      selected: true
+    }
+  ];
+}

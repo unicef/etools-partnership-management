@@ -1,7 +1,7 @@
-import {PartnerFilterKeys, partnerFilters} from './partners-filters';
+import {PartnerFilterKeys, getPartnerFilters} from './partners-filters';
 
 export function getGovernmentFilters() {
-  const filters = JSON.parse(JSON.stringify(partnerFilters));
+  const filters = JSON.parse(JSON.stringify(getPartnerFilters()));
   const partnerTypesFilter = filters.find((f) => f.filterKey == PartnerFilterKeys.partner_types);
   partnerTypesFilter!.disabled = true;
   // @ts-ignore
