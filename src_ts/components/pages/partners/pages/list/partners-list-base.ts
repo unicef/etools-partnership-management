@@ -349,21 +349,18 @@ export class PartnersListBase extends CommonMixin(
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    console.log(this.localName, 'currentPrams: ', currentParams, 'paramsToUpdate: ', paramsToUpdate);
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
     fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
 
     const stringParams: string = buildUrlQueryString(newParams);
-    console.log(this.localName + ' stringParams', stringParams);
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
   }
 
   private setSelectedValuesInFilters() {
     if (this.allFilters) {
       // update filter selection and assign the result to etools-filters(trigger render)
-      console.log(this.localName, 'setSelValInFilters', this.routeDetails?.queryParams);
       const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
       this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
     }
