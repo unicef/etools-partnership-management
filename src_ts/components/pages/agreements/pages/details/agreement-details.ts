@@ -30,7 +30,6 @@ import CommonMixin from '../../../../common/mixins/common-mixin';
 import UploadsMixin from '../../../../common/mixins/uploads-mixin';
 
 import '../../../../endpoints/endpoints.js';
-import '../../../partners/mixins/staff-members-data-mixin.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
