@@ -5,7 +5,7 @@ import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement, property} from 'lit-element';
-import {set} from 'lodash-es';
+import set from 'lodash-es/set';
 declare const dayjs: any;
 /**
  * @polymer

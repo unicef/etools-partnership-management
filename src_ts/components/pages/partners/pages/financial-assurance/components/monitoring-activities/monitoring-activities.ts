@@ -12,12 +12,13 @@ import '@polymer/paper-button';
 import '@polymer/iron-icons/editor-icons';
 import {getUniqueId} from '../../../../../../utils/utils';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin-lit';
-import {clone} from 'lodash-es';
+import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {Partner} from '../../../../../../../models/partners.models';
 import {AnyObject} from '@unicef-polymer/etools-types';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../../../endpoints/endpoints';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -35,7 +36,7 @@ enum DragAndDropClasses {
   grouped = 'grouped'
 }
 @customElement('monitoring-activities')
-export class MonitoringActivities extends EndpointsMixin(LitElement) {
+export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -170,7 +171,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
     }
     this.loading = true;
     sendRequest({
-      endpoint: this.getEndpoint('partnerActivities', {id: this._partnerId})
+      endpoint: this.getEndpoint(pmpEdpoints, 'partnerActivities', {id: this._partnerId})
     })
       .then((response: any) => {
         this.activities = response.results;
@@ -320,7 +321,7 @@ export class MonitoringActivities extends EndpointsMixin(LitElement) {
   saveGroups(): void {
     this.loading = true;
     sendRequest({
-      endpoint: this.getEndpoint('partnerDetails', {id: this._partnerId}),
+      endpoint: this.getEndpoint(pmpEdpoints, 'partnerDetails', {id: this._partnerId}),
       method: 'PATCH',
       body: {
         monitoring_activity_groups: this.groups

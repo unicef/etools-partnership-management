@@ -27,14 +27,11 @@ export class PartnersListData extends ListDataMixin(LitElement) {
   @property({type: Array})
   filteredPartners!: any[];
 
-  @property({type: Number})
-  totalResults!: number;
-
   @property({type: Object})
   currentQuery: GenericObject | null = null;
 
-  @property({type: Boolean})
-  prepareDropdownData = false;
+  // @property({type: Boolean})
+  // prepareDropdownData = false;
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -56,7 +53,7 @@ export class PartnersListData extends ListDataMixin(LitElement) {
     pageNumber: number,
     pageSize: number,
     showHidden: boolean,
-    showQueryLoading: boolean
+    showQueryLoading = false
   ) {
     // If an active query transaction exists, abort it and start
     // a new one

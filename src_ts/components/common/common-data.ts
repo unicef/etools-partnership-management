@@ -10,6 +10,10 @@ import {PolymerElement} from '@polymer/polymer';
 import EnvironmentFlagsPolymerMixin from '../common/environment-flags/environment-flags-mixin';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {CommonDataState} from '../../redux/reducers/common-data';
+import {sendRequest} from '@unicef-polymer/etools-ajax';
+import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
+import pmpEdpoints from '../endpoints/endpoints';
 
 /**
  * @polymer
@@ -20,6 +24,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     @property({type: Object})
     commonDataEndpoints = {
       pmp: [
+        // Don't change order
         'countryProgrammes',
         'dropdownsPmp',
         'dropdownsStatic',
@@ -36,14 +41,71 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     public loadCommonData() {
       // get PMP static data
-      this._getStaticData(this.commonDataEndpoints.pmp);
+      this.getCommonData(this.commonDataEndpoints.pmp);
       this._handlePrpData();
+    }
+
+    protected getCommonData(endpointsNames: string[]) {
+      const promisses = endpointsNames.map((endpointName: string) => {
+        // @ts-ignore
+        return sendRequest({endpoint: {url: pmpEdpoints[endpointName].url}});
+      });
+      Promise.allSettled(promisses).then((response: any[]) => {
+        store.dispatch({
+          type: SET_ALL_STATIC_DATA,
+          staticData: this.formatResponse(response)
+        });
+      });
     }
 
     protected _getStaticData(endpointsNames: string[]) {
       endpointsNames.forEach((endpointName: string) => {
         this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
       });
+    }
+
+    private formatResponse(response: any[]) {
+      const data: Partial<CommonDataState> = {};
+      data.countryProgrammes = this.getValue(response[0]);
+
+      const dropdownsPmpRespose = this.getValue(response[1]);
+      data.fileTypes = dropdownsPmpRespose.file_types;
+      data.cpOutputs = dropdownsPmpRespose.cp_outputs;
+      data.signedByUnicefUsers = dropdownsPmpRespose.signed_by_unicef_users;
+      data.donors = dropdownsPmpRespose.donors;
+      data.grants = dropdownsPmpRespose.grants;
+      data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
+
+      const dropdownsStatic = this.getValue(response[2]);
+      data.documentTypes = dropdownsStatic.intervention_doc_type;
+      data.interventionStatuses = dropdownsStatic.intervention_status;
+      data.currencies = dropdownsStatic.currencies;
+      data.agreementTypes = dropdownsStatic.agreement_types;
+      data.agreementStatuses = dropdownsStatic.agreement_status;
+      data.agencyChoices = dropdownsStatic.agency_choices;
+      data.agreementAmendmentTypes = dropdownsStatic.agreement_amendment_types;
+      data.csoTypes = dropdownsStatic.cso_types;
+      data.partnerTypes = dropdownsStatic.partner_types;
+      data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
+      data.assessmentTypes = dropdownsStatic.assessment_types;
+      data.interventionAmendmentTypes = dropdownsStatic.intervention_amendment_types;
+      data.locationTypes = dropdownsStatic.location_types;
+      data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
+      data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
+      data.riskTypes = dropdownsStatic.risk_types;
+      data.cashTransferModalities = dropdownsStatic.cash_transfer_modalities;
+
+      data.locations = this.getValue(response[3]);
+      data.offices = this.getValue(response[4]);
+      data.sections = this.getValue(response[5]);
+      data.sites = this.getValue(response[6]);
+      data.unicefUsersData = this.getValue(response[7]);
+      data.countryData = this.getValue(response[8]);
+      return data;
+    }
+
+    getValue(response: {status: string; value?: any; reason?: any}, defaultValue: any = []) {
+      return response.status === 'fulfilled' ? response.value : defaultValue;
     }
 
     protected _handlePrpData() {

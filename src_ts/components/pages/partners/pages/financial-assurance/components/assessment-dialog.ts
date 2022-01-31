@@ -5,8 +5,6 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
-
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
@@ -21,6 +19,8 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {formatDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 
 /**
  * @polymer
@@ -28,7 +28,7 @@ import {formatDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-
  * @appliesMixin EndpointsMixin
  */
 @customElement('assessment-dialog')
-export class AssessmentDialog extends connect(store)(EndpointsMixin(LitElement)) {
+export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -236,7 +236,7 @@ export class AssessmentDialog extends connect(store)(EndpointsMixin(LitElement))
     const endpointParam = isNew ? undefined : {assessmentId: assessId};
 
     // @ts-ignore
-    return this.getEndpoint(endpointName, endpointParam);
+    return this.getEndpoint(pmpEdpoints, endpointName, endpointParam);
   }
 
   _handleResponse(response: any, isNew: boolean) {
