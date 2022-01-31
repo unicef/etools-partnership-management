@@ -99,7 +99,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
                 <div class="flex-1 cell">${activity.start_date}</div>
                 <div class="flex-1 cell">${activity.end_date}</div>
                 <div class="flex-2 cell">
-                  ${this.locationAndSite(activity.location.name, activity.location_site.name)}
+                  ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
                 </div>
               </div>`
             )}
