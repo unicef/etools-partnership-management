@@ -79,14 +79,14 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      # - lint:
-      #     filters:
-      #       branches:
-      #         ignore:
-      #           - master
-      #           - staging
-      #           - develop
-      #           - epd
+      - lint:
+          filters:
+            branches:
+              ignore:
+                - master
+                - staging
+                - develop
+                - epd
       - build_and_deploy:
           filters:
             branches:
