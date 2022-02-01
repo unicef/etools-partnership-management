@@ -54,7 +54,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
             </div>`
           : html``}
 
-        <etools-loading .active="${this.loading}"></etools-loading>
+        <etools-loading ?active="${this.loading}"></etools-loading>
 
         ${!(this.activities || []).length
           ? html`<div class="no-activities">There are no activities</div>`
@@ -67,7 +67,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         ${(this.mappedGroups || []).map(
           (item: AnyObject) => html` <div
             class="activities ${this.groupedClass(item.activities.length)}"
-            .data-group-id="${item.id}"
+            data-group-id="${item.id}"
           >
             <div class="braces">
               <div class="description">Count as one</div>
@@ -80,21 +80,21 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
             ${(item.activities || []).map(
               (activity: AnyObject) => html` <div
                 class="row layout-horizontal"
-                .data-group-id="${item.id}"
-                .data-activity-id="${activity.id}"
+                data-group-id="${item.id}"
+                data-activity-id="${activity.id}"
               >
                 <div class="flex-2 cell">
                   <iron-icon
                     ?hidden="${!this.editMode}"
                     class="flex-none"
                     icon="editor:drag-handle"
-                    on-mousedown="startDrag"
+                    @mousedown="${this.startDrag}"
                   ></iron-icon>
-                  ${!this.editMode
-                    ? html` <a target="_blank" title="${activity.id}" ?href="/fm/activities/${activity.id}/details">
+                  ${this.editMode
+                    ? html`${activity.reference_number}`
+                    : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
                         ${activity.reference_number}
-                      </a>`
-                    : html`${activity.reference_number}`})
+                      </a>`}
                 </div>
                 <div class="flex-1 cell">${activity.start_date}</div>
                 <div class="flex-1 cell">${activity.end_date}</div>
@@ -106,7 +106,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
           </div>`
         )}
 
-        <div class="actions" ?hidden="${!this.editMode}">
+        <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
           <paper-button @click="${this.cancelEdit}">Cancel</paper-button>
           <paper-button raised class="save" @click="${this.saveGroups}">Save</paper-button>
         </div>
