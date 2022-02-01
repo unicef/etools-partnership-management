@@ -40,6 +40,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
+import {set} from 'lodash-es';
 
 /**
  * @polymer
@@ -80,7 +81,12 @@ export class PartnersModule extends connect(store)(
       <app-route
         .route="${this.route}"
         @route-changed="${({detail}: CustomEvent) => {
-          this.route = detail.value;
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
         }}"
         pattern="/list"
         .queryParams="${this.listPageQueryParams}"
@@ -98,7 +104,12 @@ export class PartnersModule extends connect(store)(
       <app-route
         .route="${this.route}"
         @route-changed="${({detail}: CustomEvent) => {
-          this.route = detail.value;
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
         }}"
         @data-changed="${({detail}: CustomEvent) => {
           this.routeData = detail.value;
