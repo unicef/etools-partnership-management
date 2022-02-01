@@ -430,7 +430,7 @@ export class PartnersListBase extends CommonMixin(
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
     const exportParams = {
-      search: this.q,
+      search: queryStringObj.search,
       partner_type: queryStringObj.partner_types,
       cso_type: queryStringObj.cso_types,
       rating: queryStringObj.risk_ratings,
