@@ -83,7 +83,6 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
               id="dateSubmitted"
               label="Date of Assessment"
               .value="${this.assessment.completed_date}"
-              fire-date-has-changed
               @date-has-changed="${(e: CustomEvent) => {
                 this.assessment.completed_date = e.detail.date ? formatDate(e.detail.date, 'YYYY-MM-DD') : null;
               }}"
