@@ -72,12 +72,15 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
             <datepicker-lite
               id="dateSubmitted"
               label="Date of Assessment"
-              value="{{assessment.completed_date}}"
+              value="[[assessment.completed_date]]"
               auto-validate
               max-date-error-msg="Date can not be in the future"
               max-date="[[getCurrentDate()]]"
               required
               selected-date-display-format="D MMM YYYY"
+              fire-date-has-changed
+              on-date-has-changed="_dateHasChanged"
+              data-field-path="assessment.completed_date"
             >
             </datepicker-lite>
           </div>
