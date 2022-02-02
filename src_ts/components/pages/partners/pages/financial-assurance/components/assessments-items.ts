@@ -192,6 +192,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
 
   newAssessmentAdded(data: any) {
     this.dataItems.push(data.detail);
+    this.dataItems = [...this.dataItems];
     fireEvent(this, 'assessment-added-step2', data.detail);
   }
 

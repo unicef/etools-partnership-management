@@ -146,9 +146,9 @@ export class PartnerOverview extends EtoolsCurrency(
                 ${this.getRiskRatingValue(this.partner.rating)}
               </div>
             </div>
-            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner.total_ct_cp, '0', 0)}</div>
+            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 2)}</div>
             <div class="col col-2 center-align block">
-              $${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}
+              $${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}
             </div>
             <div class="col col-2 center-align">
               <strong>
