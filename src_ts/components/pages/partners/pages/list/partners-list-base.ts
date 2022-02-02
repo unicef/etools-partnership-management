@@ -429,7 +429,16 @@ export class PartnersListBase extends CommonMixin(
   }
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
-    const exportParams = omit(queryStringObj, ['page', 'size']);
+    const exportParams = {
+      search: queryStringObj.search,
+      partner_type: queryStringObj.partner_types,
+      cso_type: queryStringObj.cso_types,
+      rating: queryStringObj.risk_ratings,
+      sea_risk_rating: queryStringObj.sea_risk_ratings,
+      psea_assessment_date_before: queryStringObj.psea_assessment_date_before,
+      psea_assessment_date_after: queryStringObj.psea_assessment_date_before,
+      hidden: queryStringObj.hidden ? 'true' : 'false'
+    };
     return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'partners').url);
   }
 
