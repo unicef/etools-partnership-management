@@ -81,6 +81,9 @@ export class PartnersModule extends connect(store)(
       <app-route
         .route="${this.route}"
         @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
           if (detail.path) {
             set(this, detail.path, detail.value);
             this.route = {...this.route};
@@ -104,6 +107,9 @@ export class PartnersModule extends connect(store)(
       <app-route
         .route="${this.route}"
         @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
           if (detail.path) {
             set(this, detail.path, detail.value);
             this.route = {...this.route};
