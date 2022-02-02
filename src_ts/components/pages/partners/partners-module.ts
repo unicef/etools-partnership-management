@@ -40,7 +40,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
-import {set} from 'lodash-es';
+import set from 'lodash-es/set';
 
 /**
  * @polymer
