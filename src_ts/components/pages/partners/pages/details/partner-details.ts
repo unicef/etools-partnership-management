@@ -54,6 +54,8 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   render() {
+    if (!this.partner) return;
+
     return html`
       <style>
         ${pageCommonStyles} ${sharedStyles} ${dataTableStylesLit} ${riskRatingStyles} :host {
