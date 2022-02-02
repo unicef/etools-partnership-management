@@ -92,6 +92,9 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
               .maxDate="${this.getCurrentDate()}"
               required
               selected-date-display-format="D MMM YYYY"
+              fire-date-has-changed
+              on-date-has-changed="_dateHasChanged"
+              data-field-path="assessment.completed_date"
             >
             </datepicker-lite>
           </div>
