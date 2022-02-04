@@ -2,7 +2,8 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
-
+import '@unicef-polymer/etools-data-table/etools-data-table';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin-lit';
@@ -14,7 +15,7 @@ import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {Partner} from '../../../../../models/partners.models';
+import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
 
 /**
@@ -27,8 +28,8 @@ import {translate} from 'lit-translate';
  * @appliesMixin FrNumbersConsistencyixin
  */
 @customElement('partner-overview')
-export class PartnerOverview extends EtoolsCurrency(
-  CommonMixinLit(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement)))
+export class PartnerOverview extends PaginationMixin(
+  EtoolsCurrency(CommonMixinLit(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement))))
 ) {
   static get styles() {
     return [gridLayoutStylesLit, frWarningsStyles];
@@ -119,6 +120,10 @@ export class PartnerOverview extends EtoolsCurrency(
           flex-direction: column !important;
           align-items: flex-start !important;
         }
+
+        etools-data-table-footer {
+          border-top: 1px solid var(--light-divider-color);
+        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="Partner Overview">
@@ -176,7 +181,7 @@ export class PartnerOverview extends EtoolsCurrency(
             </div>
           </div>
         </div>
-        ${this.partner.interventions?.length
+        ${this.paginatedInterventions.length
           ? html`
               <div class="hact-heading">
                 <div class="row-h">
@@ -189,7 +194,7 @@ export class PartnerOverview extends EtoolsCurrency(
                 </div>
               </div>
               <div class="hact-body">
-                ${this.partner.interventions?.map(
+                ${this.paginatedInterventions.map(
                   (partnership) => html`
                     <div class="row-h">
                       <div class="col col-3 block word-break">
@@ -299,14 +304,38 @@ export class PartnerOverview extends EtoolsCurrency(
                   `
                 )}
               </div>
+              <etools-data-table-footer
+                .pageSize="${this.paginator.page_size}"
+                .pageNumber="${this.paginator.page}"
+                .totalResults="${this.paginator.count}"
+                .visibleRange="${this.paginator.visible_range}"
+                @page-size-changed="${this.pageSizeChanged}"
+                @page-number-changed="${this.pageNumberChanged}"
+              >
+              </etools-data-table-footer>
             `
           : html``}
       </etools-content-panel>
     `;
   }
 
+  _partner!: Partner;
+
+  set partner(partner: Partner) {
+    this._partner = partner;
+    this._initPaginator(this.partner.interventions);
+  }
+
   @property({type: Object})
-  partner!: Partner;
+  get partner() {
+    return this._partner;
+  }
+
+  @property({type: Array})
+  allInterventions: PartnerIntervention[] = [];
+
+  @property({type: Array})
+  paginatedInterventions: PartnerIntervention[] = [];
 
   public connectedCallback() {
     super.connectedCallback();
@@ -321,6 +350,30 @@ export class PartnerOverview extends EtoolsCurrency(
       });
       fireEvent(this, 'tab-content-attached');
     }, 100);
+  }
+
+  public _initPaginator(interventions: PartnerIntervention[] = []) {
+    this.allInterventions = interventions;
+    this.paginatedInterventions = [];
+    this.paginator = JSON.parse(
+      JSON.stringify({
+        count: interventions.length,
+        page: 1,
+        page_size: 5
+      })
+    );
+  }
+
+  public _paginate(pageNumber: number, pageSize: number) {
+    if (!this.allInterventions) {
+      return;
+    }
+    const interventions = this.allInterventions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    this.paginatedInterventions = interventions;
+  }
+
+  paginatorChanged() {
+    this._paginate(this.paginator.page, this.paginator.page_size);
   }
 
   public _getMinReqAudits(plannedEngagement: any) {

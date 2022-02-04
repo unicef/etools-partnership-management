@@ -418,7 +418,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         )}
         <etools-data-table-footer
           .pageSize="${this.paginator.page_size}"
-          .pageNumberr="${this.paginator.page}"
+          .pageNumber="${this.paginator.page}"
           .totalResults="${this.paginator.count}"
           .visibleRange="${this.paginator.visible_range}"
           @page-size-changed="${this.pageSizeChanged}"
