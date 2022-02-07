@@ -1,4 +1,5 @@
-import {PolymerElement, html} from '@polymer/polymer';
+/* eslint-disable lit-a11y/anchor-is-valid */
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
@@ -9,17 +10,17 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import AjaxServerErrorsMixin from '../../../../common/mixins/ajax-server-errors-mixin.js';
-import PaginationMixin from '../../../../common/mixins/pagination-mixin.js';
-import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin.js';
-import CommonMixin from '../../../../common/mixins/common-mixin.js';
+import AjaxServerErrorsMixin from '../../../../common/mixins/ajax-server-errors-mixin-lit.js';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit.js';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin.js';
 
-import {pageCommonStyles} from '../../../../styles/page-common-styles';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../styles/shared-styles';
-import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
+import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
 declare const dayjs: any;
 import {AP_DOMAIN} from '../../../../../config/config';
@@ -27,13 +28,15 @@ import {AP_DOMAIN} from '../../../../../config/config';
 import './components/assessments-items.js';
 import '../../../../common/components/monitoring-visits-list';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../models/partners.models';
 import './components/hact-edit-dialog';
 import clone from 'lodash-es/clone';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
+import {translate} from 'lit-translate';
+import pmpEdpoints from '../../../../endpoints/endpoints.js';
+import {cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -41,19 +44,24 @@ import './components/monitoring-activities/monitoring-activities';
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
- * @appliesMixin EndpointsMixin
+ * @appliesMixin EndpointsLitMixin
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerFinancialAssurance extends EtoolsCurrency(
-  CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(PaginationMixin(RiskRatingMixin(PolymerElement)))))
+@customElement('partner-financial-assurance')
+export class PartnerFinancialAssurance extends PaginationMixin(
+  EtoolsCurrency(CommonMixin(EndpointsLitMixin(AjaxServerErrorsMixin(RiskRatingMixin(LitElement)))))
 ) {
-  static get template() {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
+    if (!this.partner) return;
     // language=HTML
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
-      <style include="data-table-styles">
+      ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
+      <style>
         :host {
           --paper-input-container-input-webkit-spinner: {
             -webkit-appearance: none;
@@ -67,7 +75,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
-          padding: 0 24px 0 48px;
+          padding: 0 24px 0 48px !important;
         }
 
         .overview-header etools-data-table-column {
@@ -75,7 +83,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         }
 
         .overview-row {
-          padding-left: 48px;
+          padding-left: 48px !important;
         }
 
         .vision {
@@ -88,7 +96,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           margin-left: -24px;
           padding-left: 24px;
           line-height: normal;
-          box-sizing: content-box;
+          box-sizing: content-box !important;
         }
 
         .from-vision {
@@ -194,83 +202,94 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         }
       </style>
 
-      <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
+      <etools-content-panel panel-title="${this._getYear()} Overview" class="content-section">
         <div class="row-h overview-header">
-          <etools-data-table-column class="col col-1">
-            [[_getTranslation('HACT_RISK_RATING')]]
-          </etools-data-table-column>
+          <etools-data-table-column class="col col-1"> ${translate('HACT_RISK_RATING')} </etools-data-table-column>
           <etools-data-table-column class="col col-2">
-            [[_getTranslation('TYPE_OF_ASSESSMENT')]] - [[_getTranslation('DATE_OF_ASSESSMENT')]]
+            ${translate('TYPE_OF_ASSESSMENT')} - ${translate('DATE_OF_ASSESSMENT')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-1 center-align" title="Jan-Dec">
-            [[_getTranslation('CASH_TRANSFERS_USD')]]
+            ${translate('CASH_TRANSFERS_USD')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            [[_getTranslation('PROG_VISIT')]]<br />
-            [[_getTranslation('PLANNED_MR_COMPLETED')]]
+            ${translate('PROG_VISIT')}<br />
+            ${translate('PLANNED_MR_COMPLETED')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            [[_getTranslation('SPOT_CHECKS')]] <br />
-            [[_getTranslation('REQUIRED_COMPLETED')]]
+            ${translate('SPOT_CHECKS')} <br />
+            ${translate('REQUIRED_COMPLETED')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
-            [[_getTranslation('AUDIT')]] <br />
-            [[_getTranslation('REQUIRED_COMPLETED')]]
+            ${translate('AUDIT')} <br />
+            ${translate('REQUIRED_COMPLETED')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-1 center-align">
-            [[_getTranslation('SEA_RISK_RATING')]]
+            ${translate('SEA_RISK_RATING')}
           </etools-data-table-column>
           <etools-data-table-column class="col col-1 center-align">
-            [[_getTranslation('LAST_PSEA_ASSESSMENT_DATE')]]
+            ${translate('LAST_PSEA_ASSESSMENT_DATE')}
           </etools-data-table-column>
         </div>
 
         <div class="row-h overview-row">
           <div class="col col-4 vision">
-            <div class="from-vision">[[_getTranslation('FROM_VISION')]]</div>
+            <div class="from-vision">${translate('FROM_VISION')}</div>
             <div class="col-3">
-              <span class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
+              <span class="${this.getRiskRatingClass(this.partner.rating)}">
+                ${this.getRiskRatingValue(this.partner.rating)}
+              </span>
             </div>
             <div class="col col-5">
-              [[partner.type_of_assessment]] <br />
-              [[getDateDisplayValue(partner.last_assessment_date)]]
+              ${this.partner.type_of_assessment} <br />
+              ${this.getDateDisplayValue(this.partner.last_assessment_date)}
             </div>
-            <div class="col col-4 center-align">$ [[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]</div>
+            <div class="col col-4 center-align">$ ${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}</div>
           </div>
           <div class="col col-2 center-align hact-values">
             <strong>
-              [[partner.hact_values.programmatic_visits.planned.total]] /
-              <span class="green"> [[partner.hact_min_requirements.programmatic_visits]]</span>
-              / [[partner.hact_values.programmatic_visits.completed.total]]
+              ${this.partner.hact_values?.programmatic_visits?.planned?.total} /
+              <span class="green"> ${this.partner.hact_min_requirements?.programmatic_visits}</span>
+              / ${this.partner.hact_values?.programmatic_visits?.completed?.total}
             </strong>
           </div>
           <div class="col col-2 center-align hact-values">
             <strong>
-              <span class="green">[[partner.planned_engagement.spot_check_required]] </span>
-              / [[partner.hact_values.spot_checks.completed.total]]
+              <span class="green">${this.partner.planned_engagement?.spot_check_required} </span>
+              / ${this.partner.hact_values?.spot_checks?.completed?.total}
             </strong>
           </div>
           <div class="col-2 col center-align hact-values">
             <strong>
-              <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
-              / [[partner.hact_values.audits.completed]]
+              <span class="green">${this._getMinReqAudits(this.partner.planned_engagement)} </span>
+              / ${this.partner.hact_values?.audits?.completed}
             </strong>
           </div>
           <div class="col-1 col center-align">
-            <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
-              [[getRiskRatingValue(partner.sea_risk_rating_name, 1)]]
+            <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
+              ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
             </span>
           </div>
-          <div class="col col-1 center-align">[[getDateDisplayValue(partner.psea_assessment_date)]]</div>
+          <div class="col col-1 center-align">${this.getDateDisplayValue(this.partner.psea_assessment_date)}</div>
         </div>
         <div class="row-h overview-row">
           <div class="col col-1"></div>
           <div class="col col-3">
             <etools-dropdown
-              label="[[_getTranslation('BASIS_FOR_RISK_RATING')]]"
-              options="[[basisOptions]]"
-              selected="{{partner.basis_for_risk_rating}}"
-              disabled="[[_disableBasisForRiskRating(editMode, partner.type_of_assessment, partner.rating)]]"
+              label="${translate('BASIS_FOR_RISK_RATING')}"
+              .options="${this.basisOptions}"
+              .selected="${this.partner.basis_for_risk_rating}"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => {
+                if (!detail.selectedItem) {
+                  return;
+                }
+                this.partner.basis_for_risk_rating = detail.selectedItem ? detail.selectedItem.value : '';
+              }}"
+              trigger-value-change-event
+              ?disabled="${this._disableBasisForRiskRating(
+                this.editMode,
+                this.partner.type_of_assessment,
+                this.partner.rating
+              )}"
             >
             </etools-dropdown>
           </div>
@@ -279,89 +298,89 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
       <etools-content-panel panel-title="Assurance Activities" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button icon="create" title="Edit" on-click="_openHactEditDialog"> </paper-icon-button>
+          <paper-icon-button icon="create" title="Edit" @click="${this._openHactEditDialog}"> </paper-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
             <div class="table-main col-4 no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="col-4 table-title">[[_getTranslation('PROGRAMMATIC_VISITS')]]</div>
+                <div class="col-4 table-title">${translate('PROGRAMMATIC_VISITS')}</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
                 <div class="quarter">Q3</div>
                 <div class="quarter">Q4</div>
-                <div class="col-2 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
+                <div class="col-2 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
               <div class="row-h panel-table-row">
-                <div class="col-4">[[_getTranslation('PLANNED')]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q1]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q2]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q3]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.planned.q4]]</div>
+                <div class="col-4">${translate('PLANNED')}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q1}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q2}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q3}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q4}</div>
                 <div class="col-2 darker-bg layout-horizontal totals">
-                  <strong>[[partner.hact_values.programmatic_visits.planned.total]]</strong>
+                  <strong>${this.partner.hact_values?.programmatic_visits?.planned?.total}</strong>
                 </div>
               </div>
 
               <div class="row-h panel-table-row ">
-                <div class="col-4">[[_getTranslation('COMPLETED')]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q1]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q2]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q3]]</div>
-                <div class="quarter">[[partner.hact_values.programmatic_visits.completed.q4]]</div>
+                <div class="col-4">${translate('COMPLETED')}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q1}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q2}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q3}</div>
+                <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q4}</div>
                 <div class="col-2 darker-bg totals layout-horizontal center-align">
-                  <strong>[[partner.hact_values.programmatic_visits.completed.total]]</strong>
+                  <strong>${this.partner.hact_values?.programmatic_visits?.completed?.total}</strong>
                 </div>
               </div>
             </div>
 
             <div class="table-main col-4 margin-l no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="col-4 table-title">[[_getTranslation('SPOT_CHECK')]]</div>
+                <div class="col-4 table-title">${translate('SPOT_CHECK')}</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
                 <div class="quarter">Q3</div>
                 <div class="quarter">Q4</div>
-                <div class="col-2 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
+                <div class="col-2 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
               <div class="row-h panel-table-row">
-                <div class="col-4">[[_getTranslation('PLANNED')]]</div>
-                <div class="quarter">[[partner.planned_engagement.spot_check_planned_q1]]</div>
-                <div class="quarter">[[partner.planned_engagement.spot_check_planned_q2]]</div>
-                <div class="quarter">[[partner.planned_engagement.spot_check_planned_q3]]</div>
-                <div class="quarter">[[partner.planned_engagement.spot_check_planned_q4]]</div>
+                <div class="col-4">${translate('PLANNED')}</div>
+                <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q1}</div>
+                <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q2}</div>
+                <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q3}</div>
+                <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q4}</div>
                 <div class="col-2 darker-bg totals layout-horizontal">
-                  <strong>[[partner.planned_engagement.total_spot_check_planned]]</strong>
+                  <strong>${this.partner.planned_engagement?.total_spot_check_planned}</strong>
                 </div>
               </div>
 
               <div class="row-h panel-table-row">
-                <div class="col-4">[[_getTranslation('COMPLETED')]]</div>
-                <div class="quarter">[[partner.hact_values.spot_checks.completed.q1]]</div>
-                <div class="quarter">[[partner.hact_values.spot_checks.completed.q2]]</div>
-                <div class="quarter">[[partner.hact_values.spot_checks.completed.q3]]</div>
-                <div class="quarter">[[partner.hact_values.spot_checks.completed.q4]]</div>
+                <div class="col-4">${translate('COMPLETED')}</div>
+                <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q1}</div>
+                <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q2}</div>
+                <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q3}</div>
+                <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q4}</div>
                 <div class="col-2 darker-bg totals layout-horizontal center-align">
-                  <strong>[[partner.hact_values.spot_checks.completed.total]]</strong>
+                  <strong>${this.partner.hact_values?.spot_checks?.completed?.total}</strong>
                 </div>
               </div>
             </div>
 
             <div class="table-main col-2 margin-l no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="flex-c table-title">[[_getTranslation('AUDITS')]]</div>
-                <div class="col-5 center-align">[[_getTranslation('GENERAL.TOTAL_C')]]</div>
+                <div class="flex-c table-title">${translate('AUDITS')}</div>
+                <div class="col-5 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
               <div class="row-h panel-table-row ">
-                <div class="flex-c">[[_getTranslation('REQUIRED')]]</div>
+                <div class="flex-c">${translate('REQUIRED')}</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
-                  [[partner.hact_min_requirements.audits]]
+                  ${this.partner.hact_min_requirements?.audits}
                 </div>
               </div>
               <div class="row-h panel-table-row ">
-                <div class="flex-c">[[_getTranslation('COMPLETED')]]</div>
+                <div class="flex-c">${translate('COMPLETED')}</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
-                  [[partner.hact_values.audits.completed]]
+                  ${this.partner.hact_values?.audits?.completed}
                 </div>
               </div>
             </div>
@@ -372,40 +391,38 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       <etools-content-panel
         show-expand-btn
         class="content-section"
-        panel-title="Assessments  and Assurance ([[allEngagements.length]])"
+        panel-title="Assessments  and Assurance (${this.allEngagements.length})"
       >
         <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
-          <etools-data-table-column class="col-3">[[_getTranslation('ENGAGEMENT_TYPE')]] </etools-data-table-column>
-          <etools-data-table-column class="col-2"> [[_getTranslation('DATE')]] </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            [[_getTranslation('AMOUNT_TESTED')]] <br />(USD)
-          </etools-data-table-column>
+          <etools-data-table-column class="col-3">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>
+          <etools-data-table-column class="col-2"> ${translate('DATE')} </etools-data-table-column>
+          <etools-data-table-column class="col-2"> ${translate('AMOUNT_TESTED')} <br />(USD) </etools-data-table-column>
           <etools-data-table-column class="col-3 col">
-            [[_getTranslation('OUTSTANDING_FINDINGS')]] <br />(USD)
+            ${translate('OUTSTANDING_FINDINGS')} <br />(USD)
           </etools-data-table-column>
-          <etools-data-table-column class="col-2 report-header">
-            [[_getTranslation('REPORT')]]
-          </etools-data-table-column>
+          <etools-data-table-column class="col-2"> ${translate('REPORT')} </etools-data-table-column>
         </div>
-        <template is="dom-repeat" items="[[engagements]]">
-          <div class="assessment-row panel-table-row layout-horizontal">
-            <div class="col-3">[[_displayType(item.engagement_type)]]</div>
-            <div class="col-2">[[getDateDisplayValue(item.status_date)]]</div>
-            <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
-            <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
-            <div class="col-2">
-              <a class="report" target="_blank" href$="[[item.object_url]]">
+        ${this.paginatedEngagements.map(
+          (item) => html`
+            <div class="assessment-row panel-table-row layout-horizontal">
+              <div class="col-3">${this._displayType(item.engagement_type)}</div>
+              <div class="col-2">${this.getDateDisplayValue(item.status_date)}</div>
+              <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
+              <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
+              <a class="report col-2" target="_blank" href="${item.object_url}">
                 <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
-                [[_getTranslation('VIEW_REPORT')]]
+                ${translate('VIEW_REPORT')}
               </a>
             </div>
-          </div>
-        </template>
+          `
+        )}
         <etools-data-table-footer
-          page-size="{{paginator.page_size}}"
-          page-number="{{paginator.page}}"
-          total-results="[[paginator.count]]"
-          visible-range="{{paginator.visible_range}}"
+          .pageSize="${this.paginator.page_size}"
+          .pageNumber="${this.paginator.page}"
+          .totalResults="${this.paginator.count}"
+          .visibleRange="${this.paginator.visible_range}"
+          @page-size-changed="${this.pageSizeChanged}"
+          @page-number-changed="${this.pageNumberChanged}"
         >
         </etools-data-table-footer>
       </etools-content-panel>
@@ -413,23 +430,23 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       <etools-content-panel
         id="monitoring-visits-panel"
         class="content-section"
-        panel-title="[[_getTranslation('PROGRAMMATIC_VISITS_S_CASE')]]"
+        panel-title=" ${translate('PROGRAMMATIC_VISITS_S_CASE')}"
       >
-        <monitoring-visits-list2 partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list2>
+        <monitoring-visits-list2 partner-id="${this.partner.id}" show-tpm-visits> </monitoring-visits-list2>
       </etools-content-panel>
 
       <monitoring-activities
-        is-readonly="[[!editMode]]"
-        activity-groups="[[partner.monitoring_activity_groups]]"
-        partner-id="[[partner.id]]"
+        .isReadonly="${!this.editMode}"
+        .activityGroups="${this.partner.monitoring_activity_groups}"
+        .partnerId="${this.partner.id}"
       ></monitoring-activities>
 
       <assessments-items
         id="assessmentsList"
         class="content-section"
-        data-items="{{partner.assessments}}"
-        edit-mode="[[editMode]]"
-        partner-id="[[partner.id]]"
+        .dataItems="${this.partner.assessments}"
+        .editMode="${this.editMode}"
+        .partnerId="${this.partner.id}"
       ></assessments-items>
     `;
   }
@@ -438,17 +455,25 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   auditorPortalBasePath: string = AP_DOMAIN;
 
   @property({type: Array})
-  engagements: any[] = [];
+  paginatedEngagements: any[] = [];
 
   @property({type: Array})
   allEngagements: any[] = [];
 
-  @property({
-    type: Object,
-    reflectToAttribute: true,
-    observer: '_partnerReceived'
-  })
-  partner: any = {};
+  _partner!: any;
+
+  set partner(partner) {
+    // If is needed to avoid infinite request.
+    if (JSON.stringify(this._partner) !== JSON.stringify(partner)) {
+      this._partner = partner;
+      this._partnerReceived(this._partner);
+    }
+  }
+
+  @property({type: Object, reflect: true})
+  get partner() {
+    return this._partner;
+  }
 
   @property({type: Object})
   TYPES: any = {
@@ -470,10 +495,6 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   @property({type: Boolean})
   editMode!: boolean;
 
-  static get observers() {
-    return ['_paginate(paginator.page, paginator.page_size)'];
-  }
-
   public connectedCallback() {
     super.connectedCallback();
     /**
@@ -481,12 +502,15 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
      * triggered by parent element on stamp or by tap event on tabs
      */
 
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
 
-    fireEvent(this, 'tab-content-attached');
+      fireEvent(this, 'tab-content-attached');
+    }, 100);
+
     this._assessmentUpdated = this._assessmentUpdated.bind(this);
     this._assessmentAdded = this._assessmentAdded.bind(this);
 
@@ -523,19 +547,14 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   }
 
   public _init(engagements: any) {
-    this.set('allEngagements', engagements);
-
-    this.set('engagements', []);
-
-    this.set(
-      'paginator',
-      JSON.parse(
-        JSON.stringify({
-          count: engagements.length,
-          page: 1,
-          page_size: 5
-        })
-      )
+    this.allEngagements = engagements;
+    this.paginatedEngagements = [];
+    this.paginator = JSON.parse(
+      JSON.stringify({
+        count: engagements.length,
+        page: 1,
+        page_size: 5
+      })
     );
     this._addBasisFromEngagements(engagements);
   }
@@ -546,7 +565,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
   public _getEngagementsRequestOptions(partnerId: any) {
     return {
-      endpoint: this.getEndpoint('engagements'),
+      endpoint: this.getEndpoint(pmpEdpoints, 'engagements'),
       params: {
         ordering: 'unique_id',
         status: 'final',
@@ -563,43 +582,45 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
     sendRequest(requestOptions)
-      .then((results: any) => this._init(results))
+      .then((results: any) => {
+        this._init(results);
+      })
       // @ts-ignore
       .catch((err: any) => this.handleErrorResponse(err));
 
-    this.set('basisOptions', []);
+    this.basisOptions = [];
     this._addBasisFromPartner();
   }
 
   public _addBasisFromPartner() {
-    this.set('basisOptions', [
+    this.basisOptions = [
       ...this.basisOptions,
       ...this.partner.assessments.map((a: PartnerAssessment) => ({
         label: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`,
         value: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`
       }))
-    ]);
+    ];
   }
 
   public _addBasisFromEngagements(engagements: any) {
-    this.set('basisOptions', [
+    this.basisOptions = [
       ...this.basisOptions,
       ...engagements.map((e: any) => ({
         label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`,
         value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`
       }))
-    ]);
+    ];
   }
 
   public _paginate(pageNumber: number, pageSize: number) {
     if (!this.allEngagements) {
       return;
     }
-    let engagements = this.allEngagements;
+    let engagements = cloneDeep(this.allEngagements);
     engagements = engagements
-      .sort((a, b) => dayjs(b.status_date) - dayjs(a.status_date))
+      .sort((a: any, b: any) => dayjs(b.status_date) - dayjs(a.status_date))
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    this.set('engagements', engagements);
+    this.paginatedEngagements = engagements;
   }
 
   public _getYear() {
@@ -649,7 +670,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       fireEvent(this, 'assessment-updated-step3', updatedBasisTxt);
     } else {
       const index = this.basisOptions.findIndex((b: LabelAndValue) => b.label === oldBasisTxt);
-      this.splice('basisOptions', index, 1, {
+      this.basisOptions.splice(index, 1, {
         label: updatedBasisTxt,
         value: updatedBasisTxt
       });
@@ -662,11 +683,11 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     }
     const basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
 
-    this.push('basisOptions', {
-      value: basisVal,
-      label: basisVal
-    });
+    this.basisOptions.push({value: basisVal, label: basisVal});
+  }
+
+  // Override from PaginationMixin
+  paginatorChanged() {
+    this._paginate(this.paginator.page, this.paginator.page_size);
   }
 }
-
-window.customElements.define('partner-financial-assurance', PartnerFinancialAssurance);

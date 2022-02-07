@@ -85,11 +85,11 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return files;
     }
 
-    getFileNameFromURL(url: string) {
+    getFileNameFromURL(url: string | number) {
       if (!url) {
         return '';
       }
-      return url.split('?').shift()!.split('/').pop();
+      return url.toString().split('?').shift()!.split('/').pop();
     }
 
     /**

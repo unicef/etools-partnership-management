@@ -35,7 +35,8 @@ import {
   UPDATE_GENDER_EQUITY,
   UPDATE_RISK_TYPES,
   UPDATE_CASH_TRANSFER_MODALITIES,
-  UPDATE_PROVIDED_BY
+  UPDATE_PROVIDED_BY,
+  SET_ALL_STATIC_DATA
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
@@ -105,6 +106,8 @@ export class CommonDataState {
   envFlags: EnvFlags | null = null;
   riskTypes: LabelAndValue[] = [];
   cashTransferModalities: LabelAndValue[] = [];
+  sites: [] = [];
+  commonDataIsLoaded = false;
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -114,6 +117,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
   let dIndex;
 
   switch (action.type) {
+    case SET_ALL_STATIC_DATA:
+      return {
+        ...state,
+        ...action.staticData,
+        commonDataIsLoaded: true
+      };
     case UPDATE_COUNTRY_PROGRAMMES:
       return {
         ...state,

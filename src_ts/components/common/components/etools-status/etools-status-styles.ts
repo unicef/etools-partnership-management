@@ -1,8 +1,8 @@
-import {html} from '@polymer/polymer';
-import {SharedStyles} from '../../../styles/shared-styles';
+import {html} from 'lit-element';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 export const etoolsStatusStyles = html`
-  ${SharedStyles}
+  ${sharedStyles}
   <style>
     :host {
       display: block;

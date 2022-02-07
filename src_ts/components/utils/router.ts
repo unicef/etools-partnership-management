@@ -1,5 +1,3 @@
-import {logInfo} from '@unicef-polymer/etools-behaviors/etools-logging';
-
 export interface RouteQueryParam {
   [key: string]: string;
 }
@@ -33,12 +31,12 @@ export class Router {
   routes: {regex: RegExp | string; handler: (params: RouteCallbackParams) => RouteDetails}[] = [];
   root = '/';
 
-  static clearSlashes(path: string): string {
+  static clearStartEndSlashes(path: string): string {
     return path.toString().replace(/\/$/, '').replace(/^\//, '');
   }
 
   constructor(rootPath?: string) {
-    this.root = rootPath && rootPath !== '/' ? '/' + Router.clearSlashes(rootPath) + '/' : '/';
+    this.root = rootPath && rootPath !== '/' ? '/' + Router.clearStartEndSlashes(rootPath) + '/' : '/';
   }
 
   getLocationPath(path?: string): string {
@@ -90,7 +88,6 @@ export class Router {
     const path = appLocRoute.path;
     let routeDetails: RouteDetails | null = null;
     const locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
-    logInfo(locationPath, 'Router.getRouteDetails.locationPath: ');
 
     const qs = appLocRoute.__queryParams;
 
@@ -109,7 +106,7 @@ export class Router {
   }
 
   prepareLocationPath(path: string): string {
-    return path.indexOf(this.root) === -1 ? this.root + Router.clearSlashes(path) : path;
+    return path.indexOf(this.root) === -1 ? this.root + Router.clearStartEndSlashes(path) : path;
   }
 
   pushState(path?: string) {
@@ -123,4 +120,32 @@ export class Router {
     history.replaceState(window.history.state, '', path);
     return this;
   }
+
+  /**
+   * Utility used to update location based on routes and dispatch navigate action (optional)
+   */
+  updateAppLocation(newLocation: string): void {
+    const _newLocation = this.prepareLocationPath(newLocation);
+
+    this.pushState(_newLocation);
+
+    window.dispatchEvent(new CustomEvent('popstate'));
+  }
+
+  replaceAppLocation(newLocation: string): void {
+    const _newLocation = this.prepareLocationPath(newLocation);
+
+    this.replaceState(_newLocation);
+
+    /**
+     * Note that just calling history.pushState() or history.replaceState()
+     * won't trigger a popstate event.
+     * The popstate event is only triggered by doing a browser action
+     * such as a click on the back button (or calling history.back() in JavaScript).
+     */
+    window.dispatchEvent(new CustomEvent('popstate'));
+  }
+
+  ROUTE_404 = '/not-found';
+  DEFAULT_ROUTE = '/partners/list';
 }

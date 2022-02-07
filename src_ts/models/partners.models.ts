@@ -15,6 +15,8 @@ export class PartnerCoreValAssessment extends ModelsCommon {
   id: number | null = null;
   date = ''; // TODO: use a date object
   attachment: string | number = '';
+  archived?: boolean;
+  active = true;
 
   constructor(data: GenericObject) {
     super();
@@ -22,7 +24,9 @@ export class PartnerCoreValAssessment extends ModelsCommon {
   }
 }
 
-export class PartnerIntervention {}
+export class PartnerIntervention {
+  [key: string]: any;
+}
 
 export class PartnerPlannedEngagement {}
 
