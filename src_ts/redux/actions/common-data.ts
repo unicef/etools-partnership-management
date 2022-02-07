@@ -46,6 +46,7 @@ export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_GENDER_EQUITY = 'UPDATE_GENDER_EQUITY';
 export const UPDATE_RISK_TYPES = 'UPDATE_RISK_TYPES';
 export const UPDATE_CASH_TRANSFER_MODALITIES = 'UPDATE_CASH_TRANSFER_MODALITIES';
+export const SET_ALL_STATIC_DATA = 'SET_ALL_STATIC_DATA';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: GenericObject[];

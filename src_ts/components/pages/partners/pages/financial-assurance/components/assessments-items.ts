@@ -91,7 +91,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
       </style>
 
       <etools-content-panel
-        panel-title="${translate('OTHER_ASSESSMENTS')} (${this.dataItems.length})"
+        panel-title="${translate('OTHER_ASSESSMENTS')} (${this.dataItems?.length})"
         class="content-section"
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
@@ -113,7 +113,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           </paper-icon-button>
         </div>
 
-        <div ?hidden="${this._emptyList(this.dataItems.length)}">
+        <div ?hidden="${this._emptyList(this.dataItems?.length)}">
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-3"> ${translate('ASSESSMENT_TYPE')} </etools-data-table-column>
             <etools-data-table-column class="col-2"> ${translate('DATE_OF_ASSESSMENT')} </etools-data-table-column>
@@ -121,7 +121,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
             <etools-data-table-column class="col-2 center-align"> ${translate('ARCHIVED')} </etools-data-table-column>
           </etools-data-table-header>
 
-          ${this.dataItems.map(
+          ${this.dataItems?.map(
             (item) => html`
               <etools-data-table-row
                 secondary-bg-on-hover
@@ -157,7 +157,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           )}
         </div>
 
-        <div class="row-h no-assessments-warning" ?hidden="${!this._emptyList(this.dataItems.length)}">
+        <div class="row-h no-assessments-warning" ?hidden="${!this._emptyList(this.dataItems?.length)}">
           <p>${translate('THERE_ARE_NO_ASSESSMENTS_ADDED')}</p>
         </div>
       </etools-content-panel>
@@ -165,7 +165,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
   }
 
   @property({type: Array})
-  dataItems!: PartnerAssessment[];
+  dataItems: PartnerAssessment[] = [];
 
   @property({type: Number})
   partnerId: number | null = null;
@@ -192,6 +192,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
 
   newAssessmentAdded(data: any) {
     this.dataItems.push(data.detail);
+    this.dataItems = [...this.dataItems];
     fireEvent(this, 'assessment-added-step2', data.detail);
   }
 

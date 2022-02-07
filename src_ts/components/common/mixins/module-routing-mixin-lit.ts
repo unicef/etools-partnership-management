@@ -129,7 +129,11 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
       ) {
         baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
       } else {
-        baseUrl = currentModule + '/pages/' + page + '/';
+        if (currentModule == 'governments') {
+          baseUrl = 'partners/pages/' + page + '/';
+        } else {
+          baseUrl = currentModule + '/pages/' + page + '/';
+        }
       }
       if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)

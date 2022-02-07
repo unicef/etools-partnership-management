@@ -30,7 +30,6 @@ import CommonMixin from '../../../../common/mixins/common-mixin';
 import UploadsMixin from '../../../../common/mixins/uploads-mixin';
 
 import '../../../../endpoints/endpoints.js';
-import '../../../partners/mixins/staff-members-data-mixin.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
@@ -195,10 +194,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <datepicker-lite
                 id="startDateField"
                 label="[[_getTranslation('START_DATE')]]"
-                value="{{agreement.start}}"
+                value="[[agreement.start]]"
                 readonly$="[[!agreement.permissions.edit.start]]"
                 required$="[[agreement.permissions.required.start]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.start"
               >
               </datepicker-lite>
             </div>
@@ -206,10 +208,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <datepicker-lite
                 id="endDateField"
                 label="[[_getTranslation('END_DATE')]]"
-                value="{{agreement.end}}"
+                value="[[agreement.end]]"
                 readonly$="[[!agreement.permissions.edit.end]]"
                 required$="[[agreement.permissions.required.end]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.end"
               >
               </datepicker-lite>
             </div>
@@ -256,10 +261,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <datepicker-lite
                 id="signedByPartnerDateField"
                 label="[[_getTranslation('SIGNED_BY_PARTNER_DATE')]]"
-                value="{{agreement.signed_by_partner_date}}"
+                value="[[agreement.signed_by_partner_date]]"
                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
                 max-date="[[getCurrentDate()]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.signed_by_partner_date"
               >
               </datepicker-lite>
             </div>
@@ -276,10 +284,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <datepicker-lite
                 id="signedByUnicefDateField"
                 label="[[_getTranslation('SIGNED_BY_UNICEF_DATE')]]"
-                value="{{agreement.signed_by_unicef_date}}"
+                value="[[agreement.signed_by_unicef_date]]"
                 readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
                 max-date="[[getCurrentDate()]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.signed_by_unicef_date"
               >
               </datepicker-lite>
             </div>

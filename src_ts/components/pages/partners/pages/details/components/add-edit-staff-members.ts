@@ -11,11 +11,12 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import CommonMixin from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../../endpoints/endpoints';
 
 /**
  * @customElement
@@ -23,7 +24,7 @@ import {translate} from 'lit-translate';
  * @appliesMixin EndpointsMixin
  */
 @customElement('add-edit-staff-members')
-export class AddEditStaffMembers extends CommonMixin(EndpointsMixin(LitElement)) {
+export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -206,7 +207,7 @@ export class AddEditStaffMembers extends CommonMixin(EndpointsMixin(LitElement))
   _savePartnerContact() {
     if (this.validate()) {
       const dialog = this.shadowRoot!.querySelector('#staffMemberDialog') as EtoolsDialog;
-      const endpoint = this.getEndpoint('partnerDetails', {
+      const endpoint = this.getEndpoint(pmpEdpoints, 'partnerDetails', {
         id: this.partnerId
       });
       dialog.startSpinner();
