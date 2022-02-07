@@ -30,7 +30,6 @@ import CommonMixin from '../../../../common/mixins/common-mixin';
 import UploadsMixin from '../../../../common/mixins/uploads-mixin';
 
 import '../../../../endpoints/endpoints.js';
-import '../../../partners/mixins/staff-members-data-mixin.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
@@ -40,7 +39,6 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
@@ -51,6 +49,7 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown'
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 import {get as getTranslation} from 'lit-translate';
+import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin';
 
 /**
  * @polymer
@@ -60,7 +59,7 @@ import {get as getTranslation} from 'lit-translate';
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
   static get template() {
     return html`
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
@@ -195,10 +194,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <datepicker-lite
                 id="startDateField"
                 label="[[_getTranslation('START_DATE')]]"
-                value="{{agreement.start}}"
+                value="[[agreement.start]]"
                 readonly$="[[!agreement.permissions.edit.start]]"
                 required$="[[agreement.permissions.required.start]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.start"
               >
               </datepicker-lite>
             </div>
@@ -206,10 +208,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <datepicker-lite
                 id="endDateField"
                 label="[[_getTranslation('END_DATE')]]"
-                value="{{agreement.end}}"
+                value="[[agreement.end]]"
                 readonly$="[[!agreement.permissions.edit.end]]"
                 required$="[[agreement.permissions.required.end]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.end"
               >
               </datepicker-lite>
             </div>
@@ -256,10 +261,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <datepicker-lite
                 id="signedByPartnerDateField"
                 label="[[_getTranslation('SIGNED_BY_PARTNER_DATE')]]"
-                value="{{agreement.signed_by_partner_date}}"
+                value="[[agreement.signed_by_partner_date]]"
                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
                 max-date="[[getCurrentDate()]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.signed_by_partner_date"
               >
               </datepicker-lite>
             </div>
@@ -276,10 +284,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               <datepicker-lite
                 id="signedByUnicefDateField"
                 label="[[_getTranslation('SIGNED_BY_UNICEF_DATE')]]"
-                value="{{agreement.signed_by_unicef_date}}"
+                value="[[agreement.signed_by_unicef_date]]"
                 readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
                 max-date="[[getCurrentDate()]]"
                 selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                on-date-has-changed="_dateHasChanged"
+                data-field-path="agreement.signed_by_unicef_date"
               >
               </datepicker-lite>
             </div>
@@ -822,5 +833,3 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 }
 
 window.customElements.define('agreement-details', AgreementDetails);
-
-export default AgreementDetails;

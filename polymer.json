@@ -4,6 +4,7 @@
   "fragments": [
     "src/components/pages/partners/partners-module.js",
     "src/components/pages/partners/pages/list/partners-list.js",
+    "src/components/pages/partners/pages/list/governments-list.js",
     "src/components/pages/partners/pages/overview/partner-overview.js",
     "src/components/pages/partners/pages/details/partner-details.js",
     "src/components/pages/partners/pages/financial-assurance/partner-financial-assurance.js",
@@ -27,12 +28,7 @@
     "src/components/pages/settings/settings-module.js",
     "src/components/pages/not-found/not-found.js"
   ],
-  "sources": [
-    "src/**/*",
-    "images/**/*",
-    "assets/**",
-    "package.json"
-  ],
+  "sources": ["src/**/*", "images/**/*", "assets/**", "package.json"],
   "extraDependencies": [
     "manifest.json",
     "version.json",
@@ -51,20 +47,13 @@
     "node_modules/focus-visible/dist/focus-visible.min.js"
   ],
   "lint": {
-    "rules": [
-      "polymer-3"
-    ],
-    "ignoreWarnings": [
-      "could-not-resolve-reference"
-    ]
+    "rules": ["polymer-3"],
+    "ignoreWarnings": ["could-not-resolve-reference"]
   },
   "builds": [
     {
       "name": "esm-bundled",
-      "browserCapabilities": [
-        "es2015",
-        "modules"
-      ],
+      "browserCapabilities": ["es2015", "modules"],
       "js": {
         "minify": true
       },

@@ -21,6 +21,7 @@
     "ENTER_MESSAGE_HERE": "Introduceti Mesajul Aici",
     "CREATE": "Creaza",
     "SEARCH": "Cauta",
+    "SEARCH_RECORDS": "Cauta inregistrari",
     "STATUS": "Status"
   },
   "NEW_INTERVENTION": {
@@ -100,7 +101,7 @@
   "PSEA_ASSESSMENT_DATE_BEFORE": "PSEA Assessment Date Before",
   "PSEA_ASSESSMENT_DATE_AFTER": "PSEA Assessment Date After",
   "SHOW_HIDDEN": "Show Hidden",
-  "IMPORT_PARTNER": "Import Partner",
+  "IMPORT_SYNC_PARTNER": "Import/Sync Partner",
   "VISION_VENDOR_NUMBER": "VISION Vendor Number",
   "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number",
   "EXPORT": "Export",

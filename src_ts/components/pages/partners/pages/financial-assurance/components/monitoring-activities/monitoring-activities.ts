@@ -1,21 +1,24 @@
-import {pageCommonStyles} from '../../../../../../styles/page-common-styles';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../../styles/shared-styles';
+/* eslint-disable lit-a11y/anchor-is-valid */
+import {LitElement, html, customElement, property} from 'lit-element';
+import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-content-panel';
 import '@unicef-polymer/etools-loading';
 import '@polymer/paper-icon-button';
 import '@polymer/paper-button';
 import '@polymer/iron-icons/editor-icons';
-import {html, PolymerElement} from '@polymer/polymer/polymer-element';
 import {getUniqueId} from '../../../../../../utils/utils';
-import {property} from '@polymer/decorators/lib/decorators';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import {clone} from 'lodash-es';
+import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {Partner} from '../../../../../../../models/partners.models';
+import {AnyObject} from '@unicef-polymer/etools-types';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../../../endpoints/endpoints';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -32,39 +35,40 @@ enum DragAndDropClasses {
   removeBtn = 'remove',
   grouped = 'grouped'
 }
-
-export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
-  static get template() {
+@customElement('monitoring-activities')
+export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${monitoringActivitiesStyles}
+      ${pageCommonStyles} ${sharedStyles} ${monitoringActivitiesStyles}
       <etools-content-panel
         id="monitoring-activities-panel"
         class="content-section"
         panel-title="Monitoring Activities"
       >
-        <template is="dom-if" if="[[showEditBtn(activities, isReadonly)]]">
-          <div slot="panel-btns">
-            <paper-icon-button icon="create" title="Edit" on-click="startEdit"> </paper-icon-button>
-          </div>
-        </template>
+        ${this.showEditBtn(this.activities, this.isReadonly)
+          ? html` <div slot="panel-btns">
+              <paper-icon-button icon="create" title="Edit" @click="${this.startEdit}"> </paper-icon-button>
+            </div>`
+          : html``}
 
-        <etools-loading active="[[loading]]"></etools-loading>
+        <etools-loading ?active="${this.loading}"></etools-loading>
 
-        <template is="dom-if" if="[[!activities.length]]">
-          <div class="no-activities">There are no activities</div>
-        </template>
-
-        <template is="dom-if" if="[[activities.length]]">
-          <div class="row panel-row-tall layout-horizontal">
-            <etools-data-table-column class="flex-2 cell">Reference #</etools-data-table-column>
-            <etools-data-table-column class="flex-1 cell">Start Date</etools-data-table-column>
-            <etools-data-table-column class="flex-1 cell">End Date</etools-data-table-column>
-            <etools-data-table-column class="flex-2 cell">Location (Site)</etools-data-table-column>
-          </div>
-        </template>
-
-        <template is="dom-repeat" items="[[mappedGroups]]">
-          <div class$="activities [[groupedClass(item.activities.length)]]" data-group-id$="[[item.id]]">
+        ${!(this.activities || []).length
+          ? html`<div class="no-activities">There are no activities</div>`
+          : html` <div class="row panel-row-tall layout-horizontal">
+              <etools-data-table-column class="flex-2 cell">Reference #</etools-data-table-column>
+              <etools-data-table-column class="flex-1 cell">Start Date</etools-data-table-column>
+              <etools-data-table-column class="flex-1 cell">End Date</etools-data-table-column>
+              <etools-data-table-column class="flex-2 cell">Location (Site)</etools-data-table-column>
+            </div>`}
+        ${(this.mappedGroups || []).map(
+          (item: AnyObject) => html` <div
+            class="activities ${this.groupedClass(item.activities.length)}"
+            data-group-id="${item.id}"
+          >
             <div class="braces">
               <div class="description">Count as one</div>
             </div>
@@ -73,32 +77,38 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
                 <div class="description">Remove from group</div>
               </div>
             </div>
-            <template is="dom-repeat" items="[[item.activities]]" as="activity">
-              <div class="row layout-horizontal" data-group-id$="[[item.id]]" data-activity-id$="[[activity.id]]">
+            ${(item.activities || []).map(
+              (activity: AnyObject) => html` <div
+                class="row layout-horizontal"
+                data-group-id="${item.id}"
+                data-activity-id="${activity.id}"
+              >
                 <div class="flex-2 cell">
                   <iron-icon
-                    hidden$="[[!editMode]]"
+                    ?hidden="${!this.editMode}"
                     class="flex-none"
                     icon="editor:drag-handle"
-                    on-mousedown="startDrag"
+                    @mousedown="${this.startDrag}"
                   ></iron-icon>
-                  <template is="dom-if" if="[[!editMode]]">
-                    <a target="_blank" title="[[activity.id]]" href$="/fm/activities/[[activity.id]]/details">
-                      [[activity.reference_number]]
-                    </a>
-                  </template>
-                  <template is="dom-if" if="[[editMode]]">[[activity.reference_number]]</template>
+                  ${this.editMode
+                    ? html`${activity.reference_number}`
+                    : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
+                        ${activity.reference_number}
+                      </a>`}
                 </div>
-                <div class="flex-1 cell">[[activity.start_date]]</div>
-                <div class="flex-1 cell">[[activity.end_date]]</div>
-                <div class="flex-2 cell">[[locationAndSite(activity.location.name, activity.location_site.name)]]</div>
-              </div>
-            </template>
-          </div>
-        </template>
-        <div class="actions" hidden$="[[!editMode]]">
-          <paper-button on-tap="cancelEdit">Cancel</paper-button>
-          <paper-button raised class="save" on-tap="saveGroups">Save</paper-button>
+                <div class="flex-1 cell">${activity.start_date}</div>
+                <div class="flex-1 cell">${activity.end_date}</div>
+                <div class="flex-2 cell">
+                  ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
+                </div>
+              </div>`
+            )}
+          </div>`
+        )}
+
+        <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
+          <paper-button @click="${this.cancelEdit}">Cancel</paper-button>
+          <paper-button raised class="save" @click="${this.saveGroups}">Save</paper-button>
         </div>
       </etools-content-panel>
     `;
@@ -132,11 +142,12 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
 
   @property({type: Array})
   activities: MonitoringActivity[] | null = null;
-  groups: number[][] | null = null;
-  originalGroups: number[][] | null = null;
 
   @property({type: Object})
   mappedGroups: ActivitiesGroup[] = [];
+
+  groups: number[][] | null = null;
+  originalGroups: number[][] | null = null;
 
   private offset: any = {
     x: 0,
@@ -160,15 +171,19 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
     }
     this.loading = true;
     sendRequest({
-      endpoint: this.getEndpoint('partnerActivities', {id: this._partnerId})
-    }).then((response: any) => {
-      this.activities = response.results;
-      this.mapActivitiesToGroups();
-      this.loading = false;
-    });
+      endpoint: this.getEndpoint(pmpEdpoints, 'partnerActivities', {id: this._partnerId})
+    })
+      .then((response: any) => {
+        this.activities = response.results;
+        this.mapActivitiesToGroups();
+      })
+      .catch((err: any) => {
+        logError('Partner Activities list data request failed!', 'partnerActivities', err);
+      })
+      .finally(() => (this.loading = false));
   }
 
-  showEditBtn(activities: MonitoringActivity[], isReadonly: boolean): boolean {
+  showEditBtn(activities: MonitoringActivity[] | null, isReadonly: boolean): boolean {
     return Boolean(activities?.length) && !isReadonly;
   }
 
@@ -306,7 +321,7 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
   saveGroups(): void {
     this.loading = true;
     sendRequest({
-      endpoint: this.getEndpoint('partnerDetails', {id: this._partnerId}),
+      endpoint: this.getEndpoint(pmpEdpoints, 'partnerDetails', {id: this._partnerId}),
       method: 'PATCH',
       body: {
         monitoring_activity_groups: this.groups
@@ -376,5 +391,3 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
       .filter((ids: number[]) => ids.length > 1);
   }
 }
-
-window.customElements.define('monitoring-activities', MonitoringActivities);

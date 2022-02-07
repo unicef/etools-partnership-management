@@ -11,4 +11,5 @@ export interface Status {
   completed: boolean;
   icon?: string;
   iconStyles?: string;
+  iconContainerStyles?: string;
 }

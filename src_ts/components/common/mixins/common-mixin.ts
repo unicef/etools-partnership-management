@@ -3,6 +3,8 @@ import {prettyDate} from '../../utils/date-utils';
 import {PolymerElement} from '@polymer/polymer';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
+import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -83,11 +85,11 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return files;
     }
 
-    getFileNameFromURL(url: string) {
+    getFileNameFromURL(url: string | number) {
       if (!url) {
         return '';
       }
-      return url.split('?').shift()!.split('/').pop();
+      return url.toString().split('?').shift()!.split('/').pop();
     }
 
     /**
@@ -107,6 +109,18 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
       }
       return field;
+    }
+
+    /**
+     * Event listener for date change used on DatePickerLite.
+     */
+    _dateHasChanged(event: CustomEvent) {
+      const filterPath = (event.target as DatePickerLite).getAttribute('data-field-path')!;
+      if (!event.detail.date) {
+        this.set(filterPath, '');
+        return;
+      }
+      this.set(filterPath, dayjs(event.detail.date).format('YYYY-MM-DD'));
     }
 
     _getTranslation(textKey: string) {

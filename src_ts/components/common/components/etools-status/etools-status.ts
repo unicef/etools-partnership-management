@@ -1,6 +1,6 @@
+import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
-import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-icons/iron-icons.js';
@@ -9,43 +9,42 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
-import {property} from '@polymer/decorators';
-import CommonMixin from '../../mixins/common-mixin';
+import {translate} from 'lit-translate';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
  * @polymer
  * @customElement
  */
-class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
-  static get template() {
+@customElement('etools-status')
+export class EtoolsStatus extends connect(store)(LitElement) {
+  render() {
     return html`
       ${etoolsStatusStyles}
-      <etools-content-panel panel-title="[[_getTranslation('STATUS')]]">
+      <etools-content-panel panel-title="${translate('STATUS')}">
         <div class="top-container">
-          <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="divider-line"></div>
-            <div class$="status-container [[_getStatusCssClass(status, index)]]">
-              <div class="status-icon">
-                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
-                  <span>[[_getTrueIndex(index)]]</span>
-                  <iron-icon class="done-icon" icon="done"></iron-icon>
-                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
-                </span>
-              </div>
-
-              <div class="status">
-                <span>[[status.label]]</span>
-              </div>
-            </div>
-          </template>
+          ${(this.availableStatuses || []).map(
+            (status, index) => html` <div class="divider-line"></div>
+              <div class="status-container ${this._getStatusCssClass(status, index)}">
+                <div class="status-icon">
+                  <span class="icon-wrapper" style="${status.iconContainerStyles}">
+                    <span>${this._getTrueIndex(index)}</span>
+                    <iron-icon class="done-icon" icon="done"></iron-icon>
+                    <iron-icon class="custom-icon" icon="${status.icon}" style="${status.iconStyles}"></iron-icon>
+                  </span>
+                </div>
+                <div class="status">
+                  <span>${status.label}</span>
+                </div>
+              </div>`
+          )}
         </div>
-        <div class="bottom-container" hidden$="[[hideActions]]">
+        <div class="bottom-container" ?hidden="${this.hideActions}">
           <etools-action-button
-            disabled$="[[!allowSave(uploadsInProgress)]]"
-            actions="[[actions]]"
-            title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, unsavedUploads)]]"
-            show-info-icon="[[showInfoIcon]]"
+            ?disabled="${!this.allowSave(this.uploadsInProgress)}"
+            .actions="${this.actions}"
+            title="${this.getUploadInProgressOrUnsavedTooltip(this.uploadsInProgress, this.unsavedUploads)}"
+            ?showInfoIcon="${this.showInfoIcon}"
           >
           </etools-action-button>
         </div>
@@ -77,8 +76,13 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
   private _statusChangedDebouncer!: Debouncer;
   private _actionsOptionsChangedDebouncer!: Debouncer;
 
-  static get observers() {
-    return ['_handleStatusChanged(statuses, statuses.*)', '_handleActionsChanged(actions, actions.*)'];
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('statuses')) {
+      this._handleStatusChanged(this.statuses);
+    }
+    if (changedProperties.has('actions')) {
+      this._handleActionsChanged();
+    }
   }
 
   stateChanged(state: RootState) {
@@ -90,11 +94,11 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
     }
   }
 
-  allowSave(uploadsInProgress: string) {
+  allowSave(uploadsInProgress: number) {
     return Number(uploadsInProgress) === 0;
   }
 
-  getUploadInProgressOrUnsavedTooltip(uploadsInProgress: string, unsavedUploads: string) {
+  getUploadInProgressOrUnsavedTooltip(uploadsInProgress: number, unsavedUploads: number) {
     if (Number(uploadsInProgress) > 0) {
       this.showInfoIcon = true;
       return "Uploads in progress, you can save after they're finished.";
@@ -127,7 +131,7 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
         this.actions.forEach((elem: StatusAction) => {
           hidden = elem.hidden && hidden;
         });
-        this.set('hideActions', hidden);
+        this.hideActions = hidden;
       }
     );
   }
@@ -160,14 +164,12 @@ class EtoolsStatus extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   _computeAvailableStatuses(statuses: Status[]) {
-    this.set('availableStatuses', []);
+    this.availableStatuses = [];
     setTimeout(() => {
       const filteredStatuses = statuses.filter((elem) => {
         return !elem.hidden;
       });
-      this.set('availableStatuses', filteredStatuses);
+      this.availableStatuses = filteredStatuses;
     }, 0);
   }
 }
-
-window.customElements.define('etools-status', EtoolsStatus);

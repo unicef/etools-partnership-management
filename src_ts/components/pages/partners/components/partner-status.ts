@@ -1,24 +1,22 @@
-import {PolymerElement, html} from '@polymer/polymer';
 import '../../../common/components/etools-status/etools-status.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin';
+import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 
 /**
- * @polymer
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
-  static get template() {
-    // language=HTML
+@customElement('partner-status')
+export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
+  render() {
     return html`
       <style>
         :host {
@@ -44,15 +42,15 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       </style>
 
       <etools-status
-        statuses="[[possibleStatuses]]"
-        actions="[[possibleActions]]"
-        on-partner-delete="_showDeleteConfirmationDialog"
+        .statuses="${this.statuses}"
+        .actions="${this.possibleActions}"
+        @partner-delete="${this._showDeleteConfirmationDialog}"
       >
       </etools-status>
     `;
   }
 
-  @property({type: Object, notify: true})
+  @property({type: Object})
   partner!: Partner;
 
   @property({type: Boolean})
@@ -63,6 +61,9 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   @property({type: Array})
   possibleStatuses: Status[] = [];
+
+  @property({type: Array})
+  statuses: Status[] = [];
 
   @property({type: Array})
   possibleActions: StatusAction[] = [
@@ -80,16 +81,27 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     }
   ];
 
-  static get observers() {
-    return [
-      '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked, possibleStatuses)',
-      '_computeAvailableActions(partner.hidden, editMode)'
-    ];
+  connectedCallback() {
+    super.connectedCallback();
+    setTimeout(this.setPossibleStatuses.bind(this), 0);
   }
 
-  ready() {
-    super.ready();
+  updated(changedProperties: PropertyValues) {
+    if ((changedProperties.has('partner') || changedProperties.has('possibleStatuses')) && this.partner) {
+      this._partnerStatusChanged(
+        this.partner.vision_synced,
+        this.partner.deleted_flag,
+        this.partner.blocked,
+        this.possibleStatuses
+      );
+    }
 
+    if ((changedProperties.has('partner') || changedProperties.has('editMode')) && this.partner) {
+      this._computeAvailableActions(this.partner.hidden, this.editMode);
+    }
+  }
+
+  firstUpdated() {
     this.deleteWarningDialogContent = document.createElement('div');
     this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
     this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
@@ -99,15 +111,11 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       okBtnText: 'Yes',
       cancelBtnText: 'No',
       closeCallback: this._dialogConfirmationCallback,
-      content: this.deleteWarningDialogContent
-    });
-
-    this.warningDialog.updateStyles({
-      '--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'
+      content: this.deleteWarningDialogContent,
+      id: 'delWarning'
     });
 
     this._handleStickyScroll();
-    setTimeout(this.setPossibleStatuses.bind(this), 0);
   }
 
   disconnectedCallback() {
@@ -116,7 +124,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   }
 
   setPossibleStatuses() {
-    this.set('possibleStatuses', [
+    this.possibleStatuses = [
       {
         label: CONSTANTS.PARTNER_STATUSES.NotSynced,
         icon: 'info',
@@ -149,7 +157,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         hidden: true,
         completed: false
       }
-    ]);
+    ];
   }
 
   _partnerStatusChanged(
@@ -170,13 +178,6 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     this._forceScollPositionRecalculation();
   }
 
-  // TODO: polymer 3 - remove, might not be needed
-  // _isHidden(hidden: boolean) {
-  //   if (typeof hidden === 'undefined' || hidden === null) {
-  //     return true;
-  //   }
-  //   return hidden;
-  // }
   _showDeleteConfirmationDialog() {
     if (!this.warningDialog) {
       logWarn('warningDialog not created!', 'pmp partner status change');
@@ -213,7 +214,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
-          this.set(['possibleActions', key, 'hidden'], false);
+          this.possibleActions[key].hidden = false;
         }
       }
     }
@@ -221,7 +222,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   _computeAvailableStatuses() {
     let activeStatus;
     this._setAllStatusesToHidden();
-    if (!this.partner) {
+    if (!this.partner || !this.possibleStatuses.length) {
       return;
     }
     switch (true) {
@@ -238,13 +239,13 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         activeStatus = CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION;
         break;
     }
-
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
       if (this.possibleStatuses[key].label === activeStatus) {
-        this.set(['possibleStatuses', key, 'completed'], true);
-        this.set(['possibleStatuses', key, 'hidden'], false);
+        this.possibleStatuses[key].completed = true;
+        this.possibleStatuses[key].hidden = false;
       }
     }
+    this.statuses = [...this.possibleStatuses];
   }
   _showSyncedStatus() {
     return (
@@ -270,5 +271,3 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     return this.partner.vision_synced === false;
   }
 }
-
-window.customElements.define('partner-status', PartnerStatus);

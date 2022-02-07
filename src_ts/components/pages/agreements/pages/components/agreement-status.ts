@@ -136,7 +136,7 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         completed: false
       }
     ]);
-
+    this.possibleStatuses = [...this.possibleStatuses];
     this._computeAvailableStatuses(this.status);
   }
 
@@ -245,6 +245,8 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       }
       this.set(['possibleStatuses', key, 'completed'], completedFlag);
     }
+
+    this.possibleStatuses = [...this.possibleStatuses];
   }
 
   _statusChangeConfirmationCallback(event: CustomEvent) {

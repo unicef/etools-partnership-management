@@ -41,7 +41,7 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
             <datepicker-lite
               id="signedDate"
               label="Signed Date"
-              value="{{amendment.signed_date}}"
+              value="[[amendment.signed_date]]"
               required-error-msg="[[_getTranslation('PLEASE_SELECT_SIGNED_DATE')]]"
               max-date-error-msg="[[_getTranslation('DATE_CAN_NOT_BE_IN_THE_FUTURE')]]"
               open="{{datePickerOpen}}"
@@ -49,6 +49,9 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
               max-date="[[getCurrentDate()]]"
               required
               selected-date-display-format="D MMM YYYY"
+              fire-date-has-changed
+              on-date-has-changed="_dateHasChanged"
+              data-field-path="amendment.signed_date"
             >
             </datepicker-lite>
           </div>

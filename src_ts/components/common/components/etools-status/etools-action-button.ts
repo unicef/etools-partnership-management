@@ -1,4 +1,5 @@
-import {PolymerElement, html} from '@polymer/polymer';
+/* eslint-disable lit-a11y/click-events-have-key-events */
+import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/paper-button/paper-button.js';
@@ -8,15 +9,15 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import {StatusAction} from '../../../../typings/etools-status.types';
 
 /**
  * @polymer
  * @customElement
  */
-class EtoolsActionButton extends PolymerElement {
-  static get template() {
+@customElement('etools-action-button')
+export class EtoolsActionButton extends LitElement {
+  render() {
     return html`
       <style>
         :host {
@@ -85,27 +86,29 @@ class EtoolsActionButton extends PolymerElement {
         }
       </style>
 
-      <template is="dom-if" if="[[primaryAction]]">
-        <paper-button raised disabled$="[[disabled]]">
-          <div on-tap="_handlePrimaryClick" class="main-btn-part">
-            <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]"></iron-icon>
-            [[primaryAction.label]]
-          </div>
-
-          <template is="dom-if" if="[[secondaryActions.length]]">
-            <paper-menu-button horizontal-align="right">
-              <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
-              <paper-listbox slot="dropdown-content">
-                <div class="list-wrapper">
-                  <template is="dom-repeat" items="[[secondaryActions]]" as="item">
-                    <paper-item on-tap="_handleSecondaryClick"> [[item.label]]</paper-item>
-                  </template>
-                </div>
-              </paper-listbox>
-            </paper-menu-button>
-          </template>
-        </paper-button>
-      </template>
+      ${this.primaryAction
+        ? html`<paper-button raised ?disabled="${this.disabled}">
+            <div @click="${this._handlePrimaryClick}" class="main-btn-part">
+              <iron-icon icon="info-outline" ?hidden="${!this.showInfoIcon}"></iron-icon>
+              ${this.primaryAction.label}
+            </div>
+            ${(this.secondaryActions || []).length
+              ? html` <paper-menu-button horizontal-align="right">
+                  <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
+                  <paper-listbox slot="dropdown-content">
+                    <div class="list-wrapper">
+                      ${this.secondaryActions.map(
+                        (item) =>
+                          html`<paper-item @click="${() => this._handleSecondaryClick(item)}">
+                            ${item.label}</paper-item
+                          >`
+                      )}
+                    </div>
+                  </paper-listbox>
+                </paper-menu-button>`
+              : ''}
+          </paper-button> `
+        : ''}
     `;
   }
 
@@ -113,7 +116,7 @@ class EtoolsActionButton extends PolymerElement {
   actions: StatusAction[] = [];
 
   @property({type: Object})
-  primaryAction!: StatusAction;
+  primaryAction!: StatusAction | null | undefined;
 
   @property({type: Array})
   secondaryActions: StatusAction[] = [];
@@ -126,12 +129,14 @@ class EtoolsActionButton extends PolymerElement {
 
   private _actionsChangedDebouncer!: Debouncer;
 
-  static get observers() {
-    return ['_actionsChanged(actions, actions.*)'];
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('actions')) {
+      this._actionsChanged(this.actions);
+    }
   }
 
-  _actionsChanged(actions: any[], actionsData: any) {
-    if (typeof actions === 'undefined' && typeof actionsData === 'undefined') {
+  _actionsChanged(actions: any[]) {
+    if (typeof actions === 'undefined') {
       return;
     }
     this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer, timeOut.after(10), () => {
@@ -145,8 +150,8 @@ class EtoolsActionButton extends PolymerElement {
       return;
     }
 
-    this.set('primaryAction', null);
-    this.set('secondaryActions', []);
+    this.primaryAction = null;
+    this.secondaryActions = [];
 
     let primaryAction = actions.find((elem: any) => {
       return elem.primary && !elem.hidden;
@@ -160,18 +165,15 @@ class EtoolsActionButton extends PolymerElement {
       primaryAction = secondaryActions.pop();
     }
 
-    this.set('primaryAction', primaryAction);
-    this.set('secondaryActions', secondaryActions);
+    this.primaryAction = primaryAction;
+    this.secondaryActions = secondaryActions;
   }
 
-  _handleSecondaryClick(event: any) {
-    const action = event.model.item;
-    fireEvent(this, action.event);
+  _handleSecondaryClick(item: any) {
+    fireEvent(this, item.event);
   }
 
   _handlePrimaryClick() {
-    fireEvent(this, this.primaryAction.event);
+    fireEvent(this, this.primaryAction!.event);
   }
 }
-
-window.customElements.define('etools-action-button', EtoolsActionButton);

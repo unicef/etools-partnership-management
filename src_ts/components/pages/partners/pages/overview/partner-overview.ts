@@ -1,22 +1,22 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {LitElement, html, customElement, property} from 'lit-element';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-data-table/etools-data-table';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin-lit';
 
-import CommonMixin from '../../../../common/mixins/common-mixin.js';
-import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin.js';
-
-import {pageCommonStyles} from '../../../../styles/page-common-styles';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../styles/shared-styles';
-
-import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons';
-import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles';
-import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
+import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons-lit';
+import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
-import {Partner} from '../../../../../models/partners.models';
+import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -27,11 +27,18 @@ import {Partner} from '../../../../../models/partners.models';
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
-class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
-  static get template() {
-    // language=HTML
+@customElement('partner-overview')
+export class PartnerOverview extends PaginationMixin(
+  EtoolsCurrency(CommonMixinLit(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement))))
+) {
+  static get styles() {
+    return [gridLayoutStylesLit, frWarningsStyles];
+  }
+  render() {
+    if (!this.partner) return;
+
     return html`
-      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${frWarningsStyles}
+      ${pmpCustomIcons} ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
       <style>
         :host {
           display: flex;
@@ -96,7 +103,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         }
 
         .block {
-          display: block;
+          display: block !important;
         }
 
         .word-break {
@@ -109,172 +116,226 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
         }
 
         .timeline-col {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+        }
+
+        etools-data-table-footer {
+          border-top: 1px solid var(--light-divider-color);
         }
       </style>
 
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-5"><strong>[[_getTranslation('TOTAL_CASH_TRANSFERS')]] </strong></div>
-            <div class="col col-2"><strong> [[_getTranslation('PROG_VISIT')]] </strong></div>
-            <div class="col col-2"><strong> [[_getTranslation('SPOT_CHECK')]] </strong></div>
-            <div class="col col-2"><strong> [[_getTranslation('AUDIT')]] </strong></div>
+            <div class="col col-5"><strong> ${translate('TOTAL_CASH_TRANSFERS')} </strong></div>
+            <div class="col col-2"><strong> ${translate('PROG_VISIT')} </strong></div>
+            <div class="col col-2"><strong> ${translate('SPOT_CHECK')} </strong></div>
+            <div class="col col-2"><strong> ${translate('AUDIT')} </strong></div>
           </div>
           <div class="row-h">
-            <div class="col col-1">[[_getTranslation('HACT_RISK_RATING')]]</div>
-            <div class="col col-2">[[_getTranslation('CURRENT_CP_CYCLE')]]</div>
-            <div class="col col-2">[[_getTranslation('CURRENT_YEAR_JAN_DEC')]]</div>
-            <div class="col col-2">[[_getTranslation('PLANNED_MR_COMPLETED')]]</div>
-            <div class="col col-2">[[_getTranslation('REQUIRED_COMPLETED')]]</div>
-            <div class="col col-2">[[_getTranslation('REQUIRED_COMPLETED')]]</div>
-            <div class="col col-1 center-align ">[[_getTranslation('SEA_RISK_RATING')]]</div>
+            <div class="col col-1">${translate('HACT_RISK_RATING')}</div>
+            <div class="col col-2">${translate('CURRENT_CP_CYCLE')}</div>
+            <div class="col col-2">${translate('CURRENT_YEAR_JAN_DEC')}</div>
+            <div class="col col-2">${translate('PLANNED_MR_COMPLETED')}</div>
+            <div class="col col-2">${translate('REQUIRED_COMPLETED')}</div>
+            <div class="col col-2">${translate('REQUIRED_COMPLETED')}</div>
+            <div class="col col-1 center-align ">${translate('SEA_RISK_RATING')}</div>
           </div>
         </div>
         <div class="hact-body">
           <div class="row-h">
             <div class="col col-1">
-              <div class$="[[getRiskRatingClass(partner.rating)]]">[[getRiskRatingValue(partner.rating)]]</div>
+              <div class="${this.getRiskRatingClass(this.partner.rating)}">
+                ${this.getRiskRatingValue(this.partner.rating)}
+              </div>
             </div>
-            <div class="col col-2 center-align">$[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
-            <div class="col col-2 center-align block">$[[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]</div>
+            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 2)}</div>
+            <div class="col col-2 center-align block">
+              $${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}
+            </div>
             <div class="col col-2 center-align">
               <strong>
-                [[partner.hact_values.programmatic_visits.planned.total]] /
-                <span class="green">[[partner.hact_min_requirements.programmatic_visits]]</span>
-                / [[partner.hact_values.programmatic_visits.completed.total]]
+                ${this.partner.hact_values?.programmatic_visits?.planned?.total} /
+                <span class="green">${this.partner.hact_min_requirements?.programmatic_visits}</span>
+                / ${this.partner.hact_values?.programmatic_visits?.completed?.total}
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green">[[partner.hact_min_requirements.spot_checks]] </span>
-                / [[partner.hact_values.spot_checks.completed.total]]
+                <span class="green">${this.partner.hact_min_requirements?.spot_checks} </span>
+                / ${this.partner.hact_values?.spot_checks?.completed?.total}
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
-                / [[partner.hact_values.audits.completed]]
+                <span class="green">${this._getMinReqAudits(this.partner.planned_engagement)} </span>
+                / ${this.partner.hact_values?.audits?.completed}
               </strong>
             </div>
             <div class="col col-1 center-align">
-              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
-                [[getRiskRatingValue(partner.sea_risk_rating_name, 1)]]
+              <div class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
+                ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
               </div>
             </div>
           </div>
         </div>
-        <template is="dom-if" if="[[partner.interventions.length]]">
-          <div class="hact-heading">
-            <div class="row-h">
-              <div class="col col-3 word-break left-align">[[_getTranslation('PARTNERSHIP')]]</div>
-              <div class="col col-2 left-align">[[_getTranslation('START_DATE_END_DATE')]]</div>
-              <div class="col col-2 right-align">[[_getTranslation('UNICEF_CASH')]]</div>
-              <div class="col col-2 right-align">[[_getTranslation('FR_AMOUNT')]]</div>
-              <div class="col col-2 right-align">[[_getTranslation('ACTUAL_DISBURSEMENT')]]</div>
-              <div class="col">[[_getTranslation('GENERAL.STATUS')]]</div>
-            </div>
-          </div>
-          <div class="hact-body">
-            <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
-              <div class="row-h">
-                <div class="col col-3 block word-break">
-                  <a class="primary" href="interventions/[[partnership.id]]/details">
-                    <strong>[[partnership.number]]</strong> </a
-                  ><br />
-                  <span> [[partnership.title]] </span>
-                </div>
-                <div class="col col-2 center-align timeline-col">
-                  <etools-info-tooltip
-                    class="fr-nr-warn"
-                    custom-icon
-                    icon-first
-                    hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start,
-                                                        partnership.frs_earliest_start_date)]]"
-                  >
-                    <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
-                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                    <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
-                  </etools-info-tooltip>
-                  <etools-info-tooltip
-                    class="fr-nr-warn"
-                    custom-icon
-                    icon-first
-                    hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
-                  >
-                    <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
-                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                    <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
-                  </etools-info-tooltip>
-                </div>
-                <div class="col col-2 right-align">
-                  <span class="amount-currency">[[partnership.budget_currency]]</span>
-                  <span>[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</span>
-                </div>
-                <div class="col col-2 right-align">
-                  <etools-info-tooltip
-                    class$="fr-nr-warn
-                            [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
-                    icon-first
-                    custom-icon
-                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
-                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership,
-                                      'interventionsList')]]"
-                  >
-                    <span slot="field" class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
-                      <span class="amount-currency">[[partnership.fr_currency]]</span>
-                      <span
-                        >[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span
-                      >
-                    </span>
-                    <iron-icon
-                      icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent,
-                                partnership.fr_currencies_are_consistent)]]"
-                      slot="custom-icon"
-                    ></iron-icon>
-                    <span slot="message">
-                      <span
-                        >[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent,
-                        partnership.fr_currencies_are_consistent)]]</span
-                      >
-                    </span>
-                  </etools-info-tooltip>
-                </div>
-                <div class="col col-2 right-align">
-                  <etools-info-tooltip
-                    class="fr-nr-warn currency-mismatch"
-                    icon-first
-                    custom-icon
-                    hide-tooltip="[[!frsConsistencyWarningIsActive(partnership.multi_curr_flag)]]"
-                  >
-                    <span
-                      slot="field"
-                      class$="[[getFrsValueNAClass(partnership.multi_curr_flag, 'true')]] partner-overview"
-                    >
-                      <span class="amount-currency">[[partnership.fr_currency]]</span>
-                      <span>[[getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, 'true')]]</span>
-                    </span>
-                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                    <span slot="message">
-                      <span>[[getFrsMultiCurrFlagErrTooltipMsg()]]</span>
-                    </span>
-                  </etools-info-tooltip>
-                </div>
-                <div class="col center-align overflow-hidden">
-                  <span class="partnership-status">[[partnership.status]]</span>
+        ${this.paginatedInterventions.length
+          ? html`
+              <div class="hact-heading">
+                <div class="row-h">
+                  <div class="col col-3 word-break left-align">${translate('PARTNERSHIP')}</div>
+                  <div class="col col-2 left-align">${translate('START_DATE_END_DATE')}</div>
+                  <div class="col col-2 right-align">${translate('UNICEF_CASH')}</div>
+                  <div class="col col-2 right-align">${translate('FR_AMOUNT')}</div>
+                  <div class="col col-2 right-align">${translate('ACTUAL_DISBURSEMENT')}</div>
+                  <div class="col">${translate('GENERAL.STATUS')}</div>
                 </div>
               </div>
-            </template>
-          </div>
-        </template>
+              <div class="hact-body">
+                ${this.paginatedInterventions.map(
+                  (partnership) => html`
+                    <div class="row-h">
+                      <div class="col col-3 block word-break">
+                        <a class="primary" href="interventions/${partnership.id}/metadata">
+                          <strong>${partnership.number}</strong> </a
+                        ><br />
+                        <span> ${partnership.title} </span>
+                      </div>
+                      <div class="col col-2 center-align timeline-col">
+                        <etools-info-tooltip
+                          class="fr-nr-warn"
+                          custom-icon
+                          icon-first
+                          ?hide-tooltip="${this.validateFrsVsInterventionDates(
+                            partnership.start,
+                            partnership.frs_earliest_start_date
+                          )}"
+                        >
+                          <span slot="field">${this.getDateDisplayValue(partnership.start)}</span>
+                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
+                        </etools-info-tooltip>
+                        <etools-info-tooltip
+                          class="fr-nr-warn"
+                          custom-icon
+                          icon-first
+                          ?hide-tooltip="${this.validateFrsVsInterventionDates(
+                            partnership.end,
+                            partnership.frs_latest_end_date
+                          )}"
+                        >
+                          <span slot="field">${this.getDateDisplayValue(partnership.end)}</span>
+                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
+                        </etools-info-tooltip>
+                      </div>
+                      <div class="col col-2 right-align">
+                        <span class="amount-currency">${partnership.budget_currency}</span>
+                        <span>${this.displayCurrencyAmount(partnership.unicef_cash, '0', 0)}</span>
+                      </div>
+                      <div class="col col-2 right-align">
+                        <etools-info-tooltip
+                          class="fr-nr-warn ${this.getCurrencyMismatchClass(
+                            partnership.all_currencies_are_consistent
+                          )} partner-overview"
+                          icon-first
+                          custom-icon
+                          ?hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
+                            partnership.all_currencies_are_consistent,
+                            partnership.unicef_cash,
+                            partnership.frs_total_frs_amt,
+                            partnership as any
+                          )}"
+                        >
+                          <span
+                            slot="field"
+                            class="${this.getFrsValueNAClass(partnership.fr_currencies_are_consistent)}"
+                          >
+                            <span class="amount-currency">${partnership.fr_currency}</span>
+                            <span
+                              >${this.getFrsTotal(
+                                partnership.fr_currencies_are_consistent,
+                                partnership.frs_total_frs_amt
+                              )}</span
+                            >
+                          </span>
+                          <iron-icon
+                            icon="${this.getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)}"
+                            slot="custom-icon"
+                          ></iron-icon>
+                          <span slot="message">
+                            <span
+                              >${this.getIntListUnicefCashAmountTooltipMsg(
+                                partnership.all_currencies_are_consistent,
+                                partnership.fr_currencies_are_consistent
+                              )}</span
+                            >
+                          </span>
+                        </etools-info-tooltip>
+                      </div>
+                      <div class="col col-2 right-align">
+                        <etools-info-tooltip
+                          class="fr-nr-warn currency-mismatch"
+                          icon-first
+                          custom-icon
+                          ?hide-tooltip="${!this.frsConsistencyWarningIsActive(partnership.multi_curr_flag)}"
+                        >
+                          <span
+                            slot="field"
+                            class="${this.getFrsValueNAClass(partnership.multi_curr_flag, true)} partner-overview"
+                          >
+                            <span class="amount-currency">${partnership.fr_currency}</span>
+                            <span
+                              >${this.getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, true)}</span
+                            >
+                          </span>
+                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <span slot="message">
+                            <span>${this.getFrsMultiCurrFlagErrTooltipMsg()}</span>
+                          </span>
+                        </etools-info-tooltip>
+                      </div>
+                      <div class="col center-align overflow-hidden">
+                        <span class="partnership-status">${partnership.status}</span>
+                      </div>
+                    </div>
+                  `
+                )}
+              </div>
+              <etools-data-table-footer
+                .pageSize="${this.paginator.page_size}"
+                .pageNumber="${this.paginator.page}"
+                .totalResults="${this.paginator.count}"
+                .visibleRange="${this.paginator.visible_range}"
+                @page-size-changed="${this.pageSizeChanged}"
+                @page-number-changed="${this.pageNumberChanged}"
+              >
+              </etools-data-table-footer>
+            `
+          : html``}
       </etools-content-panel>
     `;
   }
 
+  _partner!: Partner;
+
+  set partner(partner: Partner) {
+    this._partner = partner;
+    this._initPaginator(this.partner.interventions);
+  }
+
   @property({type: Object})
-  partner!: Partner;
+  get partner() {
+    return this._partner;
+  }
+
+  @property({type: Array})
+  allInterventions: PartnerIntervention[] = [];
+
+  @property({type: Array})
+  paginatedInterventions: PartnerIntervention[] = [];
 
   public connectedCallback() {
     super.connectedCallback();
@@ -282,17 +343,40 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
+      fireEvent(this, 'tab-content-attached');
+    }, 100);
+  }
 
-    fireEvent(this, 'tab-content-attached');
+  public _initPaginator(interventions: PartnerIntervention[] = []) {
+    this.allInterventions = interventions;
+    this.paginatedInterventions = [];
+    this.paginator = JSON.parse(
+      JSON.stringify({
+        count: interventions.length,
+        page: 1,
+        page_size: 5
+      })
+    );
+  }
+
+  public _paginate(pageNumber: number, pageSize: number) {
+    if (!this.allInterventions) {
+      return;
+    }
+    const interventions = this.allInterventions.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    this.paginatedInterventions = interventions;
+  }
+
+  paginatorChanged() {
+    this._paginate(this.paginator.page, this.paginator.page_size);
   }
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0 : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 }
-
-window.customElements.define('partner-overview', PartnerOverview);

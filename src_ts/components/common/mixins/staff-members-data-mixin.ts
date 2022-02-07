@@ -1,10 +1,10 @@
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import EndpointsMixin from '../..//endpoints/endpoints-mixin.js';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import {MinimalStaffMember} from '../../../../models/partners.models';
+import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 /**

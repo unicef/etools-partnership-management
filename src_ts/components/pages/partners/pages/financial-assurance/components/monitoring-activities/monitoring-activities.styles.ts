@@ -1,8 +1,8 @@
-import {html} from '@polymer/polymer/polymer-element';
-
+import {html} from 'lit-element';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 // language=HTML
-export const monitoringActivitiesStyles = html` <style include="data-table-styles">
-  :host {
+export const monitoringActivitiesStyles = html`<style>
+  ${dataTableStylesLit} :host {
     display: block;
     margin: 24px 0;
     --paper-input-container-input-webkit-spinner: {
@@ -12,6 +12,11 @@ export const monitoringActivitiesStyles = html` <style include="data-table-style
     --engagements-row: {
       padding: 0 24px;
     }
+  }
+
+  etools-content-panel::part(ecp-content) {
+    padding: 0;
+    overflow: hidden;
   }
 
   paper-button {
