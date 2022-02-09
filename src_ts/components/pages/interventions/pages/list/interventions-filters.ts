@@ -1,0 +1,229 @@
+import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
+import {get as getTranslation} from 'lit-translate';
+import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+import {EtoolsFilterTypes} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+
+export enum InterventionFilterKeys {
+  search = 'search',
+  type = 'type',
+  status = 'status',
+  section = 'section',
+  offices = 'offices',
+  cp_outputs = 'cp_outputs',
+  donors = 'donors',
+  partners = 'partners',
+  grants = 'grants',
+  unicef_focal_points = 'unicef_focal_points',
+  budget_owner = 'budget_owner',
+  cpStructures = 'cpStructures',
+  start = 'start',
+  end = 'end',
+  endAfter = 'endAfter',
+  contingency_pd = 'contingency_pd',
+  editable_by = 'editable_by'
+}
+
+export const selectedValueTypeByFilterKey: AnyObject = {
+  [InterventionFilterKeys.search]: 'string',
+  [InterventionFilterKeys.type]: 'Array',
+  [InterventionFilterKeys.status]: 'Array',
+  [InterventionFilterKeys.section]: 'Array',
+  [InterventionFilterKeys.offices]: 'Array',
+  [InterventionFilterKeys.cp_outputs]: 'Array',
+  [InterventionFilterKeys.donors]: 'Array',
+  [InterventionFilterKeys.partners]: 'Array',
+  [InterventionFilterKeys.grants]: 'Array',
+  [InterventionFilterKeys.unicef_focal_points]: 'Array',
+  [InterventionFilterKeys.budget_owner]: 'Array',
+  [InterventionFilterKeys.start]: 'string',
+  [InterventionFilterKeys.end]: 'string',
+  [InterventionFilterKeys.endAfter]: 'string',
+  [InterventionFilterKeys.contingency_pd]: 'boolean',
+  [InterventionFilterKeys.editable_by]: 'string'
+};
+
+setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
+
+export function getInterventionFilters() {
+  return [
+    {
+      filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
+      filterKey: InterventionFilterKeys.search,
+      type: EtoolsFilterTypes.Search,
+      selectedValue: '',
+      selected: true
+    },
+    {
+      filterName: getTranslation('CP_STRUCTURE'),
+      filterKey: InterventionFilterKeys.cpStructures,
+      type: 'etools-dropdown-multi',
+      selectionOptions: [],
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectedValue: [],
+      selected: true,
+      minWidth: '400px',
+      hideSearch: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
+      filterKey: InterventionFilterKeys.cp_outputs,
+      type: 'etools-dropdown-multi',
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '400px'
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.DONORS'),
+      filterKey: InterventionFilterKeys.donors,
+      type: 'etools-dropdown-multi',
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '400px'
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.PARTNERS'),
+      filterKey: InterventionFilterKeys.partners,
+      type: 'etools-dropdown-multi',
+      selectionOptions: [],
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectedValue: [],
+      selected: true,
+      minWidth: '400px',
+      hideSearch: false
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.ENDS_BEFORE'),
+      filterKey: InterventionFilterKeys.end,
+      type: 'datepicker', // datepicker-lite
+      path: 'endDate',
+      selectedValue: '',
+      selected: false
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.GRANTS'),
+      filterKey: InterventionFilterKeys.grants,
+      type: 'etools-dropdown-multi',
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '400px'
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.OFFICES'),
+      filterKey: InterventionFilterKeys.offices,
+      type: 'etools-dropdown-multi',
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '250px',
+      hideSearch: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.PD_TYPE'),
+      filterKey: InterventionFilterKeys.type,
+      type: 'etools-dropdown-multi',
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '400px',
+      hideSearch: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.SECTIONS'),
+      filterKey: InterventionFilterKeys.section,
+      type: 'etools-dropdown-multi',
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '350px',
+      hideSearch: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.STARTS_AFTER'),
+      filterKey: InterventionFilterKeys.start,
+      type: 'datepicker', // datepicker-lite
+      path: 'startDate',
+      selectedValue: '',
+      selected: false
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.ENDS_AFTER'),
+      filterKey: InterventionFilterKeys.endAfter,
+      type: 'datepicker',
+      selectedValue: '',
+      path: 'endAfter',
+      selected: false
+    },
+    {
+      filterName: getTranslation('GENERAL.STATUS'),
+      filterKey: InterventionFilterKeys.status,
+      type: 'etools-dropdown-multi',
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: true,
+      minWidth: '160px',
+      hideSearch: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
+      filterKey: InterventionFilterKeys.unicef_focal_points,
+      type: 'etools-dropdown-multi',
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '400px'
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.BUDGET_OWNER'),
+      filterKey: InterventionFilterKeys.budget_owner,
+      type: 'etools-dropdown-multi',
+      optionValue: 'id',
+      optionLabel: 'name',
+      selectionOptions: [],
+      selectedValue: [],
+      selected: false,
+      minWidth: '400px'
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
+      filterKey: InterventionFilterKeys.contingency_pd,
+      type: 'paper-toggle',
+      selectedValue: '',
+      selected: true
+    },
+    {
+      filterName: getTranslation('EDITABLE_BY'),
+      filterKey: InterventionFilterKeys.editable_by,
+      type: 'etools-dropdown',
+      optionValue: 'value',
+      optionLabel: 'label',
+      selectionOptions: [
+        {label: 'UNICEF', value: 'unicef'},
+        {label: getTranslation('PARTNER'), value: 'partner'}
+      ],
+      selectedValue: '',
+      hideSearch: true,
+      selected: false
+    }
+  ];
+}

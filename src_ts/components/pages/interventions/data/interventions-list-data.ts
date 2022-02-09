@@ -89,7 +89,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
-        loadingSource: 'pd-ssfa-list'
+        loadingSource: 'pd-list'
       });
     }
 
@@ -185,6 +185,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         queryResult.count(function (count: number) {
           // @ts-ignore
           self._setTotalResults(count);
+          fireEvent(self, 'total-results-changed', count);
         });
       });
 
@@ -196,16 +197,17 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       .then(function (result: any) {
         // @ts-ignore
         self._setFilteredInterventions(result);
+        fireEvent(self, 'filtered-interventions-changed', result);
         fireEvent(self, 'global-loading', {
           active: false,
-          loadingSource: 'pd-ssfa-list'
+          loadingSource: 'pd-list'
         });
       })
       .catch(function (error: any) {
         logError('Error querying interventions: ' + error, 'interventions-list-data');
         fireEvent(self, 'global-loading', {
           active: false,
-          loadingSource: 'pd-ssfa-list'
+          loadingSource: 'pd-list'
         });
       });
   }
