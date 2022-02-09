@@ -33,7 +33,12 @@ class GeneratePcaDialog extends CommonMixin(PolymerElement) {
         opened
       >
         <paper-dropdown-menu label="[[_getTranslation('CHOOSE_TEMPLATE')]]">
-          <paper-listbox slot="dropdown-content" attr-for-selected="item-value" selected="{{selectedTemplate}}">
+          <paper-listbox
+            slot="dropdown-content"
+            attr-for-selected="item-value"
+            selected="[[selectedTemplate]]"
+            on-selected-changed="onSelectedTemplateChanged"
+          >
             <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
               <paper-item item-value$="[[item.value]]">[[item.label]]</paper-item>
             </template>
@@ -79,6 +84,10 @@ class GeneratePcaDialog extends CommonMixin(PolymerElement) {
 
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
+  }
+
+  onSelectedTemplateChanged(e: CustomEvent) {
+    this.selectedTemplate = e.detail.value;
   }
 }
 

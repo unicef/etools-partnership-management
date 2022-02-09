@@ -64,9 +64,10 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
             accept=".doc,.docx,.pdf,.jpg,.png"
             file-url="[[amendment.signed_amendment_attachment]]"
             upload-endpoint="[[uploadEndpoint]]"
+            on-upload-started="_uploadStarted"
             on-upload-finished="_uploadFinished"
             required
-            upload-in-progress="{{uploadInProgress}}"
+            upload-in-progress="[[uploadInProgress]]"
             auto-validate="[[autoValidate]]"
             error-message="[[_getTranslation('SIGNED_AMENDMENT_FILE_IS_REQUIRED')]]"
           >
@@ -78,13 +79,13 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
             id="amendmentTypes"
             label="[[_getTranslation('AMENDMENT_TYPES')]]"
             options="[[amendmentTypes]]"
-            selected-values="{{amendment.types}}"
+            selected-values="[[amendment.types]]"
             hide-search
             error-message="[[_getTranslation('PLEASE_SELECT_AMENDMENT_TYPE')]]"
             required
             auto-validate="[[autoValidate]]"
             trigger-value-change-event
-            on-etools-selected-items-changed="_onAmendmentTypesSelected"
+            on-etools-selected-items-changed="onAmendmentTypesChanged"
           >
           </etools-dropdown-multi>
         </div>
@@ -98,7 +99,9 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
               options="[[authorizedOfficersOptions]]"
               option-value="id"
               option-label="name"
-              selected-values="{{authorizedOfficers}}"
+              selected-values="[[authorizedOfficers]]"
+              trigger-value-change-event
+              on-etools-selected-items-changed="onAuthorizedOfficersChanged"
               error-message="[[_getTranslation('PLS_ENTER_PARTNER_AUTH_OFFICERS')]]"
               required
               auto-validate
@@ -187,8 +190,14 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
     return showAuthorizedOfficers && _aoTypeSelected;
   }
 
-  _onAmendmentTypesSelected() {
+  onAmendmentTypesChanged(e: CustomEvent) {
+    this.amendment.types = e.detail.value;
+    this.amendment = {...this.amendment};
     this.set('_aoTypeSelected', this._isAoTypeSelected());
+  }
+
+  onAuthorizedOfficersChanged(e: CustomEvent) {
+    this.authorizedOfficers = e.detail.value;
   }
 
   _isAoTypeSelected() {
@@ -202,7 +211,12 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
       this.set('amendment.signed_amendment_attachment', uploadResponse.id);
+      this.uploadInProgress = false;
     }
+  }
+
+  _uploadStarted() {
+    this.uploadInProgress = true;
   }
 
   getCurrentDate() {
