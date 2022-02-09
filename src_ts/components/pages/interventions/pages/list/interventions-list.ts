@@ -43,6 +43,7 @@ import {
 } from '@unicef-polymer/etools-modules-common/dist/list/filters';
 import {getInterventionFilters, InterventionFilterKeys} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -192,7 +193,7 @@ export class InterventionsList extends connect(store)(
                 class="fr-nr-warn"
                 custom-icon
                 icon-first
-                hide-tooltip$="${this._hideDateFrsWarningTooltip(
+                hide-tooltip="${this._hideDateFrsWarningTooltip(
                   intervention.start,
                   intervention.frs_earliest_start_date,
                   intervention.status
@@ -208,7 +209,7 @@ export class InterventionsList extends connect(store)(
                 class="fr-nr-warn"
                 custom-icon
                 icon-first
-                hide-tooltip$="${this._hideDateFrsWarningTooltip(
+                hide-tooltip="${this._hideDateFrsWarningTooltip(
                   intervention.end,
                   intervention.frs_latest_end_date,
                   intervention.status
@@ -233,7 +234,7 @@ export class InterventionsList extends connect(store)(
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
               <etools-info-tooltip
-                class$="fr-nr-warn
+                class="fr-nr-warn
                             ${this.getCurrencyMismatchClass(
                   intervention.all_currencies_are_consistent
                 )} interventions-list"
@@ -249,7 +250,7 @@ export class InterventionsList extends connect(store)(
               >
                 <span slot="field">
                   <span class="amount-currency">${intervention.budget_currency}</span>
-                  <span>${this.displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
+                  <span>${displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
                 </span>
                 <iron-icon
                   icon="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
@@ -269,7 +270,7 @@ export class InterventionsList extends connect(store)(
               <span class="rdc-title">Total Budget</span>
               <span>
                 <span class="amount-currency">${intervention.budget_currency}</span>
-                <span>${this.displayCurrencyAmount(intervention.total_budget, '0.00')}</span>
+                <span>${displayCurrencyAmount(intervention.total_budget, '0.00')}</span>
               </span>
             </div>
           </div>
@@ -296,7 +297,12 @@ export class InterventionsList extends connect(store)(
   allFilters!: EtoolsFilter[];
 
   @property({type: Object})
-  prevQueryStringObj: GenericObject = {size: 10, page: 1, sort: 'name.asc'};
+  prevQueryStringObj: GenericObject = {
+    size: 10,
+    page: 1,
+    sort: 'partner_name.asc',
+    status: 'draft,signed,active,ended,suspended'
+  };
 
   @property({type: Object})
   routeDetails!: RouteDetails | null;
@@ -305,7 +311,7 @@ export class InterventionsList extends connect(store)(
   filteredInterventions: ListItemIntervention[] = [];
 
   connectedCallback(): void {
-    this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
+    this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 200);
 
     super.connectedCallback();
 
