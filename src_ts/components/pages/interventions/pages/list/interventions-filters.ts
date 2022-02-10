@@ -208,7 +208,7 @@ export function getInterventionFilters() {
       filterName: getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
       filterKey: InterventionFilterKeys.contingency_pd,
       type: EtoolsFilterTypes.Toggle,
-      selectedValue: '',
+      selectedValue: false,
       selected: true
     },
     {

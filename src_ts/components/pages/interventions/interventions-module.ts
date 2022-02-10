@@ -175,8 +175,7 @@ class InterventionsModule extends connect(store)(
                 id="list"
                 name="list"
                 active="[[listActive]]"
-                csv-download-qs="{{csvDownloadQs}}"
-                url-params="[[preservedListQueryParams]]"
+                on-csv-download-url-changed="csvDownloadUrlChanged"
               >
               </interventions-list>
             </template>
@@ -596,6 +595,9 @@ class InterventionsModule extends connect(store)(
       delete intervention.cfei_number;
     }
     return intervention;
+  }
+  csvDownloadUrlChanged(e: CustomEvent) {
+    this.csvDownloadQs = e.detail;
   }
 }
 

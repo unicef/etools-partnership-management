@@ -44,6 +44,7 @@ import {
 import {getInterventionFilters, InterventionFilterKeys} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {ListFilterOption} from '../../../../../typings/filter.types';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -75,6 +76,9 @@ export class InterventionsList extends connect(store)(
         }
         .page-content {
           margin: 0 0 24px 0;
+        }
+        .capitalize {
+          text-transform: capitalize;
         }
 
         section.page-content.filters {
@@ -295,13 +299,21 @@ export class InterventionsList extends connect(store)(
   allFilters!: EtoolsFilter[];
 
   @property({type: Object})
-  prevQueryStringObj!: GenericObject;
+  prevQueryStringObj: GenericObject = {
+    size: 10,
+    page: 1,
+    sort: 'partner_name.asc',
+    status: 'draft,signed,active,ended,suspended'
+  };
 
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
   @property({type: Array})
   filteredInterventions: ListItemIntervention[] = [];
+
+  @property({type: Array})
+  partners = [];
 
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 200);
@@ -331,12 +343,6 @@ export class InterventionsList extends connect(store)(
     }
 
     if (!this.allFilters) {
-      this.prevQueryStringObj = {
-        size: 10,
-        page: 1,
-        sort: 'partner_name.asc',
-        status: 'draft,signed,active,ended,suspended'
-      };
       this.initFiltersForDisplay(state);
     }
 
@@ -418,6 +424,7 @@ export class InterventionsList extends connect(store)(
     updateFilterSelectionOptions(allFilters, InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs);
     updateFilterSelectionOptions(allFilters, InterventionFilterKeys.donors, state.commonData!.donors);
     updateFilterSelectionOptions(allFilters, InterventionFilterKeys.partners, partnersDropdownDataSelector(state));
+    this.partners = partnersDropdownDataSelector(state);
     updateFilterSelectionOptions(allFilters, InterventionFilterKeys.grants, state.commonData!.grants);
     updateFilterSelectionOptions(
       allFilters,
@@ -462,10 +469,10 @@ export class InterventionsList extends connect(store)(
       this.getFilterUrlValuesAsArray(queryParams?.type || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cp_outputs || ''),
       this.getFilterUrlValuesAsArray(queryParams?.donors || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
+      this.getFilterValuesByProperty(this.partners, 'label', queryParams?.partners, 'value'),
       this.getFilterUrlValuesAsArray(queryParams?.grants || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.statuses || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.sections || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.status || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.section || ''),
       this.getFilterUrlValuesAsArray(queryParams?.unicef_focal_points || ''),
       this.getFilterUrlValuesAsArray(queryParams?.budget_owner || ''),
       this.getFilterUrlValuesAsArray(queryParams?.offices || ''),
@@ -488,6 +495,10 @@ export class InterventionsList extends connect(store)(
     this.updateCurrentParams({...e.detail, page: 1}, true);
   }
 
+  paginatorChanged() {
+    this.updateCurrentParams({page: this.paginator.page, size: this.paginator.page_size});
+  }
+
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
     let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
     if (reset) {
@@ -496,7 +507,7 @@ export class InterventionsList extends connect(store)(
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(newParams));
 
     const stringParams: string = buildUrlQueryString(newParams);
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
@@ -504,16 +515,25 @@ export class InterventionsList extends connect(store)(
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
     const exportParams = {
-      // search: queryStringObj.search,
-      // partner_type: queryStringObj.partner_types,
-      // cso_type: queryStringObj.cso_types,
-      // rating: queryStringObj.risk_ratings,
-      // sea_risk_rating: queryStringObj.sea_risk_ratings,
-      // psea_assessment_date_before: queryStringObj.psea_assessment_date_before,
-      // psea_assessment_date_after: queryStringObj.psea_assessment_date_before,
-      // hidden: queryStringObj.hidden ? 'true' : 'false'
+      status: queryStringObj.status,
+      document_type: queryStringObj.type,
+      sections: queryStringObj.section,
+      office: queryStringObj.offices,
+      donors: queryStringObj.donors,
+      partners: queryStringObj.partners,
+      grants: queryStringObj.grants,
+      unicef_focal_points: queryStringObj.unicef_focal_points,
+      budget_owner: queryStringObj.budget_owner,
+      country_programme: queryStringObj.cpStructures,
+      cp_outputs: queryStringObj.cp_outputs,
+      start: queryStringObj.start,
+      end: queryStringObj.end,
+      end_after: queryStringObj.endAfter,
+      editable_by: queryStringObj.editable_by,
+      contingency_pd: queryStringObj.contingency_pd,
+      search: queryStringObj.search
     };
-    return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'interventions').url);
+    return this._buildExportQueryString(exportParams);
   }
 
   _triggerInterventionLoadingMsg() {
@@ -526,5 +546,20 @@ export class InterventionsList extends connect(store)(
 
   _hideDateFrsWarningTooltip(pdDate: string, frsDate: string, status: string) {
     return !(this._canShowListDatesFrsWarnings(status) && !this.validateFrsVsInterventionDates(pdDate, frsDate));
+  }
+
+  getFilterValuesByProperty(filterOptions: ListFilterOption[], prop: string, selected: any, selectedProp: string) {
+    if (!filterOptions || !selected) {
+      return [];
+    }
+    let selectedValues = selected.indexOf(',') > -1 ? selected.split(',') : [selected];
+    selectedValues = this._convertToInt(selectedValues);
+
+    selectedProp = selectedProp || 'id';
+    return filterOptions.filter((opt) => selectedValues.indexOf(opt[selectedProp]) > -1).map((opt) => opt[prop]);
+  }
+
+  _convertToInt(data: []) {
+    return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
   }
 }
