@@ -11,6 +11,7 @@ import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixin from '../../../../../../common/mixins/common-mixin.js';
+import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 
 /**
  * @polymer
@@ -191,13 +192,18 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   }
 
   onAmendmentTypesChanged(e: CustomEvent) {
-    this.amendment.types = e.detail.value;
-    this.amendment = {...this.amendment};
+    const selectedTypes = e.detail.selectedItems.map((i: any) => i['value']);
+    if (!isJsonStrMatch(selectedTypes, this.amendment.types)) {
+      this.set('amendment.types', selectedTypes);
+    }
     this.set('_aoTypeSelected', this._isAoTypeSelected());
   }
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
-    this.authorizedOfficers = e.detail.value;
+    const selectedOfficers = e.detail.selectedItems.map((i: any) => String(i['id']));
+    if (!isJsonStrMatch(selectedOfficers, this.authorizedOfficers)) {
+      this.set('authorizedOfficers', selectedOfficers);
+    }
   }
 
   _isAoTypeSelected() {

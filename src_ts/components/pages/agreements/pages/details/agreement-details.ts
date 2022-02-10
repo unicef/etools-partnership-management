@@ -421,13 +421,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           id="agreementAmendments"
           class="content-section"
           data-items="[[agreement.amendments]]"
-          on-data-items-changed="onAmendmentsChanged"
+          data-items-changed="onAmendmentsChanged"
           agreement-type="[[agreement.agreement_type]]"
           edit-mode="[[agreement.permissions.edit.amendments]]"
           show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
           authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
           selected-ao="[[authorizedOfficers]]"
-          on-selected-ao-changed="onAuthorizedOfficersChanged"
+          on-selected-ao-changed="onAmendmentsOfficersChanged"
         >
         </agreement-amendments>
       </template>
@@ -846,6 +846,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
     const ao = e.detail.selectedItems.map((i: any) => String(i['id']));
+    if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
+      this.set('authorizedOfficers', ao);
+    }
+  }
+
+  onAmendmentsOfficersChanged(e: CustomEvent) {
+    const ao = e.detail.value;
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
       this.set('authorizedOfficers', ao);
     }
