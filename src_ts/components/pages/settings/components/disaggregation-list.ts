@@ -14,7 +14,6 @@ import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../redux/store';
 import {patchDisaggregation} from '../../../../redux/actions/common-data';
-import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '@unicef-polymer/etools-modules-common/dist/utils/user-permissions';
@@ -32,14 +31,11 @@ import pmpEdpoints from '../../../endpoints/endpoints';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EnvironmentFlagsPolymerMixin
  * @appliesMixin FrontendPaginationMixin
  */
 
 @customElement('disaggregation-list')
-export class DisaggregationList extends connect(store)(
-  PaginationMixin(EnvironmentFlagsPolymerMixin(CommonMixin(EndpointsLitMixin(LitElement))))
-) {
+export class DisaggregationList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -149,6 +145,7 @@ export class DisaggregationList extends connect(store)(
 
   set q(q: string) {
     this._q = q;
+    this.paginator.page = 1;
     this._filterData(this.disaggregations, this.q);
   }
 
