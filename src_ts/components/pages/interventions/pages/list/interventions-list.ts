@@ -334,7 +334,6 @@ export class InterventionsList extends connect(store)(
         stateRouteDetails.subRouteName === 'list'
       )
     ) {
-      // this.routeDetails = null;
       return;
     }
 
@@ -342,16 +341,13 @@ export class InterventionsList extends connect(store)(
       return;
     }
 
-    if (!this.allFilters) {
-      this.initFiltersForDisplay(state);
-    }
-
     if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
       this.routeDetails = cloneDeep(stateRouteDetails);
-      this.setSelectedValuesInFilters();
+
+      this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
@@ -376,13 +372,6 @@ export class InterventionsList extends connect(store)(
     }
   }
 
-  private setSelectedValuesInFilters() {
-    if (this.allFilters) {
-      // update filter selection and assign the result to etools-filters(trigger render)
-      const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
-    }
-  }
   /**
    * - When the page hasn't been visited before (or on page refresh),
    *  the url is initialized with prevQueryStringObj's default value
@@ -411,9 +400,18 @@ export class InterventionsList extends connect(store)(
   }
 
   protected initFiltersForDisplay(state: RootState): void {
-    const availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
-    this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
-    this.allFilters = availableFilters;
+    let availableFilters = [];
+    if (!this.allFilters) {
+      availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
+      this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
+    } else {
+      // Avoid setting this.allFilters twice, as the already selected filters will be reset
+      availableFilters = this.allFilters;
+    }
+
+    // update filter selection and assign the result to etools-filters(trigger render)
+    const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), availableFilters);
   }
 
   populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {

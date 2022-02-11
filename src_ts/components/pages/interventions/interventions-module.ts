@@ -174,6 +174,7 @@ class InterventionsModule extends connect(store)(
               <interventions-list
                 id="list"
                 name="list"
+                ?hidden="[[_pageEquals(activePage, 'list')]]"
                 active="[[listActive]]"
                 on-csv-download-url-changed="csvDownloadUrlChanged"
               >
