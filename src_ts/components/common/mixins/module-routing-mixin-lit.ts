@@ -11,7 +11,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
  * @polymer
  * @mixinFunction
  */
-function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function ModuleRoutingMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class ModuleRoutingClass extends baseClass {
     @property({type: Boolean})
     listActive!: boolean;
@@ -201,8 +201,8 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
       }
     }
 
-    _updateNewItemPageFlag(routeData: GenericObject, listActive: boolean) {
-      return routeData && routeData.id === 'new' && !listActive;
+    _updateNewItemPageFlag() {
+      return this.routeData && this.routeData.id === 'new' && !this.listActive;
     }
 
     importPageElement(fileName: string, baseUrl: string) {
@@ -236,4 +236,4 @@ function ModuleRoutingMixin<T extends Constructor<LitElement>>(baseClass: T) {
   return ModuleRoutingClass;
 }
 
-export default ModuleRoutingMixin;
+export default ModuleRoutingMixinLit;

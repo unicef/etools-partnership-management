@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin-lit';
+import ScrollControlMixinLit from '../../mixins/scroll-control-mixin-lit';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {LitElement, property, PropertyValues} from 'lit-element';
@@ -17,7 +17,7 @@ declare const ShadyCSS: any;
  * @appliesMixin ScrollControlMixin
  **/
 function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
-  class EtoolsStatusCommonClass extends ScrollControlMixin(baseClass as Constructor<LitElement>) {
+  class EtoolsStatusCommonClass extends ScrollControlMixinLit(baseClass as Constructor<LitElement>) {
     @property({type: String})
     status = '';
 
