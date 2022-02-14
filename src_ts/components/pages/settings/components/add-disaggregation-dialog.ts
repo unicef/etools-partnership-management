@@ -59,6 +59,10 @@ export class AddDisaggregationDialog extends connect(store)(
           width: 80px;
         }
 
+        .staticGroup {
+          padding-inline-end: 15px;
+        }
+
         .action.delete.no-padding {
           padding-top: 0 !important;
           padding-bottom: 0 !important;
@@ -113,10 +117,13 @@ export class AddDisaggregationDialog extends connect(store)(
                 ${(this.data || []).map(
                   (item: any, index) => html`
                     <paper-input
-                      class="newGroup"
+                      class="newGroup staticGroup"
                       no-label-float
                       label="${translate('NEW_GROUP')}"
                       .value="${item.value}"
+                      required
+                      error-message="${translate('REQUIRED')}"
+                      auto-validate
                       @value-changed="${({detail}: CustomEvent) => {
                         this.data[index].value = detail.value;
                         this.requestUpdate();
@@ -238,7 +245,11 @@ export class AddDisaggregationDialog extends connect(store)(
   }
 
   validate() {
-    return (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
+    const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
+    let validGroups = true;
+    const staticElems = this.shadowRoot!.querySelectorAll('.staticGroup');
+    staticElems.forEach((g: PaperInputElement) => (validGroups = validGroups && g.validate()));
+    return validName && validGroups;
   }
 
   resetValidations() {
