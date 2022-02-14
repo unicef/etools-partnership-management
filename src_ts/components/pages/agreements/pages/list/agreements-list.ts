@@ -59,12 +59,18 @@ class AgreementsList extends connect(store)(
           text-transform: none;
         }
       </style>
-      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query
+        query="(max-width: 767px)"
+        query-matches="[[lowResolutionLayout]]"
+        on-query-matches-changed="onQueryMatchesChanged"
+      ></iron-media-query>
       <template is="dom-if" if="[[stampListData]]">
         <agreements-list-data
           id="agreements"
-          filtered-agreements="{{filteredAgreements}}"
-          total-results="{{paginator.count}}"
+          filtered-agreements="[[filteredAgreements]]"
+          on-filtered-agreements-changed="onFilteredAgreementsChanged"
+          total-results="[[paginator.count]]"
+          on-total-results-changed="onTotalResultsChanged"
           list-data-path="filteredAgreements"
           on-agreements-loaded="_requiredDataHasBeenLoaded"
           fire-data-loaded
@@ -74,7 +80,15 @@ class AgreementsList extends connect(store)(
 
       <div id="filters" class="paper-material" elevation="1">
         <div id="filters-fields">
-          <paper-input id="query" class="filter" type="search" placeholder="Search" autocomplete="off" value="{{q}}">
+          <paper-input
+            id="query"
+            class="filter"
+            type="search"
+            placeholder="Search"
+            autocomplete="off"
+            value="[[q]]"
+            on-value-changed="onQueryChanged"
+          >
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
@@ -89,7 +103,7 @@ class AgreementsList extends connect(store)(
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="{{filter.selectedValue}}"
+                selected-values="[[filter.selectedValue]]"
                 data-filter-path$="[[filter.path]]"
                 on-etools-selected-items-changed="esmmValueChanged"
                 trigger-value-change-event
@@ -107,7 +121,7 @@ class AgreementsList extends connect(store)(
                 class="filter date"
                 label="[[filter.filterName]]"
                 placeholder="Select"
-                value="{{filter.selectedValue}}"
+                value="[[filter.selectedValue]]"
                 on-date-has-changed="_filterDateHasChanged"
                 data-filter-path$="[[filter.path]]"
                 fire-date-has-changed
@@ -126,7 +140,7 @@ class AgreementsList extends connect(store)(
                   options="[[filter.selectionOptions]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
-                  selected="{{filter.selectedValue}}"
+                  selected="[[filter.selectedValue]]"
                   trigger-value-change-event
                   on-etools-selected-item-changed="filterValueChanged"
                   data-filter-path$="[[filter.path]]"
@@ -246,10 +260,13 @@ class AgreementsList extends connect(store)(
 
         <etools-data-table-footer
           low-resolution-layout="[[lowResolutionLayout]]"
-          page-size="{{paginator.page_size}}"
-          page-number="{{paginator.page}}"
+          page-size="[[paginator.page_size]]"
+          page-number="[[paginator.page]]"
           total-results="[[paginator.count]]"
-          visible-range="{{paginator.visible_range}}"
+          visible-range="[[paginator.visible_range]]"
+          on-visible-range-changed="visibleRangeChanged"
+          on-page-size-changed="pageSizeChanged"
+          on-page-number-changed="pageNumberChanged"
         >
         </etools-data-table-footer>
       </div>
@@ -598,6 +615,26 @@ class AgreementsList extends connect(store)(
 
   _triggerAgreementLoadingMsg() {
     fireEvent(this, 'trigger-agreement-loading-msg');
+  }
+
+  visibleRangeChanged(e: CustomEvent) {
+    this.set('paginator.visible_range', e.detail.value);
+  }
+
+  onQueryChanged(e: CustomEvent) {
+    this.q = e.detail.value;
+  }
+
+  onTotalResultsChanged(e: CustomEvent) {
+    this.set('paginator.count', e.detail.value);
+  }
+
+  onFilteredAgreementsChanged(e: CustomEvent) {
+    this.filteredAgreements = e.detail.value;
+  }
+
+  onQueryMatchesChanged(e: CustomEvent) {
+    this.lowResolutionLayout = e.detail.value;
   }
 }
 

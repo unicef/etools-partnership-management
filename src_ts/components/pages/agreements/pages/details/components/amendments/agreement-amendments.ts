@@ -183,6 +183,9 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   @property({type: Array, notify: true})
   selectedAo: [] = [];
 
+  @property({type: Array})
+  dataItems: [] = [];
+
   @property({type: Boolean})
   editMode = false;
 
@@ -217,7 +220,13 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
       if (data.ao instanceof Array && data.ao.length > 0) {
         this.set('selectedAo', data.ao);
       }
-
+      this.dispatchEvent(
+        new CustomEvent('data-items-changed', {
+          bubbles: true,
+          composed: true,
+          detail: this.dataItems
+        })
+      );
       fireEvent(this, 'save-agreement');
     }
   }

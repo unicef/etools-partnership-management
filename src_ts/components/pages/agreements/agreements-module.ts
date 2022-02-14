@@ -55,13 +55,24 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
         }
       </style>
       <app-route
-        route="{{route}}"
+        route="[[route]]"
+        on-route-changed="routeChanged"
         pattern="/list"
-        query-params="{{listPageQueryParams}}"
-        active="{{listActive}}"
+        query-params="[[listPageQueryParams]]"
+        on-query-params-changed="queryParamsChanged"
+        active="[[listActive]]"
+        on-active-changed="activeChanged"
       ></app-route>
 
-      <app-route route="{{route}}" pattern="/:id/details" active="{{tabsActive}}" data="{{routeData}}"></app-route>
+      <app-route
+        route="[[route]]"
+        on-route-changed="routeChanged"
+        pattern="/:id/details"
+        active="[[tabsActive]]"
+        on-active-changed="activeTabsChanged"
+        data="[[routeData]]"
+        on-data-changed="onDataChanged"
+      ></app-route>
 
       <page-content-header with-tabs-visible="[[_showPageTabs(activePage)]]">
         <div slot="page-title">
@@ -106,15 +117,23 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
           <etools-error-messages-box
             id="errorsBox"
             title="Errors Saving Agreement"
-            errors="{{serverErrors}}"
+            errors="[[serverErrors]]"
+            on-errors-changed="onErrorsChanged"
           ></etools-error-messages-box>
-          <iron-pages id="agreementsPages" selected="{{activePage}}" attr-for-selected="name" role="main">
+          <iron-pages
+            id="agreementsPages"
+            selected="[[activePage]]"
+            selected-changed="onActivePageChanged"
+            attr-for-selected="name"
+            role="main"
+          >
             <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
               <agreements-list
                 id="list"
                 name="list"
                 active="[[listActive]]"
-                csv-download-url="{{csvDownloadUrl}}"
+                csv-download-url="[[csvDownloadUrl]]"
+                on-csv-download-url-changed="onCsvDownloadChanged"
                 url-params="[[preservedListQueryParams]]"
               >
               </agreements-list>
@@ -125,7 +144,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
                 id="agreementDetails"
                 name="details"
                 agreement="[[agreement]]"
-                authorized-officers="{{authorizedOfficers}}"
+                authorized-officers="[[authorizedOfficers]]"
+                on-authorized-officers-changed="onAuthorizedOfficersChanged"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 is-new-agreement="[[newAgreementActive]]"
                 on-save-agreement="_validateAndTriggerAgreementSave"
@@ -160,7 +180,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
       <agreement-item-data
         id="agreementData"
-        agreement="{{agreement}}"
+        agreement="[[agreement]]"
+        on-agreement-changed="onAgreementChanged"
         agreement-id="[[selectedAgreementId]]"
         error-event-name="agreement-save-error"
       >
@@ -524,6 +545,46 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       status: e.detail.status
     };
     (this.$.agreementData as AgreementItemData).updateAgreementStatus(terminationData);
+  }
+
+  routeChanged(e: CustomEvent) {
+    this.route = e.detail.value;
+  }
+
+  queryParamsChanged(e: CustomEvent) {
+    this.listPageQueryParams = e.detail.value;
+  }
+
+  activeChanged(e: CustomEvent) {
+    this.listActive = e.detail.value;
+  }
+
+  activeTabsChanged(e: CustomEvent) {
+    this.tabsActive = e.detail.value;
+  }
+
+  onDataChanged(e: CustomEvent) {
+    this.routeData = e.detail.value;
+  }
+
+  onActivePageChanged(e: CustomEvent) {
+    this.activePage = e.detail.value;
+  }
+
+  onCsvDownloadChanged(e: CustomEvent) {
+    this.csvDownloadUrl = e.detail.value;
+  }
+
+  onAuthorizedOfficersChanged(e: CustomEvent) {
+    this.authorizedOfficers = e.detail.value;
+  }
+
+  onAgreementChanged(e: CustomEvent) {
+    this.agreement = e.detail.value;
+  }
+
+  onErrorsChanged(e: CustomEvent) {
+    this.serverErrors = e.detail.value;
   }
 }
 
