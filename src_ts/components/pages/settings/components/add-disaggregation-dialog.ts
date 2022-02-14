@@ -52,6 +52,10 @@ class AddDisaggregationDialog extends connect(store)(
           width: 80px;
         }
 
+        .staticGroup {
+          padding-inline-end: 15px;
+        }
+
         .action.delete.no-padding {
           padding-top: 0 !important;
           padding-bottom: 0 !important;
@@ -93,6 +97,18 @@ class AddDisaggregationDialog extends connect(store)(
             <div class="layout-vertical">
               <label class="paper-label">[[_getTranslation('DISAGGREGATION_GROUP')]]</label>
               <div class="layout-horizontal groups">
+                <template is="dom-repeat" items="[[staticDataItems]]">
+                  <paper-input
+                    class="newGroup staticGroup"
+                    no-label-float
+                    label="[[_getTranslation('NEW_GROUP')]]"
+                    value="{{item.value}}"
+                    required
+                    error-message="Required"
+                    auto-validate
+                  >
+                  </paper-input>
+                </template>
                 <template is="dom-repeat" items="[[dataItems]]">
                   <paper-input
                     class="newGroup"
@@ -128,7 +144,10 @@ class AddDisaggregationDialog extends connect(store)(
   disaggregation!: Partial<Disaggregation>;
 
   @property({type: Array})
-  dataItems!: [];
+  staticDataItems!: DisaggregationValue[];
+
+  @property({type: Array})
+  dataItems!: DisaggregationValue[];
 
   @property({type: Boolean})
   disableConfirmBtn = false;
@@ -172,14 +191,27 @@ class AddDisaggregationDialog extends connect(store)(
   }
 
   _disaggregationChanged(disaggreg: Disaggregation) {
-    this.set('dataItems', disaggreg.disaggregation_values);
-    if (!this.dataItems) {
+    if (!disaggreg.disaggregation_values || !disaggreg.disaggregation_values.length) {
+      this.initStaticData();
       this.dataItems = [];
     }
+
+    this.staticDataItems = disaggreg.disaggregation_values.slice(0, 2);
+    this.initStaticData();
+    this.dataItems = disaggreg.disaggregation_values.slice(2, disaggreg.disaggregation_values.length);
   }
 
   _addNewGroup() {
     this._addElement();
+  }
+
+  initStaticData() {
+    if (!this.staticDataItems || this.staticDataItems.length === 0) {
+      this.staticDataItems = [
+        {value: '', active: true},
+        {value: '', active: true}
+      ];
+    }
   }
 
   _validateAndSaveDisaggregation() {
@@ -207,7 +239,7 @@ class AddDisaggregationDialog extends connect(store)(
   }
 
   _getBody() {
-    this.disaggregation.disaggregation_values = this.dataItems;
+    this.disaggregation.disaggregation_values = [...this.staticDataItems, ...this.dataItems];
     this._cleanUpDisaggregations(this.disaggregation.disaggregation_values);
     return this.disaggregation;
   }
@@ -230,7 +262,11 @@ class AddDisaggregationDialog extends connect(store)(
   }
 
   validate() {
-    return (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
+    const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
+    let validGroups = true;
+    const staticElems = this.shadowRoot!.querySelectorAll('.staticGroup');
+    staticElems.forEach((g: PaperInputElement) => (validGroups = validGroups && g.validate()));
+    return validName && validGroups;
   }
 
   resetValidations() {
