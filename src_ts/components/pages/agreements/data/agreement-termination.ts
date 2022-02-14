@@ -53,10 +53,11 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
             accept=".doc,.docx,.pdf,.jpg,.png"
             file-url="[[termination.attachment_id]]"
             upload-endpoint="[[uploadEndpoint]]"
+            on-upload-started="_uploadStarted"
             on-upload-finished="_uploadFinished"
             required
             auto-validation
-            upload-in-progress="{{uploadInProgress}}"
+            upload-in-progress="[[uploadInProgress]]"
             error-message="[[_getTranslation('TERMINATION_NOTICE_FILE_IS_REQUIRED')]]"
           >
           </etools-upload>
@@ -139,7 +140,12 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
       this.set('termination.attachment_id', uploadResponse.id);
+      this.uploadInProgress = false;
     }
+  }
+
+  _uploadStarted(_e: CustomEvent) {
+    this.uploadInProgress = true;
   }
 
   _onClose() {

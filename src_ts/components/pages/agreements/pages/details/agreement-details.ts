@@ -124,7 +124,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 label="[[_getTranslation('AGREEMENT_TYPE')]]"
                 placeholder="&#8212;"
                 options="[[agreementTypes]]"
-                selected="{{agreement.agreement_type}}"
+                selected="[[agreement.agreement_type]]"
+                trigger-value-change-event
+                on-etools-selected-item-changed="onAgreementTypeChanged"
                 hide-search
                 readonly$="[[_isAgreementTypeReadonly(agreement)]]"
                 auto-validate
@@ -136,7 +138,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             <div class="year-col" hidden$="[[!_showYearDropdown(agreement.status)]]">
               <year-dropdown
                 label="[[_getTranslation('REF_YEAR')]]"
-                selected-year="{{agreement.reference_number_year}}"
+                selected-year="[[agreement.reference_number_year]]"
+                on-selected-year-changed="onReferenceNumberChanged"
               >
               </year-dropdown>
             </div>
@@ -174,7 +177,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               label="[[_getTranslation('PARTNER_NAME')]]"
               placeholder="&#8212;"
               options="[[partnersDropdownData]]"
-              selected="{{agreement.partner}}"
+              selected="[[agreement.partner]]"
+              trigger-value-change-event
+              on-etools-selected-item-changed="onAgreementPartnerChanged"
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
               error-message="[[_getTranslation('PLEASE_SELECT_A_PARTNER')]]"
@@ -225,7 +230,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 id="cpStructure"
                 module="agreements"
                 app-module-item="[[agreement]]"
-                selected-cp="{{agreement.country_programme}}"
+                selected-cp="[[agreement.country_programme]]"
+                on-selected-cp-changed="onCountryProgrammeChanged"
                 edit-mode="[[agreement.permissions.edit.country_programme]]"
                 required$="[[agreement.permissions.required.country_programme]]"
               >
@@ -245,7 +251,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 options="[[staffMembers]]"
                 option-value="id"
                 option-label="name"
-                selected="{{agreement.partner_manager}}"
+                selected="[[agreement.partner_manager]]"
+                trigger-value-change-event
+                on-etools-selected-item-changed="onAgreementPartnerManagerChanged"
                 hidden$="[[!agreement.permissions.edit.partner_manager]]"
               >
               </etools-dropdown>
@@ -306,7 +314,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
             option-value="id"
             option-label="name"
-            selected-values="{{authorizedOfficers}}"
+            selected-values="[[authorizedOfficers]]"
+            trigger-value-change-event
+            on-etools-selected-items-changed="onAuthorizedOfficersChanged"
             hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
             error-message="[[_getTranslation('PLEASE_ENTER_PARTNER_AUTH_OFFICERS')]]"
             required$="[[agreement.permissions.required.authorized_officers]]"
@@ -343,7 +353,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
         <div class="row-h flex-c">
           <paper-toggle-button
-            checked="{{agreement.special_conditions_pca}}"
+            checked="[[agreement.special_conditions_pca]]"
+            on-checked-changed="onSpecialConditionsPCAChanged"
             hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
             disabled$="[[!agreement.permissions.edit.special_conditions_pca]]"
           >
@@ -380,7 +391,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-upload
               label=" [[_getTranslation('SIGNED_AGREEMENT')]]"
-              file-url="{{agreement.attachment}}"
+              file-url="[[agreement.attachment]]"
               upload-endpoint="[[uploadEndpoint]]"
               on-upload-finished="_signedAgreementUploadFinished"
               show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment,
@@ -409,12 +420,14 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         <agreement-amendments
           id="agreementAmendments"
           class="content-section"
-          data-items="{{agreement.amendments}}"
+          data-items="[[agreement.amendments]]"
+          data-items-changed="onAmendmentsChanged"
           agreement-type="[[agreement.agreement_type]]"
           edit-mode="[[agreement.permissions.edit.amendments]]"
           show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
           authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-          selected-ao="{{authorizedOfficers}}"
+          selected-ao="[[authorizedOfficers]]"
+          on-selected-ao-changed="onAmendmentsOfficersChanged"
         >
         </agreement-amendments>
       </template>
@@ -829,6 +842,52 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   _hideTerminationDoc(file: string, status: string) {
     return !file || status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
+  }
+
+  onAuthorizedOfficersChanged(e: CustomEvent) {
+    const ao = e.detail.selectedItems.map((i: any) => String(i['id']));
+    if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
+      this.set('authorizedOfficers', ao);
+    }
+  }
+
+  onAmendmentsOfficersChanged(e: CustomEvent) {
+    const ao = e.detail.value;
+    if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
+      this.set('authorizedOfficers', ao);
+    }
+  }
+
+  onAgreementTypeChanged(e: CustomEvent) {
+    this.set('agreement.agreement_type', e.detail.selectedItem ? e.detail.selectedItem.value : null);
+  }
+
+  onAgreementPartnerChanged(e: CustomEvent) {
+    this.set('agreement.partner', e.detail.selectedItem ? e.detail.selectedItem.value : null);
+  }
+
+  onAgreementPartnerManagerChanged(e: CustomEvent) {
+    if (!this.staffMembers.length && this.agreement.partner_manager) {
+      // data is not loaded yet and we already have a partner_manager
+      return;
+    }
+    this.set('agreement.partner_manager', e.detail.selectedItem ? e.detail.selectedItem.id : null);
+  }
+
+  onSpecialConditionsPCAChanged(e: CustomEvent) {
+    this.set('agreement.special_conditions_pca', e.detail.value);
+  }
+
+  onCountryProgrammeChanged(e: CustomEvent) {
+    this.set('agreement.country_programme', e.detail.value);
+  }
+
+  onReferenceNumberChanged(e: CustomEvent) {
+    this.set('agreement.reference_number_year', e.detail.value);
+  }
+
+  onAmendmentsChanged(e: CustomEvent) {
+    this.set('agreement.amendments', e.detail.value);
   }
 }
 
