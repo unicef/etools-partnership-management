@@ -56,9 +56,6 @@ export class InterventionsModule extends connect(store)(
   )
 ) {
   render() {
-    if (!this.intervention) {
-      return;
-    }
     return html`
       ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
@@ -204,7 +201,7 @@ export class InterventionsModule extends connect(store)(
               </paper-menu-button>
             </div>
 
-            <div class="action" hidden$="${!this._showAddNewIntervBtn(this.listActive, this.permissions)}">
+            <div class="action" ?hidden="${!this._showAddNewIntervBtn(this.listActive, this.permissions)}">
               <paper-button class="primary-btn with-prefix" @tap="${this._goToNewInterventionPage}">
                 <iron-icon icon="add"></iron-icon>
                 ${this._getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')}
@@ -254,7 +251,7 @@ export class InterventionsModule extends connect(store)(
   selectedInterventionId!: number;
 
   @property({type: Object})
-  intervention!: Intervention;
+  intervention: Partial<Intervention> = {};
 
   @property({type: Object})
   originalIntervention!: Intervention;
@@ -322,7 +319,7 @@ export class InterventionsModule extends connect(store)(
       this.intervention = get(state, 'interventions.current');
     } else {
       const currentPD = get(state, 'interventions.current');
-      if (!isJsonStrMatch(this.intervention, currentPD)) {
+      if (!isJsonStrMatch(this.intervention, currentPD) && currentPD) {
         this.updateDexieData(currentPD);
         console.log('Updated Intervention list Dexie data');
         this.intervention = currentPD;
