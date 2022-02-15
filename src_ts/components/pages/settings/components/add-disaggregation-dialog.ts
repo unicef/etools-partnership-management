@@ -1,27 +1,28 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import RepeatableDataSetsMixin from '../../../common/mixins/repeatable-data-sets-mixin.js';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import RepeatableDataSetsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/repeatable-data-sets-mixin';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
-import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
-import {buttonsStyles} from '../../../styles/buttons-styles';
-import {SharedStyles} from '../../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
+import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
+
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../redux/store';
 import {addDisaggregation} from '../../../../redux/actions/common-data';
-import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators/lib/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import CommonMixin from '../../../common/mixins/common-mixin';
+import {translate} from 'lit-translate';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -30,13 +31,19 @@ import CommonMixin from '../../../common/mixins/common-mixin';
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(
-  CommonMixin(RepeatableDataSetsMixin(EndpointsMixin(PolymerElement)))
+
+@customElement('add-disaggregation-dialog')
+export class AddDisaggregationDialog extends connect(store)(
+  CommonMixin(RepeatableDataSetsMixin(EndpointsLitMixin(LitElement)))
 ) {
-  static get template() {
+  static get styles() {
+    return [gridLayoutStylesLit, buttonsStyles];
+  }
+
+  render() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${actionIconBtnsStyles}
+      ${sharedStyles} ${RequiredFieldsStyles} ${actionIconBtnsStyles}
       <style>
         paper-input {
           width: 100%;
@@ -67,70 +74,77 @@ class AddDisaggregationDialog extends connect(store)(
             padding: 0 0 !important;
           }
         }
+
+        .extra-padd {
+          padding-top: 12px !important;
+          padding-bottom: 12px !important;
+        }
       </style>
 
       <etools-dialog
         keep-dialog-open
         id="etoolsDialog"
         size="lg"
-        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
-        dialog-title="[[_getTranslation('ADD_DISAGGREGATION')]]"
-        disable-confirm-btn="[[disableConfirmBtn]]"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
+        dialog-title="${translate('ADD_DISAGGREGATION')}"
+        ?disable-confirm-btn="${this.disableConfirmBtn}"
         opened
-        on-confirm-btn-clicked="_validateAndSaveDisaggregation"
-        on-close="_onClose"
+        @confirm-btn-clicked="${this._validateAndSaveDisaggregation}"
+        @close="${this._onClose}"
+        ?show-spinner="${this.disableConfirmBtn}"
       >
-        <div class="layout-horizontal flex-c row-padding-v">
+        <div class="layout-horizontal flex-c row-padding-v extra-padd">
           <div class="col col-4">
             <paper-input
               id="disaggregateByEl"
-              label="[[_getTranslation('DISAGGREGATION')]]"
-              value="{{disaggregation.name}}"
+              label="${translate('DISAGGREGATION')}"
+              .value="${this.disaggregation.name}"
+              @value-changed="${({detail}: CustomEvent) => {
+                this.disaggregation.name = detail.value;
+                this.requestUpdate();
+              }}"
               required
               auto-validate
-              error-message="[[_getTranslation('PLEASE_ADD_DISAGGREGATION')]]"
+              error-message="${translate('PLEASE_ADD_DISAGGREGATION')}"
               placeholder="&#8212;"
             >
             </paper-input>
           </div>
           <div class="col col-8">
             <div class="layout-vertical">
-              <label class="paper-label">[[_getTranslation('DISAGGREGATION_GROUP')]]</label>
+              <label class="paper-label">${translate('DISAGGREGATION_GROUP')}</label>
               <div class="layout-horizontal groups">
-                <template is="dom-repeat" items="[[staticDataItems]]">
-                  <paper-input
-                    class="newGroup staticGroup"
-                    no-label-float
-                    label="[[_getTranslation('NEW_GROUP')]]"
-                    value="{{item.value}}"
-                    required
-                    error-message="Required"
-                    auto-validate
-                  >
-                  </paper-input>
-                </template>
-                <template is="dom-repeat" items="[[dataItems]]">
-                  <paper-input
-                    class="newGroup"
-                    no-label-float
-                    label="[[_getTranslation('NEW_GROUP')]]"
-                    value="{{item.value}}"
-                  >
-                  </paper-input>
-                  <paper-icon-button
-                    class="action delete no-padding"
-                    icon="cancel"
-                    on-tap="_openDeleteConfirmation"
-                    data-args$="[[index]]"
-                    title="[[_getTranslation('GENERAL.DELETE')]]"
-                  >
-                  </paper-icon-button>
-                </template>
+                ${(this.data || []).map(
+                  (item: any, index) => html`
+                    <paper-input
+                      class="newGroup staticGroup"
+                      no-label-float
+                      label="${translate('NEW_GROUP')}"
+                      .value="${item.value}"
+                      required
+                      error-message="${translate('REQUIRED')}"
+                      auto-validate
+                      @value-changed="${({detail}: CustomEvent) => {
+                        this.data[index].value = detail.value;
+                        this.requestUpdate();
+                      }}"
+                    >
+                    </paper-input>
+                    <paper-icon-button
+                      class="action delete no-padding"
+                      icon="cancel"
+                      @click="${(event: CustomEvent) => this._openDeleteConfirmation(event, index)}"
+                      ?data-args="${index}"
+                      title="${translate('GENERAL.DELETE')}"
+                    >
+                    </paper-icon-button>
+                  `
+                )}
                 <paper-button
                   class="secondary-btn"
-                  on-tap="_addNewGroup"
-                  title="[[_getTranslation('ADD_DISAGGREGATION_GROUP')]]"
-                  >+[[_getTranslation('GENERAL.ADD')]]
+                  @click="${this._addNewGroup}"
+                  title="${translate('ADD_DISAGGREGATION_GROUP')}"
+                  >+${translate('GENERAL.ADD')}
                 </paper-button>
               </div>
             </div>
@@ -140,14 +154,8 @@ class AddDisaggregationDialog extends connect(store)(
     `;
   }
 
-  @property({type: Object, observer: '_disaggregationChanged'})
+  @property({type: Object})
   disaggregation!: Partial<Disaggregation>;
-
-  @property({type: Array})
-  staticDataItems!: DisaggregationValue[];
-
-  @property({type: Array})
-  dataItems!: DisaggregationValue[];
 
   @property({type: Boolean})
   disableConfirmBtn = false;
@@ -163,6 +171,7 @@ class AddDisaggregationDialog extends connect(store)(
       active: true,
       disaggregation_values: []
     };
+    this.data = [];
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
@@ -180,48 +189,22 @@ class AddDisaggregationDialog extends connect(store)(
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
-  startSpinner() {
-    this.disableConfirmBtn = true;
-    (this.$.etoolsDialog as EtoolsDialog).startSpinner();
-  }
-
-  stopSpinner() {
-    this.disableConfirmBtn = false;
-    (this.$.etoolsDialog as EtoolsDialog).stopSpinner();
-  }
-
-  _disaggregationChanged(disaggreg: Disaggregation) {
-    if (!disaggreg.disaggregation_values || !disaggreg.disaggregation_values.length) {
-      this.initStaticData();
-      this.dataItems = [];
-    }
-
-    this.staticDataItems = disaggreg.disaggregation_values.slice(0, 2);
-    this.initStaticData();
-    this.dataItems = disaggreg.disaggregation_values.slice(2, disaggreg.disaggregation_values.length);
-  }
-
   _addNewGroup() {
-    this._addElement();
-  }
-
-  initStaticData() {
-    if (!this.staticDataItems || this.staticDataItems.length === 0) {
-      this.staticDataItems = [
-        {value: '', active: true},
-        {value: '', active: true}
-      ];
+    if (!this.editMode) {
+      return;
     }
+    this.data.push({value: ''});
+    this.data = [...this.data];
   }
 
   _validateAndSaveDisaggregation() {
     if (!this.validate()) {
       return;
     }
-    this.startSpinner();
+    this.disableConfirmBtn = true;
     const requestParams = {
       method: 'POST',
-      endpoint: this.getEndpoint('disaggregations'),
+      endpoint: this.getEndpoint(pmpEdpoints, 'disaggregations'),
       body: this._getBody()
     };
     return sendRequest(requestParams)
@@ -229,17 +212,17 @@ class AddDisaggregationDialog extends connect(store)(
         this.disaggregation = response;
         store.dispatch(addDisaggregation(response));
         this.broadcastAddDisaggregToOtherTabs(response);
-        this.stopSpinner();
+        this.disableConfirmBtn = false;
         this._onClose();
       })
       .catch((error: any) => {
-        this.stopSpinner();
+        this.disableConfirmBtn = false;
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
 
   _getBody() {
-    this.disaggregation.disaggregation_values = [...this.staticDataItems, ...this.dataItems];
+    this.disaggregation.disaggregation_values = this.data;
     this._cleanUpDisaggregations(this.disaggregation.disaggregation_values);
     return this.disaggregation;
   }
@@ -274,5 +257,4 @@ class AddDisaggregationDialog extends connect(store)(
   }
 }
 
-window.customElements.define('add-disaggregation-dialog', AddDisaggregationDialog);
 export {AddDisaggregationDialog as AddDisaggregationDialogEl};
