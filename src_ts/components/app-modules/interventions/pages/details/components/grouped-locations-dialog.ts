@@ -195,8 +195,8 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     for (i = 0; i < this.interventionLocations.length; i++) {
       const grouping = new GroupedLocations();
 
-      if (this.interventionLocations[i].gateway.name === selectedAdminLevel) {
-        // gateway.name is location_type
+      if (this.interventionLocations[i].admin_level_name === selectedAdminLevel) {
+        // admin_level_name is location_type
         grouping.adminLevelLocation = this.interventionLocations[i];
         groupedLocations.push(grouping);
         continue;
@@ -234,7 +234,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
       return null;
     }
     const existingGroup = groupedLocations.find(function (g) {
-      return parseInt((g.adminLevelLocation!.id as unknown) as string) === parseInt(adminLevelLocation.id);
+      return parseInt(g.adminLevelLocation!.id as unknown as string) === parseInt(adminLevelLocation.id);
     });
 
     if (!existingGroup) {
@@ -253,7 +253,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     if (!parentLoc) {
       return null;
     }
-    if (parentLoc.gateway.name === adminLevel) {
+    if (parentLoc.admin_level_name === adminLevel) {
       return parentLoc;
     }
     return this._findAdminLevelParent(parentLoc, adminLevel);

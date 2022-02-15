@@ -278,7 +278,8 @@ export interface Location {
   id: string;
   name: string;
   p_code: string;
-  gateway: AdminLevel;
+  admin_level_name: string;
+  admin_level: string;
   parent?: string;
 }
 
