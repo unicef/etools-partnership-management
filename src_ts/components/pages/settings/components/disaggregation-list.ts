@@ -1,47 +1,49 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-data-table/etools-data-table';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
-import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../styles/shared-styles';
-import FrontendPaginationMixin from '../../../common/mixins/frontend-pagination-mixin';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../redux/store';
 import {patchDisaggregation} from '../../../../redux/actions/common-data';
-import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {userIsPme} from '../../../common/user/user-permissions';
-import {property} from '@polymer/decorators/lib/decorators';
+import {userIsPme} from '@unicef-polymer/etools-modules-common/dist/utils/user-permissions';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
-import {Disaggregation, EnvFlags, User} from '@unicef-polymer/etools-types';
+import {Disaggregation} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../utils/dialog';
-import CommonMixin from '../../../common/mixins/common-mixin';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import {translate} from 'lit-translate';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EnvironmentFlagsPolymerMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(
-  FrontendPaginationMixin(EnvironmentFlagsPolymerMixin(CommonMixin(EndpointsMixin(PolymerElement))))
-) {
-  static get template() {
+
+@customElement('disaggregation-list')
+export class DisaggregationList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${SharedStyles}
-      <style include="data-table-styles paper-material-styles">
-        [hidden] {
+      <style>
+        ${sharedStyles} ${dataTableStylesLit} [hidden] {
           display: none !important;
         }
 
@@ -58,53 +60,72 @@ class DisaggregationList extends connect(store)(
       </style>
 
       <div id="filters" class="paper-material" elevation="1">
-        <paper-input id="query" class="qFilter" type="search" autocomplete="off" value="{{q}}" placeholder="Search">
+        <paper-input
+          id="query"
+          class="qFilter"
+          type="search"
+          autocomplete="off"
+          .value="${this.q}"
+          @value-changed="${({detail}: CustomEvent) => {
+            this.q = detail.value;
+            this.requestUpdate();
+          }}"
+          placeholder="Search"
+        >
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
       </div>
 
-      <etools-content-panel panel-title="Disaggregations">
-        <template is="dom-if" if="[[userIsPme(currentUser)]]">
-          <paper-icon-button slot="panel-btns" icon="add-box" on-tap="_addDisaggregation"> </paper-icon-button>
-        </template>
-        <div hidden$="[[_emptyList(filteredDisaggregations)]]">
+      <etools-content-panel panel-title="${translate('DISAGGREGATIONS')}">
+        <paper-icon-button
+          slot="panel-btns"
+          ?hidden="${!userIsPme(this.currentUser)}"
+          icon="add-box"
+          @click="${this._addDisaggregation}"
+        >
+        </paper-icon-button>
+        <div ?hidden="${this._emptyList(this.filteredDisaggregations)}">
           <etools-data-table-header no-collapse no-title>
-            <etools-data-table-column class="col-4" field="name">[[_getTranslation('NAME')]]</etools-data-table-column>
+            <etools-data-table-column class="col-4" field="name">${translate('NAME')}</etools-data-table-column>
             <etools-data-table-column class="col-6" field="disaggregation_values">
-              [[_getTranslation('DISAGGREGATION_GROUP')]]
+              ${translate('DISAGGREGATION_GROUP')}
             </etools-data-table-column>
             <etools-data-table-column class="col-2" field="disaggregation_active"
-              >[[_getTranslation('ACTIVE')]]</etools-data-table-column
+              >${translate('ACTIVE')}</etools-data-table-column
             >
           </etools-data-table-header>
-          <template is="dom-repeat" items="[[dataItems]]">
-            <etools-data-table-row no-collapse>
-              <div slot="row-data">
-                <span class="col-data col-4">[[item.name]]</span>
-                <span class="col-data col-6">[[_displayGroups(item.disaggregation_values)]]</span>
-                <span class="col-data col-2">
-                  <paper-toggle-button
-                    id="showActive-[[item.id]]"
-                    disabled="[[!userIsPme(currentUser)]]"
-                    checked="{{item.active}}"
-                    on-change="_disaggregationChange"
-                  >
-                  </paper-toggle-button>
-                </span>
-              </div>
-            </etools-data-table-row>
-          </template>
+          ${(this.paginatedDisaggregations || []).map(
+            (item: any) => html`
+              <etools-data-table-row no-collapse>
+                <div slot="row-data">
+                  <span class="col-data col-4">${item.name}</span>
+                  <span class="col-data col-6">${this._displayGroups(item.disaggregation_values)}</span>
+                  <span class="col-data col-2">
+                    <paper-toggle-button
+                      data-id="${item.id}"
+                      data-active="${item.active}"
+                      ?disabled="${!userIsPme(this.currentUser)}"
+                      ?checked="${item.active}"
+                      @checked-changed="${this._disaggregationChange}"
+                    >
+                    </paper-toggle-button>
+                  </span>
+                </div>
+              </etools-data-table-row>
+            `
+          )}
 
           <etools-data-table-footer
-            page-size="[[pagination.pageSize]]"
-            page-number="[[pagination.pageNumber]]"
-            total-results="[[pagination.totalResults]]"
-            on-page-size-changed="_pageSizeChanged"
-            on-page-number-changed="_pageNumberChanged"
+            .pageSize="${this.paginator.page_size}"
+            .pageNumber="${this.paginator.page}"
+            .totalResults="${this.paginator.count}"
+            .visibleRange="${this.paginator.visible_range}"
+            @page-size-changed="${this.pageSizeChanged}"
+            @page-number-changed="${this.pageNumberChanged}"
           >
           </etools-data-table-footer>
         </div>
-        <div class="row-padding" hidden$="[[!_emptyList(filteredDisaggregations)]]">
+        <div class="row-padding" ?hidden="${!this._emptyList(this.filteredDisaggregations)}">
           <p>The are no disaggregations defined.</p>
         </div>
       </etools-content-panel>
@@ -114,42 +135,43 @@ class DisaggregationList extends connect(store)(
   @property({type: Array})
   disaggregations!: Disaggregation[];
 
-  @property({type: Array, computed: '_filterData(disaggregations, q)'})
+  @property({type: Array})
   filteredDisaggregations!: Disaggregation[];
 
-  @property({type: String})
-  q = '';
+  @property({type: Array})
+  paginatedDisaggregations!: Disaggregation[];
 
-  @property({
-    type: Number,
-    computed: '_computeResults(filteredDisaggregations)'
-  })
-  totalResults!: number;
+  _q!: string;
+
+  set q(q: string) {
+    this._q = q;
+    this.paginator.page = 1;
+    this._filterData(this.disaggregations, this.q);
+  }
+
+  @property({type: String})
+  get q() {
+    return this._q;
+  }
 
   @property({type: Boolean})
   editMode!: boolean;
 
-  static get observers() {
-    return [
-      '_paginationChanged(pagination.pageNumber, pagination.pageSize, filteredDisaggregations)',
-      '_disagregationsChanged(filteredDisaggregations, environmentFlags)'
-    ];
-  }
-
-  public stateChanged(state: RootState) {
+  stateChanged(state: RootState) {
     if (!state.commonData) {
       return;
     }
 
     if (!isJsonStrMatch(state.commonData.disaggregations, this.disaggregations)) {
       this.disaggregations = [...state.commonData.disaggregations];
+      this._filterData(this.disaggregations, this.q);
     }
 
     this.endStateChanged(state);
   }
 
-  ready() {
-    super.ready();
+  connectedCallback(): void {
+    super.connectedCallback();
     this.editMode = true;
   }
 
@@ -166,11 +188,11 @@ class DisaggregationList extends connect(store)(
 
   _filterData(disaggregations: Disaggregation[], q: any) {
     if (!(disaggregations instanceof Array && disaggregations.length > 0)) {
-      return [];
+      return;
     }
-    let filteredDisaggregations = JSON.parse(JSON.stringify(disaggregations));
-    filteredDisaggregations = filteredDisaggregations.filter((d: Disaggregation) => this._applyQFilter(d, q));
-    return filteredDisaggregations;
+    const filteredDisaggregations = JSON.parse(JSON.stringify(disaggregations));
+    this.filteredDisaggregations = filteredDisaggregations.filter((d: Disaggregation) => this._applyQFilter(d, q));
+    this.initializePaginator(this.filteredDisaggregations.length);
   }
 
   _applyQFilter(d: Disaggregation, q: any) {
@@ -183,12 +205,17 @@ class DisaggregationList extends connect(store)(
 
   _disaggregationChange(e: any) {
     const elDisaggregation = e.currentTarget as PaperToggleButtonElement;
+
+    // to avoid making calls when table is rendered, make sure property binded to checked and checked are different
+    if (elDisaggregation.dataset.active === String(elDisaggregation.checked)) {
+      return;
+    }
     const requestParams = {
       method: 'PATCH',
-      endpoint: this.getEndpoint('patchDisaggregations', {
-        id: e.model.item.id
+      endpoint: this.getEndpoint(pmpEdpoints, 'patchDisaggregations', {
+        id: elDisaggregation.dataset.id
       }),
-      body: {active: e.model.item.active}
+      body: {active: elDisaggregation.checked}
     };
 
     return sendRequest(requestParams)
@@ -197,25 +224,31 @@ class DisaggregationList extends connect(store)(
         this.broadcastPatchDisaggregToOtherTabs(response);
       })
       .catch((error: any) => {
-        elDisaggregation.checked = !e.model.item.active;
+        elDisaggregation.checked = !elDisaggregation.checked;
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
 
-  _computeResults(filteredDis: any) {
-    return filteredDis.length;
+  _emptyList(arr: any[]) {
+    return !arr || !arr.length;
   }
 
-  _emptyList() {
-    return !this.disaggregations || !this.disaggregations.length;
+  initializePaginator(datalength: number) {
+    this.paginator = {...this.paginator, count: datalength};
   }
 
-  _disagregationsChanged(disaggregs: Disaggregation[], _environmentFlags: EnvFlags) {
-    if (!disaggregs || !disaggregs.length) {
-      this.dataItems = [];
+  _paginate(pageNumber: number, pageSize: number) {
+    if (!this.filteredDisaggregations) {
       return;
     }
-    this.set('pagination.totalResults', disaggregs.length);
+    this.paginatedDisaggregations = (this.filteredDisaggregations || []).slice(
+      (pageNumber - 1) * pageSize,
+      pageNumber * pageSize
+    );
+  }
+
+  paginatorChanged() {
+    this._paginate(this.paginator.page, this.paginator.page_size);
   }
 
   _addDisaggregation() {
@@ -234,10 +267,4 @@ class DisaggregationList extends connect(store)(
       })
       .join('; ');
   }
-
-  userIsPme(currentUser: User) {
-    return userIsPme(currentUser);
-  }
 }
-
-window.customElements.define('disaggregation-list', DisaggregationList);
