@@ -179,7 +179,6 @@ export class PartnersModule extends connect(store)(
               ?hidden="${!(
                 this._pageEquals(this.activePage, 'list') && this.partnersListActive(this.listActive, this.route)
               )}"
-              .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
               .currentModule="${this.currentModule}"
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;

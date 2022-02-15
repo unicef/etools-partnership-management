@@ -46,8 +46,6 @@ export class PartnersList extends connect(store)(PartnersListBase) {
   }
 
   getSelectedPartnerTypes(selectedPartnerTypes: any) {
-    // return this.showOnlyGovernmentType
-    //   ? this._governmentLockedPartnerTypes
     return this.getFilterUrlValuesAsArray(selectedPartnerTypes);
   }
 }
