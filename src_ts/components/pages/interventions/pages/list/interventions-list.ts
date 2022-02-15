@@ -11,20 +11,13 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
-import {
-  GenericObject,
-  Intervention,
-  ListItemIntervention,
-  RouteDetails,
-  RouteQueryParams
-} from '@unicef-polymer/etools-types';
+import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {EtoolsRouter} from '../../../../utils/routes';
 import {buildUrlQueryString} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import pmpEdpoints from '../../../../endpoints/endpoints';
 import '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
 import {translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
@@ -33,7 +26,6 @@ import '../../data/interventions-list-data.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import {InterventionsListData} from '../../data/interventions-list-data.js';
-import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
@@ -60,7 +52,6 @@ export class InterventionsList extends connect(store)(
 
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} :host {
-          @apply --layout-flex;
           box-sizing: border-box;
           width: 100%;
           background-color: #eeeeee;
@@ -197,7 +188,7 @@ export class InterventionsList extends connect(store)(
                   icon-first
                   hide-tooltip="${this._hideDateFrsWarningTooltip(
                     intervention.start,
-                    intervention.frs_earliest_start_date,
+                    intervention.frs_earliest_start_date!,
                     intervention.status
                   )}"
                 >
@@ -213,7 +204,7 @@ export class InterventionsList extends connect(store)(
                   icon-first
                   hide-tooltip="${this._hideDateFrsWarningTooltip(
                     intervention.end,
-                    intervention.frs_latest_end_date,
+                    intervention.frs_latest_end_date!,
                     intervention.status
                   )}"
                 >
@@ -246,8 +237,7 @@ export class InterventionsList extends connect(store)(
                     intervention.all_currencies_are_consistent,
                     intervention.unicef_cash,
                     intervention.frs_total_frs_amt,
-                    intervention,
-                    'interventionsList'
+                    intervention as any
                   )}"
                 >
                   <span slot="field">
@@ -505,7 +495,7 @@ export class InterventionsList extends connect(store)(
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(newParams) as any);
 
     const stringParams: string = buildUrlQueryString(newParams);
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);

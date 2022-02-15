@@ -12,7 +12,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
  * @polymer
  * @mixinFunction
  */
-function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class ModuleMainElCommonFunctionalityClass extends baseClass {
     _listPageQueryParams!: GenericObject;
     /* Gets updated by app-route */
@@ -139,4 +139,4 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<LitElement>>
   return ModuleMainElCommonFunctionalityClass;
 }
 
-export default ModuleMainElCommonFunctionalityMixin;
+export default ModuleMainElCommonFunctionalityMixinLit;
