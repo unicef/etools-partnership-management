@@ -14,7 +14,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  */
-function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class ListDataClass extends EndpointsLitMixin(AjaxServerErrorsMixin(baseClass)) {
     @property({type: Object})
     options: {
@@ -129,4 +129,4 @@ function ListDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
   return ListDataClass;
 }
 
-export default ListDataMixin;
+export default ListDataMixinLit;
