@@ -197,7 +197,10 @@ class InterventionsModule extends connect(store)(
           <!-- main page content end -->
         </div>
       </div>
-      <intervention-tabs hidden="[[!showNewPMP(activePage)]]"></intervention-tabs>
+      <intervention-tabs
+        hidden="[[!showNewPMP(activePage)]]"
+        on-intervention-deleted="handleInterventionDeleted"
+      ></intervention-tabs>
     `;
   }
 
@@ -596,6 +599,10 @@ class InterventionsModule extends connect(store)(
       delete intervention.cfei_number;
     }
     return intervention;
+  }
+
+  handleInterventionDeleted(event: CustomEvent) {
+    (this.$.interventionData as InterventionItemData)._handleInterventionDeleteSuccess(event.detail.id);
   }
 }
 
