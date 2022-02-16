@@ -306,7 +306,7 @@ export class InterventionsList extends connect(store)(
   partners = [];
 
   connectedCallback(): void {
-    this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 200);
+    this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
 
     super.connectedCallback();
 
