@@ -16,7 +16,7 @@ import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
+import {isJsonStrMatch} from '../../utils/utils';
 import {store, RootState} from '../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -30,9 +30,7 @@ import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit'
 import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import debounce from 'lodash-es/debounce';
-import cloneDeep from 'lodash-es/cloneDeep';
-import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 
 // @ts-ignore
 setStore(store);
@@ -157,7 +155,7 @@ export class InterventionsModule extends connect(store)(
         <page-content-header with-tabs-visible="${this.tabsActive}">
           <div slot="page-title">
             <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> PD/SPDs </span>
-            <span ?hidden="${!this.newPageActive}">
+            <span ?hidden="${!this._pageEquals(this.activePage, 'new')}">
               <span class="no-capitalization"
                 >${this._getTranslation('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')}</span
               >
@@ -212,7 +210,7 @@ export class InterventionsModule extends connect(store)(
             </interventions-list>
 
             <intervention-new
-              ?hidden="${this._pageEquals(this.activePage, 'new')}"
+              ?hidden="${!this._pageEquals(this.activePage, 'new')}"
               @create-intervention="${this.onCreateIntervention}"
             ></intervention-new>
           </div>
@@ -221,6 +219,8 @@ export class InterventionsModule extends connect(store)(
         </div>
       </div>
       <intervention-tabs ?hidden="${!this.showNewPMP(this.activePage)}"></intervention-tabs>
+
+      <intervention-item-data id="interventionData"></intervention-item-data>
     `;
   }
 
@@ -254,20 +254,20 @@ export class InterventionsModule extends connect(store)(
   @property({type: Boolean})
   editMode!: boolean;
 
-  @property({type: Boolean})
-  _redirectToNewIntervPageInProgress!: boolean;
+  // @property({type: Boolean})
+  // _redirectToNewIntervPageInProgress!: boolean;
 
   @property({type: String})
   errorMsgBoxTitle = 'Errors Saving PD/SSFA';
 
-  @property({type: Object})
-  saved: {
-    interventionId: any;
-    justSaved: boolean;
-  } = {
-    interventionId: null,
-    justSaved: false
-  };
+  // @property({type: Object})
+  // saved: {
+  //   interventionId: any;
+  //   justSaved: boolean;
+  // } = {
+  //   interventionId: null,
+  //   justSaved: false
+  // };
 
   @property({type: Boolean})
   _forceDetUiValidationOnAttach!: boolean;
@@ -275,8 +275,8 @@ export class InterventionsModule extends connect(store)(
   @property({type: Boolean})
   _forceReviewUiValidationOnAttach!: boolean;
 
-  @property({type: Boolean})
-  newPageActive!: boolean;
+  // @property({type: Boolean})
+  // newPageActive!: boolean;
 
   @property({type: Object})
   reportsPrevParams!: GenericObject;
@@ -289,22 +289,22 @@ export class InterventionsModule extends connect(store)(
   @property({type: String})
   rootPath!: string;
 
-  @property({type: String})
-  prevRouteDetails!: string;
+  @property({type: Object})
+  prevRouteDetails!: any;
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
 
-    if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'interventions', '')) {
+    if (get(state, 'app.routeDetails.routeName') !== 'interventions') {
       return;
     } else {
       const routeDetials = state.app?.routeDetails;
-      if (!isJsonStrMatch(this.prevRouteDetails, routeDetials)) {
-        this.listPageQueryParams = routeDetials?.queryParams;
-        this.activePage = routeDetials!.subRouteName!;
-        if (!['list', 'new'].includes(this.activePage)) {
-          this.tabsActive = true;
-        }
+      if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
+        // this.listPageQueryParams = routeDetials?.queryParams;
+        // this.activePage = routeDetials!.subRouteName!;
+        this.prevRouteDetails = routeDetials;
+        this.tabsActive = !['list', 'new'].includes(routeDetials!.subRouteName!);
+        this.pageChanged(routeDetials!.subRouteName!);
       }
     }
 
@@ -349,7 +349,7 @@ export class InterventionsModule extends connect(store)(
       loadingSource: 'main-page'
     });
     // this._showInterventionPageLoadingMessage();
-    this.pageChanged = debounce(this.pageChanged.bind(this), 200);
+    // this.pageChanged = debounce(this.pageChanged.bind(this), 200);
   }
 
   disconnectedCallback() {
@@ -377,31 +377,31 @@ export class InterventionsModule extends connect(store)(
     this.removeEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
 
-  _interventionChanged(intervention: Intervention, permissions: UserPermissions) {
-    if (typeof intervention === 'undefined' || typeof permissions === 'undefined') {
-      return;
-    }
-    // this._displayAnyMigrationErrors(intervention);
-    // this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
+  // _interventionChanged(intervention: Intervention, permissions: UserPermissions) {
+  //   if (typeof intervention === 'undefined' || typeof permissions === 'undefined') {
+  //     return;
+  //   }
+  //   // this._displayAnyMigrationErrors(intervention);
+  //   // this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
-    this.originalIntervention = JSON.parse(JSON.stringify(intervention));
-    if (!isEmptyObject(intervention)) {
-      // set edit permissions
-      const isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
-      if (isNewIntervention) {
-        this.intervention.reference_number_year = new Date().getFullYear();
-        this.requestUpdate();
-      }
+  //   this.originalIntervention = JSON.parse(JSON.stringify(intervention));
+  //   if (!isEmptyObject(intervention)) {
+  //     // set edit permissions
+  //     const isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
+  //     if (isNewIntervention) {
+  //       this.intervention.reference_number_year = new Date().getFullYear();
+  //       this.requestUpdate();
+  //     }
 
-      setTimeout(() => {
-        // ensure intervention get/save/change status loading msgs close
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'pd-ssfa-data'
-        });
-      }, 1000);
-    }
-  }
+  //     setTimeout(() => {
+  //       // ensure intervention get/save/change status loading msgs close
+  //       fireEvent(this, 'global-loading', {
+  //         active: false,
+  //         loadingSource: 'pd-ssfa-data'
+  //       });
+  //     }, 1000);
+  //   }
+  // }
 
   _displayAnyMigrationErrors(_intervention: any) {
     // TODO -remove
@@ -425,34 +425,34 @@ export class InterventionsModule extends connect(store)(
     // this.saved.interventionId = intervention.id;
   }
 
-  _isPrpTab(tabName: string) {
-    return ['reports', 'progress'].indexOf(tabName) > -1;
-  }
+  // _isPrpTab(tabName: string) {
+  //   return ['reports', 'progress'].indexOf(tabName) > -1;
+  // }
 
-  _canAccessPdTab(tabName: string) {
-    if (this._isPrpTab(tabName)) {
-      return this.showPrpReports();
-    } else {
-      // not prp tab, allow access
-      return true;
-    }
-  }
+  // _canAccessPdTab(tabName: string) {
+  //   if (this._isPrpTab(tabName)) {
+  //     return this.showPrpReports();
+  //   } else {
+  //     // not prp tab, allow access
+  //     return true;
+  //   }
+  // }
 
-  _resetRedirectToNewInterventionFlag() {
-    if (this._redirectToNewIntervPageInProgress) {
-      this._redirectToNewIntervPageInProgress = false;
-    }
-  }
+  // _resetRedirectToNewInterventionFlag() {
+  //   if (this._redirectToNewIntervPageInProgress) {
+  //     this._redirectToNewIntervPageInProgress = false;
+  //   }
+  // }
 
-  pageChanged() {
+  pageChanged(page: string) {
     // Using isActiveModule will prevent wrong page import
     // if (!this.isActiveModule() || (!this.listActive && !this.tabsActive && !this.newPageActive)) {
     //   return;
     // }
 
-    this.scrollToTopOnCondition(!this._pageEquals(this.activePage, 'list'));
+    this.scrollToTopOnCondition(!this._pageEquals(page, 'list'));
 
-    if (['list', 'new'].includes(this.activePage)) {
+    if (['list', 'new'].includes(page)) {
       this.reportsPrevParams = {};
     }
     const fileImportDetails = {
@@ -470,13 +470,15 @@ export class InterventionsModule extends connect(store)(
     // } else {
     //   page = this.routeData.tab;
     // }
-    this.setActivePage(
-      this.activePage,
-      fileImportDetails,
-      this._canAccessPdTab,
-      null,
-      this._resetRedirectToNewInterventionFlag
-    );
+    this.setActivePage(page, fileImportDetails, undefined, null, null);
+    // switch (this.activePage) {
+    //   case 'list':
+    //     this.importPageElement('interventions-list', 'interventions/pages/list/');
+    //     break;
+    //   case 'new':
+    //     this.importPageElement('intervention-new', 'interventions/pages/new/');
+    //     break;
+    // }
   }
 
   // _observeRouteDataId(idStr: string) {
@@ -546,9 +548,12 @@ export class InterventionsModule extends connect(store)(
     if (!this._hasEditPermissions(this.permissions)) {
       return;
     }
-    this._redirectToNewIntervPageInProgress = true;
+    // this._redirectToNewIntervPageInProgress = true;
     // this.selectedInterventionId = null;
-    fireEvent(this, 'update-main-path', {path: 'interventions/new'});
+    // fireEvent(this, 'update-main-path', {path: 'interventions/new'});
+
+    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
+    window.dispatchEvent(new CustomEvent('popstate'));
     this._handleInterventionSelectionLoadingMsg();
   }
 
@@ -560,7 +565,9 @@ export class InterventionsModule extends connect(store)(
    * Go to details page once the new intervention has been saved
    */
   _newInterventionSaved(intervention: Intervention) {
-    this.route.path = '/' + intervention.id + '/metadata';
+    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
+    window.dispatchEvent(new CustomEvent('popstate'));
+    // this.route.path = '/' + intervention.id + '/metadata';
     this.requestUpdate();
   }
 
