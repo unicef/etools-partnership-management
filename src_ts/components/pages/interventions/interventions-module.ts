@@ -46,59 +46,6 @@ setStore(store);
  * @appliesMixin SaveInterventionMixin
  */
 
-//  <app-route
-//  .route="${this.route}"
-//  @route-changed="${({detail}: CustomEvent) => {
-//    // Sometimes only __queryParams get changed
-//    // In this case  detail will contain detail.path = 'route._queryParams'
-//    // and value will contain only the value for this.route._queryParams and not the entire route object
-//    if (detail.path) {
-//      // set(this, detail.path, detail.value);
-//      this.route = {...this.route};
-//    } else {
-//      this.route = detail.value;
-//    }
-//  }}"
-//  pattern="/list"
-//  .queryParams="${this.listPageQueryParams}"
-//  @query-params-changed="${({detail}: CustomEvent) => {
-//    setTimeout(() => {
-//      this.listPageQueryParams = detail.value;
-//    }, 100);
-//  }}"
-//  .active="${this.listActive}"
-//  @active-changed="${({detail}: CustomEvent) => {
-//    this.listActive = detail.value;
-//    this.newInterventionActive = this._updateNewItemPageFlag();
-//    this.pageChanged();
-//  }}"
-// ></app-route>
-
-// <app-route
-//  .route="${cloneDeep(this.route)}"
-//  pattern="/new"
-//  .active="${this.newPageActive}"
-//  @active-changed="${({detail}: CustomEvent) => {
-//    this.newPageActive = detail.value;
-//    this.pageChanged();
-//  }}"
-// ></app-route>
-// <app-route
-//  .route="${this.route}"
-//  pattern="/:id/:tab"
-//  .active="${this.tabsActive}"
-//  .data="${this.routeData}"
-//  @active-changed="${({detail}: CustomEvent) => {
-//    this.tabsActive = detail.value;
-//    this.pageChanged();
-//  }}"
-//  @data-changed="${({detail}: CustomEvent) => {
-//    this.routeData = detail.value;
-//    this.newInterventionActive = this._updateNewItemPageFlag();
-//    this.pageChanged();
-//  }}"
-// ></app-route>
-
 @customElement('interventions-module')
 export class InterventionsModule extends connect(store)(
   ScrollControlMixinLit(
@@ -183,7 +130,10 @@ export class InterventionsModule extends connect(store)(
               </paper-menu-button>
             </div>
 
-            <div class="action" ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.permissions)}">
+            <div
+              class="action"
+              ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.userPermissions)}"
+            >
               <paper-button class="primary-btn with-prefix" @tap="${this._goToNewInterventionPage}">
                 <iron-icon icon="add"></iron-icon>
                 ${this._getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')}
@@ -209,10 +159,9 @@ export class InterventionsModule extends connect(store)(
             >
             </interventions-list>
 
-            <intervention-new
-              ?hidden="${!this._pageEquals(this.activePage, 'new')}"
-              @create-intervention="${this.onCreateIntervention}"
-            ></intervention-new>
+            ${this._pageEquals(this.activePage, 'new')
+              ? html`<intervention-new @create-intervention="${this.onCreateIntervention}"></intervention-new>`
+              : html``}
           </div>
 
           <!-- main page content end -->
@@ -224,15 +173,8 @@ export class InterventionsModule extends connect(store)(
     `;
   }
 
-  /**
-   * User permissions at this level
-   * TODO: rename to userPermissions
-   */
   @property({type: Object})
-  permissions!: UserPermissions;
-
-  // @property({type: Number})
-  // selectedInterventionId!: number;
+  userPermissions!: UserPermissions;
 
   @property({type: Object})
   intervention: Partial<Intervention> = {};
@@ -254,29 +196,8 @@ export class InterventionsModule extends connect(store)(
   @property({type: Boolean})
   editMode!: boolean;
 
-  // @property({type: Boolean})
-  // _redirectToNewIntervPageInProgress!: boolean;
-
   @property({type: String})
   errorMsgBoxTitle = 'Errors Saving PD/SSFA';
-
-  // @property({type: Object})
-  // saved: {
-  //   interventionId: any;
-  //   justSaved: boolean;
-  // } = {
-  //   interventionId: null,
-  //   justSaved: false
-  // };
-
-  @property({type: Boolean})
-  _forceDetUiValidationOnAttach!: boolean;
-
-  @property({type: Boolean})
-  _forceReviewUiValidationOnAttach!: boolean;
-
-  // @property({type: Boolean})
-  // newPageActive!: boolean;
 
   @property({type: Object})
   reportsPrevParams!: GenericObject;
@@ -300,8 +221,6 @@ export class InterventionsModule extends connect(store)(
     } else {
       const routeDetials = state.app?.routeDetails;
       if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
-        // this.listPageQueryParams = routeDetials?.queryParams;
-        // this.activePage = routeDetials!.subRouteName!;
         this.prevRouteDetails = routeDetials;
         this.tabsActive = !['list', 'new'].includes(routeDetials!.subRouteName!);
         this.pageChanged(routeDetials!.subRouteName!);
@@ -337,19 +256,12 @@ export class InterventionsModule extends connect(store)(
 
   connectedCallback() {
     super.connectedCallback();
-    // if (this.newInterventionActive) {
-    //   // @ts-ignore
-    //   this._setNewInterventionObj();
-    // }
-
     this._initInterventionsModuleListeners();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
-    // this._showInterventionPageLoadingMessage();
-    // this.pageChanged = debounce(this.pageChanged.bind(this), 200);
+    // fireEvent(this, 'global-loading', {
+    //   active: false,
+    //   loadingSource: 'main-page'
+    // });
   }
 
   disconnectedCallback() {
@@ -359,9 +271,9 @@ export class InterventionsModule extends connect(store)(
 
   _initInterventionsModuleListeners() {
     this._interventionSaveErrors = this._interventionSaveErrors.bind(this);
-    this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
+    // this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
-    this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+    // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
 
     this.onAmendmentAdded = this.onAmendmentAdded.bind(this);
     this.onAmendmentDeleted = this.onAmendmentDeleted.bind(this);
@@ -371,78 +283,11 @@ export class InterventionsModule extends connect(store)(
 
   _removeInterventionsModuleListeners() {
     this.removeEventListener('intervention-save-error', this._interventionSaveErrors as any);
-    this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+    // this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
 
     this.removeEventListener('amendment-added', this.onAmendmentAdded as any);
     this.removeEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
-
-  // _interventionChanged(intervention: Intervention, permissions: UserPermissions) {
-  //   if (typeof intervention === 'undefined' || typeof permissions === 'undefined') {
-  //     return;
-  //   }
-  //   // this._displayAnyMigrationErrors(intervention);
-  //   // this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
-
-  //   this.originalIntervention = JSON.parse(JSON.stringify(intervention));
-  //   if (!isEmptyObject(intervention)) {
-  //     // set edit permissions
-  //     const isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
-  //     if (isNewIntervention) {
-  //       this.intervention.reference_number_year = new Date().getFullYear();
-  //       this.requestUpdate();
-  //     }
-
-  //     setTimeout(() => {
-  //       // ensure intervention get/save/change status loading msgs close
-  //       fireEvent(this, 'global-loading', {
-  //         active: false,
-  //         loadingSource: 'pd-ssfa-data'
-  //       });
-  //     }, 1000);
-  //   }
-  // }
-
-  _displayAnyMigrationErrors(_intervention: any) {
-    // TODO -remove
-    // if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
-    //   if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
-    //     // Avoid showing msg again after save
-    //     this.set(
-    //       'errorMsgBoxTitle',
-    //       'eTools validation code has been upgraded and this record is now considered invalid due to:'
-    //     );
-    //     fireEvent(this, 'set-server-errors', intervention.metadata.error_msg);
-    //   }
-    // }
-  }
-
-  /* Show metadata error message on intervention detail 'page load'*/
-  _makeSureMigrationErrorIsNotShownAgainAfterSave(_intervention: Intervention) {
-    // if (this.saved.interventionId !== intervention.id) {
-    //   this.saved.justSaved = false;
-    // }
-    // this.saved.interventionId = intervention.id;
-  }
-
-  // _isPrpTab(tabName: string) {
-  //   return ['reports', 'progress'].indexOf(tabName) > -1;
-  // }
-
-  // _canAccessPdTab(tabName: string) {
-  //   if (this._isPrpTab(tabName)) {
-  //     return this.showPrpReports();
-  //   } else {
-  //     // not prp tab, allow access
-  //     return true;
-  //   }
-  // }
-
-  // _resetRedirectToNewInterventionFlag() {
-  //   if (this._redirectToNewIntervPageInProgress) {
-  //     this._redirectToNewIntervPageInProgress = false;
-  //   }
-  // }
 
   pageChanged(page: string) {
     // Using isActiveModule will prevent wrong page import
@@ -462,40 +307,9 @@ export class InterventionsModule extends connect(store)(
       errMsgPrefixTmpl: '[intervention(s) ##page##]',
       loadingMsgSource: 'interv-page'
     };
-    // let page;
-    // if (this.listActive) {
-    //   page = 'list';
-    // } else if (this.newPageActive) {
-    //   page = 'new';
-    // } else {
-    //   page = this.routeData.tab;
-    // }
-    this.setActivePage(page, fileImportDetails, undefined, null, null);
-    // switch (this.activePage) {
-    //   case 'list':
-    //     this.importPageElement('interventions-list', 'interventions/pages/list/');
-    //     break;
-    //   case 'new':
-    //     this.importPageElement('intervention-new', 'interventions/pages/new/');
-    //     break;
-    // }
-  }
 
-  // _observeRouteDataId(idStr: string) {
-  //   // Using isActiveModule will prevent PD details/reports/progress request with the wrong id (report id)
-  //   if (!this.isActiveModule() || typeof idStr === 'undefined') {
-  //     return;
-  //   }
-  //   setTimeout(() => {
-  //     let id: number | null = parseInt(idStr, 10);
-  //     if (isNaN(id)) {
-  //       id = null;
-  //     }
-  //     if (this.selectedInterventionId !== id) {
-  //       this.selectedInterventionId = id;
-  //     }
-  //   }, 0);
-  // }
+    this.setActivePage(page, fileImportDetails, undefined, null, undefined);
+  }
 
   onAmendmentDeleted(e: CustomEvent) {
     (this.shadowRoot?.querySelector('#interventionData') as InterventionItemData).deleteInterventionFromDexie(
@@ -545,16 +359,16 @@ export class InterventionsModule extends connect(store)(
 
   _goToNewInterventionPage() {
     // go to new intervention
-    if (!this._hasEditPermissions(this.permissions)) {
+    if (!this._hasEditPermissions(this.userPermissions)) {
       return;
     }
-    // this._redirectToNewIntervPageInProgress = true;
-    // this.selectedInterventionId = null;
-    // fireEvent(this, 'update-main-path', {path: 'interventions/new'});
 
     history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
     window.dispatchEvent(new CustomEvent('popstate'));
-    this._handleInterventionSelectionLoadingMsg();
+    fireEvent(this, 'global-loading', {
+      active: true,
+      loadingSource: 'interv-page'
+    });
   }
 
   _visibleTabContent(activePage: string, expectedPage: string, newInterventionActive: boolean) {
@@ -567,7 +381,6 @@ export class InterventionsModule extends connect(store)(
   _newInterventionSaved(intervention: Intervention) {
     history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
     window.dispatchEvent(new CustomEvent('popstate'));
-    // this.route.path = '/' + intervention.id + '/metadata';
     this.requestUpdate();
   }
 
@@ -586,28 +399,22 @@ export class InterventionsModule extends connect(store)(
     }
   }
 
-  _handleTabSelectAction(e: CustomEvent) {
-    setTimeout(() => {
-      this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
-    });
-  }
-
-  _handleInterventionSelectionLoadingMsg() {
-    setTimeout(() => {
-      this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
-    });
-  }
+  // _handleInterventionSelectionLoadingMsg() {
+  //   setTimeout(() => {
+  //     this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+  //   });
+  // }
 
   /**
    * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
    */
-  _showInterventionPageLoadingMessage() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'interv-page'
-    });
-  }
+  // _showInterventionPageLoadingMessage() {
+  //   fireEvent(this, 'global-loading', {
+  //     message: 'Loading...',
+  //     active: true,
+  //     loadingSource: 'interv-page'
+  //   });
+  // }
 
   _exportPdBudget() {
     // @ts-ignore TODO-convert EtoolsAjaxRequestMixin to module in order for EndpointsMixin members to be visible

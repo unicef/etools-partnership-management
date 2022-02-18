@@ -152,7 +152,6 @@ export class InterventionsList extends connect(store)(
                   class="pd-ref truncate"
                   href="interventions/${intervention.id}/metadata"
                   title="${this.getDisplayValue(intervention.number)}"
-                  @click="${this._triggerInterventionLoadingMsg}"
                 >
                   ${this.getDisplayValue(intervention.number)}
                 </a>
@@ -339,7 +338,7 @@ export class InterventionsList extends connect(store)(
 
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
-      this.loadListData();
+      this.loadFilteredInterventions();
     }
   }
 
@@ -432,20 +431,17 @@ export class InterventionsList extends connect(store)(
     return [];
   }
 
-  loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'pd-list'
-    });
-    this.loadFilteredInterventions();
-  }
-
   loadFilteredInterventions() {
     const intervElem = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
     if (!intervElem) {
       return;
     }
+    fireEvent(this, 'global-loading', {
+      message: 'Loading...',
+      active: true,
+      loadingSource: 'pd-list'
+    });
+
     const queryParams = this.routeDetails?.queryParams;
 
     const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
