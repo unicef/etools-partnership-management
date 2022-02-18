@@ -1,8 +1,6 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../../../redux/store';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-menu-button/paper-menu-button';
@@ -18,594 +16,407 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin.js';
-import ListFiltersMixin from '../../../../common/mixins/list-filters-mixin';
-import PaginationMixin from '../../../../common/mixins/pagination-mixin.js';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
-import CommonMixin from '../../../../common/mixins/common-mixin';
-import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../../endpoints/endpoints';
 
-import {SharedStyles} from '../../../../styles/shared-styles';
-import {listFilterStyles} from '../../../../styles/list-filter-styles';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
+import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
+
+import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
+import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
 import '../../data/agreements-list-data.js';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
-import {property} from '@polymer/decorators';
-import {ListFilterOption} from '../../../../../typings/filter.types';
-import {CountryProgram, LabelAndValue} from '@unicef-polymer/etools-types';
+import {GenericObject} from '@unicef-polymer/etools-types';
+import {
+  updateFilterSelectionOptions,
+  updateFiltersSelectedValues
+} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+import {translate} from 'lit-translate';
+import {AgreementsFilterKeys, getAgreementFilters} from './agreements-filters';
+import {CommonDataState} from '../../../../../redux/reducers/common-data';
+import get from 'lodash-es/get';
+import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import debounce from 'lodash-es/debounce';
+import pick from 'lodash-es/pick';
+import omit from 'lodash-es/omit';
+import {EtoolsRouter} from '../../../../utils/routes';
 
-let _agreementsLastNavigated = '';
 /**
  * @polymer
  * @customElement
  * @mixinFunction
  * @appliesMixin CommonMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin ListFiltersMixin
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class AgreementsList extends connect(store)(
-  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(PolymerElement)))))
+@customElement('agreements-list')
+export class AgreementsList extends connect(store)(
+  CommonMixin(ListsCommonMixin(PaginationMixin(EndpointsLitMixin(LitElement))))
 ) {
-  static get template() {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
     return html`
-      ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
-      <style include="paper-material-styles data-table-styles">
-        .ag-ref {
+      ${listFilterStyles}
+      <style>
+        ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} .ag-ref {
           @apply --text-btn-style;
           text-transform: none;
         }
+        .page-content {
+          margin: 0 0 24px 0;
+        }
+
+        section.page-content.filters {
+          padding: 8px 24px;
+        }
+
+        @media (max-width: 576px) {
+          section.page-content.filters {
+            padding: 5px;
+          }
+          .page-content {
+            margin: 5px;
+          }
+        }
       </style>
+
       <iron-media-query
         query="(max-width: 767px)"
-        query-matches="[[lowResolutionLayout]]"
-        on-query-matches-changed="onQueryMatchesChanged"
+        .queryMatches="${this.lowResolutionLayout}"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
       ></iron-media-query>
-      <template is="dom-if" if="[[stampListData]]">
-        <agreements-list-data
-          id="agreements"
-          filtered-agreements="[[filteredAgreements]]"
-          on-filtered-agreements-changed="onFilteredAgreementsChanged"
-          total-results="[[paginator.count]]"
-          on-total-results-changed="onTotalResultsChanged"
-          list-data-path="filteredAgreements"
-          on-agreements-loaded="_requiredDataHasBeenLoaded"
-          fire-data-loaded
-        >
-        </agreements-list-data>
-      </template>
 
-      <div id="filters" class="paper-material" elevation="1">
-        <div id="filters-fields">
-          <paper-input
-            id="query"
-            class="filter"
-            type="search"
-            placeholder="Search"
-            autocomplete="off"
-            value="[[q]]"
-            on-value-changed="onQueryChanged"
-          >
-            <iron-icon icon="search" slot="prefix"></iron-icon>
-          </paper-input>
+      <agreements-list-data
+        id="agreements"
+        @filtered-agreements-changed="${(e: CustomEvent) => {
+          this.filteredAgreements = e.detail;
+        }}"
+        @total-results-changed="${(e: CustomEvent) => {
+          this.paginator = {...this.paginator, count: e.detail};
+          // etools-data-table-footer is not displayed without this:
+          setTimeout(() => this.requestUpdate());
+        }}"
+        list-data-path="filteredAgreements"
+        fireDataLoaded
+      >
+      </agreements-list-data>
 
-          <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
-              <!-- esmm multi -->
-              <etools-dropdown-multi
-                class="filter"
-                label="[[filter.filterName]]"
-                placeholder="Select"
-                disabled$="[[!filter.selectionOptions.length]]"
-                options="[[filter.selectionOptions]]"
-                option-value="[[filter.optionValue]]"
-                option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.selectedValue]]"
-                data-filter-path$="[[filter.path]]"
-                on-etools-selected-items-changed="esmmValueChanged"
-                trigger-value-change-event
-                hide-search="[[filter.hideSearch]]"
-                min-width="[[filter.minWidth]]"
-                horizontal-align="left"
-                no-dynamic-align
-              >
-              </etools-dropdown-multi>
-            </template>
+      <section class="elevation page-content filters" elevation="1">
+        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+      </section>
 
-            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-              <datepicker-lite
-                id$="datepicker_[[filter.path]]"
-                class="filter date"
-                label="[[filter.filterName]]"
-                placeholder="Select"
-                value="[[filter.selectedValue]]"
-                on-date-has-changed="_filterDateHasChanged"
-                data-filter-path$="[[filter.path]]"
-                fire-date-has-changed
-                selected-date-display-format="D MMM YYYY"
-              >
-              </datepicker-lite>
-            </template>
-
-            <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
-              <div class="filter">
-                <etools-dropdown
-                  class="filter"
-                  label="[[filter.filterName]]"
-                  placeholder="Select"
-                  disabled$="[[!filter.selectionOptions.length]]"
-                  options="[[filter.selectionOptions]]"
-                  option-value="[[filter.optionValue]]"
-                  option-label="[[filter.optionLabel]]"
-                  selected="[[filter.selectedValue]]"
-                  trigger-value-change-event
-                  on-etools-selected-item-changed="filterValueChanged"
-                  data-filter-path$="[[filter.path]]"
-                  hide-search="[[filter.hideSearch]]"
-                  min-width="[[filter.minWidth]]"
-                  horizontal-align="left"
-                  no-dynamic-align
-                  enable-none-option
-                >
-                </etools-dropdown>
-              </div>
-            </template>
-          </template>
-        </div>
-
-        <div class="fixed-controls">
-          <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
-            <paper-button class="button" slot="dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>
-              [[_getTranslation('GENERAL.FILTERS')]]
-            </paper-button>
-            <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilters" class="secondary-btn">
-                [[_getTranslation('GENERAL.CLEAR_ALL')]]</paper-button
-              >
-            </div>
-            <paper-listbox slot="dropdown-content" multi>
-              <template is="dom-repeat" items="[[listFilterOptions]]">
-                <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
-                  <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
-                  <paper-item-body>[[item.filterName]]</paper-item-body>
-                </paper-icon-item>
-              </template>
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
-      </div>
-
-      <div id="list" class="paper-material hidden" elevation="1">
+      <div id="list" elevation="1" class="paper-material elevation">
         <etools-data-table-header
-          low-resolution-layout="[[lowResolutionLayout]]"
+          .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
-          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
+          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count ||
+          0} results to show"
         >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
-            [[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]
+            ${translate('AGREEMENT_REFERENCE_NUMBER')}
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="partner_name" sortable>
-            [[_getTranslation('PARTNER_FULL_NAME')]]
+            ${translate('PARTNER_FULL_NAME')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type"
-            >[[_getTranslation('TYPE')]]</etools-data-table-column
-          >
+          <etools-data-table-column class="col-2" field="partner_type">${translate('TYPE')}</etools-data-table-column>
           <etools-data-table-column class="col-2" field="partner_status"
-            >[[_getTranslation('STATUS')]]</etools-data-table-column
+            >${translate('STATUS')}</etools-data-table-column
           >
           <etools-data-table-column class="flex-c" field="start" sortable
-            >[[_getTranslation('START_DATE')]]</etools-data-table-column
+            >${translate('START_DATE')}</etools-data-table-column
           >
           <etools-data-table-column class="flex-c" field="end" sortable
-            >[[_getTranslation('END_DATE')]]</etools-data-table-column
+            >${translate('END_DATE')}</etools-data-table-column
           >
         </etools-data-table-header>
 
-        <template
-          id="rows"
-          is="dom-repeat"
-          items="[[filteredAgreements]]"
-          as="agreement"
-          initial-count="10"
-          on-dom-change="_listDataChanged"
-        >
-          <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
+        ${this.filteredAgreements.map(
+          (agreement: any) => html` <etools-data-table-row
+            .lowResolutionLayout="${this.lowResolutionLayout}"
+            .detailsOpened="${this.detailsOpened}"
+          >
             <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label$="[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]">
+              <span class="col-data col-2" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
                 <a
                   class="ag-ref truncate"
-                  href="agreements/[[agreement.id]]/details"
-                  title="[[getDisplayValue(agreement.agreement_number)]]"
-                  on-click="_triggerAgreementLoadingMsg"
+                  href="agreements/${agreement.id}/details"
+                  title="${this.getDisplayValue(agreement.agreement_number, ',', false)}"
+                  @click="${this._triggerAgreementLoadingMsg}"
                 >
-                  [[getDisplayValue(agreement.agreement_number)]]
+                  ${this.getDisplayValue(agreement.agreement_number, ',', false)}
                 </a>
               </span>
               <span
                 class="col-data col-4"
-                data-col-header-label$="[[_getTranslation('PARTNER_FULL_NAME')]]"
-                title="[[getDisplayValue(agreement.partner_name)]]"
+                data-col-header-label="${translate('PARTNER_FULL_NAME')}"
+                title="${this.getDisplayValue(agreement.partner_name, ',', false)}"
               >
-                <span> [[getDisplayValue(agreement.partner_name)]] </span>
+                <span> ${this.getDisplayValue(agreement.partner_name, ',', false)} </span>
               </span>
-              <span class="col-data col-2" data-col-header-label$="[[_getTranslation('TYPE')]]">
-                [[getDisplayValue(agreement.agreement_type)]]
+              <span class="col-data col-2" data-col-header-label="${translate('TYPE')}">
+                ${this.getDisplayValue(agreement.agreement_type, ',', false)}
               </span>
-              <span class="col-data col-2 capitalize" data-col-header-label$="[[_getTranslation('STATUS')]]">
-                [[getDisplayValue(agreement.status)]]
+              <span class="col-data col-2 capitalize" data-col-header-label="${translate('STATUS')}">
+                ${this.getDisplayValue(agreement.status, ',', false)}
               </span>
-              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('START_DATE')]]">
-                [[_checkAndShowAgreementDate(agreement.start)]]
+              <span class="col-data flex-c" data-col-header-label="${translate('START_DATE')}">
+                ${this._checkAndShowAgreementDate(agreement.start)}
               </span>
-              <span class="col-data flex-c" data-col-header-label$="[[_getTranslation('END_DATE')]]">
-                [[_checkAndShowAgreementDate(agreement.end)]]
+              <span class="col-data flex-c" data-col-header-label="${translate('END_DATE')}">
+                ${this._checkAndShowAgreementDate(agreement.end)}
               </span>
             </div>
             <div slot="row-data-details">
               <div class="row-details-content col-2">
                 <span class="rdc-title">Signed By Partner Date</span>
-                <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
+                <span>${this._checkAndShowAgreementDate(agreement.signed_by_partner_date)}</span>
               </div>
               <div class="row-details-content col-2">
                 <span class="rdc-title">Signed By UNICEF Date</span>
-                <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
+                <span>${this._checkAndShowAgreementDate(agreement.signed_by_unicef_date)}</span>
               </div>
             </div>
-          </etools-data-table-row>
-        </template>
-
+          </etools-data-table-row>`
+        )}
         <etools-data-table-footer
-          low-resolution-layout="[[lowResolutionLayout]]"
-          page-size="[[paginator.page_size]]"
-          page-number="[[paginator.page]]"
-          total-results="[[paginator.count]]"
-          visible-range="[[paginator.visible_range]]"
-          on-visible-range-changed="visibleRangeChanged"
-          on-page-size-changed="pageSizeChanged"
-          on-page-number-changed="pageNumberChanged"
+          .lowResolutionLayout="${this.lowResolutionLayout}"
+          .pageSize="${this.paginator.page_size}"
+          .pageNumber="${this.paginator.page}"
+          .totalResults="${this.paginator.count}"
+          .visibleRange="${this.paginator.visible_range}"
+          @page-size-changed="${this.pageSizeChanged}"
+          @page-number-changed="${this.pageNumberChanged}"
         >
         </etools-data-table-footer>
       </div>
     `;
   }
 
-  @property({type: Array, notify: true, observer: '_listChanged'})
+  @property({type: Array})
   filteredAgreements: [] = [];
 
   @property({type: Array})
-  selectedAgTypes: [] = [];
-
-  @property({type: Array})
-  selectedAgStatuses: [] = [];
-
-  @property({type: Array, observer: '_arrayFilterChanged'})
-  selectedPartners: [] = [];
-
-  @property({type: Array, observer: '_arrayFilterChanged'})
-  selectedCPStructures: [] = [];
-
-  @property({type: String, observer: 'resetPageNumber'})
-  startDate = '';
-
-  @property({type: String, observer: 'resetPageNumber'})
-  endDate = '';
-
-  @property({type: Array})
   partnersDropdownData: [] = [];
-
-  @property({type: Array})
-  countryProgrammes: CountryProgram[] = [];
-
-  @property({type: Array})
-  agreementTypes: LabelAndValue[] = [];
-
-  @property({type: Array})
-  agreementStatuses: LabelAndValue[] = [];
 
   @property({type: Boolean})
   lowResolutionLayout = false;
 
   @property({type: Array})
-  _sortableFieldNames: string[] = ['agreement_number', 'partner_name', 'start', 'end'];
+  allFilters!: EtoolsFilter[];
 
-  @property({type: String})
-  isSpecialConditionsPca: string | null = null;
+  @property({type: Object})
+  routeDetails!: RouteDetails | null;
 
-  _updateFiltersValsDebouncer!: Debouncer | null;
-  _queryDebouncer!: Debouncer | null;
-
-  static get observers() {
-    return [
-      // used for non removable filters
-      'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' + 'selectedCPStructures.length)',
-      '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
-      '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
-        'selectedPartners, selectedCPStructures.length,' +
-        'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded,' +
-        'initComplete, isSpecialConditionsPca)',
-      '_init(active)'
-    ];
-  }
-
-  stateChanged(state: RootState) {
-    this.partnersDropdownData = partnersDropdownDataSelector(state);
-
-    if (!isJsonStrMatch(state.commonData!.agreementStatuses, this.agreementStatuses)) {
-      this.agreementStatuses = [...state.commonData!.agreementStatuses];
-    }
-    if (!isJsonStrMatch(state.commonData!.agreementTypes, this.agreementTypes)) {
-      this.agreementTypes = [...state.commonData!.agreementTypes];
-    }
-    if (!isJsonStrMatch(state.commonData!.countryProgrammes, this.countryProgrammes)) {
-      this.countryProgrammes = [...state.commonData!.countryProgrammes];
-    }
-  }
-
-  _initFiltersMenuList(
-    partnersDropdownData: number[],
-    agreementStatuses: string[],
-    agreementTypes: string[],
-    countryProgrammes: number[]
-  ) {
-    if (!partnersDropdownData || !agreementStatuses || !agreementTypes || !countryProgrammes) {
-      // this is just to be safe, the method should only get triggered once when redux data is loaded
-      return;
-    }
-    // init list filter options
-    this.initListFiltersData([
-      new ListFilterOption({
-        filterName: this._getTranslation('CP_STRUCTURE'),
-        type: 'etools-dropdown-multi',
-        selectionOptions: countryProgrammes,
-        optionValue: 'id',
-        optionLabel: 'name',
-        selectedValue: [],
-        path: 'selectedCPStructures',
-        selected: true,
-        minWidth: '400px',
-        hideSearch: true
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('ENDS_BEFORE'),
-        type: 'datepicker',
-        selectedValue: '',
-        path: 'endDate',
-        selected: false
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('PARTNER'),
-        type: 'etools-dropdown-multi',
-        selectionOptions: partnersDropdownData,
-        optionValue: 'value',
-        optionLabel: 'label',
-        selectedValue: [],
-        path: 'selectedPartners',
-        selected: true,
-        minWidth: '400px',
-        hideSearch: false
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('STARTS_AFTER'),
-        type: 'datepicker',
-        selectedValue: '',
-        path: 'startDate',
-        selected: false
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('STATUS'),
-        type: 'etools-dropdown-multi',
-        selectionOptions: agreementStatuses,
-        optionValue: 'value',
-        optionLabel: 'label',
-        selectedValue: [],
-        path: 'selectedAgStatuses',
-        selected: true,
-        minWidth: '160px',
-        hideSearch: true
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('TYPE'),
-        type: 'etools-dropdown-multi',
-        selectionOptions: agreementTypes,
-        optionValue: 'value',
-        optionLabel: 'label',
-        selectedValue: [],
-        path: 'selectedAgTypes',
-        selected: true,
-        minWidth: '350px',
-        hideSearch: true
-      }),
-      new ListFilterOption({
-        filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
-        type: 'etools-dropdown',
-        singleSelection: true,
-        selectionOptions: [
-          {value: 'true', label: 'Yes'},
-          {value: 'false', label: 'No'}
-        ],
-        optionValue: 'value',
-        optionLabel: 'label',
-        selectedValue: null,
-        path: 'isSpecialConditionsPca',
-        selected: true,
-        minWidth: '350px',
-        hideSearch: true,
-        allowEmpty: true
-      })
-    ]);
-    this._updateSelectedFiltersValues();
-  }
+  @property({type: Object})
+  prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc'};
 
   connectedCallback() {
     super.connectedCallback();
+
+    this.loadFilteredAgreements = debounce(this.loadFilteredAgreements.bind(this), 600);
     /**
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'ag-page'
-    });
-    this.listAttachedCallback(this.active, 'Loading...', 'ag-list');
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'ag-page'
+      });
+    }, 10);
   }
 
-  // Input: URL query params
-  // Initializes the properties of the list at page load
-  // to the params interpretted from the URL string.
-  _init(active: boolean) {
-    const urlQueryParams = this.urlParams;
+  stateChanged(state: RootState) {
+    // if (state.app?.routeDetails?.routeName !== 'agreements') {
+    //   return;
+    // }
 
-    if (!active || !urlQueryParams) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       return;
     }
 
-    if (isEmptyObject(urlQueryParams)) {
-      urlQueryParams.status = 'draft|signed|suspended';
+    const stateRouteDetails = get(state, 'app.routeDetails');
+    if (
+      !(
+        this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
+        stateRouteDetails.subRouteName === 'list'
+      )
+    ) {
+      return;
     }
-    this.set('initComplete', false);
-    this.setProperties({
-      q: urlQueryParams.q ? urlQueryParams.q : '',
-      selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
-      selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
-      selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
-      selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
-      startDate: urlQueryParams.start ? urlQueryParams.start : '',
-      endDate: urlQueryParams.end ? urlQueryParams.end : '',
-      isSpecialConditionsPca: urlQueryParams.special_conditions_pca
-    });
 
-    this.setPaginationDataFromUrlParams(urlQueryParams);
+    this.partnersDropdownData = partnersDropdownDataSelector(state);
 
-    // format of sort param is sort=field.order ex: sort=name.asc
-    const result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
-    this.set('sortOrder', result);
-    this.set('initComplete', true);
-    this._updateSelectedFiltersValues();
-  }
-
-  _updateSelectedFiltersValues() {
-    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(20), () => {
-      const filtersValues = [
-        {
-          filterName: this._getTranslation('TYPE'),
-          selectedValue: this.selectedAgTypes
-        },
-        {
-          filterName: this._getTranslation('STATUS'),
-          selectedValue: this.selectedAgStatuses
-        },
-        {
-          filterName: this._getTranslation('CP_STRUCTURE'),
-          selectedValue: this.selectedCPStructures
-        },
-        {
-          filterName: this._getTranslation('PARTNER'),
-          selectedValue: this.selectedPartners
-        },
-        {
-          filterName: this._getTranslation('STARTS_AFTER'),
-          selectedValue: this.startDate
-        },
-        {
-          filterName: this._getTranslation('ENDS_BEFORE'),
-          selectedValue: this.endDate
-        },
-        {
-          filterName: this._getTranslation('SPECIAL_CONDITIONS_PCA'),
-          selectedValue: this.isSpecialConditionsPca,
-          allowEmpty: true
-        }
-      ];
-      this.updateShownFilters(filtersValues);
-    });
-  }
-
-  // Updates URL state with new query string, and launches query
-  _updateUrlAndData() {
-    if (this._canFilterData()) {
-      this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-
-      const qs = this._buildQueryString();
-
-      this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs, this._filterListData.bind(this));
-
-      _agreementsLastNavigated = qs || _agreementsLastNavigated; // TODO -test
+    if (!this.allFilters) {
+      this.initFiltersForDisplay(state.commonData!);
     }
-  }
 
-  _filterListData(forceNoLoading?: boolean) {
-    // Query is debounced with a debounce time
-    // set depending on what action the user takes
-    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer, timeOut.after(this.debounceTime), () => {
-      const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-      if (!agreements) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+      if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
-      agreements.query(
-        this.sortOrder.field,
-        this.sortOrder.direction,
-        this.q.trim().toLowerCase(),
-        this.selectedAgTypes,
-        this.selectedAgStatuses,
-        this.getFilterValuesByProperty(this.partnersDropdownData, 'label', this.selectedPartners, 'value'),
-        this.startDate,
-        this.endDate,
-        this.selectedCPStructures,
-        this._getIsSpecialConditionsPca(),
-        this.paginator.page,
-        this.paginator.page_size,
-        forceNoLoading ? false : this.showQueryLoading
-      );
-    });
+      this.routeDetails = cloneDeep(stateRouteDetails);
+      this.setSelectedValuesInFilters();
+      this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
+      this.loadListData();
+    }
   }
 
-  // Outputs the query string for the list
-  _buildQueryString() {
-    return this._buildUrlQueryString({
-      page: this.paginator.page,
-      size: this.paginator.page_size,
-      q: this.q,
-      type: this.selectedAgTypes,
-      status: this.selectedAgStatuses,
-      partners: this.selectedPartners,
-      start: this.startDate,
-      end: this.endDate,
-      cpStructures: this.selectedCPStructures,
-      sort: this.sortOrder,
-      special_conditions_pca: this._getIsSpecialConditionsPca()
-    });
+  /**
+   * - When the page hasn't been visited before (or on page refresh),
+   *  the url is initialized with prevQueryStringObj's default value
+   * - When you apply a set of filters , then go to the details page, then come back to list,
+   * you should have the same set of filters applied on the list
+   */
+  hadToinitializeUrlWithPrevQueryString(stateRouteDetails: any) {
+    if (
+      (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
+      this.prevQueryStringObj
+    ) {
+      this.routeDetails = cloneDeep(stateRouteDetails);
+      this.updateCurrentParams(this.prevQueryStringObj);
+      return true;
+    }
+    return false;
   }
 
-  _buildCsvDownloadUrl() {
-    const endpointUrl = this.getEndpoint('agreements').url;
-    const params = {
-      agreement_type: this.selectedAgTypes,
-      status: this.selectedAgStatuses,
-      partner_name: this.getFilterValuesByProperty(this.partnersDropdownData, 'label', this.selectedPartners, 'value'),
-      start: this.startDate,
-      end: this.endDate,
-      cpStructures: this.selectedCPStructures,
-      search: this.q,
-      special_conditions_pca: this._getIsSpecialConditionsPca()
+  loadListData() {
+    fireEvent(this, 'global-loading', {
+      message: 'Loading...',
+      active: true,
+      loadingSource: 'ag-list'
+    });
+    this.loadFilteredAgreements();
+  }
+
+  loadFilteredAgreements() {
+    const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
+    if (!agreements) {
+      return;
+    }
+    const queryParams = this.routeDetails?.queryParams;
+
+    const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
+
+    agreements.query(
+      sortOrder[0],
+      sortOrder[1],
+      queryParams?.search?.toLowerCase() || '',
+      this.getFilterUrlValuesAsArray(queryParams?.type || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.status || ''),
+      this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
+      queryParams?.start || '',
+      queryParams?.end || '',
+      this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
+      queryParams?.special_conditions_pca || 'false',
+      queryParams?.page ? Number(queryParams.page) : 1,
+      queryParams?.size ? Number(queryParams.size) : 10,
+      false
+    );
+  }
+
+  getFilterUrlValuesAsArray(types: string) {
+    return types ? types.split(',') : [];
+  }
+
+  filteringParamsHaveChanged(stateRouteDetails: any) {
+    return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
+  }
+
+  dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
+    return Boolean(state.commonData?.commonDataIsLoaded);
+  }
+
+  initFiltersForDisplay(commonData: CommonDataState) {
+    const availableFilters = JSON.parse(JSON.stringify(getAgreementFilters()));
+    this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
+    this.allFilters = availableFilters;
+  }
+
+  populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
+    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.cpStructures, commonData!.countryProgrammes);
+    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.partners, this.partnersDropdownData);
+    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.type, commonData!.agreementTypes);
+    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.status, commonData!.agreementStatuses);
+  }
+
+  filtersChange(e: CustomEvent) {
+    this.updateCurrentParams({...e.detail, page: 1}, true);
+  }
+
+  private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
+    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    if (reset) {
+      currentParams = pick(currentParams, ['sort', 'size', 'page']);
+    }
+    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
+    this.prevQueryStringObj = newParams;
+
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+
+    const stringParams: string = buildUrlQueryString(newParams);
+    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+  }
+
+  private setSelectedValuesInFilters() {
+    if (this.allFilters) {
+      // update filter selection and assign the result to etools-filters(trigger render)
+      const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
+    }
+  }
+
+  /**
+   *  On first page access/page refresh
+   */
+  initializePaginatorFromUrl(queryParams: any) {
+    if (queryParams.page) {
+      this.paginator.page = Number(queryParams.page);
+    } else {
+      this.paginator.page = 1;
+    }
+
+    if (queryParams.size) {
+      this.paginator.page_size = Number(queryParams.size);
+    }
+  }
+
+  _sortOrderChanged(e: CustomEvent) {
+    const sort = e.detail.field + '.' + e.detail.direction;
+    this.updateCurrentParams({sort: sort});
+  }
+
+  paginatorChanged() {
+    this.updateCurrentParams({page: this.paginator.page, size: this.paginator.page_size});
+  }
+
+  buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
+    const exportParams = {
+      search: queryStringObj.search,
+      agreement_type: queryStringObj.type,
+      status: queryStringObj.status,
+      partner_name: queryStringObj.partners,
+      start: queryStringObj.start,
+      end: queryStringObj.end,
+      cpStructures: queryStringObj.cpStructures,
+      special_conditions_pca: queryStringObj.special_conditions_pca ? queryStringObj.special_conditions_pca : ''
     };
-    return this._buildCsvExportUrl(params, endpointUrl);
-  }
-
-  _getIsSpecialConditionsPca() {
-    if (this.isSpecialConditionsPca === null || typeof this.isSpecialConditionsPca === 'undefined') {
-      return '';
-    }
-    return this.isSpecialConditionsPca;
-  }
-
-  _arrayFilterChanged(filterVal: [], oldFilterVals: []) {
-    if (typeof oldFilterVals !== 'undefined' && filterVal.length !== oldFilterVals.length) {
-      this.resetPageNumber();
-    }
+    return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'agreements').url);
   }
 
   // verify date and prettify or not
@@ -616,26 +427,4 @@ class AgreementsList extends connect(store)(
   _triggerAgreementLoadingMsg() {
     fireEvent(this, 'trigger-agreement-loading-msg');
   }
-
-  visibleRangeChanged(e: CustomEvent) {
-    this.set('paginator.visible_range', e.detail.value);
-  }
-
-  onQueryChanged(e: CustomEvent) {
-    this.q = e.detail.value;
-  }
-
-  onTotalResultsChanged(e: CustomEvent) {
-    this.set('paginator.count', e.detail.value);
-  }
-
-  onFilteredAgreementsChanged(e: CustomEvent) {
-    this.filteredAgreements = e.detail.value;
-  }
-
-  onQueryMatchesChanged(e: CustomEvent) {
-    this.lowResolutionLayout = e.detail.value;
-  }
 }
-
-window.customElements.define('agreements-list', AgreementsList);

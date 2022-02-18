@@ -1,20 +1,19 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import {property} from '@polymer/decorators';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../common/mixins/common-mixin';
-import {get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  */
-class GeneratePcaDialog extends CommonMixin(PolymerElement) {
-  static get template() {
+@customElement('generate-pca-dialog')
+export class GeneratePcaDialog extends LitElement {
+  render() {
     return html`
       <style>
         paper-dropdown-menu,
@@ -25,23 +24,25 @@ class GeneratePcaDialog extends CommonMixin(PolymerElement) {
       <etools-dialog
         id="etoolsDialog"
         size="md"
-        ok-btn-text="[[_getTranslation('DOWNLOAD')]]"
-        dialog-title="[[_getTranslation('GENERATE_PCA')]]"
+        .okBtnText="${translate('DOWNLOAD')}"
+        dialog-title="${translate('GENERATE_PCA')}"
         keep-dialog-open
-        on-close="_onClose"
-        on-confirm-btn-clicked="_onConfirm"
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._onConfirm}"
         opened
       >
-        <paper-dropdown-menu label="[[_getTranslation('CHOOSE_TEMPLATE')]]">
+        <paper-dropdown-menu label="${translate('CHOOSE_TEMPLATE')}">
           <paper-listbox
             slot="dropdown-content"
             attr-for-selected="item-value"
-            selected="[[selectedTemplate]]"
-            on-selected-changed="onSelectedTemplateChanged"
+            .selected="${this.selectedTemplate}"
+            @selected-changed="${(e: CustomEvent) => {
+              this.selectedTemplate = e.detail.value;
+            }}"
           >
-            <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
-              <paper-item item-value$="[[item.value]]">[[item.label]]</paper-item>
-            </template>
+            ${this.templateOptions.map(
+              (item: any) => html` <paper-item .item-value="${item.value}">${item.label}</paper-item>`
+            )}
           </paper-listbox>
         </paper-dropdown-menu>
       </etools-dialog>
@@ -86,10 +87,6 @@ class GeneratePcaDialog extends CommonMixin(PolymerElement) {
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
-  onSelectedTemplateChanged(e: CustomEvent) {
-    this.selectedTemplate = e.detail.value;
-  }
 }
 
-window.customElements.define('generate-pca-dialog', GeneratePcaDialog);
 export {GeneratePcaDialog as GeneratePcaDialogEl};

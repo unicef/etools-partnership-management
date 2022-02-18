@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import {PolymerElement, html} from '@polymer/polymer';
+import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
@@ -26,30 +26,30 @@ import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import CommonMixin from '../../../../common/mixins/common-mixin';
-import UploadsMixin from '../../../../common/mixins/uploads-mixin';
+import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
+import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin-lit';
 
 import '../../../../endpoints/endpoints.js';
 
-import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {buttonsStyles} from '../../../../styles/buttons-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles-lit';
+import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
+import {buttonsStyles} from '../../../../styles/buttons-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
-import {get as getTranslation} from 'lit-translate';
-import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin';
+import {translate, get as getTranslation} from 'lit-translate';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 
 /**
  * @polymer
@@ -59,10 +59,17 @@ import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
-  static get template() {
+@customElement('agreement-details')
+export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
+    if (!this.agreement) return;
+
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
+      ${pageCommonStyles} ${sharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -114,32 +121,32 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         }
       </style>
 
-      <etools-content-panel class="content-section" panel-title="[[_getTranslation('AGREEMENT_DETAILS')]]">
+      <etools-content-panel class="content-section" panel-title="${translate('AGREEMENT_DETAILS')}">
         <div class="row-h flex-c b-border row-second-bg">
           <div class="col col-6">
             <div class="flex-c padd-right">
               <!-- Agreement Type -->
               <etools-dropdown
                 id="agreementType"
-                label="[[_getTranslation('AGREEMENT_TYPE')]]"
+                label="${translate('AGREEMENT_TYPE')}"
                 placeholder="&#8212;"
-                options="[[agreementTypes]]"
-                selected="[[agreement.agreement_type]]"
+                .options="${this.agreementTypes}"
+                .selected="${this.agreement.agreement_type}"
                 trigger-value-change-event
-                on-etools-selected-item-changed="onAgreementTypeChanged"
+                @etools-selected-item-changed="${this.onAgreementTypeChanged}"
                 hide-search
-                readonly$="[[_isAgreementTypeReadonly(agreement)]]"
+                ?readonly="${this._isAgreementTypeReadonly(this.agreement)}"
                 auto-validate
-                error-message="[[_getTranslation('PLEASE_SELECT_AGREEMENT_TYPE')]]"
+                error-message="${translate('PLEASE_SELECT_AGREEMENT_TYPE')}"
                 required
               >
               </etools-dropdown>
             </div>
-            <div class="year-col" hidden$="[[!_showYearDropdown(agreement.status)]]">
+            <div class="year-col" ?hidden="${!this._showYearDropdown(this.agreement.status)}">
               <year-dropdown
-                label="[[_getTranslation('REF_YEAR')]]"
-                selected-year="[[agreement.reference_number_year]]"
-                on-selected-year-changed="onReferenceNumberChanged"
+                label="${translate('REF_YEAR')}"
+                .selectedYear="${this.agreement.reference_number_year}"
+                @selected-year-changed="${this.onReferenceNumberChanged}"
               >
               </year-dropdown>
             </div>
@@ -148,25 +155,27 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           <div class="col col-3">
             <!-- Reference Number -->
             <paper-input
-              label="[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]"
-              value="[[agreement.agreement_number]]"
-              title$="[[agreement.agreement_number]]"
-              hidden$="[[!agreement.id]]"
+              label="${translate('AGREEMENT_REFERENCE_NUMBER')}"
+              .value="${this.agreement.agreement_number}"
+              .title="${this.agreement.agreement_number}"
+              ?hidden="${!this.agreement.id}"
               placeholder="&#8212;"
               readonly
             >
             </paper-input>
           </div>
-          <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
-            <div class="col col-3">
-              <etools-form-element-wrapper2
-                label="[[_getTranslation('DURATION')]] ([[_getTranslation('SIGNED_DATE')]] - [[_getTranslation('CP_END_DATE')]])"
-                hidden$="[[!agreement.id]]"
-                value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]"
-              >
-              </etools-form-element-wrapper2>
-            </div>
-          </template>
+          ${this._typeMatches(this.agreement.agreement_type, 'PCA')
+            ? html` <div class="col col-3">
+                <etools-form-element-wrapper2
+                  label="${translate('DURATION')} (${translate('SIGNED_DATE')} - ${translate('CP_END_DATE')})"
+                  ?hidden="${!this.agreement.id}"
+                  .value="${this.getDateDisplayValue(this.agreement.start)} &#8212; ${this.getDateDisplayValue(
+                    this.agreement.end
+                  )}"
+                >
+                </etools-form-element-wrapper2>
+              </div>`
+            : ''}
         </div>
 
         <div class="row-h flex-c">
@@ -174,93 +183,94 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             <!-- Partner name -->
             <etools-dropdown
               id="partner"
-              label="[[_getTranslation('PARTNER_NAME')]]"
+              label="${translate('PARTNER_NAME')}"
               placeholder="&#8212;"
-              options="[[partnersDropdownData]]"
-              selected="[[agreement.partner]]"
+              .options="${this.partnersDropdownData}"
+              .selected="${this.agreement.partner}"
               trigger-value-change-event
-              on-etools-selected-item-changed="onAgreementPartnerChanged"
-              hidden$="[[!agreement.permissions.edit.partner]]"
+              @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
+              ?hidden="${!this.agreement.permissions?.edit.partner}"
               auto-validate
-              error-message="[[_getTranslation('PLEASE_SELECT_A_PARTNER')]]"
+              error-message="${translate('PLEASE_SELECT_A_PARTNER')}"
               required
             >
             </etools-dropdown>
             <etools-form-element-wrapper2
-              label="[[_getTranslation('PARTNER_NAME')]]"
-              required$="[[agreement.permissions.required.partner]]"
-              hidden$="[[agreement.permissions.edit.partner]]"
-              value="[[agreement.partner_name]]"
+              label="${translate('PARTNER_NAME')}"
+              ?required="${this.agreement.permissions?.required.partner}"
+              ?hidden="${this.agreement.permissions?.edit.partner}"
+              .value="${this.agreement.partner_name}"
             >
             </etools-form-element-wrapper2>
           </div>
-          <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
-            <div class="col col-3">
-              <datepicker-lite
-                id="startDateField"
-                label="[[_getTranslation('START_DATE')]]"
-                value="[[agreement.start]]"
-                readonly$="[[!agreement.permissions.edit.start]]"
-                required$="[[agreement.permissions.required.start]]"
-                selected-date-display-format="D MMM YYYY"
-                fire-date-has-changed
-                on-date-has-changed="_dateHasChanged"
-                data-field-path="agreement.start"
-              >
-              </datepicker-lite>
-            </div>
-            <div class="col col-3">
-              <datepicker-lite
-                id="endDateField"
-                label="[[_getTranslation('END_DATE')]]"
-                value="[[agreement.end]]"
-                readonly$="[[!agreement.permissions.edit.end]]"
-                required$="[[agreement.permissions.required.end]]"
-                selected-date-display-format="D MMM YYYY"
-                fire-date-has-changed
-                on-date-has-changed="_dateHasChanged"
-                data-field-path="agreement.end"
-              >
-              </datepicker-lite>
-            </div>
-          </template>
-          <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
-            <div class="col col-6">
-              <etools-cp-structure
-                id="cpStructure"
-                module="agreements"
-                app-module-item="[[agreement]]"
-                selected-cp="[[agreement.country_programme]]"
-                on-selected-cp-changed="onCountryProgrammeChanged"
-                edit-mode="[[agreement.permissions.edit.country_programme]]"
-                required$="[[agreement.permissions.required.country_programme]]"
-              >
-              </etools-cp-structure>
-            </div>
-          </template>
+
+          ${this._typeMatches(this.agreement.agreement_type, 'MOU')
+            ? html` <div class="col col-3">
+                  <datepicker-lite
+                    id="startDateField"
+                    label="${translate('START_DATE')}"
+                    .value="${this.agreement.start}"
+                    ?readonly="${!this.agreement.permissions?.edit.start}"
+                    ?required="${this.agreement.permissions?.required.start}"
+                    selected-date-display-format="D MMM YYYY"
+                    fire-date-has-changed
+                    @date-has-changed="${(e: CustomEvent) => (this.agreement.start = e.detail.date)}"
+                  >
+                  </datepicker-lite>
+                </div>
+                <div class="col col-3">
+                  <datepicker-lite
+                    id="endDateField"
+                    label="${translate('END_DATE')}"
+                    .value="${this.agreement.end}"
+                    ?readonly="${!this.agreement.permissions?.edit.end}"
+                    ?required="${this.agreement.permissions?.required.end}"
+                    selected-date-display-format="D MMM YYYY"
+                    fire-date-has-changed
+                    @date-has-changed="${(e: CustomEvent) => (this.agreement.end = e.detail.date)}"
+                  >
+                  </datepicker-lite>
+                </div>`
+            : ''}
+          ${this._typeMatches(this.agreement.agreement_type, 'PCA')
+            ? html`
+                <div class="col col-6">
+                  <etools-cp-structure
+                    id="cpStructure"
+                    module="agreements"
+                    app-module-item="${this.agreement}"
+                    .selected-cp="${this.agreement.country_programme}"
+                    @selected-cp-changed="onCountryProgrammeChanged"
+                    .edit-mode="${this.agreement.permissions?.edit.country_programme}"
+                    ?required="${this.agreement.permissions?.required.country_programme}"
+                  >
+                  </etools-cp-structure>
+                </div>
+              `
+            : ''}
         </div>
 
-        <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+        <div ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By Partner -->
               <etools-dropdown
                 id="signedByPartner"
-                label="[[_getTranslation('SIGNED_BY_PARTNER')]]"
+                label="${translate('SIGNED_BY_PARTNER')}"
                 placeholder="&#8212;"
-                options="[[staffMembers]]"
+                .options="${this.staffMembers}"
                 option-value="id"
                 option-label="name"
-                selected="[[agreement.partner_manager]]"
+                .selected="${this.agreement.partner_manager}"
                 trigger-value-change-event
-                on-etools-selected-item-changed="onAgreementPartnerManagerChanged"
-                hidden$="[[!agreement.permissions.edit.partner_manager]]"
+                @etools-selected-item-changed="${this.onAgreementPartnerManagerChanged}"
+                ?hidden="${!this.agreement.permissions?.edit.partner_manager}"
               >
               </etools-dropdown>
               <etools-form-element-wrapper2
-                label="[[_getTranslation('SIGNED_BY_PARTNER')]]"
-                hidden$="[[agreement.permissions.edit.partner_manager]]"
-                value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]"
+                label="${translate('SIGNED_BY_PARTNER')}"
+                ?hidden="${this.agreement.permissions?.edit.partner_manager}"
+                .value="${this._getReadonlySignedByPartner(this.staffMembers, this.agreement.partner_manager)}"
               >
               </etools-form-element-wrapper2>
             </div>
@@ -268,14 +278,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <!-- Signed By Partner Date -->
               <datepicker-lite
                 id="signedByPartnerDateField"
-                label="[[_getTranslation('SIGNED_BY_PARTNER_DATE')]]"
-                value="[[agreement.signed_by_partner_date]]"
-                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                max-date="[[getCurrentDate()]]"
+                label="${translate('SIGNED_BY_PARTNER_DATE')}"
+                .value="${this.agreement.signed_by_partner_date}"
+                ?readonly="${!this.agreement.permissions?.edit.signed_by_partner_date}"
+                .maxDate="${this.getCurrentDate()}"
                 selected-date-display-format="D MMM YYYY"
                 fire-date-has-changed
-                on-date-has-changed="_dateHasChanged"
-                data-field-path="agreement.signed_by_partner_date"
+                @date-has-changed="${(e: CustomEvent) => (this.agreement.signed_by_partner_date = e.detail.date)}"
               >
               </datepicker-lite>
             </div>
@@ -283,7 +292,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By UNICEF -->
-              <etools-form-element-wrapper2 value="[[_getTranslation('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')]]">
+              <etools-form-element-wrapper2 .value="${translate('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')}">
               </etools-form-element-wrapper2>
             </div>
 
@@ -291,124 +300,154 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               <!-- Signed By UNICEF Date -->
               <datepicker-lite
                 id="signedByUnicefDateField"
-                label="[[_getTranslation('SIGNED_BY_UNICEF_DATE')]]"
-                value="[[agreement.signed_by_unicef_date]]"
-                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                max-date="[[getCurrentDate()]]"
+                label="${translate('SIGNED_BY_UNICEF_DATE')}"
+                .value="${this.agreement.signed_by_unicef_date}"
+                ?readonly="${!this.agreement.permissions?.edit.signed_by_unicef_date}"
+                .maxDate="${this.getCurrentDate()}"
                 selected-date-display-format="D MMM YYYY"
                 fire-date-has-changed
-                on-date-has-changed="_dateHasChanged"
-                data-field-path="agreement.signed_by_unicef_date"
+                @date-has-changed="${(e: CustomEvent) => (this.agreement.signed_by_unicef_date = e.detail.date)}"
               >
               </datepicker-lite>
             </div>
           </div>
         </div>
 
-        <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
+        <div class="row-h flex-c" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'MOU')}">
           <!-- Partner Authorized Officers (partner staff members) -->
           <etools-dropdown-multi
             id="officers"
-            label="[[_getTranslation('PARTNER_AUTHORIZED_OFFICERS')]]"
+            label="${translate('PARTNER_AUTHORIZED_OFFICERS')}"
             placeholder="&#8212;"
-            options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+            .options="${this._getAvailableAuthOfficers(this.staffMembers, this.agreement.authorized_officers)}"
             option-value="id"
             option-label="name"
-            selected-values="[[authorizedOfficers]]"
+            .selected-values="${this.authorizedOfficers}"
             trigger-value-change-event
-            on-etools-selected-items-changed="onAuthorizedOfficersChanged"
-            hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
-            error-message="[[_getTranslation('PLEASE_ENTER_PARTNER_AUTH_OFFICERS')]]"
-            required$="[[agreement.permissions.required.authorized_officers]]"
-            auto-validate$="[[enableEditForAuthorizedOfficers]]"
+            @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
+            ?hidden="${!this._allowAuthorizedOfficersEditing(
+              this.agreement.status,
+              this.editMode,
+              this.allowAoEditForSSFA
+            )}"
+            error-message="${translate('PLEASE_ENTER_PARTNER_AUTH_OFFICERS')}"
+            ?required="${this.agreement.permissions?.required.authorized_officers}"
+            ?auto-validate="${this.enableEditForAuthorizedOfficers}"
           >
           </etools-dropdown-multi>
           <etools-form-element-wrapper2
-            label="[[_getTranslation('PARTNER_AUTHORIZED_OFFICERS')]]"
-            required$="[[agreement.permissions.required.authorized_officers]]"
-            hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
-            value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]"
+            label="${translate('PARTNER_AUTHORIZED_OFFICERS')}"
+            ?required="${this.agreement.permissions?.required.authorized_officers}"
+            ?hidden="${this._allowAuthorizedOfficersEditing(
+              this.agreement.status,
+              this.editMode,
+              this.allowAoEditForSSFA
+            )}"
+            .value="${this._getReadonlyAuthorizedOfficers(this.agreement, this.authorizedOfficers, this.staffMembers)}"
           >
           </etools-form-element-wrapper2>
         </div>
 
         <div
           class="layout-horizontal row-padding-h"
-          hidden$="[[!_showAoEditBtn(agreement.status, editMode, agreement.permissions.edit.authorized_officers)]]"
+          ?hidden="${!this._showAoEditBtn(
+            this.agreement.status,
+            this.editMode,
+            this.agreement.permissions?.edit.authorized_officers
+          )}"
         >
-          <paper-button id="editAo" class="secondary-btn" on-tap="_enableAoEdit" hidden$="[[allowAoEditForSSFA]]">
+          <paper-button
+            id="editAo"
+            class="secondary-btn"
+            @click="${this._enableAoEdit}"
+            ?hidden="${this.allowAoEditForSSFA}"
+          >
             <iron-icon icon="create"></iron-icon>
-            <span>[[_getTranslation('AMEND_PARTNER_AUTHORIZED_OFFICERS')]]</span>
+            <span>${translate('AMEND_PARTNER_AUTHORIZED_OFFICERS')}</span>
           </paper-button>
           <paper-button
             id="cancelAoEdit"
             class="secondary-btn"
-            on-tap="_cancelAoEdit"
-            hidden$="[[!allowAoEditForSSFA]]"
+            @click="${this._cancelAoEdit}"
+            ?hidden="${!this.allowAoEditForSSFA}"
           >
             <iron-icon icon="cancel"></iron-icon>
-            <span>[[_getTranslation('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')]]</span>
+            <span>${translate('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')}</span>
           </paper-button>
         </div>
 
         <div class="row-h flex-c">
           <paper-toggle-button
-            checked="[[agreement.special_conditions_pca]]"
-            on-checked-changed="onSpecialConditionsPCAChanged"
-            hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
-            disabled$="[[!agreement.permissions.edit.special_conditions_pca]]"
+            ?checked="${this.agreement.special_conditions_pca}"
+            @checked-changed="${this.onSpecialConditionsPCAChanged}"
+            ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'PCA')}"
+            ?disabled="${!this.agreement.permissions?.edit.special_conditions_pca}"
           >
-            [[_getTranslation('SPECIAL_CONDITIONS_PCA')]]
+            ${translate('SPECIAL_CONDITIONS_PCA')}
           </paper-toggle-button>
         </div>
-        <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
+        <div class="row-h flex-c ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
           <div
             class="generate-pca col col-3"
-            hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement,
-                                agreement.special_conditions_pca, agreement.status)]]"
+            ?hidden="${!this._showGeneratePcaBtn(
+              this.agreement.agreement_type,
+              this.isNewAgreement,
+              this.agreement.special_conditions_pca,
+              this.agreement.status
+            )}"
           >
             <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
               <!-- Generate PCA -->
-              <label slot="label" aria-hidden="true">[[_getTranslation('PCA_AGREEMENT_TO_SIGN')]]</label>
+              <label slot="label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <paper-button
                 slot="input"
                 class="paper-input-input secondary-btn"
                 id="generateMyPca"
-                on-tap="_openGeneratePCADialog"
+                @click="${this._openGeneratePCADialog}"
               >
                 <iron-icon icon="refresh"></iron-icon>
-                [[_getTranslation('GENERATE')]]
+                ${translate('GENERATE')}
               </paper-button>
             </paper-input-container>
           </div>
           <div
             class="generate-pca col col-3"
-            hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement,
-                        agreement.special_conditions_pca)]]"
+            ?hidden="${!this._showGeneratePcaWarning(
+              this.agreement.agreement_type,
+              this.isNewAgreement,
+              this.agreement.special_conditions_pca
+            )}"
           >
-            <span class="type-warning">[[generatePCAMessage]]</span>
+            <span class="type-warning">${this.generatePCAMessage}</span>
           </div>
-          <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+          <div class="col col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
             <etools-upload
-              label=" [[_getTranslation('SIGNED_AGREEMENT')]]"
-              file-url="[[agreement.attachment]]"
-              upload-endpoint="[[uploadEndpoint]]"
-              on-upload-finished="_signedAgreementUploadFinished"
-              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment,
-                                   originalAgreementData.attachment, isNewAgreement)]]"
-              on-delete-file="_signedAgFileDelete"
+              label=" ${translate('SIGNED_AGREEMENT')}"
+              .fileUrl="${this.agreement.attachment}"
+              .uploadEndpoint="${this.uploadEndpoint}"
+              @upload-finished="${this._signedAgreementUploadFinished}"
+              .showDeleteBtn="${this.showSignedAgDeleteBtn(
+                this.agreement.status,
+                this.isNewAgreement,
+                this.agreement.permissions?.edit.attachment,
+                this.originalAgreementData?.attachment
+              )}"
+              @delete-file="${this._signedAgFileDelete}"
               accept=".doc,.docx,.pdf,.jpg,.png"
-              readonly$="[[!agreement.permissions.edit.attachment]]"
-              required$="[[agreement.permissions.required.attachment]]"
-              on-upload-started="_onUploadStarted"
-              on-change-unsaved-file="_onChangeUnsavedFile"
+              ?readonly="${!this.agreement.permissions?.edit.attachment}"
+              ?required="${this.agreement.permissions?.required.attachment}"
+              @upload-started="${this._onUploadStarted}"
+              @change-unsaved-file="${this._onChangeUnsavedFile}"
             >
             </etools-upload>
           </div>
-          <div class="col col-6" hidden$="[[_hideTerminationDoc(agreement.termination_doc, agreement.status)]]">
+          <div
+            class="col col-6"
+            ?hidden="${this._hideTerminationDoc(this.agreement.termination_doc, this.agreement.status)}"
+          >
             <etools-upload
-              label=" [[_getTranslation('TERMINATION_NOTICE')]]"
-              file-url="[[agreement.termination_doc]]"
+              label=" ${translate('TERMINATION_NOTICE')}"
+              .fileUrl="${this.agreement.termination_doc}"
               readonly="true"
             >
             </etools-upload>
@@ -416,34 +455,39 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         </div>
       </etools-content-panel>
 
-      <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-        <agreement-amendments
-          id="agreementAmendments"
-          class="content-section"
-          data-items="[[agreement.amendments]]"
-          data-items-changed="onAmendmentsChanged"
-          agreement-type="[[agreement.agreement_type]]"
-          edit-mode="[[agreement.permissions.edit.amendments]]"
-          show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
-          authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-          selected-ao="[[authorizedOfficers]]"
-          on-selected-ao-changed="onAmendmentsOfficersChanged"
-        >
-        </agreement-amendments>
-      </template>
+      ${this._showAmendments(this.agreement.agreement_type, this.agreement.status)
+        ? html`
+            <agreement-amendments
+              id="agreementAmendments"
+              class="content-section"
+              .dataItems="${this.agreement.amendments}"
+              @data-items-changed="${this.onAmendmentsChanged}"
+              .agreementType="${this.agreement.agreement_type}"
+              .editMode="${this.agreement.permissions?.edit.amendments}"
+              .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
+              .authorizedOfficers="${this._getAvailableAuthOfficers(
+                this.staffMembers,
+                this.agreement.authorized_officers
+              )}"
+              .selectedAo="${this.authorizedOfficers}"
+              @selected-ao-changed="${this.onAmendmentsOfficersChanged}"
+            >
+            </agreement-amendments>
+          `
+        : ''}
     `;
   }
 
-  @property({type: Object, observer: '_agreementChanged', notify: true})
+  @property({type: Object})
   agreement!: Agreement;
 
   @property({type: String})
   agreementId: string | null = null;
 
-  @property({type: Boolean, observer: '_editModeChanged'})
+  @property({type: Boolean})
   editMode = false;
 
-  @property({type: Boolean, observer: '_isNewAgreementChanged'})
+  @property({type: Boolean})
   isNewAgreement = false;
 
   @property({type: Array})
@@ -455,8 +499,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Array})
   staffMembers: [] = [];
 
-  @property({type: Array, notify: true})
-  authorizedOfficers: [] = [];
+  @property({type: Array})
+  authorizedOfficers: string[] = [];
 
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
@@ -479,12 +523,16 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  static get observers() {
-    return [
-      '_agreementFieldChanged(agreement.*)',
-      '_partnerChanged(agreement.partner)',
-      '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
-    ];
+  connectedCallback() {
+    super.connectedCallback();
+
+    // Disable loading message for details tab elements load,
+    // triggered by parent element on stamp
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'ag-page'
+    });
+    fireEvent(this, 'tab-content-attached');
   }
 
   stateChanged(state: RootState) {
@@ -503,21 +551,37 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     this.uploadsStateChanged(state);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  //  static get observers() {
+  //   return [
+  //     '_agreementFieldChanged(agreement.*)',
+  //   ];
+  // }
 
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'ag-page'
-    });
-    fireEvent(this, 'tab-content-attached');
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('editMode')) {
+      this._editModeChanged(this.editMode);
+    }
+    if (changedProperties.has('isNewAgreement')) {
+      this._isNewAgreementChanged(this.isNewAgreement);
+    }
+    if (changedProperties.has('authorizedOfficers')) {
+      this.authorizedOfficersChanged();
+    }
+  }
+
+  firstUpdated(changedProperties: PropertyValues): void {
+    super.firstUpdated(changedProperties);
+
+    this._agreementChanged(this.agreement);
+  }
+
+  authorizedOfficersChanged() {
+    fireEvent(this, 'authorized-officers-changed', this.authorizedOfficers);
   }
 
   _handleSpecialConditionsPca(isSpecialConditionsPCA: boolean, agreementType: string) {
     if (agreementType !== CONSTANTS.AGREEMENT_TYPES.PCA) {
-      this.set('agreement.isSpecialConditionsPCA', false);
+      this.agreement.isSpecialConditionsPCA = false;
     }
 
     if (isSpecialConditionsPCA) {
@@ -533,12 +597,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   // Editing Agreement Type is allowed only if Agreement is new/unsaved
-  _isAgreementTypeReadonly() {
-    return this.agreement && this.agreement.id;
+  _isAgreementTypeReadonly(agreement: Agreement) {
+    return agreement && agreement.id;
   }
 
   _isNewAgreementChanged(isNew: boolean) {
-    this.set('authorizedOfficers', []);
+    this.authorizedOfficers = [];
     this._setDraftStatus(this.editMode, isNew);
   }
 
@@ -550,7 +614,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   _setDraftStatus(editMode: boolean, isNewAgreement: boolean) {
     if (editMode && isNewAgreement && this.agreement && !this._isDraft()) {
-      this.set('agreement.status', '');
+      this.agreement.status = '';
     }
   }
 
@@ -563,26 +627,26 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   _agreementChanged(agreement: Agreement) {
     this.agreementId = agreement.id ? String(agreement.id) : null;
 
-    this.set('allowAoEditForSSFA', false);
+    this.allowAoEditForSSFA = false;
 
     if (typeof agreement === 'object' && agreement !== null && agreement.id) {
       // prevent wrong new agreement value
-      this.set('isNewAgreement', false);
+      this.isNewAgreement = false;
 
-      this.set('oldSelectedPartnerId', agreement.partner);
+      this.oldSelectedPartnerId = agreement.partner;
 
       // keep a copy of the agreement before changes are made and use it later to save only the changes
-      this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+      this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
 
       const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
       if (cpField) {
         cpField.resetCpDropdownInvalidState();
       }
-      this.set('enableEditForAuthorizedOfficers', false);
+      this.enableEditForAuthorizedOfficers = false;
       this.resetAttachedAgreementElem(agreement);
       this._initAuthorizedOfficers(agreement.authorized_officers!);
     } else {
-      this.set('agreement.attachment', null);
+      this.agreement.attachment = null;
       // new agreement, update status to draft and reset fields
       this._setDraftStatus(this.editMode, this.isNewAgreement);
       this._resetDropdown('#partner');
@@ -597,7 +661,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   resetAttachedAgreementElem(agreement: Agreement) {
     // forces etools-upload to redraw the element
     if (!agreement.attachment) {
-      this.set('agreement.attachment', null);
+      this.agreement.attachment = null;
     }
   }
 
@@ -640,50 +704,20 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     return isSpecialConditionsPCA || isNewAgreement;
   }
 
-  _partnerChanged(currentPartnerId: string) {
-    if (typeof currentPartnerId === 'undefined') {
+  _partnerChanged(currentPartnerId: number | null | undefined) {
+    if (!currentPartnerId || isNaN(currentPartnerId)) {
       return;
     }
-    const partnerId = parseInt(currentPartnerId);
-    if (isNaN(partnerId)) {
-      return;
-    }
-    this.set('staffMembers', []);
-    if (this.agreement && partnerId !== this.oldSelectedPartnerId) {
+
+    this.staffMembers = [];
+    if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
       // partner not set or changed, reset related fields
-      this.set('agreement.partner_manager', null);
-      this.set('authorizedOfficers', []);
-      this.set('agreement.authorized_officers', []);
-      this.set('oldSelectedPartnerId', currentPartnerId);
+      this.agreement.partner_manager = null;
+      this.authorizedOfficers = [];
+      this.agreement.authorized_officers = [];
+      this.oldSelectedPartnerId = currentPartnerId;
     }
-    this.getPartnerStaffMembers(partnerId);
-  }
-
-  // Validate agreements fields on change
-  _agreementFieldChanged(agreementProperty: any) {
-    if (typeof agreementProperty === 'undefined') {
-      return;
-    }
-    // check edit permissions and continue only if true; no validations in view mode
-    if (this.agreement && !this._allowEdit(this.agreement!.status!)) {
-      return;
-    }
-
-    if (agreementProperty && agreementProperty.path === 'agreement.agreement_type') {
-      if (agreementProperty.value !== CONSTANTS.AGREEMENT_TYPES.PCA) {
-        // reset country_programme as it's available only for PCA type
-        this.set('agreement.country_programme', null);
-        // reset start and end date
-        // TODO: decide if we reset start and end dates when type is changed
-        // this.set('agreement.start', null);
-        // this.set('agreement.end', null);
-      } else {
-        const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
-        if (cpField) {
-          cpField.setDefaultSelectedCpStructure();
-        }
-      }
-    }
+    this.getPartnerStaffMembers(currentPartnerId);
   }
 
   _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: PartnerStaffMember[]) {
@@ -696,7 +730,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     return [];
   }
 
-  _getReadonlySignedByPartner(staffMembers: MinimalStaffMember[], selectedId: string) {
+  _getReadonlySignedByPartner(staffMembers: MinimalStaffMember[], selectedId?: number | null) {
     if (!this.agreement) {
       return '';
     }
@@ -704,7 +738,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
     } else if (staffMembers && staffMembers.length) {
       const selectedPartner = staffMembers.filter(function (s: any) {
-        return parseInt(s.id) === parseInt(selectedId);
+        return parseInt(s.id) === selectedId || -1;
       });
       if (selectedPartner && selectedPartner.length) {
         return selectedPartner[0];
@@ -750,15 +784,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   _initAuthorizedOfficers(authOfficers: PartnerStaffMember[]) {
     if (authOfficers instanceof Array && authOfficers.length) {
-      this.set(
-        'authorizedOfficers',
-        authOfficers.map(function (authOfficer) {
-          return authOfficer.id + '';
-        })
-      );
+      this.authorizedOfficers = authOfficers.map(function (authOfficer) {
+        return authOfficer.id + '';
+      });
       return;
     }
-    this.set('authorizedOfficers', []);
+    this.authorizedOfficers = [];
   }
 
   // set authorized officers field readonly mode
@@ -776,7 +807,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     }
   }
 
-  _showAoEditBtn(status: string, editMode: boolean, permissionsEditAO: boolean) {
+  _showAoEditBtn(status: string, editMode: boolean, permissionsEditAO: boolean | undefined) {
     return (
       this.agreement &&
       this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
@@ -787,13 +818,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   _enableAoEdit() {
-    this.set('allowAoEditForSSFA', true);
+    this.allowAoEditForSSFA = true;
   }
 
   _cancelAoEdit() {
     this._initAuthorizedOfficers(this.agreement.authorized_officers);
-    (this.$.officers as any).resetInvalidState();
-    this.set('allowAoEditForSSFA', false);
+    (this.shadowRoot?.querySelector('#officers') as EtoolsDropdownMultiEl).resetInvalidState();
+    this.allowAoEditForSSFA = false;
   }
 
   // Validate agreement fields
@@ -816,7 +847,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = e.detail.success;
-      this.set('agreement.attachment', response.id);
+      this.agreement.attachment = response.id;
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
@@ -825,14 +856,19 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
    * Refer to unicef/etools-issues#232
    * For Draft Status, only Change option is available. No delete option is available in Draft.
    */
-  showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
+  showSignedAgDeleteBtn(
+    _status: string,
+    _isNewAgreement: boolean,
+    _editAttPermission?: boolean,
+    _originalAtt?: string
+  ) {
     return _isNewAgreement
       ? true
       : this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
   }
 
   _signedAgFileDelete() {
-    this.set('agreement.attachment', null);
+    this.agreement.attachment = null;
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
@@ -847,23 +883,21 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   onAuthorizedOfficersChanged(e: CustomEvent) {
     const ao = e.detail.selectedItems.map((i: any) => String(i['id']));
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
-      this.set('authorizedOfficers', ao);
+      this.authorizedOfficers = ao;
     }
   }
 
   onAmendmentsOfficersChanged(e: CustomEvent) {
     const ao = e.detail.value;
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
-      this.set('authorizedOfficers', ao);
+      this.authorizedOfficers = ao;
     }
   }
 
-  onAgreementTypeChanged(e: CustomEvent) {
-    this.set('agreement.agreement_type', e.detail.selectedItem ? e.detail.selectedItem.value : null);
-  }
-
   onAgreementPartnerChanged(e: CustomEvent) {
-    this.set('agreement.partner', e.detail.selectedItem ? e.detail.selectedItem.value : null);
+    this.agreement.partner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
+    this._partnerChanged(this.agreement.partner);
+    this.requestUpdate();
   }
 
   onAgreementPartnerManagerChanged(e: CustomEvent) {
@@ -871,24 +905,51 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       // data is not loaded yet and we already have a partner_manager
       return;
     }
-    this.set('agreement.partner_manager', e.detail.selectedItem ? e.detail.selectedItem.id : null);
+    this.agreement.partner_manager = e.detail.selectedItem ? e.detail.selectedItem.id : null;
+  }
+
+  onAgreementTypeChanged(e: CustomEvent) {
+    this.agreement.agreement_type = e.detail.selectedItem ? e.detail.selectedItem.value : null;
+    this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
+    this.afterAgreementTypeChanged();
+    this.requestUpdate();
+  }
+
+  afterAgreementTypeChanged() {
+    // check edit permissions and continue only if true; no validations in view mode
+    if (this.agreement && !this._allowEdit(this.agreement!.status!)) {
+      return;
+    }
+
+    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.PCA) {
+      // reset country_programme as it's available only for PCA type
+      this.agreement.country_programme = null;
+      // reset start and end date
+      // TODO: decide if we reset start and end dates when type is changed
+      // this.set('agreement.start', null);
+      // this.set('agreement.end', null);
+    } else {
+      const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
+      if (cpField) {
+        cpField.setDefaultSelectedCpStructure();
+      }
+    }
   }
 
   onSpecialConditionsPCAChanged(e: CustomEvent) {
-    this.set('agreement.special_conditions_pca', e.detail.value);
+    this.agreement.special_conditions_pca = e.detail.value;
+    this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
   }
 
   onCountryProgrammeChanged(e: CustomEvent) {
-    this.set('agreement.country_programme', e.detail.value);
+    this.agreement.country_programme = e.detail.value;
   }
 
   onReferenceNumberChanged(e: CustomEvent) {
-    this.set('agreement.reference_number_year', e.detail.value);
+    this.agreement.reference_number_year = e.detail.value;
   }
 
   onAmendmentsChanged(e: CustomEvent) {
-    this.set('agreement.amendments', e.detail.value);
+    this.agreement.amendments = e.detail.value;
   }
 }
-
-window.customElements.define('agreement-details', AgreementDetails);
