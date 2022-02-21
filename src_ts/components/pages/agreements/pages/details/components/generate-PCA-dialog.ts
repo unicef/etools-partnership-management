@@ -41,7 +41,7 @@ export class GeneratePcaDialog extends LitElement {
             }}"
           >
             ${this.templateOptions.map(
-              (item: any) => html` <paper-item .item-value="${item.value}">${item.label}</paper-item>`
+              (item: any) => html` <paper-item item-value="${item.value}">${item.label}</paper-item>`
             )}
           </paper-listbox>
         </paper-dropdown-menu>

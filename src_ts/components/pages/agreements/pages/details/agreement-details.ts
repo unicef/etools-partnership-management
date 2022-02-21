@@ -456,24 +456,22 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       </etools-content-panel>
 
       ${this._showAmendments(this.agreement.agreement_type, this.agreement.status)
-        ? html`
-            <agreement-amendments
-              id="agreementAmendments"
-              class="content-section"
-              .dataItems="${this.agreement.amendments}"
-              @data-items-changed="${this.onAmendmentsChanged}"
-              .agreementType="${this.agreement.agreement_type}"
-              .editMode="${this.agreement.permissions?.edit.amendments}"
-              .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
-              .authorizedOfficers="${this._getAvailableAuthOfficers(
-                this.staffMembers,
-                this.agreement.authorized_officers
-              )}"
-              .selectedAo="${this.authorizedOfficers}"
-              @selected-ao-changed="${this.onAmendmentsOfficersChanged}"
-            >
-            </agreement-amendments>
-          `
+        ? html` <agreement-amendments
+            id="agreementAmendments"
+            class="content-section"
+            .dataItems="${this.agreement.amendments}"
+            @data-items-changed="${this.onAmendmentsChanged}"
+            .agreementType="${this.agreement.agreement_type}"
+            .editMode="${this.agreement.permissions?.edit.amendments}"
+            .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
+            .authorizedOfficers="${this._getAvailableAuthOfficers(
+              this.staffMembers,
+              this.agreement.authorized_officers
+            )}"
+            .selectedAo="${this.authorizedOfficers}"
+            @selected-ao-changed="${this.onAmendmentsOfficersChanged}"
+          >
+          </agreement-amendments>`
         : ''}
     `;
   }
@@ -550,12 +548,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
     this.uploadsStateChanged(state);
   }
-
-  //  static get observers() {
-  //   return [
-  //     '_agreementFieldChanged(agreement.*)',
-  //   ];
-  // }
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('editMode')) {
@@ -646,7 +638,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this.resetAttachedAgreementElem(agreement);
       this._initAuthorizedOfficers(agreement.authorized_officers!);
     } else {
-      this.agreement.attachment = null;
+      this.agreement.attachment = undefined;
       // new agreement, update status to draft and reset fields
       this._setDraftStatus(this.editMode, this.isNewAgreement);
       this._resetDropdown('#partner');
@@ -661,7 +653,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   resetAttachedAgreementElem(agreement: Agreement) {
     // forces etools-upload to redraw the element
     if (!agreement.attachment) {
-      this.agreement.attachment = null;
+      this.agreement.attachment = undefined;
     }
   }
 
@@ -747,7 +739,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     return '';
   }
 
-  _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: [], staffMembers: MinimalStaffMember[]) {
+  _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: any[], staffMembers: MinimalStaffMember[]) {
     let ao: (MinimalStaffMember | PartnerStaffMember)[] = [];
     const aoSelected = selection instanceof Array && selection.length > 0;
     if (aoSelected) {
@@ -868,7 +860,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   _signedAgFileDelete() {
-    this.agreement.attachment = null;
+    this.agreement.attachment = undefined;
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
@@ -881,16 +873,17 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
-    const ao = e.detail.selectedItems.map((i: any) => String(i['id']));
-    if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
-      this.authorizedOfficers = ao;
-    }
+    this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
   }
 
   onAmendmentsOfficersChanged(e: CustomEvent) {
-    const ao = e.detail.value;
+    this.setAuthorizedOfficers(e.detail ? e.detail : []);
+  }
+
+  setAuthorizedOfficers(ao: string[]) {
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
       this.authorizedOfficers = ao;
+      this.authorizedOfficersChanged();
     }
   }
 
@@ -950,6 +943,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAmendmentsChanged(e: CustomEvent) {
-    this.agreement.amendments = e.detail.value;
+    this.agreement.amendments = e.detail ? e.detail : [];
   }
 }

@@ -102,7 +102,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
   }
 
   updated(changedProperties: PropertyValues) {
-    if ((changedProperties.has('status') || changedProperties.has('agreementId')) && this.agreementId) {
+    if (changedProperties.has('status') || changedProperties.has('agreementId')) {
       this._handleStatusChange(this.status);
     }
   }
@@ -189,6 +189,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
         }
       }
     }
+    this.possibleActions = [...this.possibleActions];
   }
 
   _computeAvailableStatuses(status: string) {

@@ -241,21 +241,17 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   set newAgreementActive(newAgreementActive: boolean) {
-    this._newAgreementActive = newAgreementActive;
-    this._updateNewItemPageFlag(this.routeData, this.listActive);
+    if (this.newAgreementActive !== newAgreementActive) {
+      // Useful when refreshing the page
+      this._newAgreementActive = newAgreementActive;
+      if (this.newAgreementActive) {
+        this.agreement = new Agreement();
+      }
+    }
   }
-
-  private _agreement!: Agreement;
 
   @property({type: Object})
-  get agreement() {
-    return this._agreement;
-  }
-
-  set agreement(agreement: Agreement) {
-    this._agreement = agreement;
-    this._agreementChanged(this.agreement);
-  }
+  agreement!: Agreement;
 
   @property({type: String})
   moduleName = 'agreements';
@@ -299,8 +295,14 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('agreement')) {
+      this._agreementChanged(this.agreement);
+    }
     if (changedProperties.has('routeData')) {
       this._observeRouteDataId(this.routeData.id);
+    }
+    if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
+      this.newAgreementActive = this._updateNewItemPageFlag(this.routeData, this.listActive);
     }
     if (
       changedProperties.has('listActive') ||

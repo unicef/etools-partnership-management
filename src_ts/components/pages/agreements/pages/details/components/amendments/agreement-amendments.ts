@@ -10,24 +10,27 @@ import CONSTANTS from '../../../../../../../config/app-constants';
 import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
-import '../../../../../../common/mixins/common-mixin.js';
+
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../redux/store';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../../../utils/dialog';
 import {translate} from 'lit-translate';
+
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-customElement('agreement-amendments');
+@customElement('agreement-amendments')
 export class AgreementAmendments extends connect(store)(CommonMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
@@ -36,7 +39,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
     return html`
       ${sharedStyles} ${buttonsStyles}
       <style>
-        [hidden] {
+        ${dataTableStylesLit} [hidden] {
           display: none !important;
         }
 
@@ -87,7 +90,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
         }
       </style>
 
-      <etools-content-panel panel-title="${translate('AMENDMENTS')} (${this.dataItems.length})">
+      <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
           <paper-icon-button
             icon="add-box"
@@ -113,7 +116,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
           </a>
         </div>
 
-        <div id="amendments-wrapper" ?hidden="${this._emptyList(this.dataItems.length)}">
+        <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">
           <etools-data-table-header id="listHeader" no-collapse no-title>
             <etools-data-table-column class="col-1"
               >${translate('AGREEMENT_REFERENCE_NUMBER')}</etools-data-table-column
@@ -123,12 +126,12 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
             <etools-data-table-column class="flex-c">${translate('SIGNED_AMENDMENT')}</etools-data-table-column>
           </etools-data-table-header>
 
-          ${this.dataItems.map(
+          ${(this.dataItems || []).map(
             (item: any) => html`
               <etools-data-table-row no-collapse>
                 <div slot="row-data">
                   <span class="col-data col-1">
-                    ${item.id ? html`item.number` : ``}
+                    ${item.id ? html`${item.number}` : ``}
                     ${!item.id
                       ? html`<etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
                           <span slot="field">${translate('NOT_SAVED')}</span>
@@ -147,7 +150,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
                             >${this.getFileNameFromURL(item.signed_amendment_attachment)}</a
                           >`
                         : ``}
-                      ${!item.id ? html`<span>${item.signed_amendment.name}</span>` : ``}
+                      ${!item.id ? html`<span>${item.signed_amendment?.name}</span>` : ``}
                     </span>
                   </span>
                 </div>
@@ -156,7 +159,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
           )}
         </div>
 
-        <div class="row-h" ?hidden="${!this._emptyList(this.dataItems.length)}">
+        <div class="row-h" ?hidden="${!isEmptyObject(this.dataItems)}">
           <p>${translate('THERE_ARE_NO_AMENDMENTS_ADDED')}</p>
         </div>
       </etools-content-panel>
@@ -187,7 +190,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
   selectedAo: [] = [];
 
   @property({type: Array})
-  dataItems: [] = [];
+  dataItems: any[] = [];
 
   @property({type: Boolean})
   editMode = false;
@@ -199,9 +202,6 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('selectedAo')) {
-      fireEvent(this, 'selected-ao-changed', this.selectedAo);
-    }
     if (changedProperties.has('dataItems')) {
       fireEvent(this, 'data-items-changed', this.dataItems);
     }
@@ -227,10 +227,14 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
   saveNewAmendment(data: any) {
     const unsavedAmendment = data.amendment;
     if (unsavedAmendment) {
+      if (!this.dataItems) {
+        this.dataItems = [];
+      }
       this.dataItems.push(unsavedAmendment);
 
       if (data.ao instanceof Array && data.ao.length > 0) {
         this.selectedAo = data.ao;
+        fireEvent(this, 'selected-ao-changed', this.selectedAo);
       }
       this.dispatchEvent(
         new CustomEvent('data-items-changed', {
@@ -280,9 +284,5 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
       return amTypesFiltered.concat(legacyAmTypesFiltered).join(' | ');
     }
     return null;
-  }
-
-  _emptyList(listLength: number) {
-    return listLength === 0;
   }
 }

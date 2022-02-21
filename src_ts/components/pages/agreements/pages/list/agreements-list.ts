@@ -242,9 +242,9 @@ export class AgreementsList extends connect(store)(
   }
 
   stateChanged(state: RootState) {
-    // if (state.app?.routeDetails?.routeName !== 'agreements') {
-    //   return;
-    // }
+    if (state.app?.routeDetails?.routeName !== 'agreements') {
+      return;
+    }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       return;
@@ -304,30 +304,39 @@ export class AgreementsList extends connect(store)(
     this.loadFilteredAgreements();
   }
 
-  loadFilteredAgreements() {
-    const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-    if (!agreements) {
-      return;
-    }
-    const queryParams = this.routeDetails?.queryParams;
+  async loadFilteredAgreements() {
+    this.waitForAgreementsListDataToLoad().then(async () => {
+      const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
+      const queryParams = this.routeDetails?.queryParams;
+      const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
 
-    const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
+      agreements.query(
+        sortOrder[0],
+        sortOrder[1],
+        queryParams?.search?.toLowerCase() || '',
+        this.getFilterUrlValuesAsArray(queryParams?.type || ''),
+        this.getFilterUrlValuesAsArray(queryParams?.status || ''),
+        this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
+        queryParams?.start || '',
+        queryParams?.end || '',
+        this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
+        queryParams?.special_conditions_pca || 'false',
+        queryParams?.page ? Number(queryParams.page) : 1,
+        queryParams?.size ? Number(queryParams.size) : 10,
+        false
+      );
+    });
+  }
 
-    agreements.query(
-      sortOrder[0],
-      sortOrder[1],
-      queryParams?.search?.toLowerCase() || '',
-      this.getFilterUrlValuesAsArray(queryParams?.type || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.status || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
-      queryParams?.start || '',
-      queryParams?.end || '',
-      this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
-      queryParams?.special_conditions_pca || 'false',
-      queryParams?.page ? Number(queryParams.page) : 1,
-      queryParams?.size ? Number(queryParams.size) : 10,
-      false
-    );
+  waitForAgreementsListDataToLoad() {
+    return new Promise((resolve) => {
+      const agreementListDataCheck = setInterval(() => {
+        if (this.shadowRoot!.querySelector('#agreements')) {
+          clearInterval(agreementListDataCheck);
+          resolve(true);
+        }
+      }, 50);
+    });
   }
 
   getFilterUrlValuesAsArray(types: string) {
