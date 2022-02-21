@@ -352,7 +352,7 @@ export class PartnersListBase extends CommonMixin(
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams) as any);
 
     const stringParams: string = buildUrlQueryString(newParams);
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
