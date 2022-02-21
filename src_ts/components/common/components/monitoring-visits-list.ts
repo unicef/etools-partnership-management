@@ -38,7 +38,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       </style>
 
       <div class="monitoring-visits-container">
-        <etools-loading loading-text="Loading..." active$="[[showLoading]]"></etools-loading>
+        <etools-loading id="monitoring" loading-text="Loading..." active$="[[showLoading]]"></etools-loading>
 
         <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
           <etools-data-table-header
