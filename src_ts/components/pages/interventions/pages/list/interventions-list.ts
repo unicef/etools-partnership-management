@@ -109,7 +109,11 @@ export class InterventionsList extends connect(store)(
       </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filterLoadingAbsolute="${this.filterLoadingAbsolute}"
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
@@ -282,6 +286,9 @@ export class InterventionsList extends connect(store)(
     `;
   }
 
+  @property({type: String})
+  filterLoadingAbsolute = true;
+
   @property({type: Boolean})
   lowResolutionLayout = false;
 
@@ -336,6 +343,12 @@ export class InterventionsList extends connect(store)(
         return;
       }
       this.routeDetails = cloneDeep(stateRouteDetails);
+
+      fireEvent(this, 'global-loading', {
+        message: 'Loading...',
+        active: true,
+        loadingSource: 'pd-list'
+      });
 
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
@@ -438,11 +451,6 @@ export class InterventionsList extends connect(store)(
     if (!intervElem) {
       return;
     }
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'pd-list'
-    });
 
     const queryParams = this.routeDetails?.queryParams;
 
