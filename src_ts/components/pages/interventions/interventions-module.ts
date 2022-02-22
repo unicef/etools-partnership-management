@@ -256,6 +256,10 @@ export class InterventionsModule extends connect(store)(
 
   connectedCallback() {
     super.connectedCallback();
+    fireEvent(this, 'global-loading', {
+      active: true,
+      loadingSource: 'interv-page'
+    });
     this._initInterventionsModuleListeners();
     // deactivate main page loading msg triggered in app-shell
     // fireEvent(this, 'global-loading', {
