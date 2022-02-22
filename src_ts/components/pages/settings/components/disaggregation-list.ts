@@ -7,6 +7,7 @@ import '@unicef-polymer/etools-data-table/etools-data-table';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -37,7 +38,7 @@ import pmpEdpoints from '../../../endpoints/endpoints';
 @customElement('disaggregation-list')
 export class DisaggregationList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [gridLayoutStylesLit, elevationStyles];
   }
   render() {
     // language=HTML
@@ -59,7 +60,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
         }
       </style>
 
-      <div id="filters" class="paper-material" elevation="1">
+      <div id="filters" class="paper-material elevation" elevation="1">
         <paper-input
           id="query"
           class="qFilter"
