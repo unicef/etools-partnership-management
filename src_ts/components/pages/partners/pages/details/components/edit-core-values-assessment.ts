@@ -3,6 +3,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
@@ -24,7 +25,7 @@ export class EditCoreValuesAssessment extends CommonMixinLit(LitElement) {
   render() {
     // language=HTML
     return html`
-      ${RequiredFieldsStyles}
+      ${sharedStyles} ${RequiredFieldsStyles}
       <style>
         :host {
           display: block;
