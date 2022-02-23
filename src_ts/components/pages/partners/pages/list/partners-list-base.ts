@@ -118,7 +118,11 @@ export class PartnersListBase extends CommonMixin(
       </partners-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filterLoadingAbsolute="${true}"
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
