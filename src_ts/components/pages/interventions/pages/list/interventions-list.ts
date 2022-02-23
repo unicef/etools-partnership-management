@@ -110,7 +110,7 @@ export class InterventionsList extends connect(store)(
 
       <section class="elevation page-content filters" elevation="1">
         <etools-filters
-          .filterLoadingAbsolute="${this.filterLoadingAbsolute}"
+          .filterLoadingAbsolute="${true}"
           .filters="${this.allFilters}"
           @filter-change="${this.filtersChange}"
         ></etools-filters>
@@ -285,9 +285,6 @@ export class InterventionsList extends connect(store)(
       </div>
     `;
   }
-
-  @property({type: String})
-  filterLoadingAbsolute = true;
 
   @property({type: Boolean})
   lowResolutionLayout = false;
