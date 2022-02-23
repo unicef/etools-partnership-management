@@ -1,6 +1,6 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../../../redux/store';
-import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
+import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-menu-button/paper-menu-button';
@@ -45,7 +45,7 @@ import {AgreementsFilterKeys, getAgreementFilters} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
-import debounce from 'lodash-es/debounce';
+import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
@@ -223,12 +223,12 @@ export class AgreementsList extends connect(store)(
   routeDetails!: RouteDetails | null;
 
   @property({type: Object})
-  prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc'};
+  prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc', status: 'draft,signed,suspended'};
 
   connectedCallback() {
     super.connectedCallback();
 
-    this.loadFilteredAgreements = debounce(this.loadFilteredAgreements.bind(this), 600);
+    this.loadFilteredAgreements = debounce(this.loadFilteredAgreements.bind(this), 600) as any;
     /**
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
@@ -316,7 +316,12 @@ export class AgreementsList extends connect(store)(
         queryParams?.search?.toLowerCase() || '',
         this.getFilterUrlValuesAsArray(queryParams?.type || ''),
         this.getFilterUrlValuesAsArray(queryParams?.status || ''),
-        this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
+        this.getFilterValuesByProperty(
+          this.partnersDropdownData,
+          'label',
+          this.getFilterUrlValuesAsArray(queryParams?.partners || ''),
+          'value'
+        ),
         queryParams?.start || '',
         queryParams?.end || '',
         this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),

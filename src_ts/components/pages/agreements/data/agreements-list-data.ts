@@ -109,10 +109,7 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
           return false;
         }
 
-        if (
-          !isEmptyObject(cpStructures) &&
-          cpStructures.indexOf(agreement.country_programme as unknown as string) === -1
-        ) {
+        if (!isEmptyObject(cpStructures) && cpStructures.indexOf(String(agreement.country_programme)) === -1) {
           return false;
         }
 

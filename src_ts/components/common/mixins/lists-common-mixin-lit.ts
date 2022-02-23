@@ -2,6 +2,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {updateAppState} from '../../utils/navigation-helper';
 import {isEmptyObject} from '../../utils/utils';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
+import {ListFilterOption} from '../../../typings/filter.types';
 import get from 'lodash-es/get';
 import {LitElement, property} from 'lit-element';
 
@@ -231,6 +232,26 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
           this.forceDataRefresh = false;
         }
       }
+    }
+
+    /**
+     * Get filter selected options values by option property and filter selected values
+     * @param filterOptions
+     * @param prop
+     * @param selected
+     * @param selectedProp
+     * @returns {Array}
+     */
+    getFilterValuesByProperty(filterOptions: ListFilterOption[], prop: string, selected: any, selectedProp: string) {
+      const selectedValues = this._convertToInt(selected);
+      selectedProp = selectedProp || 'id';
+      return filterOptions && filterOptions.length && selectedValues && selectedValues.length
+        ? filterOptions.filter((opt) => selectedValues.indexOf(opt[selectedProp]) > -1).map((opt) => opt[prop])
+        : [];
+    }
+
+    _convertToInt(data: []) {
+      return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
     }
   }
   return ListsCommonClass;

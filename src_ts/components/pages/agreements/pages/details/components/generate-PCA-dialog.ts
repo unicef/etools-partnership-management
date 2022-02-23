@@ -3,6 +3,7 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation} from 'lit-translate';
@@ -15,6 +16,7 @@ import {translate, get as getTranslation} from 'lit-translate';
 export class GeneratePcaDialog extends LitElement {
   render() {
     return html`
+      ${sharedStyles}
       <style>
         paper-dropdown-menu,
         paper-listbox {
