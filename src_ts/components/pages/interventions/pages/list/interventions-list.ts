@@ -30,10 +30,11 @@ import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
 import {
+  setselectedValueTypeByFilterKey,
   updateFilterSelectionOptions,
   updateFiltersSelectedValues
 } from '@unicef-polymer/etools-modules-common/dist/list/filters';
-import {getInterventionFilters, InterventionFilterKeys} from './interventions-filters';
+import {getInterventionFilters, InterventionFilterKeys, selectedValueTypeByFilterKey} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {ListFilterOption} from '../../../../../typings/filter.types';
@@ -390,6 +391,7 @@ export class InterventionsList extends connect(store)(
 
   protected initFiltersForDisplay(state: RootState): void {
     let availableFilters = [];
+    setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
