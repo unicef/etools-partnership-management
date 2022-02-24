@@ -24,9 +24,6 @@ class EtoolsFormElementWrapper extends PolymerElement {
           --paper-input-container-underline-focus: {
             display: none;
           }
-          --paper-input-container-underline-disabled: {
-            display: none;
-          }
           --paper-input-prefix: {
             margin-right: 5px;
             margin-top: -2px;
