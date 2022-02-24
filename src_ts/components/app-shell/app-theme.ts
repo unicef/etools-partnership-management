@@ -82,6 +82,9 @@ documentContainer.innerHTML = `
         --add-button-color: var(--success-color);
         --icon-delete-color: var(--error-color);
 
+        --gray-06: rgba(0,0,0,.06);
+        --gray-light: rgba(0,0,0,.38);
+
         /* partner risk ratings colors */
         --risk-rating-not-assesed-color: #dcd8d8;
         --risk-rating-high-color: #740E0E;
