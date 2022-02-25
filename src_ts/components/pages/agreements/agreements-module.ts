@@ -9,7 +9,6 @@ import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
-import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import CONSTANTS from '../../../config/app-constants.js';
 
 import '../../common/components/etools-tabs';

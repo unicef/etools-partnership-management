@@ -9,9 +9,9 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
-import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
-import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
-import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
+import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
+import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
+import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 
 import '../../common/components/page-content-header';
@@ -59,7 +59,9 @@ export class PartnersModule extends connect(store)(
   GestureEventListeners(
     CommonMixinLit(
       // eslint-disable-next-line new-cap
-      ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixinLit(LitElement))))
+      ScrollControlMixinLit(
+        ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
+      )
     )
   )
   // eslint-enable new-cap
@@ -177,7 +179,6 @@ export class PartnersModule extends connect(store)(
               ?hidden="${!(
                 this._pageEquals(this.activePage, 'list') && this.partnersListActive(this.listActive, this.route)
               )}"
-              .showOnlyGovernmentType="${this.showOnlyGovernmentType}"
               .currentModule="${this.currentModule}"
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;

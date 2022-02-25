@@ -7,7 +7,7 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {customElement, LitElement, property} from 'lit-element';
-import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
+import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 
 /**
  * @polymer
@@ -17,7 +17,7 @@ import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
  */
 
 @customElement('partners-list-data')
-export class PartnersListData extends ListDataMixin(LitElement) {
+export class PartnersListData extends ListDataMixinLit(LitElement) {
   @property({type: String})
   endpointName = 'partners';
 
