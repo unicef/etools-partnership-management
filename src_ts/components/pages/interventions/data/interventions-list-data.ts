@@ -1,11 +1,10 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
-import ListDataMixin from '../../../common/mixins/list-data-mixin';
-import {PolymerElement} from '@polymer/polymer';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property, customElement} from '@polymer/decorators';
 import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
+import {customElement, LitElement, property} from 'lit-element';
+import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 
 /**
  * @polymer
@@ -13,17 +12,17 @@ import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types'
  * @appliesMixin ListDataMixin
  */
 @customElement('interventions-list-data')
-class InterventionsListData extends ListDataMixin(PolymerElement) {
+export class InterventionsListData extends ListDataMixinLit(LitElement) {
   @property({type: String})
   endpointName = 'interventions';
 
   @property({type: String})
   dataLoadedEventName = 'interventions-loaded';
 
-  @property({type: Array, readOnly: true, notify: true})
+  @property({type: Array})
   filteredInterventions!: [];
 
-  @property({type: Number, readOnly: true, notify: true})
+  @property({type: Number})
   totalResults!: number;
 
   @property({type: Object})
@@ -89,7 +88,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
-        loadingSource: 'pd-ssfa-list'
+        loadingSource: 'pd-list'
       });
     }
 
@@ -184,7 +183,8 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       Dexie.ignoreTransaction(function () {
         queryResult.count(function (count: number) {
           // @ts-ignore
-          self._setTotalResults(count);
+          self.totalResults = count;
+          fireEvent(self, 'total-results-changed', count);
         });
       });
 
@@ -195,20 +195,19 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     })
       .then(function (result: any) {
         // @ts-ignore
-        self._setFilteredInterventions(result);
+        self.filteredInterventions = result;
+        fireEvent(self, 'filtered-interventions-changed', result);
         fireEvent(self, 'global-loading', {
           active: false,
-          loadingSource: 'pd-ssfa-list'
+          loadingSource: 'pd-list'
         });
       })
       .catch(function (error: any) {
         logError('Error querying interventions: ' + error, 'interventions-list-data');
         fireEvent(self, 'global-loading', {
           active: false,
-          loadingSource: 'pd-ssfa-list'
+          loadingSource: 'pd-list'
         });
       });
   }
 }
-
-export {InterventionsListData};

@@ -38,8 +38,9 @@ import omit from 'lodash-es/omit';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
-import {GenericObject} from '@unicef-polymer/etools-types';
+import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 import {
+  setselectedValueTypeByFilterKey,
   updateFilterSelectionOptions,
   updateFiltersSelectedValues
 } from '@unicef-polymer/etools-modules-common/dist/list/filters';
@@ -117,7 +118,11 @@ export class PartnersListBase extends CommonMixin(
       </partners-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filterLoadingAbsolute="${true}"
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
@@ -282,28 +287,47 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (!this.allFilters) {
-      this.initFiltersForDisplay(state.commonData!);
-    }
-
     if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+
       this.routeDetails = cloneDeep(stateRouteDetails);
-      this.setSelectedValuesInFilters();
+      this.initFiltersForDisplay(state.commonData!);
+      // this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
   }
 
-  protected initFiltersForDisplay(_commonData: CommonDataState): void {
-    console.log('initFiltersForDisplay / To be implemented in derived class');
+  initFiltersForDisplay(commonData: CommonDataState) {
+    let availableFilters = [];
+    setselectedValueTypeByFilterKey(this.getSelectedValueTypeByFilterKey());
+    if (!this.allFilters) {
+      availableFilters = JSON.parse(JSON.stringify(this.getAllFilters()));
+      this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
+    } else {
+      // Avoid setting this.allFilters twice, as the already selected filters will be reset
+      availableFilters = this.allFilters;
+    }
+
+    const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), availableFilters);
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
     console.log('getSelectedPartnerTypes / To be implemented in derived class');
     return [];
+  }
+
+  protected getAllFilters() {
+    console.log('getAllFilters / To be implemented in derived class');
+    return [];
+  }
+
+  protected getSelectedValueTypeByFilterKey(): AnyObject {
+    console.log('getSelectedValueTypeByFilterKey / To be implemented in derived class');
+    return {};
   }
 
   loadListData() {
@@ -352,7 +376,7 @@ export class PartnersListBase extends CommonMixin(
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams) as any);
 
     const stringParams: string = buildUrlQueryString(newParams);
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);

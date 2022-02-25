@@ -6,7 +6,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @polymer
  * @mixinFunction
  */
-function ScrollControlMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class ScrollControlClass extends baseClass {
     @property({type: Object})
     contentContainer: LitElement | null = window.EtoolsPmpApp.ContentContainer;
@@ -54,4 +54,4 @@ function ScrollControlMixin<T extends Constructor<LitElement>>(baseClass: T) {
   return ScrollControlClass;
 }
 
-export default ScrollControlMixin;
+export default ScrollControlMixinLit;

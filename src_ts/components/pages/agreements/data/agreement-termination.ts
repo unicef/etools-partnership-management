@@ -1,27 +1,35 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
+import {LitElement, html, property, customElement} from 'lit-element';
+import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
+import CommonMixin from '../../../common/mixins/common-mixin-lit';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
 import '../../../common/components/etools-warn-message';
-import {SharedStyles} from '../../../styles/shared-styles';
-import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
-import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
+
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
+
+import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import CONSTANTS from '../../../../config/app-constants';
-import CommonMixin from '../../../common/mixins/common-mixin';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
-export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixin(PolymerElement)) {
-  static get template() {
+@customElement('agreement-termination')
+export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
     return html`
-      ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           /* host CSS */
@@ -38,32 +46,32 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         id="agreementTermination"
         opened
         size="md"
-        hidden$="[[warningOpened]]"
-        ok-btn-text="[[_getTranslation('TERMINATE')]]"
-        dialog-title="[[_getTranslation('TERMINATE_AGREEMENT')]]"
-        on-close="_onClose"
-        on-confirm-btn-clicked="_triggerAgreementTermination"
-        disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]"
+        ?hidden="${this.warningOpened}"
+        .okBtnText="${translate('TERMINATE')}"
+        dialog-title="${translate('TERMINATE_AGREEMENT')}"
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._triggerAgreementTermination}"
+        ?disableConfirmBtn="${this.uploadInProgress}"
+        ?disableDismissBtn="${this.uploadInProgress}"
       >
         <div class="row-h flex-c">
           <etools-upload
             id="terminationNotice"
-            label="[[_getTranslation('TERMINATION_NOTICE')]]"
+            label="${translate('TERMINATION_NOTICE')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
-            file-url="[[termination.attachment_id]]"
-            upload-endpoint="[[uploadEndpoint]]"
-            on-upload-started="_uploadStarted"
-            on-upload-finished="_uploadFinished"
+            .fileUrl="${this.termination.attachment_id}"
+            .uploadEndpoint="${this.uploadEndpoint}"
+            @upload-started="${this._uploadStarted}"
+            @upload-finished="${this._uploadFinished}"
             required
             auto-validation
-            upload-in-progress="[[uploadInProgress]]"
-            error-message="[[_getTranslation('TERMINATION_NOTICE_FILE_IS_REQUIRED')]]"
+            .uploadInProgress="${this.uploadInProgress}"
+            error-message="${translate('TERMINATION_NOTICE_FILE_IS_REQUIRED')}"
           >
           </etools-upload>
         </div>
         <div class="row-h">
-          <etools-warn-message messages="[[_getTranslation('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')]]">
+          <etools-warn-message messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
           </etools-warn-message>
         </div>
       </etools-dialog>
@@ -89,12 +97,10 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
   termination!: {attachment_id: number};
 
   @property({type: Object})
-  terminationElSource!: PolymerElement;
+  terminationElSource!: LitElement;
 
   @property({type: Boolean})
   uploadInProgress = false;
-
-  private _validationSelectors: string[] = ['#terminationNotice'];
 
   set dialogData(data: any) {
     const {terminationElSource, agreementId, termination}: any = data;
@@ -122,24 +128,15 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
     this._onClose();
   }
 
-  // TODO: refactor validation at some point (common with ag add amendment dialog and more)
   validate() {
-    let isValid = true;
-    this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
-        validate(): boolean;
-      };
-      if (el && !el.validate()) {
-        isValid = false;
-      }
-    });
-    return isValid;
+    return validateRequiredFields(this);
   }
 
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set('termination.attachment_id', uploadResponse.id);
+      this.termination.attachment_id = uploadResponse.id;
+      this.termination = {...this.termination};
       this.uploadInProgress = false;
     }
   }
@@ -152,5 +149,3 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 }
-
-window.customElements.define('agreement-termination', AgreementTermination);

@@ -1,26 +1,34 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
-import {SharedStyles} from '../../../../../../styles/shared-styles';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
-import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
+
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
+
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
-import {property} from '@polymer/decorators';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../../common/mixins/common-mixin.js';
+import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  */
-class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
-  static get template() {
+@customElement('add-ag-amendment-dialog')
+export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     return html`
-      ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${RequiredFieldsStyles}
 
       <etools-dialog
         no-padding
@@ -28,13 +36,13 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
         id="add-ag-amendment"
         opened
         size="md"
-        hidden$="[[datePickerOpen]]"
-        ok-btn-text="[[_getTranslation('GENERAL.SAVE')]]"
-        dialog-title="[[_getTranslation('ADD_AMENDMENT')]]"
-        on-close="_onClose"
-        on-confirm-btn-clicked="_validateAndSaveAmendment"
-        disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]"
+        ?hidden="${this.datePickerOpen}"
+        .okBtnText="${translate('GENERAL.SAVE')}"
+        dialog-title="${translate('ADD_AMENDMENT')}"
+        @close="${this._onClose}"
+        @confirm-btn-clicked="${this._validateAndSaveAmendment}"
+        .disableConfirmBtn="${this.uploadInProgress}"
+        .disableDismissBtn="${this.uploadInProgress}"
       >
         <div class="row-h flex-c">
           <div class="col col-4">
@@ -42,17 +50,16 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
             <datepicker-lite
               id="signedDate"
               label="Signed Date"
-              value="[[amendment.signed_date]]"
-              required-error-msg="[[_getTranslation('PLEASE_SELECT_SIGNED_DATE')]]"
-              max-date-error-msg="[[_getTranslation('DATE_CAN_NOT_BE_IN_THE_FUTURE')]]"
-              open="{{datePickerOpen}}"
-              auto-validate="[[autoValidate]]"
-              max-date="[[getCurrentDate()]]"
+              .value="${this.amendment.signed_date}"
+              required-error-msg="${translate('PLEASE_SELECT_SIGNED_DATE')}"
+              max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
+              .open="${this.datePickerOpen}"
+              .autoValidate="${this.autoValidate}"
+              .maxDate="${this.getCurrentDate()}"
               required
               selected-date-display-format="D MMM YYYY"
               fire-date-has-changed
-              on-date-has-changed="_dateHasChanged"
-              data-field-path="amendment.signed_date"
+              @date-has-changed="${(e: CustomEvent) => (this.amendment.signed_date = e.detail.date)}"
             >
             </datepicker-lite>
           </div>
@@ -61,16 +68,16 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
           <!-- Signed Agreement -->
           <etools-upload
             id="signedAmendment"
-            label="[[_getTranslation('SIGNED_AMENDMENT')]]"
+            label="${translate('SIGNED_AMENDMENT')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
-            file-url="[[amendment.signed_amendment_attachment]]"
-            upload-endpoint="[[uploadEndpoint]]"
-            on-upload-started="_uploadStarted"
-            on-upload-finished="_uploadFinished"
+            .fileUrl="${this.amendment.signed_amendment_attachment}"
+            .uploadEndpoint="${this.uploadEndpoint}"
+            @upload-started="${this._uploadStarted}"
+            @upload-finished="${this._uploadFinished}"
             required
-            upload-in-progress="[[uploadInProgress]]"
-            auto-validate="[[autoValidate]]"
-            error-message="[[_getTranslation('SIGNED_AMENDMENT_FILE_IS_REQUIRED')]]"
+            .uploadInProgress="${this.uploadInProgress}"
+            .autoValidate="${this.autoValidate}"
+            error-message="${translate('SIGNED_AMENDMENT_FILE_IS_REQUIRED')}"
           >
           </etools-upload>
         </div>
@@ -78,38 +85,38 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
         <div class="row-h flex-c">
           <etools-dropdown-multi
             id="amendmentTypes"
-            label="[[_getTranslation('AMENDMENT_TYPES')]]"
-            options="[[amendmentTypes]]"
-            selected-values="[[amendment.types]]"
+            label="${translate('AMENDMENT_TYPES')}"
+            .options="${this.amendmentTypes}"
+            .selectedValues="${this.amendment.types}"
             hide-search
-            error-message="[[_getTranslation('PLEASE_SELECT_AMENDMENT_TYPE')]]"
+            error-message="${translate('PLEASE_SELECT_AMENDMENT_TYPE')}"
             required
-            auto-validate="[[autoValidate]]"
+            .autoValidate="${this.autoValidate}"
             trigger-value-change-event
-            on-etools-selected-items-changed="onAmendmentTypesChanged"
+            @etools-selected-items-changed="${this.onAmendmentTypesChanged}"
           >
           </etools-dropdown-multi>
         </div>
 
-        <template is="dom-if" if="[[_showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected)]]" restamp>
-          <div class="row-h flex-c">
-            <etools-dropdown-multi
-              id="officers"
-              label="[[_getTranslation('AUTHORIZED_OFFICERS')]]"
-              placeholder="&#8212;"
-              options="[[authorizedOfficersOptions]]"
-              option-value="id"
-              option-label="name"
-              selected-values="[[authorizedOfficers]]"
-              trigger-value-change-event
-              on-etools-selected-items-changed="onAuthorizedOfficersChanged"
-              error-message="[[_getTranslation('PLS_ENTER_PARTNER_AUTH_OFFICERS')]]"
-              required
-              auto-validate
-            >
-            </etools-dropdown-multi>
-          </div>
-        </template>
+        ${this._showAuthorizedOfficersField(this.showAuthorizedOfficers, this._aoTypeSelected)
+          ? html` <div class="row-h flex-c">
+              <etools-dropdown-multi
+                id="officers"
+                label="${translate('AUTHORIZED_OFFICERS')}"
+                placeholder="&#8212;"
+                .options="${this.authorizedOfficersOptions}"
+                option-value="id"
+                option-label="name"
+                .selected-values="${this.authorizedOfficers}"
+                trigger-value-change-event
+                @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
+                error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"
+                required
+                auto-validate
+              >
+              </etools-dropdown-multi>
+            </div>`
+          : ''}
       </etools-dialog>
     `;
   }
@@ -144,18 +151,16 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   @property({type: Boolean})
   uploadInProgress = false;
 
-  private _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
-
   set dialogData(data: any) {
     const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes}: any = data;
 
-    this.set('amendment', new AgreementAmendment());
-    this.set('amendmentTypes', amendmentTypes);
-    this.set('authorizedOfficersOptions', authorizedOfficers);
-    this.set('authorizedOfficers', []);
-    this.set('showAuthorizedOfficers', showAuthorizedOfficers);
-    this.set('autoValidate', true);
-    this.set('_aoTypeSelected', false);
+    this.amendment = new AgreementAmendment();
+    this.amendmentTypes = amendmentTypes;
+    this.authorizedOfficersOptions = authorizedOfficers;
+    this.authorizedOfficers = [];
+    this.showAuthorizedOfficers = showAuthorizedOfficers;
+    this.autoValidate = true;
+    this._aoTypeSelected = false;
   }
 
   _validateAndSaveAmendment() {
@@ -175,16 +180,7 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   }
 
   validate() {
-    let isValid = true;
-    this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
-        validate(): boolean;
-      };
-      if (el && !el.validate()) {
-        isValid = false;
-      }
-    });
-    return isValid;
+    return validateRequiredFields(this);
   }
 
   _showAuthorizedOfficersField(showAuthorizedOfficers: boolean, _aoTypeSelected: boolean) {
@@ -194,15 +190,15 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   onAmendmentTypesChanged(e: CustomEvent) {
     const selectedTypes = e.detail.selectedItems.map((i: any) => i['value']);
     if (!isJsonStrMatch(selectedTypes, this.amendment.types)) {
-      this.set('amendment.types', selectedTypes);
+      this.amendment.types = selectedTypes;
     }
-    this.set('_aoTypeSelected', this._isAoTypeSelected());
+    this._aoTypeSelected = this._isAoTypeSelected();
   }
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
     const selectedOfficers = e.detail.selectedItems.map((i: any) => String(i['id']));
     if (!isJsonStrMatch(selectedOfficers, this.authorizedOfficers)) {
-      this.set('authorizedOfficers', selectedOfficers);
+      this.authorizedOfficers = selectedOfficers;
     }
   }
 
@@ -216,7 +212,8 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set('amendment.signed_amendment_attachment', uploadResponse.id);
+      this.amendment.signed_amendment_attachment = uploadResponse.id;
+      this.amendment = {...this.amendment};
       this.uploadInProgress = false;
     }
   }
@@ -229,7 +226,3 @@ class AddAgAmendmentDialog extends CommonMixin(PolymerElement) {
     return new Date();
   }
 }
-
-window.customElements.define('add-ag-amendment-dialog', AddAgAmendmentDialog);
-
-export {AddAgAmendmentDialog};

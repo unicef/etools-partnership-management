@@ -215,12 +215,7 @@ class AppShell extends connect(store)(
             </template>
 
             <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
-              <interventions-module
-                id="interventions"
-                class="main-page"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
+              <interventions-module id="interventions" class="main-page" user-permissions="[[permissions]]">
               </interventions-module>
             </template>
 
