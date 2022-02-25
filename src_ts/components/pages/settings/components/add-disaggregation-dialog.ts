@@ -52,7 +52,7 @@ export class AddDisaggregationDialog extends connect(store)(
         .groups {
           align-items: center;
           flex-wrap: wrap;
-          width: 520px; /* For IE */
+          margin-top: -9px;
         }
 
         .newGroup {
@@ -60,7 +60,8 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .staticGroup {
-          padding-inline-end: 15px;
+          padding-inline-end: 6px;
+          padding-inline-start: 10px;
         }
 
         .action.delete.no-padding {
@@ -69,15 +70,21 @@ export class AddDisaggregationDialog extends connect(store)(
           height: 20px;
         }
 
-        etools-dialog paper-input.newGroup {
-          --paper-input-container: {
-            padding: 0 0 !important;
-          }
-        }
-
         .extra-padd {
           padding-top: 12px !important;
           padding-bottom: 12px !important;
+        }
+
+        .secondary-btn {
+          padding-top: 10px !important;
+        }
+
+        .group-label {
+          padding-top: 9px !important;
+        }
+
+        paper-input[required].staticGroup {
+          --required-star-style_-_background: url('./images/required.svg') no-repeat 99% 20%/6px;
         }
       </style>
 
@@ -112,7 +119,7 @@ export class AddDisaggregationDialog extends connect(store)(
           </div>
           <div class="col col-8">
             <div class="layout-vertical">
-              <label class="paper-label">${translate('DISAGGREGATION_GROUP')}</label>
+              <label class="paper-label group-label">${translate('DISAGGREGATION_GROUP')}</label>
               <div class="layout-horizontal groups">
                 ${(this.data || []).map(
                   (item: any, index) => html`
