@@ -88,7 +88,6 @@ export class GeneratePcaDialog extends LitElement {
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
-
 }
 
 export {GeneratePcaDialog as GeneratePcaDialogEl};
