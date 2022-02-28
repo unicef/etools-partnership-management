@@ -1,15 +1,16 @@
 import {store} from '../../../../redux/store';
-import {PolymerElement} from '@polymer/polymer';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin.js';
+import {LitElement, property, customElement} from 'lit-element';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement} from '../../../../redux/actions/agreements';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property} from '@polymer/decorators';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
+import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -18,8 +19,9 @@ import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
-class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
-  static get template() {
+@customElement('agreement-item-data')
+export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(LitElement)) {
+  render() {
     return null;
   }
 
@@ -30,17 +32,35 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     DELETE: 'agreementDelete'
   };
 
-  @property({type: Object, readOnly: true, notify: true})
-  agreement!: Agreement;
+  private _agreement!: Agreement;
+  @property({type: Object})
+  get agreement() {
+    return this._agreement;
+  }
+
+  set agreement(agreement: Agreement) {
+    if (!isJsonStrMatch(this._agreement, agreement)) {
+      this._agreement = agreement;
+      fireEvent(this, 'agreement-changed', this.agreement);
+    }
+  }
 
   @property({type: Object})
   _partners!: GenericObject;
 
-  @property({type: Number, notify: true, observer: '_agreementIdChanged'})
-  agreementId: number | null = null;
+  private _agreementId!: number;
+  @property({type: Number})
+  get agreementId() {
+    return this._agreementId;
+  }
+
+  set agreementId(agreementId: number) {
+    this._agreementId = agreementId;
+    this._agreementIdChanged(this.agreementId);
+  }
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback!: (response: any) => void;
+  handleSuccResponseAdditionalCallback!: (response: any) => void | null;
 
   @property({type: String})
   ajaxLoadingMsgSource = 'ag-data';
@@ -61,7 +81,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       });
   }
 
-  _agreementIdChanged(newId: string) {
+  _agreementIdChanged(newId: number | null) {
     if (newId) {
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
@@ -69,7 +89,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         loadingSource: this.ajaxLoadingMsgSource
       });
       this._triggerAgreementRequest({
-        endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {
+        endpoint: this.getEndpoint(pmpEdpoints, this.agreementEndpoints.DETAILS, {
           id: newId
         })
       });
@@ -79,13 +99,13 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   // Handle received data from request
   _handleSuccResponse(response: any, ajaxMethod: string) {
     // @ts-ignore
-    this._setAgreement(response);
+    this.agreement = response;
 
     // call additional callback, if any
     if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
       this.handleSuccResponseAdditionalCallback.bind(this, response)();
       // reset callback
-      this.set('handleSuccResponseAdditionalCallback', null);
+      this.handleSuccResponseAdditionalCallback = null;
     }
     if (ajaxMethod !== 'GET') {
       // 'agreement_number_status' is not retrieved from API
@@ -162,7 +182,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         // status change is allowed
         // set additional callback if any
         if (callback) {
-          this.set('handleResponseAdditionalCallback', callback);
+          this.handleResponseAdditionalCallback = callback;
         }
         fireEvent(this, 'global-loading', {
           message: 'Changing agreement status...',
@@ -172,7 +192,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
         const requestOptions: any = {
           method: 'PATCH',
-          endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {
+          endpoint: this.getEndpoint(pmpEdpoints, this.agreementEndpoints.DETAILS, {
             id: data.agreementId
           }),
           body: {
@@ -224,12 +244,12 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
       if (agreement.id) {
         // prepare PATCH endpoint
-        endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {
+        endpoint = this.getEndpoint(pmpEdpoints, this.agreementEndpoints.DETAILS, {
           id: agreement.id
         });
       } else {
         // new agreement, use POST method for the same endpoint
-        endpoint = this.getEndpoint(this.agreementEndpoints.CREATE);
+        endpoint = this.getEndpoint(pmpEdpoints, this.agreementEndpoints.CREATE);
         isNew = true;
       }
       // remove id from data
@@ -239,7 +259,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       if (Object.keys(agreement).length > 0) {
         // set additional callback if any
         if (succCallback) {
-          this.set('handleSuccResponseAdditionalCallback', succCallback);
+          this.handleSuccResponseAdditionalCallback = succCallback;
         }
 
         fireEvent(this, 'global-loading', {
@@ -269,7 +289,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       return;
     }
     const reqMethod = 'DELETE';
-    this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod})
+    this.fireRequest(pmpEdpoints, this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod})
       .then(() => {
         this._handleAgreementDeleteSuccess(id);
       })
@@ -314,6 +334,5 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     });
   }
 }
-window.customElements.define('agreement-item-data', AgreementItemData);
 
-export default AgreementItemData;
+export {AgreementItemData as AgreementItemDataEl};

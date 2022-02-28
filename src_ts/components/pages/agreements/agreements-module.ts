@@ -1,31 +1,33 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, property, query, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../redux/store';
-import ScrollControlMixin from '../../common/mixins/scroll-control-mixin.js';
-import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin.js';
-import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
+import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
+import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import CONSTANTS from '../../../config/app-constants.js';
-import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin.js';
 
 import '../../common/components/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import '../../common/components/page-content-header';
-import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
-import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {SharedStyles} from '../../styles/shared-styles';
-import {buttonsStyles} from '../../styles/buttons-styles';
+
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
+import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
-import AgreementItemData from './data/agreement-item-data.js';
-import {property} from '@polymer/decorators';
+import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../common/mixins/common-mixin';
-import {get as getTranslation} from 'lit-translate';
+import set from 'lodash-es/set';
+import cloneDeep from 'lodash-es/cloneDeep';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -36,7 +38,7 @@ import {get as getTranslation} from 'lit-translate';
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins = ScrollControlMixin(
-  CommonMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(PolymerElement))))
+  CommonMixinLit(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(LitElement)))
 );
 
 /**
@@ -44,72 +46,101 @@ const AgreementsModuleRequiredMixins = ScrollControlMixin(
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
-class AgreementsModule extends AgreementsModuleRequiredMixins {
-  public static get template() {
+@customElement('agreements-module')
+export class AgreementsModule extends AgreementsModuleRequiredMixins {
+  render() {
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
         }
       </style>
+
       <app-route
-        route="[[route]]"
-        on-route-changed="routeChanged"
+        .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
+        }}"
         pattern="/list"
-        query-params="[[listPageQueryParams]]"
-        on-query-params-changed="queryParamsChanged"
-        active="[[listActive]]"
-        on-active-changed="activeChanged"
+        .queryParams="${this.listPageQueryParams}"
+        @query-params-changed="${({detail}: CustomEvent) => {
+          setTimeout(() => {
+            this.listPageQueryParams = detail.value;
+          }, 100);
+        }}"
+        .active="${this.listActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.listActive = detail.value;
+        }}"
       ></app-route>
 
       <app-route
-        route="[[route]]"
-        on-route-changed="routeChanged"
-        pattern="/:id/details"
-        active="[[tabsActive]]"
-        on-active-changed="activeTabsChanged"
-        data="[[routeData]]"
-        on-data-changed="onDataChanged"
+        .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
+        }}"
+        @data-changed="${({detail}: CustomEvent) => {
+          this.routeData = detail.value;
+        }}"
+        pattern="/:id/:details"
+        .active="${this.tabsActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.tabsActive = detail.value;
+        }}"
       ></app-route>
 
-      <page-content-header with-tabs-visible="[[_showPageTabs(activePage)]]">
-        <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            <span>[[_getTranslation('AGREEMENTS')]]</span>
-          </template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <span>[[_getAgreementDetailsTitle(agreement, newAgreementActive)]]</span>
-          </template>
+      <page-content-header with-tabs-visible="${this._showPageTabs(this.activePage)}">
+        <div slot="page-listActive">
+          ${this.listActive ? html`<span>${translate('AGREEMENTS')}</span>` : ''}
+          ${this.tabsActive
+            ? html`<span>${this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive)}</span>`
+            : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions">
-          <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]">
+          <div class="action" ?hidden="${!this.listActive}">
+            <a target="_blank" href="${this.csvDownloadUrl}">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
-                [[_getTranslation('EXPORT')]]
+                ${translate('EXPORT')}
               </paper-button>
             </a>
           </div>
-          <div class="action" hidden$="[[!_showNewAgreementAddButton(listActive, permissions)]]">
-            <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
+          <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
+            <paper-button class="primary-btn with-prefix" @click="${this._goToNewAgreementPage}">
               <iron-icon icon="add"></iron-icon>
-              [[_getTranslation('ADD_NEW_AGREEMENT')]]
+              ${translate('ADD_NEW_AGREEMENT')}
             </paper-button>
           </div>
         </div>
 
-        <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-          <etools-tabs
-            slot="tabs"
-            tabs="[[agreementsTabs]]"
-            active-tab="details"
-            on-iron-select="_handleTabSelectAction"
-          >
-          </etools-tabs>
-        </template>
+        ${this._showPageTabs(this.activePage)
+          ? html` <etools-tabs
+              slot="tabs"
+              .tabs="${this.agreementsTabs}"
+              active-tab="details"
+              @iron-select="${this._handleTabSelectAction}"
+            >
+            </etools-tabs>`
+          : ''}
       </page-content-header>
 
       <div id="main">
@@ -117,72 +148,67 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
           <etools-error-messages-box
             id="errorsBox"
             title="Errors Saving Agreement"
-            errors="[[serverErrors]]"
-            on-errors-changed="onErrorsChanged"
+            .errors="${this.serverErrors}"
+            @errors-changed="${this.onErrorsChanged}"
           ></etools-error-messages-box>
-          <iron-pages
-            id="agreementsPages"
-            selected="[[activePage]]"
-            selected-changed="onActivePageChanged"
-            attr-for-selected="name"
-            role="main"
-          >
-            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <agreements-list
-                id="list"
-                name="list"
-                active="[[listActive]]"
-                csv-download-url="[[csvDownloadUrl]]"
-                on-csv-download-url-changed="onCsvDownloadChanged"
-                url-params="[[preservedListQueryParams]]"
-              >
-              </agreements-list>
-            </template>
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-              <agreement-details
-                id="agreementDetails"
-                name="details"
-                agreement="[[agreement]]"
-                authorized-officers="[[authorizedOfficers]]"
-                on-authorized-officers-changed="onAuthorizedOfficersChanged"
-                edit-mode="[[_hasEditPermissions(permissions)]]"
-                is-new-agreement="[[newAgreementActive]]"
-                on-save-agreement="_validateAndTriggerAgreementSave"
-              >
-              </agreement-details>
-            </template>
-          </iron-pages>
+          <agreements-list
+            id="list"
+            name="list"
+            ?hidden="${!this._pageEquals(this.activePage, 'list')}"
+            .active="${this.listActive}"
+            .csv-download-url="${this.csvDownloadUrl}"
+            @csvDownloadUrl-changed=${(e: any) => {
+              this.csvDownloadUrl = e.detail;
+            }}
+            .url-params="${this.preservedListQueryParams}"
+          >
+          </agreements-list>
+
+          <agreement-details
+            id="agreementDetails"
+            name="details"
+            ?hidden="${!this._pageEquals(this.activePage, 'details')}"
+            .agreement="${this.agreement}"
+            .authorizedOfficers="${this.authorizedOfficers}"
+            @authorized-officers-changed="${(e: CustomEvent) => {
+              this.authorizedOfficers = e.detail;
+            }}"
+            .editMode="${this._hasEditPermissions(this.permissions)}"
+            .isNewAgreement="${this.newAgreementActive}"
+            @save-agreement="${this._validateAndTriggerAgreementSave}"
+          >
+          </agreement-details>
         </div>
         <!-- page content end -->
 
-        <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, agreement)]]">
-          <!-- sidebar content start -->
-          <div id="sidebar">
-            <agreement-status
-              status$="[[agreement.status]]"
-              active="[[!listActive]]"
-              new-agreement$="[[newAgreementActive]]"
-              agreement-id$="[[agreement.id]]"
-              agreement-type="[[agreement.agreement_type]]"
-              on-save-agreement="_validateAndTriggerAgreementSave"
-              edit-mode="[[_hasEditPermissions(permissions)]]"
-              on-terminate-agreement="_terminateAgreementNow"
-              on-update-agreement-status="_updateAgreementStatus"
-              on-delete-agreement="_deleteAgreement"
-            >
-            </agreement-status>
-          </div>
-          <!-- sidebar content end -->
-        </template>
+        ${this._showSidebarStatus(this.listActive, this.tabAttached, this.agreement)
+          ? html` <!-- sidebar content start -->
+              <div id="sidebar">
+                <agreement-status
+                  .status="${this.agreement?.status}"
+                  .active="${!this.listActive}"
+                  .newAgreement="${this.newAgreementActive}"
+                  .agreementId="${this.agreement?.id}"
+                  .agreementType="${this.agreement?.agreement_type}"
+                  @save-agreement="${this._validateAndTriggerAgreementSave}"
+                  .editMode="${this._hasEditPermissions(this.permissions)}"
+                  @terminate-agreement="${this._terminateAgreementNow}"
+                  @update-agreement-status="${this._updateAgreementStatus}"
+                  @delete-agreement="${this._deleteAgreement}"
+                >
+                </agreement-status>
+              </div>
+              <!-- sidebar content end -->`
+          : ''}
       </div>
       <!-- main page content end -->
 
       <agreement-item-data
         id="agreementData"
-        agreement="[[agreement]]"
-        on-agreement-changed="onAgreementChanged"
-        agreement-id="[[selectedAgreementId]]"
+        .agreement="${this.agreement}"
+        @agreement-changed="${this.onAgreementChanged}"
+        .agreementId="${this.selectedAgreementId}"
         error-event-name="agreement-save-error"
       >
       </agreement-item-data>
@@ -202,18 +228,28 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   permissions!: UserPermissions;
 
   @property({type: Number})
-  selectedAgreementId!: number;
+  selectedAgreementId!: number | null;
 
   @property({type: String})
   csvDownloadUrl!: string;
 
-  @property({
-    type: Boolean,
-    computed: `_updateNewItemPageFlag(routeData, listActive)`
-  })
-  newAgreementActive!: boolean;
+  private _newAgreementActive!: boolean;
+  @property({type: Boolean})
+  get newAgreementActive() {
+    return this._newAgreementActive;
+  }
 
-  @property({type: Object, observer: `_agreementChanged`})
+  set newAgreementActive(newAgreementActive: boolean) {
+    if (this.newAgreementActive !== newAgreementActive) {
+      // Useful when refreshing the page
+      this._newAgreementActive = newAgreementActive;
+      if (this.newAgreementActive) {
+        this.agreement = new Agreement();
+      }
+    }
+  }
+
+  @property({type: Object})
   agreement!: Agreement;
 
   @property({type: String})
@@ -224,18 +260,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   originalAgreementData!: Agreement;
 
-  static get observers() {
-    return ['_pageChanged(listActive, tabsActive, newAgreementActive)', '_observeRouteDataId(routeData.id)'];
-  }
-
-  ready() {
-    super.ready();
-    this._initListeners();
-    if (this.newAgreementActive) {
-      // Useful when refreshing the page
-      this.set('agreement', new Agreement());
-    }
-  }
+  @query('#agreementData')
+  agreementDataEl!: AgreementItemDataEl;
 
   connectedCallback() {
     super.connectedCallback();
@@ -244,6 +270,12 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       active: false,
       loadingSource: 'main-page'
     });
+
+    this._initListeners();
+    if (this.newAgreementActive) {
+      // Useful when refreshing the page
+      this.agreement = new Agreement();
+    }
     // fire agreement page loading message
     this._showAgreementsPageLoadingMessage();
   }
@@ -259,6 +291,25 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
     this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
     this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('agreement')) {
+      this._agreementChanged(this.agreement);
+    }
+    if (changedProperties.has('routeData')) {
+      this._observeRouteDataId(this.routeData.id);
+    }
+    if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
+      this.newAgreementActive = this._updateNewItemPageFlag(this.routeData, this.listActive);
+    }
+    if (
+      changedProperties.has('listActive') ||
+      changedProperties.has('tabsActive') ||
+      changedProperties.has('newAgreementActive')
+    ) {
+      this._pageChanged(this.listActive, this.tabsActive, this.newAgreementActive);
+    }
   }
 
   _removeListeners() {
@@ -306,7 +357,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
-    (this.$.agreementData as AgreementItemData)
+
+    this.agreementDataEl
       .saveAgreement(agreementData, this._newAgreementSaved.bind(this))
       .then((successfull: boolean) => {
         if (successfull) {
@@ -318,12 +370,13 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   _updateAgreementStatus(e: CustomEvent) {
     e.stopImmediatePropagation();
 
-    (this.$.agreementData as AgreementItemData).updateAgreementStatus(e.detail);
+    this.agreementDataEl.updateAgreementStatus(e.detail);
   }
 
   // Go to details page once the new agreement has been saved
   _newAgreementSaved(agreement: Agreement) {
-    this.set('route.path', '/' + agreement.id + '/details');
+    this.route.path = '/' + agreement.id + '/details';
+    this.route = {...this.route};
   }
 
   _agreementSaveErrors(e: CustomEvent) {
@@ -340,7 +393,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
    */
   _goToNewAgreementPage() {
     // go to new agreement
-    this.set('agreement', new Agreement());
+    this.agreement = new Agreement();
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
     this._handleAgreementSelectionLoadingMsg();
   }
@@ -353,12 +406,12 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (isNaN(id)) {
       id = null;
     }
-    this.set('selectedAgreementId', id);
+    this.selectedAgreementId = id;
   }
 
   _agreementChanged(agreement: Agreement) {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
-    this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+    this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
     fireEvent(this, 'clear-server-errors');
   }
 
@@ -534,7 +587,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   _deleteAgreement(e: CustomEvent) {
-    (this.$.agreementData as AgreementItemData).deleteAgreement(e.detail.id);
+    this.agreementDataEl.deleteAgreement(e.detail.id);
   }
 
   _terminateAgreementNow(e: CustomEvent) {
@@ -544,48 +597,14 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       termination_doc: e.detail.terminationData.fileId,
       status: e.detail.status
     };
-    (this.$.agreementData as AgreementItemData).updateAgreementStatus(terminationData);
-  }
-
-  routeChanged(e: CustomEvent) {
-    this.route = e.detail.value;
-  }
-
-  queryParamsChanged(e: CustomEvent) {
-    this.listPageQueryParams = e.detail.value;
-  }
-
-  activeChanged(e: CustomEvent) {
-    this.listActive = e.detail.value;
-  }
-
-  activeTabsChanged(e: CustomEvent) {
-    this.tabsActive = e.detail.value;
-  }
-
-  onDataChanged(e: CustomEvent) {
-    this.routeData = e.detail.value;
-  }
-
-  onActivePageChanged(e: CustomEvent) {
-    this.activePage = e.detail.value;
-  }
-
-  onCsvDownloadChanged(e: CustomEvent) {
-    this.csvDownloadUrl = e.detail.value;
-  }
-
-  onAuthorizedOfficersChanged(e: CustomEvent) {
-    this.authorizedOfficers = e.detail.value;
+    this.agreementDataEl.updateAgreementStatus(terminationData);
   }
 
   onAgreementChanged(e: CustomEvent) {
-    this.agreement = e.detail.value;
+    this.agreement = cloneDeep(e.detail);
   }
 
   onErrorsChanged(e: CustomEvent) {
     this.serverErrors = e.detail.value;
   }
 }
-
-window.customElements.define('agreements-module', AgreementsModule);

@@ -1,5 +1,5 @@
-import {PolymerElement} from '@polymer/polymer';
-import ListDataMixin from '../../../common/mixins/list-data-mixin';
+import {customElement, LitElement, property} from 'lit-element';
+import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
 import {store} from '../../../../redux/store';
 
 declare const dayjs: any;
@@ -9,7 +9,6 @@ import {isEmptyObject} from '../../../utils/utils';
 import {setAgreements} from '../../../../redux/actions/agreements';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -18,18 +17,16 @@ import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
  * @mixinFunction
  * @appliesMixin ListDataMixin
  */
-class AgreementsListData extends ListDataMixin(PolymerElement) {
+@customElement('agreements-list-data')
+export class AgreementsListData extends ListDataMixin(LitElement) {
   @property({type: String})
   endpointName = 'agreements';
 
   @property({type: String})
   dataLoadedEventName = 'agreements-loaded';
 
-  @property({type: Array, notify: true, readOnly: true})
+  @property({type: Array})
   filteredAgreements: [] = [];
-
-  @property({type: Number, readOnly: true, notify: true})
-  totalResults!: number;
 
   @property({type: Object})
   currentQuery: GenericObject | null = null;
@@ -52,7 +49,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
     isSpecialConditionsPca: string,
     pageNumber: number,
     pageSize: number,
-    showQueryLoading: boolean
+    showQueryLoading = false
   ) {
     // If an active query transaction exists, abort it and start
     // a new one
@@ -112,10 +109,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (
-          !isEmptyObject(cpStructures) &&
-          cpStructures.indexOf(agreement.country_programme as unknown as string) === -1
-        ) {
+        if (!isEmptyObject(cpStructures) && cpStructures.indexOf(String(agreement.country_programme)) === -1) {
           return false;
         }
 
@@ -142,8 +136,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // instead of blocking the main query
       Dexie.ignoreTransaction(function () {
         queryResult.count(function (count: number) {
-          // @ts-ignore
-          self._setTotalResults(count);
+          fireEvent(self, 'total-results-changed', count);
         });
       });
 
@@ -153,8 +146,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
         .toArray();
     })
       .then(function (result: any) {
-        // @ts-ignore
-        self._setFilteredAgreements(result);
+        fireEvent(self, 'filtered-agreements-changed', result);
         fireEvent(self, 'global-loading', {
           active: false,
           loadingSource: 'ag-list'
@@ -169,7 +161,3 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       });
   }
 }
-
-window.customElements.define('agreements-list-data', AgreementsListData);
-
-export {AgreementsListData};

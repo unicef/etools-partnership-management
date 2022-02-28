@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, customElement, property, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -7,31 +7,39 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
-import CommonMixin from '../../../../../../common/mixins/common-mixin';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../../styles/shared-styles';
-import {buttonsStyles} from '../../../../../../styles/buttons-styles';
-import '../../../../../../common/mixins/common-mixin.js';
+import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
+
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
+
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../redux/store';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
+import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../../../utils/dialog';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
-  static get template() {
+@customElement('agreement-amendments')
+export class AgreementAmendments extends connect(store)(CommonMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+  render() {
     return html`
-      ${gridLayoutStyles} ${SharedStyles} ${buttonsStyles}
-      <style include="data-table-styles">
-        [hidden] {
+      ${sharedStyles} ${buttonsStyles}
+      <style>
+        ${dataTableStylesLit} [hidden] {
           display: none !important;
         }
 
@@ -82,14 +90,14 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-content-panel panel-title="[[_getTranslation('AMENDMENTS')]] ([[dataItems.length]])">
+      <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
           <paper-icon-button
             icon="add-box"
-            hidden$="[[!editMode]]"
-            disabled$="[[!editMode]]"
-            title="Add"
-            on-click="_openAddAgAmendmentDialog"
+            ?hidden="${!this.editMode}"
+            ?disabled="${!this.editMode}"
+            title="${translate('ADD')}"
+            @click="${this._openAddAgAmendmentDialog}"
           >
           </paper-icon-button>
         </div>
@@ -97,64 +105,62 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
           <!-- Amendments template download -->
           <div id="download-template-msg">
-            [[_getTranslation('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')]]
+            ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
           </div>
           <!-- Download template btn -->
           <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
             <paper-button id="download-template-btn" class="secondary-btn">
               <iron-icon icon="file-download"></iron-icon>
-              [[_getTranslation('DOWNLOAD_TEMPLATE')]]
+              ${translate('DOWNLOAD_TEMPLATE')}
             </paper-button>
           </a>
         </div>
 
-        <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
+        <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">
           <etools-data-table-header id="listHeader" no-collapse no-title>
             <etools-data-table-column class="col-1"
-              >[[_getTranslation('AGREEMENT_REFERENCE_NUMBER')]]</etools-data-table-column
+              >${translate('AGREEMENT_REFERENCE_NUMBER')}</etools-data-table-column
             >
-            <etools-data-table-column class="col-4">[[_getTranslation('AMENDMENT_TYPE')]]</etools-data-table-column>
-            <etools-data-table-column class="col-2">[[_getTranslation('SIGNED_DATE')]]</etools-data-table-column>
-            <etools-data-table-column class="flex-c">[[_getTranslation('SIGNED_AMENDMENT')]]</etools-data-table-column>
+            <etools-data-table-column class="col-4">${translate('AMENDMENT_TYPE')}</etools-data-table-column>
+            <etools-data-table-column class="col-2">${translate('SIGNED_DATE')}</etools-data-table-column>
+            <etools-data-table-column class="flex-c">${translate('SIGNED_AMENDMENT')}</etools-data-table-column>
           </etools-data-table-header>
 
-          <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row no-collapse>
-              <div slot="row-data">
-                <span class="col-data col-1">
-                  <template is="dom-if" if="[[item.id]]" restamp>[[item.number]]</template>
-                  <template is="dom-if" if="[[!item.id]]" restamp>
-                    <etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
-                      <span slot="field">[[_getTranslation('NOT_SAVED')]]</span>
-                      <span slot="message"
-                        >[[_getTranslation('USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT')]]</span
-                      >
-                    </etools-info-tooltip>
-                  </template>
-                </span>
-                <span class="col-data col-4">[[_getReadonlyAmendmentTypes(item.types)]]</span>
-                <span class="col-data col-2">[[getDateDisplayValue(item.signed_date)]]</span>
-                <span class="col-data flex-c">
-                  <iron-icon icon="attachment" class="attachment"></iron-icon>
-                  <span class="break-word">
-                    <!-- target="_blank" is there for IE -->
-                    <template is="dom-if" if="[[item.id]]" restamp>
-                      <a href$="[[item.signed_amendment_attachment]]" target="_blank" download
-                        >[[getFileNameFromURL(item.signed_amendment_attachment)]]</a
-                      >
-                    </template>
-                    <template is="dom-if" if="[[!item.id]]" restamp>
-                      <span>[[item.signed_amendment.name]]</span>
-                    </template>
+          ${(this.dataItems || []).map(
+            (item: any) => html`
+              <etools-data-table-row no-collapse>
+                <div slot="row-data">
+                  <span class="col-data col-1">
+                    ${item.id ? html`${item.number}` : ``}
+                    ${!item.id
+                      ? html`<etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
+                          <span slot="field">${translate('NOT_SAVED')}</span>
+                          <span slot="message">${translate('USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT')}</span>
+                        </etools-info-tooltip>`
+                      : ``}
                   </span>
-                </span>
-              </div>
-            </etools-data-table-row>
-          </template>
+                  <span class="col-data col-4">${this._getReadonlyAmendmentTypes(item.types)}</span>
+                  <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
+                  <span class="col-data flex-c">
+                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <span class="break-word">
+                      <!-- target="_blank" is there for IE -->
+                      ${item.id
+                        ? html` <a href="${item.signed_amendment_attachment}" target="_blank" download
+                            >${this.getFileNameFromURL(item.signed_amendment_attachment)}</a
+                          >`
+                        : ``}
+                      ${!item.id ? html`<span>${item.signed_amendment?.name}</span>` : ``}
+                    </span>
+                  </span>
+                </div>
+              </etools-data-table-row>
+            `
+          )}
         </div>
 
-        <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>[[_getTranslation('THERE_ARE_NO_AMENDMENTS_ADDED')]]</p>
+        <div class="row-h" ?hidden="${!isEmptyObject(this.dataItems)}">
+          <p>${translate('THERE_ARE_NO_AMENDMENTS_ADDED')}</p>
         </div>
       </etools-content-panel>
     `;
@@ -180,11 +186,11 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   @property({type: Boolean})
   showAuthorizedOfficers = false;
 
-  @property({type: Array, notify: true})
+  @property({type: Array})
   selectedAo: [] = [];
 
   @property({type: Array})
-  dataItems: [] = [];
+  dataItems: any[] = [];
 
   @property({type: Boolean})
   editMode = false;
@@ -192,6 +198,12 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {
       this._amendmentTypes = state.commonData!.agreementAmendmentTypes;
+    }
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('dataItems')) {
+      fireEvent(this, 'data-items-changed', this.dataItems);
     }
   }
 
@@ -215,10 +227,14 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   saveNewAmendment(data: any) {
     const unsavedAmendment = data.amendment;
     if (unsavedAmendment) {
-      this.push('dataItems', unsavedAmendment);
+      if (!this.dataItems) {
+        this.dataItems = [];
+      }
+      this.dataItems.push(unsavedAmendment);
 
       if (data.ao instanceof Array && data.ao.length > 0) {
-        this.set('selectedAo', data.ao);
+        this.selectedAo = data.ao;
+        fireEvent(this, 'selected-ao-changed', this.selectedAo);
       }
       this.dispatchEvent(
         new CustomEvent('data-items-changed', {
@@ -269,10 +285,4 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     }
     return null;
   }
-
-  _emptyList(listLength: number) {
-    return listLength === 0;
-  }
 }
-
-window.customElements.define('agreement-amendments', AgreementAmendments);
