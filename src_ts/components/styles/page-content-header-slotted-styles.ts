@@ -6,6 +6,8 @@ export const pageContentHeaderSlottedStyles = html` <style>
     display: flex;
     flex-direction: row;
     align-items: flex-end;
+    place-content: flex-end;
+    flex-wrap: wrap;
   }
 
   @media (max-width: 576px) {

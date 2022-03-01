@@ -79,7 +79,7 @@ export class InterventionsList extends connect(store)(
 
         @media (max-width: 576px) {
           section.page-content.filters {
-            padding: 5px;
+            margin: 5px 0;
           }
           .page-content {
             margin: 5px;
