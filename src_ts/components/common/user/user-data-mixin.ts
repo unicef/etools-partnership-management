@@ -10,7 +10,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
-import {UserPermissions, UserGroup, User, Constructor} from '@unicef-polymer/etools-types';
+import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -37,6 +37,9 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         endpoint: this.getEndpoint(this.endpointName)
       })
         .then((res: any) => {
+          if (this.redirectToEpdIfNeccessary(res)) {
+            return;
+          }
           // TODO: check response to make sure it contains a valid user
           this._setUserData(res);
 
@@ -52,6 +55,19 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
             fireEvent(this, 'forbidden', {bubbles: true, composed: true});
           }
         });
+    }
+
+    redirectToEpdIfNeccessary(user: EtoolsUser) {
+      if (!user.is_unicef_user) {
+        if (window.location.href.includes('/interventions')) {
+          // preserve url
+          window.location.href = window.location.href.replace('pmp', 'epd');
+        } else {
+          window.location.href = window.location.origin + '/epd/';
+        }
+        return true;
+      }
+      return false;
     }
 
     public checkDexieCountryIsUserCountry(user: any) {
