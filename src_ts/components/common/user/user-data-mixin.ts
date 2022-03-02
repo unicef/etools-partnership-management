@@ -37,7 +37,7 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         endpoint: this.getEndpoint(this.endpointName)
       })
         .then((res: any) => {
-          if (this.redirectToEpdIfNeccessary(res)) {
+          if (this.redirectToEPDIfNeccessary(res)) {
             return;
           }
           // TODO: check response to make sure it contains a valid user
@@ -57,7 +57,7 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         });
     }
 
-    redirectToEpdIfNeccessary(user: EtoolsUser) {
+    redirectToEPDIfNeccessary(user: EtoolsUser) {
       if (!user.is_unicef_user) {
         if (window.location.href.includes('/interventions')) {
           // preserve url
