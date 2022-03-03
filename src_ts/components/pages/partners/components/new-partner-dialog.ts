@@ -2,6 +2,7 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {translate} from 'lit-translate';
 
@@ -14,6 +15,7 @@ export class NewPartnerDialog extends LitElement {
   render() {
     // language=HTML
     return html`
+      ${sharedStyles}
       <etools-dialog
         id="newPartnerDialog"
         size="md"

@@ -82,6 +82,9 @@ documentContainer.innerHTML = `
         --add-button-color: var(--success-color);
         --icon-delete-color: var(--error-color);
 
+        --gray-06: rgba(0,0,0,.06);
+        --gray-light: rgba(0,0,0,.38);
+
         /* partner risk ratings colors */
         --risk-rating-not-assesed-color: #dcd8d8;
         --risk-rating-high-color: #740E0E;
@@ -153,6 +156,10 @@ documentContainer.innerHTML = `
         };
         --esmm-delete-icon-color: var(--error-color);
 
+         /* etools-dialog styles */
+        --etools-dialog-primary-color: #FFFFFF;
+        --etools-dialog-contrast-text-color: var(--primary-text-color);
+
         /* global loading box content */
         --etools-loading-border-color: rgba(255, 255, 255, 0.12);
         --etools-loading-shadow-color: #333333;
@@ -179,7 +186,7 @@ documentContainer.innerHTML = `
         };
 
         --paper-tooltip-delay-in: 0;
-        
+
         --required-star-style: {
           background: url('./images/required.svg') no-repeat 99% 20%/8px;
           width: auto !important;
