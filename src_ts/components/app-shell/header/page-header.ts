@@ -73,10 +73,6 @@ class PageHeader extends connect(store)(
               display: none;
             }
 
-            --paper-input-container-underline-disabled: {
-              display: none;
-            }
-
             --paper-input-container-shared-input-style: {
               color: var(--light-secondary-text-color);
               cursor: pointer;

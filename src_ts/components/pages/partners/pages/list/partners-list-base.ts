@@ -61,9 +61,9 @@ export class PartnersListBase extends CommonMixin(
   render() {
     // language=HTML
     return html`
-      ${listFilterStyles} ${partnerStatusStyles}
+      ${listFilterStyles} ${partnerStatusStyles}${sharedStyles}
       <style>
-        ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} .sm-status-wrapper {
+        ${elevationStyles} ${dataTableStylesLit} .sm-status-wrapper {
           padding-left: 10px;
         }
         :host {

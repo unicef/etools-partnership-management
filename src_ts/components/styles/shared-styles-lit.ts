@@ -130,9 +130,6 @@ export const sharedStyles = html`
       --paper-input-container-underline-focus: {
         display: none;
       }
-      --paper-input-container-underline-disabled: {
-        display: none;
-      }
       --paper-input-char-counter: {
         display: none;
       }
