@@ -1,20 +1,20 @@
+import {LitElement, property} from 'lit-element';
 import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
-import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
+import {AnyObject, Constructor, User} from '@unicef-polymer/etools-types';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymerMixin
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class ReportDetailsClass extends EndpointsMixin(baseClass) {
+function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
+  class ReportDetailsClass extends EndpointsLitMixin(baseClass) {
     @property({type: Object})
-    report!: GenericObject;
+    report: AnyObject = {};
 
     @property({type: Array})
     reportAttachments!: any[];
@@ -51,7 +51,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         return;
       }
 
-      this.set('reportAttachments', []);
+      this.reportAttachments = [];
 
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
@@ -59,9 +59,9 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         loadingSource: this._loadingMsgSource
       });
 
-      this.fireRequest('reportDetails', {reportId: id})
+      this.fireRequest(pmpEdpoints, 'reportDetails', {reportId: id})
         .then((response: any) => {
-          this.set('report', response);
+          this.report = response;
           fireEvent(this, 'global-loading', {
             active: false,
             loadingSource: this._loadingMsgSource
@@ -86,15 +86,15 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         active: true,
         loadingSource: this._loadingMsgSource
       });
-      this.set('reportAttachments', []);
-      this.fireRequest('reportAttachments', {reportId: reportId})
+      this.reportAttachments = [];
+      this.fireRequest(pmpEdpoints, 'reportAttachments', {reportId: reportId})
         .then((response: any) => {
           fireEvent(this, 'global-loading', {
             active: false,
             loadingSource: this._loadingMsgSource
           });
 
-          this.set('reportAttachments', response);
+          this.reportAttachments = response;
         })
         .catch((error: any) => {
           const errMsg = 'Report attachment request failed!';

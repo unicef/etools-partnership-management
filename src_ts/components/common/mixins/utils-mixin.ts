@@ -1,8 +1,8 @@
+import {LitElement} from 'lit-element';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {PolymerElement} from '@polymer/polymer';
 import {Constructor} from '@unicef-polymer/etools-types';
 
-function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function UtilsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class UtilsClass extends baseClass {
     _equals(a: any, b: any) {
       return a === b;
@@ -83,7 +83,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return value === expected ? value1 : value2;
     }
 
-    _withDefault(value: any, defaultValue: any) {
+    _withDefault(value: any, defaultValue?: any) {
       if (typeof defaultValue === 'undefined') {
         defaultValue = '-';
       }

@@ -1,27 +1,27 @@
+import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import {PolymerElement, html} from '@polymer/polymer';
-import {SharedStyles} from '../../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 declare const dayjs: any;
-import {property} from '@polymer/decorators/lib/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-  static get template() {
+@customElement('report-reject-dialog')
+export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElement)) {
+  render() {
     return html`
-      ${SharedStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${requiredFieldStarredStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -34,15 +34,22 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
         keep-dialog-open
         opened
         spinner-text="Sending rating..."
-        disable-confirm-btn="[[!comment.length]]"
+        ?disable-confirm-btn="${!this.comment.length}"
         ok-btn-text="Send Back to Partner"
         cancel-btn-text="Cancel"
-        dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
-        on-confirm-btn-clicked="saveStatus"
-        on-close="_onClose"
+        dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
+        ?show-spinner="${this.showSpinner}"
+        @confirm-btn-clicked="${this.saveStatus}"
+        @close="${this._onClose}"
       >
         <div id="content-box">
-          <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>
+          <paper-input
+            required
+            label="Feedback/Comments"
+            placeholder="&#8212;"
+            .value="${this.comment}"
+            @value-changed="${({detail}: CustomEvent) => (this.comment = detail.value)}"
+          ></paper-input>
         </div>
       </etools-dialog>
     `;
@@ -57,6 +64,9 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: String})
   comment = '';
 
+  @property({type: Boolean})
+  showSpinner = false;
+
   set dialogData(data: any) {
     const {report}: any = data;
     this.report = report;
@@ -68,14 +78,6 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
-  }
-
-  startSpinner() {
-    (this.$.reportRejectDialog as EtoolsDialog).startSpinner();
-  }
-
-  stopSpinner() {
-    (this.$.reportRejectDialog as EtoolsDialog).stopSpinner();
   }
 
   getCurrentDate() {
@@ -90,10 +92,10 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
       review_date: this.getCurrentDate()
     };
 
-    this.startSpinner();
-    this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
+    this.showSpinner = true;
+    this.fireRequest(pmpEdpoints, 'reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
       .then((response: any) => {
-        this.stopSpinner();
+        this.showSpinner = false;
         fireEvent(this, 'dialog-closed', {confirmed: true, response: response});
       })
       .catch((error: any) => {
@@ -102,10 +104,9 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   _handleErrorResponse(error: any) {
-    this.stopSpinner();
+    this.showSpinner = false;
     parseRequestErrorsAndShowAsToastMsgs(error, this);
   }
 }
 
-window.customElements.define('report-reject-dialog', ReportRejectDialog);
 export {ReportRejectDialog as ReportRejectDialogEl};

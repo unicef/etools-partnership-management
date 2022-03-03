@@ -1,10 +1,8 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/app-layout/app-grid/app-grid-style.js';
-
+import {html, LitElement, property, customElement} from 'lit-element';
+import {appGridStyles} from './styles/app-grid-styles';
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -12,15 +10,12 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
-  static get is() {
-    return 'disaggregation-table-cell-ratio';
-  }
-
-  static get template() {
+@customElement('disaggregation-table-cell-ratio')
+export class DisaggregationTableCellRatio extends UtilsMixin(LitElement) {
+  render() {
     return html`
-      ${disaggregationTableStyles}
-      <style include="app-grid-style">
+      ${appGridStyles} ${disaggregationTableStyles}
+      <style>
         :host {
           display: block;
 
@@ -55,15 +50,15 @@ class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
 
       <div class="app-grid">
         <div class="item">
-          <span>[[_formatNumber(data.v, '-', 0, ',')]]</span>
+          <span>${this._formatNumber(this.data?.v, '-', 0, ',')}</span>
         </div>
         <div class="item">
-          <span>[[_formatNumber(data.d, '-', 0, ',')]]</span>
+          <span>${this._formatNumber(this.data?.d, '-', 0, ',')}</span>
         </div>
         <div class="computed-value">
-          <span>[[_formatNumber(data.v, '-', 0, ',')]]</span>
+          <span>${this._formatNumber(this.data?.v, '-', 0, ',')}</span>
           /
-          <span>[[_formatNumber(data.d, '-', 0, ',')]]</span>
+          <span>${this._formatNumber(this.data?.d, '-', 0, ',')}</span>
         </div>
       </div>
     `;
@@ -72,5 +67,3 @@ class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
   @property({type: Object})
   data!: GenericObject;
 }
-
-window.customElements.define(DisaggregationTableCellRatio.is, DisaggregationTableCellRatio);

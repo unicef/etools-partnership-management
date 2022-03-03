@@ -1,12 +1,12 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';
 import './table-content/one-disaggregation';
 import './table-content/zero-disaggregations';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
-import {property} from '@polymer/decorators';
 import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -18,12 +18,12 @@ import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTable extends UtilsMixin(PolymerElement) {
-  static get is() {
-    return 'disaggregation-table';
+@customElement('disaggregation-table')
+export class DisaggregationTable extends UtilsMixin(LitElement) {
+  static get styles() {
+    return [gridLayoutStylesLit];
   }
-
-  static get template() {
+  render() {
     return html`
       ${disaggregationTableStyles}
       <style>
@@ -40,81 +40,54 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
         .data-key dd {
           margin: 0;
         }
-
       </style>
 
       <div>
-        <template
-        is="dom-if"
-        if="[[viewLabel]]"
-        restamp="true">
-          <template
-              is="dom-if"
-              if="[[labels]]"
-              restamp="true">
-            <dl class="data-key">
-              <dt>Label - </dt>
-              <template
-                  is="dom-if"
-                  if="[[_equals(data.display_type, 'number')]]"
-                  restamp="true">
-                <dd>[ [[_withDefault(labels.label)]] ]</dd>
-              </template>
-              <template
-                  is="dom-if"
-                  if="[[!_equals(data.display_type, 'number')]]"
-                  restamp="true">
-                <dd>
-                  [ [[_withDefault(labels.numerator_label)]] ]
-                  /
-                  [ [[_withDefault(labels.denominator_label)]] ]
-                </dd>
-              </template>
-              </dl>
-            </template>
-          </dl>
-        </template>
+        ${this.viewLabel
+          ? html`
+           ${
+             this.labels
+               ? html`
+                   <dl class="data-key">
+                     <dt>Label -</dt>
+                     ${this._equals(this.data.display_type, 'number')
+                       ? html`<dd>[ ${this._withDefault(this.labels.label)} ]</dd>`
+                       : html` <dd>
+                           [ ${this._withDefault(this.labels.numerator_label)} ] / [
+                           ${this._withDefault(this.labels.denominator_label)} ]
+                         </dd>`}
+                   </dl>
+                 `
+               : ''
+           }
+            </dl>
+        `
+          : ''}
 
-        <table class="vertical layout">
-          <template
-              is="dom-if"
-              if="[[_equals(formattedMapping.length, 0)]]"
-              restamp="true">
-            <zero-disaggregations
-                data="[[viewData]]"
-                mapping="[[formattedMapping]]">
-            </zero-disaggregations>
-          </template>
-
-          <template
-              is="dom-if"
-              if="[[_equals(formattedMapping.length, 1)]]"
-              restamp="true">
-            <one-disaggregation
-                data="[[viewData]]"
-                mapping="[[formattedMapping]]">
-            </one-disaggregation>
-          </template>
-
-          <template
-              is="dom-if"
-              if="[[_equals(formattedMapping.length, 2)]]"
-              restamp="true">
-            <two-disaggregations
-                data="[[viewData]]"
-                mapping="[[formattedMapping]]">
-            </two-disaggregations>
-          </template>
-
-          <template
-              is="dom-if"
-              if="[[_equals(formattedMapping.length, 3)]]"
-              restamp="true">
-            <three-disaggregations
-                data="[[viewData]]"
-                mapping="[[formattedMapping]]">
-            </three-disaggregations>
-          </template>
+        <table class="layout-vertical">
+          ${this._equals(this.formattedMapping?.length, 0)
+            ? html`
+                <zero-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
+                </zero-disaggregations>
+              `
+            : ''}
+          ${this._equals(this.formattedMapping?.length, 1)
+            ? html`
+                <one-disaggregation .data="${this.viewData}" .mapping="${this.formattedMapping}"> </one-disaggregation>
+              `
+            : ''}
+          ${this._equals(this.formattedMapping?.length, 2)
+            ? html`
+                <two-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
+                </two-disaggregations>
+              `
+            : ''}
+          ${this._equals(this.formattedMapping?.length, 3)
+            ? html`
+                <three-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
+                </three-disaggregations>
+              `
+            : ''}
         </table>
       </div>
     `;
@@ -127,28 +100,22 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   @property({type: Number})
   editable = 0;
 
-  @property({type: Object, observer: '_cloneData'})
+  @property({type: Object})
   data!: GenericObject;
 
-  @property({
-    type: Object,
-    computed: '_computeViewData(formattedData, totals)'
-  })
+  @property({type: Object})
   viewData!: GenericObject;
 
   @property({type: Object})
   formattedData!: GenericObject;
 
-  @property({
-    type: Array,
-    computed: '_computeMapping(editableBool, formattedData, mapping)'
-  })
+  @property({type: Array})
   formattedMapping!: any[];
 
-  @property({type: Boolean, computed: '_computeEditableBool(editable)'})
+  @property({type: Boolean})
   editableBool!: boolean;
 
-  @property({type: String, computed: '_computeIndicatorType(data)'})
+  @property({type: String})
   indicatorType!: string;
 
   @property({type: Array})
@@ -160,23 +127,42 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   @property({type: Object})
   labels!: GenericObject;
 
-  @property({
-    type: Boolean,
-    computed: '_computeLabelVisibility(indicatorType)'
-  })
+  @property({type: Boolean})
   viewLabel!: boolean;
 
   @property({type: Object})
-  totals!: GenericObject;
-
-  static get observers() {
-    return ['_resetFields(formattedData.disaggregation_reported_on)'];
-  }
+  totals!: any;
 
   connectedCallback() {
     super.connectedCallback();
     if (!this.totals) {
-      this.set('totals', {});
+      this.totals = {};
+    }
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('data')) {
+      this._cloneData(this.data);
+      this.indicatorType = this._computeIndicatorType(this.data);
+    }
+    if (changedProperties.has('formattedData') || changedProperties.has('totals')) {
+      this.viewData = this._computeViewData(this.formattedData, this.totals);
+      if (changedProperties.has('formattedData')) {
+        this._resetFields(this.formattedData.disaggregation_reported_on);
+      }
+    }
+    if (
+      changedProperties.has('editableBool') ||
+      changedProperties.has('formattedData') ||
+      changedProperties.has('mapping')
+    ) {
+      this.formattedMapping = this._computeMapping(this.editableBool, this.formattedData, this.mapping);
+    }
+    if (changedProperties.has('editable')) {
+      this.editableBool = this._computeEditableBool(this.editable);
+    }
+    if (changedProperties.has('indicatorType')) {
+      this.viewLabel = this._computeLabelVisibility(this.indicatorType);
     }
   }
 
@@ -184,7 +170,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     if (typeof reportedOn === 'undefined') {
       return;
     }
-    this.set('fields', []);
+    this.fields = [];
   }
 
   _computeLabelVisibility(indicatorType: string) {
@@ -223,8 +209,8 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     if (typeof data === 'undefined') {
       return;
     }
-    this.set('formattedData', JSON.parse(JSON.stringify(data)));
-    this.set('totals', JSON.parse(JSON.stringify(this.formattedData.disaggregation)));
+    this.formattedData = JSON.parse(JSON.stringify(data));
+    this.totals = JSON.parse(JSON.stringify(this.formattedData.disaggregation));
   }
 
   _computeViewData(data: any, totals: number) {
@@ -233,5 +219,3 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     });
   }
 }
-
-window.customElements.define(DisaggregationTable.is, DisaggregationTable);

@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/app-route/app-route.js';
@@ -16,23 +16,28 @@ import '../../common/components/etools-tabs';
 import './components/report-status';
 import './components/report-rating-dialog';
 import './components/report-reject-dialog';
+
 import {GenericObject, User} from '@unicef-polymer/etools-types';
-import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin';
-import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin';
-import ScrollControlMixin from '../../common/mixins/scroll-control-mixin';
-import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {SharedStyles} from '../../styles/shared-styles';
-import {buttonsStyles} from '../../styles/buttons-styles';
-import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles';
+import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
+import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
+import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
+import CommonMixin from '../../common/mixins/common-mixin-lit';
+
+import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {buttonsStyles} from '../../styles/buttons-styles-lit';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
+
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {isEmptyObject} from '../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
-import {property} from '@polymer/decorators/lib/decorators';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';
-import CommonMixin from '../../common/mixins/common-mixin';
+import set from 'lodash-es/set';
+import {translate} from 'lit-translate';
+import pmpEdpoints from '../../endpoints/endpoints';
 declare const dayjs: any;
 
 /**
@@ -44,18 +49,15 @@ declare const dayjs: any;
  * @appliesMixin ReportDetailsMixin
  * @appliesMixin ScrollControlMixin
  */
-class ReportsModule extends connect(store)(
+@customElement('reports-module')
+export class ReportsModule extends connect(store)(
   ScrollControlMixin(
-    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(CommonMixin(ReportDetailsMixin(PolymerElement))))
+    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(CommonMixin(ReportDetailsMixin(LitElement))))
   )
 ) {
-  static get is() {
-    return 'reports-module';
-  }
-
-  static get template() {
+  render() {
     return html`
-      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
@@ -100,124 +102,170 @@ class ReportsModule extends connect(store)(
       </style>
 
       <app-route
-        route="{{route}}"
+        .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
+        }}"
         pattern="/list"
-        query-params="{{listPageQueryParams}}"
-        active="{{listActive}}"
+        .queryParams="${this.listPageQueryParams}"
+        @query-params-changed="${({detail}: CustomEvent) => {
+          setTimeout(() => {
+            this.listPageQueryParams = detail.value;
+          }, 100);
+        }}"
+        .active="${this.listActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.listActive = detail.value;
+        }}"
       ></app-route>
 
-      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
+      <app-route
+        .route="${this.route}"
+        @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
+          if (detail.path) {
+            set(this, detail.path, detail.value);
+            this.route = {...this.route};
+          } else {
+            this.route = detail.value;
+          }
+        }}"
+        @data-changed="${({detail}: CustomEvent) => {
+          this.routeData = detail.value;
+        }}"
+        pattern="/:id/:tab"
+        .active="${this.tabsActive}"
+        @active-changed="${({detail}: CustomEvent) => {
+          this.tabsActive = detail.value;
+        }}"
+      ></app-route>
 
-      <page-content-header with-tabs-visible="[[tabsActive]]">
+      <page-content-header ?with-tabs-visible="${this.tabsActive}">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">[[_getTranslation('PARTNER_REPORTS')]]</template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <div class="secondary-title">
-              <a target="_blank" href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
-                [[report.partner_org_name]] - [[report.partner_vendor_number]]
-              </a>
-            </div>
+          ${this.listActive ? html`<span>${translate('PARTNER_REPORTS')}</span>` : ''}
+          ${this.tabsActive
+            ? html`
+                <div class="secondary-title">
+                  <a target="_blank" href="${this.rootPath}partners/${this.report.partner_org_id}/details">
+                    ${this.report.partner_org_name} - ${this.report.partner_vendor_number}
+                  </a>
+                </div>
 
-            <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
-              <a class="primary" href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports">
-                [[report.programme_document.reference_number]]
-              </a>
-            </span>
+                <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
+                  <a
+                    class="primary"
+                    href="${this.rootPath}interventions/${this.report.programme_document?.external_id}/reports"
+                  >
+                    ${this.report.programme_document?.reference_number}
+                  </a>
+                </span>
 
-            <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
-            <!-- <sup>
-              <report-status status="[[report.status]]"></report-status>
-            </sup> -->
-            <paper-tooltip
-              for="tooltip-trigger-pdtitle"
-              position="bottom"
-              fit-to-visible-bounds
-              animation-delay="0"
-              offset="0"
-            >
-              [[report.programme_document.title]]
-            </paper-tooltip>
-          </template>
+                <span>: ${this.report.report_type}${this.report.report_number} ${this.report.reporting_period}</span>
+                <!-- <sup>
+                  <report-status .status="report.status"></report-status>
+                </sup> -->
+                <paper-tooltip
+                  for="tooltip-trigger-pdtitle"
+                  position="bottom"
+                  fit-to-visible-bounds
+                  animation-delay="0"
+                  offset="0"
+                >
+                  ${this.report.programme_document?.title}
+                </paper-tooltip>
+              `
+            : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
-          <div class="action" hidden$="[[!listActive]]">
+          <div class="action" ?hidden="${!this.listActive}">
             <paper-menu-button id="export" close-on-activate horizontal-align="right">
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
-                [[_getTranslation('EXPORT')]]
+                ${translate('EXPORT')}
               </paper-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_exportIndicatorsPDF">Export Indicators - PDF</paper-item>
-                <paper-item on-tap="_exportIndicatorsXLS">Export Indicators - XLS</paper-item>
+                <paper-item @click="${this._exportIndicatorsPDF}">Export Indicators - PDF</paper-item>
+                <paper-item @click="${this._exportIndicatorsXLS}">Export Indicators - XLS</paper-item>
               </paper-listbox>
             </paper-menu-button>
           </div>
 
-          <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
-            <report-status status="[[report.status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
+          <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
+            <report-status
+              .status="${this.report.status}"
+              ?hidden="${this.statusIs(this.report.status, 'Sub')}"
+            ></report-status>
 
-            <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
-              <paper-button slot="dropdown-trigger" class="primary-btn"
-                >[[_getTranslation('ACCEPT_SEND_BACK')]]</paper-button
-              >
+            <paper-menu-button
+              close-on-activate
+              class="no-right-padd"
+              ?hidden="${!this.statusIs(this.report.status, 'Sub')}"
+            >
+              <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_accept">[[_getTranslation('ACCEPT_REPORT')]]</paper-item>
-                <paper-item on-tap="_sendBackToPartner">[[_getTranslation('SEND_BACK_TO_PARTNER')]]</paper-item>
+                <paper-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</paper-item>
+                <paper-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</paper-item>
               </paper-listbox>
             </paper-menu-button>
 
             <paper-menu-button close-on-activate horizontal-align="right">
               <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_downloadAnexC">[[_getTranslation('DOWNLOAD_REPORT')]]</paper-item>
-                <paper-item on-tap="_goToActionPointModule">[[_getTranslation('ADD_ACTION_POINTS')]]</paper-item>
-                <paper-item on-tap="_downloadXls">Download XLS</paper-item>
-                <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
+                <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
+                <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
+                <paper-item @click="${this._downloadXls}">Download XLS</paper-item>
+                <paper-item @click="${this._downloadPdf}">Download PDF</paper-item>
               </paper-listbox>
             </paper-menu-button>
           </div>
         </div>
 
-        <template is="dom-if" if="[[tabsActive]]">
-          <etools-tabs
-            slot="tabs"
-            tabs="[[reportTabs]]"
-            active-tab="{{routeData.tab}}"
-            on-iron-select="_handleTabSelectAction"
-          ></etools-tabs>
-        </template>
+        ${this.tabsActive
+          ? html` <etools-tabs
+              slot="tabs"
+              .tabs="${this.reportTabs}"
+              .activeTab="${(this.routeData || {}).tab}"
+              @iron-select="${this._handleTabSelectAction}"
+            ></etools-tabs>`
+          : ''}
       </page-content-header>
 
       <div id="main">
         <div id="pageContent">
-          <iron-pages id="reportsPages" selected="{{activePage}}" attr-for-selected="name" role="main">
-            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <reports-list
-                id="list"
-                name="list"
-                active="[[listActive]]"
-                url-params="[[preservedListQueryParams]]"
-              ></reports-list>
-            </template>
+          <reports-list
+            ?hidden="${!this._pageEquals(this.activePage, 'list')}"
+            id="list"
+            name="list"
+            .active="${this.listActive}"
+            .urlParams="${this.preservedListQueryParams}"
+          ></reports-list>
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
-              <report-summary
-                name="summary"
-                report="[[report]]"
-                report-attachments="[[reportAttachments]]"
-              ></report-summary>
-            </template>
+          <report-summary
+            ?hidden="${!this._pageEquals(this.activePage, 'summary')}"
+            id="summary"
+            name="summary"
+            .report="${this.report}"
+            .reportAttachments="${this.reportAttachments}"
+          ></report-summary>
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
-              <report-progress
-                id="reportDetails"
-                name="progress"
-                report="[[report]]"
-                report-attachments="[[reportAttachments]]"
-              ></report-progress>
-            </template>
-          </iron-pages>
+          <report-progress
+            ?hidden="${!this._pageEquals(this.activePage, 'progress')}"
+            id="progress"
+            name="progress"
+            .report="${this.report}"
+            .reportAttachments="${this.reportAttachments}"
+          ></report-progress>
         </div>
         <!-- page content end -->
         <!-- No sidebar here -->
@@ -252,23 +300,8 @@ class ReportsModule extends connect(store)(
   private mockupListLoadedDebouncer!: Debouncer;
   private loadingReportDataDebouncer!: Debouncer;
 
-  static get observers() {
-    return [
-      '_pageChanged(listActive, tabsActive, routeData)',
-      '_loadReport(routeData.id, tabsActive, prpCountries, currentUser)'
-    ];
-  }
-
   stateChanged(state: RootState) {
     this.endStateChanged(state);
-  }
-
-  ready() {
-    super.ready();
-
-    this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer, timeOut.after(500), () => {
-      fireEvent(this, 'global-loading', {active: false});
-    });
   }
 
   connectedCallback() {
@@ -288,6 +321,28 @@ class ReportsModule extends connect(store)(
       active: true,
       loadingSource: 'reports-page'
     });
+
+    this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer, timeOut.after(500), () => {
+      fireEvent(this, 'global-loading', {active: false});
+    });
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (
+      changedProperties.has('listActive') ||
+      changedProperties.has('tabsActive') ||
+      changedProperties.has('routeData')
+    ) {
+      this._pageChanged(this.listActive, this.tabsActive, this.routeData);
+    }
+    if (
+      changedProperties.has('routeData') ||
+      changedProperties.has('tabsActive') ||
+      changedProperties.has('prpCountries') ||
+      changedProperties.has('currentUser')
+    ) {
+      this._loadReport((this.routeData || {}).id, this.tabsActive, this.prpCountries, this.currentUser);
+    }
   }
 
   _hideActionBtns(tabsActive: boolean, report: any) {
@@ -322,6 +377,12 @@ class ReportsModule extends connect(store)(
 
   _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
+    const newTabName: string = e.detail.item.getAttribute('name');
+    if (!this.report || !this.report.id || newTabName == this.activePage) {
+      return;
+    }
+    const newPath = `reports/${this.report!.id}/${newTabName}`;
+    fireEvent(this, 'update-main-path', {path: newPath});
   }
 
   _loadReport(reportId: string, tabsActive: boolean, prpCountries: any, currentUser: User) {
@@ -343,7 +404,7 @@ class ReportsModule extends connect(store)(
           text: 'Invalid report ID!',
           showCloseBtn: true
         });
-        this.set('report', null);
+        this.report = null;
         return;
       }
       this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer, timeOut.after(50), () => {
@@ -394,43 +455,43 @@ class ReportsModule extends connect(store)(
 
   _exportIndicators(type: string) {
     const reportsList = this.shadowRoot!.querySelector('#list') as ReportsListEl;
-    if (reportsList instanceof PolymerElement === false) {
+    if (reportsList instanceof LitElement === false) {
       return;
     }
 
     const params: GenericObject = {};
-
-    if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
-      params.pd_ref_title = reportsList.queryParams.pd_ref_title;
+    const queryParams =  reportsList.routeDetails?.queryParams || {};
+    if (typeof queryParams.pd_ref_title === 'string' && queryParams.pd_ref_title !== '') {
+      params.pd_ref_title = queryParams.pd_ref_title;
     }
 
-    if (reportsList.queryParams.status.length > 0) {
-      params.report_status = reportsList.queryParams.status;
+    if (queryParams.status && queryParams.status.length > 0) {
+      params.report_status = queryParams.status;
     }
 
-    if (reportsList.queryParams.report_type) {
-      params.report_type = reportsList.queryParams.report_type;
+    if (queryParams.report_type) {
+      params.report_type = queryParams.report_type;
     }
 
-    if (reportsList.queryParams.external_partner_id) {
-      params.report_partner_external = reportsList.queryParams.external_partner_id;
+    if (queryParams.external_partner_id) {
+      params.report_partner_external = queryParams.external_partner_id;
     }
 
-    if (reportsList.queryParams.cp_output) {
-      params.cp_output = reportsList.queryParams.cp_output;
+    if (queryParams.cp_output) {
+      params.cp_output = queryParams.cp_output;
     }
 
-    if (reportsList.queryParams.section) {
-      params.report_section = reportsList.queryParams.section;
+    if (queryParams.section) {
+      params.report_section = queryParams.section;
     }
 
-    if (reportsList.queryParams.unicef_focal_points.length > 0) {
-      params.unicef_focal_points = reportsList.queryParams.unicef_focal_points;
+    if (queryParams.unicef_focal_points && queryParams.unicef_focal_points.length > 0) {
+      params.unicef_focal_points = queryParams.unicef_focal_points;
     }
 
     params.export = type;
 
-    this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params}).then(
+    this.fireRequest(pmpEdpoints, 'reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params}).then(
       (blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type)
     );
   }
@@ -459,8 +520,8 @@ class ReportsModule extends connect(store)(
       return;
     }
 
-    this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'}).then((blob: Blob) =>
-      this._handleBlobDataReceivedAndStartDownload(blob, filename)
+    this.fireRequest(pmpEdpoints, endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'}).then(
+      (blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename)
     );
   }
 
@@ -501,7 +562,7 @@ class ReportsModule extends connect(store)(
     if (!report) {
       return;
     }
-    this.set('report', report);
+    this.report = report;
     // update reports list object data without makeing a new request
     this._updateReportDataOnList(report);
   }
@@ -537,5 +598,3 @@ class ReportsModule extends connect(store)(
     return currentStatus === status;
   }
 }
-
-window.customElements.define(ReportsModule.is, ReportsModule);
