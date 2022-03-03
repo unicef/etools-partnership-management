@@ -382,14 +382,6 @@ export class PartnersListBase extends CommonMixin(
     EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
   }
 
-  private setSelectedValuesInFilters() {
-    if (this.allFilters) {
-      // update filter selection and assign the result to etools-filters(trigger render)
-      const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
-    }
-  }
-
   // Override from lists-common-mixin
   _sortOrderChanged(e: CustomEvent) {
     const sort = e.detail.field + '.' + e.detail.direction;

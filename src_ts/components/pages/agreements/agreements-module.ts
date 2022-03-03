@@ -301,7 +301,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
       this._observeRouteDataId(this.routeData.id);
     }
     if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
-      this.newAgreementActive = this._updateNewItemPageFlag(this.routeData, this.listActive);
+      this.newAgreementActive = this._updateNewItemPageFlag();
     }
     if (
       changedProperties.has('listActive') ||
