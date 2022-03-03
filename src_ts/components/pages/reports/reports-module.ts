@@ -1,6 +1,5 @@
 import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
-import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -297,9 +296,6 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   moduleName = 'reports';
 
-  private mockupListLoadedDebouncer!: Debouncer;
-  private loadingReportDataDebouncer!: Debouncer;
-
   stateChanged(state: RootState) {
     this.endStateChanged(state);
   }
@@ -322,9 +318,10 @@ export class ReportsModule extends connect(store)(
       loadingSource: 'reports-page'
     });
 
-    this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer, timeOut.after(500), () => {
+    setTimeout(() => {
       fireEvent(this, 'global-loading', {active: false});
-    });
+    }, 100);
+    this.requestReportDetails = debounce(this.requestReportDetails.bind(this), 50) as any;
   }
 
   updated(changedProperties: PropertyValues) {
@@ -407,9 +404,7 @@ export class ReportsModule extends connect(store)(
         this.report = null;
         return;
       }
-      this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer, timeOut.after(50), () => {
-        this.requestReportDetails.bind(this, id ? id.toString() : '')();
-      });
+      this.requestReportDetails(id ? id.toString() : '');
     }, 0);
   }
 
