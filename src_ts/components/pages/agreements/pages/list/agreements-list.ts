@@ -30,16 +30,13 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-s
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
-import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import '../../data/agreements-list-data.js';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues
-} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+import {updateFilterSelectionOptions, updateFiltersSelectedValues} from '@unicef-polymer/etools-filters/src/filters';
 import {translate} from 'lit-translate';
 import {AgreementsFilterKeys, getAgreementFilters} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
