@@ -60,7 +60,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
   }
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback!: (response: any) => void | null;
+  handleSuccResponseAdditionalCallback!: ((response: any) => void) | null;
 
   @property({type: String})
   ajaxLoadingMsgSource = 'ag-data';
@@ -182,7 +182,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         // status change is allowed
         // set additional callback if any
         if (callback) {
-          this.handleResponseAdditionalCallback = callback;
+          this.handleSuccResponseAdditionalCallback = callback;
         }
         fireEvent(this, 'global-loading', {
           message: 'Changing agreement status...',

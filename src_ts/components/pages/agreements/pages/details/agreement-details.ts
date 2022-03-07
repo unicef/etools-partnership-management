@@ -852,7 +852,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     _status: string,
     _isNewAgreement: boolean,
     _editAttPermission?: boolean,
-    _originalAtt?: string
+    _originalAtt?: string | null
   ) {
     return _isNewAgreement
       ? true
