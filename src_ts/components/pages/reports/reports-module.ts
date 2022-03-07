@@ -455,7 +455,7 @@ export class ReportsModule extends connect(store)(
     }
 
     const params: GenericObject = {};
-    const queryParams =  reportsList.routeDetails?.queryParams || {};
+    const queryParams = reportsList.routeDetails?.queryParams || {};
     if (typeof queryParams.pd_ref_title === 'string' && queryParams.pd_ref_title !== '') {
       params.pd_ref_title = queryParams.pd_ref_title;
     }
