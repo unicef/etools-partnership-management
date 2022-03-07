@@ -1,20 +1,20 @@
+import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
-
 import '@unicef-polymer/etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
 import {isEmptyObject} from '../../../../../utils/utils';
-import {PolymerElement, html} from '@polymer/polymer';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import {appGridStyles} from './disaggregations/styles/app-grid-styles';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 
 /**
  * @polymer
@@ -22,18 +22,18 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
-  static get is() {
-    return 'indicator-details';
-  }
-
-  static get template() {
+@customElement('indicator-details')
+export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) {
+  render() {
     return html`
-      <style include="app-grid-style">
+      ${appGridStyles}
+      <style>
         :host {
           display: block;
           min-height: 150px;
           position: relative;
+          padding-left: 24px;
+          padding-right: 24px;
 
           --app-grid-columns: 2;
           --app-grid-gutter: 24px;
@@ -94,67 +94,86 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-loading active="[[loading]]">Loading...</etools-loading>
+      <etools-loading ?active="${this.loading}">Loading...</etools-loading>
 
       <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
-      <template is="dom-if" if="[[!loading]]">
-        <paper-tabs selected="{{selected}}" selectable="paper-tab" scrollable>
-          <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
-            <paper-tab>
-              <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
-              [[topLevelLocation.title]]
-            </paper-tab>
-          </template>
-        </paper-tabs>
 
-        <iron-pages selected="{{selected}}">
-          <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
+      ${!this.loading
+        ? html`<paper-tabs
+            .selected="${this.selected}"
+            @selected-changed="${this.onSelectedTabChanged}"
+            selectable="paper-tab"
+            scrollable
+          >
+            ${(this.locationData || []).map(
+              (topLevelLocation: any) => html`<paper-tab>
+                <report-status .status="${this._computeLocationStatus(topLevelLocation)}" no-label></report-status>
+                ${topLevelLocation.title}
+              </paper-tab>`
+            )}
+          </paper-tabs>`
+        : ''}
+
+      <iron-pages .selected="${this.selected}">
+        ${(this.locationData || []).map(
+          (topLevelLocation: any) => html`
             <div>
-              <paper-tabs selected="{{topLevelLocation.selected}}" selectable="paper-tab" scrollable>
-                <template is="dom-repeat" items="[[topLevelLocation.byEntity]]" as="location">
-                  <paper-tab>[[location.reporting_entity.title]]</paper-tab>
-                </template>
+              <paper-tabs .selected="${topLevelLocation.selected}" selectable="paper-tab" scrollable>
+                ${topLevelLocation.byEntity.map(
+                  (location: any) => html`<paper-tab>${location.reporting_entity.title}</paper-tab>`
+                )}
               </paper-tabs>
 
-              <iron-pages selected="{{topLevelLocation.selected}}">
-                <template is="dom-repeat" items="[[topLevelLocation.byEntity]]" as="location">
-                  <div>
-                    <div class="tab-header">
-                      <dl>
-                        <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
-                          <dt>Location progress against [[location.reporting_entity.title]] target:</dt>
-                          <dd>[[_formatNumber(location.location_progress.v, '0', 0, ',')]]</dd>
-                          <dt>Previous location progress:</dt>
-                          <dd>[[_formatNumber(location.previous_location_progress.v, '0', 0, ',')]]</dd>
-                        </template>
-                        <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
-                          <dt>Location progress:</dt>
-                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]</dd>
-                          <dt>Previous location progress:</dt>
-                          <dd>
-                            [[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, 1)]]
-                          </dd>
-                        </template>
-                      </dl>
-                    </div>
+              <iron-pages .selected="${topLevelLocation.selected}">
+                ${topLevelLocation.byEntity.map(
+                  (location: any) => html`
+                    <div>
+                      <div class="tab-header">
+                        <dl>
+                          ${this._equals(location.display_type, 'number')
+                            ? html`
+                                <dt>Location progress against ${location.reporting_entity.title} target:</dt>
+                                <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
+                                <dt>Previous location progress:</dt>
+                                <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
+                              `
+                            : html` <dt>Location progress:</dt>
+                                <dd>
+                                  ${this._formatIndicatorValue(
+                                    location.display_type,
+                                    location.location_progress.c,
+                                    true
+                                  )}
+                                </dd>
+                                <dt>Previous location progress:</dt>
+                                <dd>
+                                  ${this._formatIndicatorValue(
+                                    location.display_type,
+                                    location.previous_location_progress?.c,
+                                    true
+                                  )}
+                                </dd>`}
+                        </dl>
+                      </div>
 
-                    <div class="table-container app-grid">
-                      <div class="item">
-                        <disaggregation-table
-                          data="[[location]]"
-                          mapping="[[indicatorReport.disagg_lookup_map]]"
-                          labels="[[indicatorReport.labels]]"
-                        >
-                        </disaggregation-table>
+                      <div class="table-container app-grid">
+                        <div class="item">
+                          <disaggregation-table
+                            .data="${location}"
+                            .mapping="${this.indicatorReport.disagg_lookup_map}"
+                            .labels="${this.indicatorReport.labels}"
+                          >
+                          </disaggregation-table>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </template>
+                  `
+                )}
               </iron-pages>
             </div>
-          </template>
-        </iron-pages>
-      </template>
+          `
+        )}
+      </iron-pages>
     `;
   }
 
@@ -170,14 +189,21 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
   @property({type: Number})
   selected = 0;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean, reflect: true})
   isClusterIndicator = false;
 
-  @property({
-    type: Array,
-    computed: '_computeLocationData(indicatorReport.indicator_location_data)'
-  })
+  @property({type: Array})
   locationData!: any[];
+
+  onSelectedTabChanged(e: CustomEvent) {
+    this.selected = e.detail.value;
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('indicatorReport')) {
+      this.locationData = this._computeLocationData(this.indicatorReport.indicator_location_data);
+    }
+  }
 
   _shouldRefreshIndicatorDetails() {
     return (
@@ -196,9 +222,9 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
     const params = this._computeParams(String(this.indicatorReportId));
     this._showLoading();
-    this.fireRequest('reportIndicatorsDetails', {}, {params: params})
+    this.fireRequest(pmpEdpoints, 'reportIndicatorsDetails', {}, {params: params})
       .then((response: any) => {
-        this.set('indicatorReport', response && response[0] ? response[0] : {});
+        this.indicatorReport = response && response[0] ? response[0] : {};
         this._hideLoading();
       })
       .catch((error: any) => {
@@ -209,11 +235,11 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
   }
 
   _showLoading() {
-    this.set('loading', true);
+    this.loading = true;
   }
 
   _hideLoading() {
-    this.set('loading', false);
+    this.loading = false;
   }
 
   _computeParams(indicatorReportId: string) {
@@ -255,5 +281,3 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
     return location.byEntity[0].is_complete ? 1 : 2; //  'success' : 'error'
   }
 }
-
-window.customElements.define(IndicatorDetails.is, IndicatorDetails);

@@ -1,21 +1,21 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, property, customElement} from 'lit-element';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import '../../../../../common/components/etools-form-element-wrapper';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
-import {property} from '@polymer/decorators';
-import {SharedStyles} from '../../../../../styles/shared-styles';
-import {GenericObject} from '@unicef-polymer/etools-types';
 
-class SrDetails extends PolymerElement {
-  static get is() {
-    return 'sr-details';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
+
+@customElement('sr-details')
+export class SrDetails extends LitElement {
+  static get styles() {
+    return [gridLayoutStylesLit];
   }
-
-  static get template() {
+  render() {
     return html`
-      ${gridLayoutStyles}
+      ${sharedStyles}
       <style include="paper-material-styles">
         :host {
           display: block;
@@ -31,19 +31,21 @@ class SrDetails extends PolymerElement {
           margin-bottom: 24px;
         }
       </style>
-      ${SharedStyles}
-      <div class="paper-material" elevation="1">
+
+      <div class="paper-material elevation" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper2 label="Narrative" value="[[report.narrative]]"> </etools-form-element-wrapper2>
+          <etools-form-element-wrapper2 label="Narrative" .value="${this.report?.narrative}">
+          </etools-form-element-wrapper2>
         </div>
         <div class="row-padding">
-          <template is="dom-repeat" items="[[reportAttachments]]">
-            <div class="att">
-              <iron-label for="file_[[index]]">[[item.type]]</iron-label>
-
-              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">[[item.file_name]]</a>
-            </div>
-          </template>
+          ${(this.reportAttachments || []).map(
+            (item: AnyObject, index: number) => html`
+              <div class="att">
+                <iron-label for="file_${index}">${item.type}</iron-label>
+                <a class="primary" id="file_${index}" href="${item.path}" target="_blank">${item.file_name}</a>
+              </div>
+            `
+          )}
         </div>
       </div>
     `;
@@ -55,5 +57,3 @@ class SrDetails extends PolymerElement {
   @property({type: Array})
   reportAttachments!: any[];
 }
-
-window.customElements.define(SrDetails.is, SrDetails);

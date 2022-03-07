@@ -1,20 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, property, customElement} from 'lit-element';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '../../../../common/components/etools-form-element-wrapper';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
+import {AnyObject} from '@unicef-polymer/etools-types';
 
 /*
  * @customElement
  * @polymer
- * @extends {Polymer.Element}
  */
-class SentBkComments extends PolymerElement {
-  static get is() {
-    return 'sent-bk-comments';
-  }
-
-  static get template() {
+@customElement('sent-bk-comments')
+export class SentBkComments extends LitElement {
+  render() {
     return html`
       <style>
         :host {
@@ -22,10 +18,10 @@ class SentBkComments extends PolymerElement {
         }
       </style>
 
-      <etools-dialog opened on-close="_onClose" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
+      <etools-dialog opened @close="${this._onClose}" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
         <etools-form-element-wrapper2
-          label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
-          value="[[report.sent_back_feedback]]"
+          .label="${this._getHeading(this.report.review_date, this.report.reviewed_by_name)}"
+          .value="${this.report.sent_back_feedback}"
         >
         </etools-form-element-wrapper2>
       </etools-dialog>
@@ -33,7 +29,7 @@ class SentBkComments extends PolymerElement {
   }
 
   @property({type: Object})
-  report = {};
+  report: AnyObject = {};
 
   set dialogData(data: any) {
     const {report}: any = data;
@@ -51,5 +47,3 @@ class SentBkComments extends PolymerElement {
     return (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
   }
 }
-
-window.customElements.define(SentBkComments.is, SentBkComments);

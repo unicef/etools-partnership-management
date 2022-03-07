@@ -1,6 +1,6 @@
-import {html} from '@polymer/polymer/polymer-element.js';
+import {html} from 'lit-element';
 
-export const disaggregationTableStyles = html` <style include="iron-flex iron-flex-alignment">
+export const disaggregationTableStyles = html` <style>
   :host {
     display: block;
   }

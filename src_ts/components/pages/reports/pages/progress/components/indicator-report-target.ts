@@ -1,6 +1,5 @@
+import {html, LitElement, property, customElement} from 'lit-element';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
-import {PolymerElement, html} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -8,12 +7,9 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
-  static get is() {
-    return 'indicator-report-target2';
-  }
-
-  static get template() {
+@customElement('indicator-report-target2')
+export class IndicatorReportTarget extends UtilsMixin(LitElement) {
+  render() {
     return html`
       <style>
         :host {
@@ -71,18 +67,20 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
 
       <div class="target-row">
         <span>Target:</span>
-        <span title$="[[_getTargetValue(displayType, target)]]"> [[_getTargetValue(displayType, target)]] </span>
+        <span title="${this._getTargetValue(this.displayType, this.target)}">
+          ${this._getTargetValue(this.displayType, this.target)}
+        </span>
       </div>
       <div class="target-row">
         <span>Total cumulative progress:</span>
-        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">
-          [[_getCumulativeProgress(displayType, cumulativeProgress)]]
+        <span title="${this._getCumulativeProgress(this.displayType, this.cumulativeProgress)}">
+          ${this._getCumulativeProgress(this.displayType, this.cumulativeProgress)}
         </span>
       </div>
       <div class="target-row">
         <span>Achievement in reporting period:</span>
-        <span title$="[[_getAchievement(displayType, achievement)]]"
-          >[[_getAchievement(displayType, achievement)]]</span
+        <span title="${this._getAchievement(this.displayType, this.achievement)}"
+          >${this._getAchievement(this.displayType, this.achievement)}</span
         >
       </div>
     `;
@@ -97,7 +95,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   @property({type: String})
   achievement = '-';
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean, reflect: true})
   bold = false;
 
   @property({type: String})
@@ -123,5 +121,3 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     return this._formatIndicatorValue(displayType, achievedVal, false);
   }
 }
-
-window.customElements.define(IndicatorReportTarget.is, IndicatorReportTarget);

@@ -1,19 +1,15 @@
+import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/image-icons.js';
-import {PolymerElement, html} from '@polymer/polymer';
-import {property} from '@polymer/decorators/lib/decorators';
 
 /**
  * @polymer
  * @customElement
  * @extends {Polymer.Element}
  */
-class ReportStatus extends PolymerElement {
-  static get is() {
-    return 'report-status';
-  }
-
-  static get template() {
+@customElement('report-status')
+export class ReportStatus extends LitElement {
+  render() {
     return html`
       <style>
         :host {
@@ -54,39 +50,28 @@ class ReportStatus extends PolymerElement {
         }
       </style>
 
-      <template is="dom-if" if="[[!noIcon]]">
-        <iron-icon icon$="[[icon]]"></iron-icon>
-      </template>
-      <template is="dom-if" if="[[!noLabel]]">
-        <span id="label">[[label]]</span>
-      </template>
+      ${!this.noIcon ? html`<iron-icon icon="${this.icon}"></iron-icon>` : ''}
+      ${!this.noLabel ? html`<span id="label">${this.label}</span>` : ''}
       <slot></slot>
     `;
   }
 
-  @property({type: String})
+  @property({type: String, reflect: true, attribute: 'status'})
   status!: string;
 
-  @property({type: Boolean})
+  @property({type: Boolean, reflect: true, attribute: 'no-label'})
   noLabel = false;
 
-  @property({type: Boolean})
+  @property({type: Boolean, reflect: true, attribute: 'no-icon'})
   noIcon = false;
 
-  @property({
-    type: String,
-    computed: '_computeStatusType(status)',
-    reflectToAttribute: true
-  })
+  @property({type: String, reflect: true, attribute: 'status-type'})
   statusType!: string;
 
-  @property({
-    type: String,
-    computed: '_computeLabel(status, final, reportType)'
-  })
+  @property({type: String})
   label!: string;
 
-  @property({type: String, computed: '_computeIcon(statusType)'})
+  @property({type: String})
   icon!: string;
 
   @property({type: Boolean})
@@ -94,6 +79,18 @@ class ReportStatus extends PolymerElement {
 
   @property({type: String})
   reportType = '';
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('status')) {
+      this.statusType = this._computeStatusType(this.status);
+    }
+    if (changedProperties.has('statusType')) {
+      this.icon = this._computeIcon(this.statusType);
+    }
+    if (changedProperties.has('status') || changedProperties.has('final') || changedProperties.has('reportType')) {
+      this.label = this._computeLabel(this.status, this.final, this.reportType);
+    }
+  }
 
   _computeStatusType(status: null | undefined | string) {
     if (status === null || typeof status === 'undefined') {
@@ -128,7 +125,7 @@ class ReportStatus extends PolymerElement {
     }
   }
 
-  _computeLabel(status: string, final: string, reportType: string) {
+  _computeLabel(status: string, final: boolean, reportType: string) {
     switch (status) {
       case '1':
         return 'Nothing due';
@@ -181,5 +178,3 @@ class ReportStatus extends PolymerElement {
     }
   }
 }
-
-window.customElements.define(ReportStatus.is, ReportStatus);

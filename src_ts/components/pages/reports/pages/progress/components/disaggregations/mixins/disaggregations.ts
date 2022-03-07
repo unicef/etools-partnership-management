@@ -1,4 +1,4 @@
-import {PolymerElement} from '@polymer/polymer';
+import {LitElement} from 'lit-element';
 import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
@@ -8,7 +8,7 @@ import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
  * @polymer
  * @mixinFunction
  */
-function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function DisaggregationsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class DisaggregationsClass extends baseClass {
     // Used to display rows for two and three disaggregations.
     // It will NOT work for one and zero disaggregations.

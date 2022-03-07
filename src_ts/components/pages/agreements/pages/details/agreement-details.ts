@@ -136,7 +136,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 @etools-selected-item-changed="${this.onAgreementTypeChanged}"
                 hide-search
                 ?readonly="${this._isAgreementTypeReadonly(this.agreement)}"
-                auto-validate
+                ?auto-validate="${this.autoValidate}"
                 error-message="${translate('PLEASE_SELECT_AGREEMENT_TYPE')}"
                 required
               >
@@ -190,7 +190,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               trigger-value-change-event
               @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
               ?hidden="${!this.agreement.permissions?.edit.partner}"
-              auto-validate
+              ?auto-validate="${this.autoValidate}"
               error-message="${translate('PLEASE_SELECT_A_PARTNER')}"
               required
             >
@@ -512,6 +512,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Boolean})
   enableEditForAuthorizedOfficers = false;
 
+  @property({type: Boolean})
+  autoValidate = false;
+
   @property({type: String})
   generatePCAMessage = getTranslation('SAVE_BEFORE_GENERATING_PCA_TEMPLATE');
 
@@ -565,6 +568,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     super.firstUpdated(changedProperties);
 
     this._agreementChanged(this.agreement);
+    this.autoValidate = true;
   }
 
   authorizedOfficersChanged() {
