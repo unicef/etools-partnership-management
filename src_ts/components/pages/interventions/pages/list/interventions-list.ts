@@ -10,7 +10,7 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-s
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
-import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -18,7 +18,7 @@ import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-c
 import {EtoolsRouter} from '../../../../utils/routes';
 import {buildUrlQueryString} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+import '@unicef-polymer/etools-filters/src/etools-filters';
 import {translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -33,7 +33,7 @@ import {
   setselectedValueTypeByFilterKey,
   updateFilterSelectionOptions,
   updateFiltersSelectedValues
-} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+} from '@unicef-polymer/etools-filters/src/filters';
 import {getInterventionFilters, InterventionFilterKeys, selectedValueTypeByFilterKey} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';

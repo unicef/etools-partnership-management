@@ -209,7 +209,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
         .agreement="${this.agreement}"
         @agreement-changed="${this.onAgreementChanged}"
         .agreementId="${this.selectedAgreementId}"
-        error-event-name="agreement-save-error"
+        errorEventName="agreement-save-error"
       >
       </agreement-item-data>
     `;
