@@ -580,8 +580,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   resetControlsValidation() {
-    this.autoValidate = false;
-    resetRequiredFields(this);
+    if (this.autoValidate) {
+      this.autoValidate = false;
+      resetRequiredFields(this);
+    }
   }
 
   authorizedOfficersChanged() {
