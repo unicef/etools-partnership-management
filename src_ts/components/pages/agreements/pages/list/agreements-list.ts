@@ -36,7 +36,11 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {updateFilterSelectionOptions, updateFiltersSelectedValues, setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-filters/src/filters';
+import {
+  updateFilterSelectionOptions,
+  updateFiltersSelectedValues,
+  setselectedValueTypeByFilterKey
+} from '@unicef-polymer/etools-filters/src/filters';
 import {translate} from 'lit-translate';
 import {AgreementsFilterKeys, getAgreementFilters, selectedValueTypeByFilterKey} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
