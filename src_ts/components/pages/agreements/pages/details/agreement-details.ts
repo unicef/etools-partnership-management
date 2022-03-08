@@ -50,6 +50,9 @@ import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etoo
 import {openDialog} from '../../../../utils/dialog';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
+import {resetRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -238,9 +241,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                   <etools-cp-structure
                     id="cpStructure"
                     module="agreements"
-                    app-module-item="${this.agreement}"
-                    .selected-cp="${this.agreement.country_programme}"
-                    @selected-cp-changed="onCountryProgrammeChanged"
+                    .appModuleItem="${this.agreement}"
+                    .selectedCp="${this.agreement.country_programme}"
+                    @selected-cp-changed="${this.onCountryProgrammeChanged}"
                     .edit-mode="${this.agreement.permissions?.edit.country_programme}"
                     ?required="${this.agreement.permissions?.required.country_programme}"
                   >
@@ -322,7 +325,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             .options="${this._getAvailableAuthOfficers(this.staffMembers, this.agreement.authorized_officers)}"
             option-value="id"
             option-label="name"
-            .selected-values="${this.authorizedOfficers}"
+            .selectedValues="${this.authorizedOfficers}"
             trigger-value-change-event
             @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
             ?hidden="${!this._allowAuthorizedOfficersEditing(
@@ -537,6 +540,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   stateChanged(state: RootState) {
+    if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
+      this.resetControlsValidation();
+      return;
+    }
+
     if (!state.partners) {
       return;
     }
@@ -569,6 +577,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
     this._agreementChanged(this.agreement);
     this.autoValidate = true;
+  }
+
+  resetControlsValidation() {
+    this.autoValidate = false;
+    resetRequiredFields(this);
   }
 
   authorizedOfficersChanged() {
