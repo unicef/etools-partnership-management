@@ -3,7 +3,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@unicef-polymer/etools-data-table/etools-data-table';
 import '@polymer/iron-media-query/iron-media-query.js';
-import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import '../../components/report-status';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -20,10 +20,7 @@ import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {ReportsFilterKeys, getReportFilters} from './reports-filters';
-import {
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues
-} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+import {updateFilterSelectionOptions, updateFiltersSelectedValues} from '@unicef-polymer/etools-filters/src/filters';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
