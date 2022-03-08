@@ -744,4 +744,8 @@ export class PartnersList extends connect(store)(
   public _triggerPartnerLoadingMsg() {
     fireEvent(this, 'trigger-partner-loading-msg');
   }
+
+  filtersChange(e: CustomEvent) {
+    console.log(e);
+  }
 }

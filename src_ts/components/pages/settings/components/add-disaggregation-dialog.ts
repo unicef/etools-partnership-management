@@ -254,7 +254,7 @@ export class AddDisaggregationDialog extends connect(store)(
   validate() {
     const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
     let validGroups = true;
-    const staticElems = this.shadowRoot!.querySelectorAll('.staticGroup');
+    const staticElems = this.shadowRoot!.querySelectorAll('.staticGroup') as unknown as PaperInputElement[];
     staticElems.forEach((g: PaperInputElement) => (validGroups = validGroups && g.validate()));
     return validName && validGroups;
   }

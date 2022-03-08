@@ -1,8 +1,7 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -10,12 +9,9 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin DisaggregationsMixin
  */
-class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
-  static get is() {
-    return 'one-disaggregation';
-  }
-
-  static get template() {
+@customElement('one-disaggregation')
+export class OneDisaggregation extends DisaggregationsMixin(LitElement) {
+  render() {
     return html`
       ${disaggregationTableStyles}
       <style>
@@ -28,12 +24,18 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
         <th>Total</th>
       </tr>
 
-      <template is="dom-repeat" items="[[rows]]" as="row">
-        <disaggregation-table-row data="[[row]]" indicator-type="[[data.display_type]]" row-type="middleRow">
-        </disaggregation-table-row>
-      </template>
+      ${(this.rows || []).map(
+        (row: any) => html`
+          <disaggregation-table-row .data="${row}" .indicatorType="${this.data.display_type}" row-type="middleRow">
+          </disaggregation-table-row>
+        `
+      )}
 
-      <disaggregation-table-row data="[[totalRow]]" indicator-type="[[data.display_type]]" row-type="totalsRow">
+      <disaggregation-table-row
+        .data="${this.totalRow}"
+        .indicatorType="${this.data.display_type}"
+        row-type="totalsRow"
+      >
       </disaggregation-table-row>
     `;
   }
@@ -44,14 +46,26 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
   @property({type: Array})
   mapping!: any[];
 
-  @property({type: Array, computed: '_determineTotalRow(data)'})
-  totalRow!: any[];
+  @property({type: Object})
+  totalRow!: GenericObject | undefined;
 
-  @property({type: Array, computed: '_getColumns(mapping)'})
+  @property({type: Array})
   columns!: any[];
 
-  @property({type: Array, computed: '_determineRows(columns, data)'})
+  @property({type: Array})
   rows!: any[];
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('data')) {
+      this.totalRow = this._determineTotalRow(this.data);
+    }
+    if (changedProperties.has('mapping')) {
+      this.columns = this._getColumns(this.mapping);
+    }
+    if (changedProperties.has('columns') || changedProperties.has('data')) {
+      this.rows = this._determineRows(this.columns, this.data);
+    }
+  }
 
   _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {
@@ -92,5 +106,3 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
     });
   }
 }
-
-window.customElements.define(OneDisaggregation.is, OneDisaggregation);

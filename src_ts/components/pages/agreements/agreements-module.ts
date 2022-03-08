@@ -107,8 +107,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
         }}"
       ></app-route>
 
-      <page-content-header with-tabs-visible="${this._showPageTabs(this.activePage)}">
-        <div slot="page-listActive">
+      <page-content-header ?with-tabs-visible="${this._showPageTabs(this.activePage)}">
+        <div slot="page-title">
           ${this.listActive ? html`<span>${translate('AGREEMENTS')}</span>` : ''}
           ${this.tabsActive
             ? html`<span>${this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive)}</span>`
@@ -301,7 +301,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
       this._observeRouteDataId(this.routeData.id);
     }
     if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
-      this.newAgreementActive = this._updateNewItemPageFlag(this.routeData, this.listActive);
+      this.newAgreementActive = this._updateNewItemPageFlag();
     }
     if (
       changedProperties.has('listActive') ||

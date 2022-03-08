@@ -1,8 +1,7 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property, customElement} from 'lit-element';
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
-import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -10,12 +9,9 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
-  static get is() {
-    return 'disaggregation-table-cell-number';
-  }
-
-  static get template() {
+@customElement('disaggregation-table-cell-number')
+export class DisaggregationTableCellNumber extends UtilsMixin(LitElement) {
+  render() {
     return html`
       ${disaggregationTableStyles}
       <style>
@@ -23,11 +19,10 @@ class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
           display: block;
         }
       </style>
-      <span class="cellValue">[[_formatNumber(data.v, '-', 0, ',')]]</span>
+      <span class="cellValue">${this._formatNumber(this.data?.v, '-', 0, ',')}</span>
     `;
   }
 
   @property({type: Object})
   data!: GenericObject;
 }
-window.customElements.define(DisaggregationTableCellNumber.is, DisaggregationTableCellNumber);
