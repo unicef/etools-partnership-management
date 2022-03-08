@@ -31,6 +31,7 @@ import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
+import pmpEdpoints from '../../endpoints/endpoints';
 
 // @ts-ignore
 setStore(store);
@@ -117,13 +118,13 @@ export class InterventionsModule extends connect(store)(
                   ${this._getTranslation('EXPORT')}
                 </paper-button>
                 <paper-listbox slot="dropdown-content">
-                  <paper-item on-tap="_exportPdBudget"
+                  <paper-item @tap="${this._exportPdBudget}"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</paper-item
                   >
-                  <paper-item on-tap="_exportPdResult"
+                  <paper-item @tap="${this._exportPdResult}"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</paper-item
                   >
-                  <paper-item on-tap="_exportPdLocations"
+                  <paper-item @tap="${this._exportPdLocations}"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</paper-item
                   >
                 </paper-listbox>
@@ -422,17 +423,17 @@ export class InterventionsModule extends connect(store)(
 
   _exportPdBudget() {
     // @ts-ignore TODO-convert EtoolsAjaxRequestMixin to module in order for EndpointsMixin members to be visible
-    this._exportPD(this.getEndpoint('interventions').url);
+    this._exportPD(pmpEdpoints.interventions.url);
   }
 
   _exportPdResult() {
     // @ts-ignore
-    this._exportPD(this.getEndpoint('resultExports').url);
+    this._exportPD(pmpEdpoints.resultExports.url);
   }
 
   _exportPdLocations() {
     // @ts-ignore
-    this._exportPD(this.getEndpoint('pdLocationsExport').url);
+    this._exportPD(pmpEdpoints.pdLocationsExport.url);
   }
 
   _exportPD(url: string) {
