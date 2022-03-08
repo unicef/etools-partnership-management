@@ -28,6 +28,9 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: Array})
     data: [] = [];
 
+    @property({type: Boolean})
+    listDataIsLoaded = false;
+
     @property({type: String})
     globalMessage = 'An error occurred while trying to fetch the data!';
 
@@ -76,6 +79,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       sendRequest(this.options)
         .then((resp: any) => {
           this._handleMyResponse(resp);
+          this.listDataIsLoaded = true;
         })
         .catch((error: any) => {
           this.handleErrorResponse(error);
