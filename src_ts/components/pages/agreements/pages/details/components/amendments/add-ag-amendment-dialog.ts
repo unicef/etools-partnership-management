@@ -107,7 +107,7 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
                 .options="${this.authorizedOfficersOptions}"
                 option-value="id"
                 option-label="name"
-                .selected-values="${this.authorizedOfficers}"
+                .selectedValues="${this.authorizedOfficers}"
                 trigger-value-change-event
                 @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
                 error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"

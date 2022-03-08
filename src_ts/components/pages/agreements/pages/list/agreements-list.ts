@@ -36,9 +36,9 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {updateFilterSelectionOptions, updateFiltersSelectedValues} from '@unicef-polymer/etools-filters/src/filters';
+import {updateFilterSelectionOptions, updateFiltersSelectedValues, setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-filters/src/filters';
 import {translate} from 'lit-translate';
-import {AgreementsFilterKeys, getAgreementFilters} from './agreements-filters';
+import {AgreementsFilterKeys, getAgreementFilters, selectedValueTypeByFilterKey} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
@@ -87,6 +87,10 @@ export class AgreementsList extends connect(store)(
           .page-content {
             margin: 5px;
           }
+        }
+
+        .capitalize {
+          text-transform: capitalize;
         }
       </style>
 
@@ -341,8 +345,11 @@ export class AgreementsList extends connect(store)(
     });
   }
 
-  getFilterUrlValuesAsArray(types: string) {
-    return types ? types.split(',') : [];
+  getFilterUrlValuesAsArray(types: string | []) {
+    if (!types) {
+      return [];
+    }
+    return typeof types === 'string' ? types.split(',') : types;
   }
 
   filteringParamsHaveChanged(stateRouteDetails: any) {
@@ -354,6 +361,7 @@ export class AgreementsList extends connect(store)(
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
+    setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
     const availableFilters = JSON.parse(JSON.stringify(getAgreementFilters()));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
@@ -417,11 +425,17 @@ export class AgreementsList extends connect(store)(
   }
 
   buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
+    const partnerNames = this.getFilterValuesByProperty(
+      this.partnersDropdownData,
+      'label',
+      this.getFilterUrlValuesAsArray(queryStringObj.partners),
+      'value'
+    );
     const exportParams = {
       search: queryStringObj.search,
       agreement_type: queryStringObj.type,
       status: queryStringObj.status,
-      partner_name: queryStringObj.partners,
+      partner_name: partnerNames,
       start: queryStringObj.start,
       end: queryStringObj.end,
       cpStructures: queryStringObj.cpStructures,
