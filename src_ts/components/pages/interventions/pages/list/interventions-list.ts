@@ -486,6 +486,12 @@ export class InterventionsList extends connect(store)(
     this.updateCurrentParams({...e.detail, page: 1}, true);
   }
 
+  // Override from lists-common-mixin
+  _sortOrderChanged(e: CustomEvent) {
+    const sort = e.detail.field + '.' + e.detail.direction;
+    this.updateCurrentParams({sort: sort});
+  }
+
   paginatorChanged() {
     this.updateCurrentParams({page: this.paginator.page, size: this.paginator.page_size});
   }
