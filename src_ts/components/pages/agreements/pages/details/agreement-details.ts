@@ -636,7 +636,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   // When agreement data is changed we need to check and prepare attached agreement file and
   // display amendments if needed
   _agreementChanged(agreement: Agreement) {
-    this.agreementId = agreement.id ? String(agreement.id) : null;
+    this.agreementId = agreement && agreement.id ? String(agreement.id) : null;
 
     this.allowAoEditForSSFA = false;
 
