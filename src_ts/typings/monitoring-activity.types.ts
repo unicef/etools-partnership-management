@@ -73,18 +73,14 @@ type Site = {
 };
 
 interface ISiteParrentLocation {
-  gateway: LocationGateway;
+  admin_level: number;
+  admin_level_name: string;
   geo_point: string;
   id: string;
   name: string;
   p_code: string;
   parent: null | ISiteParrentLocation;
 }
-type LocationGateway = {
-  admin_level: null | string | number;
-  id: number;
-  name: string;
-};
 
 type GeojsonPoint = {
   coordinates: CoordinatesArray;
