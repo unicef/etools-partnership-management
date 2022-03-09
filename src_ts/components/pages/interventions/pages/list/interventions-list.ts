@@ -324,8 +324,8 @@ export class InterventionsList extends connect(store)(
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
-        this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
-        stateRouteDetails.subRouteName === 'list'
+        this.localName.indexOf(stateRouteDetails.routeName?.split('-')[0]) > -1 &&
+        stateRouteDetails?.subRouteName === 'list'
       )
     ) {
       return;
@@ -484,6 +484,12 @@ export class InterventionsList extends connect(store)(
 
   filtersChange(e: CustomEvent) {
     this.updateCurrentParams({...e.detail, page: 1}, true);
+  }
+
+  // Override from lists-common-mixin
+  _sortOrderChanged(e: CustomEvent) {
+    const sort = e.detail.field + '.' + e.detail.direction;
+    this.updateCurrentParams({sort: sort});
   }
 
   paginatorChanged() {
