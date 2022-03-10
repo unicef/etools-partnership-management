@@ -1,4 +1,4 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import {LitElement} from 'lit-element';
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
@@ -7,7 +7,6 @@ import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
@@ -18,7 +17,7 @@ import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
  */
-function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class UserDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
     @property({type: String})
     endpointName = 'myProfile';

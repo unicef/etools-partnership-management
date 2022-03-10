@@ -1,3 +1,4 @@
+import {LitElement} from 'lit-element';
 import {store} from '../../../redux/store';
 import {isEmptyObject} from '../../utils/utils';
 
@@ -7,7 +8,6 @@ import {updateUserData} from '../../../redux/actions/user';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
 
@@ -17,7 +17,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  */
-function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ProfileOperationsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
     @property({type: Boolean})
     _saveActionInProgress = false;

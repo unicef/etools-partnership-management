@@ -1,4 +1,3 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -18,6 +17,7 @@ import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
+import {LitElement} from 'lit-element';
 
 store.addReducers({
   activeLanguage
@@ -33,9 +33,9 @@ store.addReducers({
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(ProfileOperationsMixin(PolymerElement))
+  GestureEventListeners(ProfileOperationsMixin(LitElement))
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
