@@ -558,6 +558,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('agreement') && !changedProperties.get('agreement')) {
+      this._agreementChanged(this.agreement);
+    }
     if (changedProperties.has('editMode')) {
       this._editModeChanged(this.editMode);
     }
@@ -572,12 +575,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
-    this._agreementChanged(this.agreement);
     this.autoValidate = true;
   }
 
   resetOnLeave() {
     this.staffMembers = [];
+    this.agreement = undefined;
     this.resetControlsValidation();
   }
 

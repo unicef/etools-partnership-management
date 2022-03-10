@@ -28,6 +28,7 @@ import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment
 import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
+import {isJsonStrMatch} from '../../utils/utils';
 
 /**
  * @polymer
@@ -601,7 +602,9 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   onAgreementChanged(e: CustomEvent) {
-    this.agreement = cloneDeep(e.detail);
+    if (!isJsonStrMatch(this.agreement, e.detail)) {
+      this.agreement = cloneDeep(e.detail);
+    }
   }
 
   onErrorsChanged(e: CustomEvent) {
