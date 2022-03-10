@@ -16,6 +16,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
+import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
@@ -32,6 +33,7 @@ import agreements from './redux/reducers/agreements.js';
 import partners from './redux/reducers/partners.js';
 import user from './redux/reducers/user';
 
+setStore(store as any);
 store.addReducers({
   // @ts-ignore
   commonData,

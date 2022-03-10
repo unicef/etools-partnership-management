@@ -30,7 +30,7 @@ import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
-import {EtoolsFilter} from '@unicef-polymer/etools-modules-common/dist/layout/filters/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import {PartnersListData} from '../../data/partners-list-data';
 import {EtoolsRouter} from '../../../../utils/routes';
@@ -43,7 +43,7 @@ import {
   setselectedValueTypeByFilterKey,
   updateFilterSelectionOptions,
   updateFiltersSelectedValues
-} from '@unicef-polymer/etools-modules-common/dist/list/filters';
+} from '@unicef-polymer/etools-filters/src/filters';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {RootState} from '../../../../../redux/store';
