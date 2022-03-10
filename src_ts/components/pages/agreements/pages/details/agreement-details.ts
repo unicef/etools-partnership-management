@@ -479,19 +479,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     `;
   }
 
-  _agreement!: Agreement;
-
-  set agreement(agreement: Agreement) {
-    if (!isJsonStrMatch(this._agreement, agreement)) {
-      this._agreement = agreement;
-      this._agreementChanged(this.agreement);
-    }
-  }
-
   @property({type: Object})
-  get agreement() {
-    return this._agreement;
-  }
+  agreement!: Agreement;
 
   @property({type: Boolean})
   editMode = false;
@@ -583,6 +572,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
+    this._agreementChanged(this.agreement);
     this.autoValidate = true;
   }
 
@@ -667,7 +657,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this.resetAttachedAgreementElem(agreement);
       this._initAuthorizedOfficers(agreement.authorized_officers!);
     } else {
-      this.agreement.attachment = undefined;
       // new agreement, update status to draft and reset fields
       this._setDraftStatus(this.editMode, this.isNewAgreement);
       this._resetDropdown('#partner');
