@@ -40,7 +40,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import {isJsonStrMatch} from '../../../../utils/utils';
+import { isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
@@ -479,11 +479,19 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     `;
   }
 
-  @property({type: Object})
-  agreement!: Agreement;
+  _agreement!: Agreement;
 
-  @property({type: String})
-  agreementId: string | null = null;
+  set agreement(agreement: Agreement) {
+    if (!isJsonStrMatch(this._agreement, agreement)) {
+      this._agreement = agreement;
+      this._agreementChanged(this.agreement);
+    }
+  }
+
+  @property({type: Object})
+  get agreement() {
+    return this._agreement;
+  }
 
   @property({type: Boolean})
   editMode = false;
@@ -541,7 +549,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   stateChanged(state: RootState) {
     if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
-      this.resetControlsValidation();
+      this.resetOnLeave();
       return;
     }
 
@@ -575,8 +583,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
-    this._agreementChanged(this.agreement);
     this.autoValidate = true;
+  }
+
+  resetOnLeave() {
+    this.staffMembers = [];
+    this.resetControlsValidation();
   }
 
   resetControlsValidation() {
@@ -636,8 +648,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   // When agreement data is changed we need to check and prepare attached agreement file and
   // display amendments if needed
   _agreementChanged(agreement: Agreement) {
-    this.agreementId = agreement && agreement.id ? String(agreement.id) : null;
-
     this.allowAoEditForSSFA = false;
 
     if (typeof agreement === 'object' && agreement !== null && agreement.id) {
@@ -784,7 +794,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   _openGeneratePCADialog() {
-    const agreementId = this.agreementId ? this.agreementId : this.agreement.id;
+    const agreementId = this.agreement && this.agreement.id ? this.agreement.id : null;
     openDialog({
       dialog: 'generate-pca-dialog',
       dialogData: {
@@ -907,9 +917,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
-    this.agreement.partner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
-    this._partnerChanged(this.agreement.partner);
-    this.requestUpdate();
+    const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
+    if (this.agreement.partner !== newPartner) {
+      this.agreement.partner = newPartner;
+      this._partnerChanged(this.agreement.partner);
+      this.requestUpdate();
+    }
   }
 
   onAgreementPartnerManagerChanged(e: CustomEvent) {
