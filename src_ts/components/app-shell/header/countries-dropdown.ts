@@ -1,15 +1,15 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
-import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {html, LitElement, property} from 'lit-element';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../endpoints/endpoints.js';
 
 /**
  * @polymer
@@ -18,8 +18,8 @@ import {GenericObject} from '@unicef-polymer/etools-types';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsMixin(PolymerElement))) {
-  public static get template() {
+class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement))) {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -76,16 +76,16 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
         id="countrySelector"
-        hidden$="[[!countrySelectorVisible]]"
-        selected="[[currentCountry.id]]"
+        ?hidden="${!this.countrySelectorVisible}"
+        .selected="${this.currentCountry?.id}"
         placeholder="Country"
         allow-outside-scroll
         no-label-float
-        options="[[countries]]"
+        .options="${this.countries}"
         option-label="name"
         option-value="id"
         trigger-value-change-event
-        on-etools-selected-item-changed="_countrySelected"
+        @etools-selected-item-changed="${this._countrySelected}"
         shown-options-limit="250"
         hide-search
         auto-width
@@ -96,8 +96,16 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
   @property({type: Object})
   currentCountry: GenericObject = {};
 
-  @property({type: Array, observer: '_countrySelectorUpdate'})
-  countries: any[] = [];
+  private _countries: [] = [];
+  @property({type: Array})
+  get countries() {
+    return this._countries;
+  }
+
+  set countries(val: []) {
+    this._countries = val;
+    this._countrySelectorUpdate(this._countries);
+  }
 
   @property({type: Boolean})
   countrySelectorVisible = false;
@@ -107,8 +115,8 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
 
     setTimeout(() => {
       const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      (this.$.countrySelector as EtoolsDropdownEl).set('fitInto', fitInto);
-    }, 0);
+      (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).fitInto = fitInto;
+    }, 1000);
   }
 
   public stateChanged(state: RootState) {
@@ -139,7 +147,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     });
 
     sendRequest({
-      endpoint: this.getEndpoint('changeCountry'),
+      endpoint: pmpEdpoints.changeCountry,
       method: 'POST',
       body: {country: countryId}
     })
@@ -156,7 +164,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     this.refresh();
   }
 
-  protected _countrySelectorUpdate(countries: any) {
+  protected _countrySelectorUpdate(countries: any[]) {
     if (Array.isArray(countries) && countries.length > 1) {
       this.countrySelectorVisible = true;
     }
@@ -164,7 +172,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
 
   protected _handleError(error: any) {
     logError('Country change failed!', 'countries-dropdown', error);
-    (this.$.countrySelector as EtoolsDropdownEl).set('selected', this.currentCountry.id);
+    (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).selected = this.currentCountry.id;
     fireEvent(this, 'toast', {
       text: 'Something went wrong changing your workspace. Please try again'
     });

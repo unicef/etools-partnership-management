@@ -27,13 +27,12 @@ store.addReducers({
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin GestureEventListeners
  * @appliesMixin ProfileOperationsMixin
  */
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(ProfileOperationsMixin(LitElement))
+  ProfileOperationsMixin(LitElement)
 ) {
   render() {
     // main template
@@ -43,7 +42,7 @@ class PageHeader extends connect(store)(
         app-toolbar {
           padding: 0 16px 0 0;
           height: 60px;
-          background-color: var(--header-bg-color);
+          background-color: ${this.headerColor};
         }
 
         .titlebar {
@@ -231,7 +230,7 @@ class PageHeader extends connect(store)(
                 auto-width
               ></etools-dropdown>
 
-              <countries-dropdown id="countries" countries="${this.countries}" current-country="${
+              <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${
       this.profile?.country
     }">
               </countries-dropdown>
@@ -273,21 +272,13 @@ class PageHeader extends connect(store)(
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(sections)'
-  })
+  @property({type: Array})
   allSections: LabelAndValue[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(offices)'
-  })
+  @property({type: Array})
   allOffices: LabelAndValue[] = [];
 
-  @property({type: Array, notify: true, computed: '_convertUsers(users)'})
+  @property({type: Array})
   allUsers: LabelAndValue[] = [];
 
   @property({type: String})
@@ -302,6 +293,9 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
+  @property({type: String})
+  headerColor = 'var(--header-bg-color)';
+
   languages: GenericObject[] = [
     {value: 'en', display_name: 'English'},
     {value: 'ar', display_name: 'Arabic'}
@@ -310,9 +304,9 @@ class PageHeader extends connect(store)(
   @property({type: String})
   selectedLanguage!: string;
 
-  public static get observers() {
-    return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
-  }
+  // public static get observers() {
+  //   return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
+  // }
 
   public connectedCallback() {
     super.connectedCallback();
@@ -326,12 +320,15 @@ class PageHeader extends connect(store)(
     }
     if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
       this.offices = [...state.commonData.offices];
+      this.allOffices = this._convertCollection(this.offices);
     }
     if (!isJsonStrMatch(state.commonData.sections, this.sections)) {
       this.sections = [...state.commonData.sections];
+      this.allSections = this._convertCollection(this.sections);
     }
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
+      this.allUsers = this._convertUsers(this.users);
     }
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
@@ -344,6 +341,8 @@ class PageHeader extends connect(store)(
     }
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
+      this._profileChanged(this.profile);
+      this._updateCountriesList(this.profile.countries_available);
 
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
@@ -358,7 +357,7 @@ class PageHeader extends connect(store)(
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (this.environment) {
-      this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
+      this.headerColor = 'var(--nonprod-header-color)';
     }
   }
 

@@ -1,4 +1,4 @@
-import {LitElement} from 'lit-element';
+import {LitElement, property} from 'lit-element';
 import {store} from '../../../redux/store';
 import {isEmptyObject} from '../../utils/utils';
 
@@ -8,7 +8,6 @@ import {updateUserData} from '../../../redux/actions/user';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
