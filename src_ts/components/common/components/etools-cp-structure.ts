@@ -53,7 +53,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
         error-message="Please select CP Structure"
         trigger-value-change-event
         @etools-selected-item-changed="${(event: CustomEvent) => {
-          this.selectedCp = event.detail.selectedItem.id;
+          this.selectedCp = event.detail.selectedItem?.id;
           fireEvent(this, 'selected-cp-changed', {value: this.selectedCp});
         }}"
       >

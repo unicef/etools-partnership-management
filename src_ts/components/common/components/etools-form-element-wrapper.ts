@@ -1,18 +1,19 @@
-import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input-container.js';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
-import {SharedStyles} from '../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
-import {property} from '@polymer/decorators';
+import {html, LitElement, property} from 'lit-element';
+import {requiredFieldStarredStyles} from '../../styles/required-field-styles-lit';
 
 /**
  * @polymer
  * @customElement
+ * ! TODO - etools-form-element-wrapper from etools-modules-common
+ * has an extra margin(from sharedStyles) that doesn't fit in in PMP
  */
-class EtoolsFormElementWrapper extends PolymerElement {
-  static get template() {
+class EtoolsFormElementWrapper extends LitElement {
+  render() {
     return html`
-      ${SharedStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           width: 100%;
@@ -52,16 +53,20 @@ class EtoolsFormElementWrapper extends PolymerElement {
         .placeholder {
           color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         }
+
+        paper-input-container {
+          margin: 0;
+        }
       </style>
       <paper-input-container
-        always-float-label="[[alwaysFloatLabel]]"
-        no-label-float="[[noLabelFloat]]"
-        required$="[[required]]"
+        ?always-float-label="${this.alwaysFloatLabel}"
+        noLabelFloat="${this.noLabelFloat}"
+        ?required="${this.required}"
       >
-        <label hidden$="[[!label]]" slot="label">[[label]]</label>
+        <label ?hidden="${!this.label}" slot="label">${this.label}</label>
         <slot name="prefix" slot="prefix"></slot>
-        <div slot="input" class="paper-input-input">
-          <span class$="input-value [[_getPlaceholderClass(value)]]">[[_getDisplayValue(value)]]</span>
+        <div slot="input" class="paper-input-input etools-form-element-wrapper">
+          <span class="input-value">${this._getDisplayValue(this.value)}</span>
           <slot></slot>
         </div>
       </paper-input-container>
@@ -81,9 +86,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
   noLabelFloat!: boolean;
 
   @property({
-    type: Boolean,
-    reflectToAttribute: true,
-    observer: '_requiredChanged'
+    type: Boolean
   })
   required!: boolean;
 
@@ -96,13 +99,6 @@ class EtoolsFormElementWrapper extends PolymerElement {
     if (appShell && appShell.classList.contains('ie')) {
       this.classList.add('ie');
     }
-  }
-
-  _requiredChanged(req: any) {
-    if (typeof req === 'undefined') {
-      return;
-    }
-    this.updateStyles();
   }
 
   _getPlaceholderClass(value: string) {
