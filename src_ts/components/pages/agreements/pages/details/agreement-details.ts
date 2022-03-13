@@ -244,7 +244,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                     .appModuleItem="${this.agreement}"
                     .selectedCp="${this.agreement.country_programme}"
                     @selected-cp-changed="${this.onCountryProgrammeChanged}"
-                    .edit-mode="${this.agreement.permissions?.edit.country_programme}"
+                    .editMode="${this.agreement.permissions?.edit.country_programme}"
                     ?required="${this.agreement.permissions?.required.country_programme}"
                   >
                   </etools-cp-structure>
