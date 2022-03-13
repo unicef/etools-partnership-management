@@ -1,16 +1,15 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {html, LitElement, property} from 'lit-element';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
-import {SharedStyles} from '../../styles/shared-styles';
-import {gridLayoutStyles} from '../../styles/grid-layout-styles';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin';
+import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
 import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 /**
  * @polymer
@@ -18,14 +17,13 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
-  static get is() {
-    return 'data-refresh-dialog';
+class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
+  static get styles() {
+    return [gridLayoutStylesLit];
   }
-
-  static get template() {
+  render() {
     return html`
-      ${SharedStyles} ${gridLayoutStyles}
+      ${sharedStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -57,25 +55,53 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
         ok-btn-text="Refresh data"
         cancel-btn-text="Cancel"
         dialog-title="Refresh data"
-        disable-confirm-btn="[[!anySelected]]"
-        on-close="_handleDialogClosed"
+        ?disableConfirmBtn="${!this.anySelected}"
+        @close="${this._handleDialogClosed}"
       >
         <div id="content-box">
           <div class="title-indent">Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox checked="{{partnersSelected}}">Partners/Government</paper-checkbox>
+              <paper-checkbox
+                ?checked="${this.partnersSelected}"
+                @checked-changed="${(e: CustomEvent) => {
+                  this.partnersSelected = e.detail.value;
+                  this._singleSectionChanged();
+                }}"
+                >Partners/Government</paper-checkbox
+              >
             </div>
             <div class="col col-6">
-              <paper-checkbox checked="{{interventionsSelected}}">PD/SPD</paper-checkbox>
+              <paper-checkbox
+                ?checked="${this.interventionsSelected}"
+                @checked-changed="${(e: CustomEvent) => {
+                  this.interventionsSelected = e.detail.value;
+                  this._singleSectionChanged();
+                }}"
+                >PD/SPD</paper-checkbox
+              >
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox checked="{{agreementsSelected}}">Agreements</paper-checkbox>
+              <paper-checkbox
+                ?checked="${this.agreementsSelected}"
+                @checked-changed="${(e: CustomEvent) => {
+                  this.agreementsSelected = e.detail.value;
+                  this._singleSectionChanged();
+                }}"
+                >Agreements</paper-checkbox
+              >
             </div>
             <div class="col col-6">
-              <paper-checkbox checked="{{allSelected}}">All</paper-checkbox>
+              <paper-checkbox
+                ?checked="${this.allSelected}"
+                @checked-changed="${(e: CustomEvent) => {
+                  this.allSelected = e.detail.value;
+                  this._allSelectedChanged();
+                }}"
+                >All</paper-checkbox
+              >
             </div>
           </div>
         </div>
@@ -98,19 +124,12 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
   @property({type: Boolean})
   anySelected = false;
 
-  @property({type: String, notify: true})
+  @property({type: String})
   page!: string;
 
-  static get observers() {
-    return [
-      '_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)',
-      '_allSelectedChanged(allSelected)'
-    ];
-  }
-
   open() {
-    if (!(this.$.refreshDialog as EtoolsDialog).opened) {
-      (this.$.refreshDialog as EtoolsDialog).opened = true;
+    if (!(this.shadowRoot.querySelector('#refreshDialog') as EtoolsDialog).opened) {
+      (this.shadowRoot.querySelector('#refreshDialog') as EtoolsDialog).opened = true;
     }
   }
 
@@ -119,18 +138,18 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
       return;
     }
 
-    this.set('interventionsSelected', true);
-    this.set('partnersSelected', true);
-    this.set('agreementsSelected', true);
-    this.set('anySelected', true);
+    this.interventionsSelected = true;
+    this.partnersSelected = true;
+    this.agreementsSelected = true;
+    this.anySelected = true;
   }
 
   _singleSectionChanged() {
     const allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
     const anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
-    this.set('allSelected', allSelected);
-    this.set('anySelected', anySelected);
+    this.allSelected = allSelected;
+    this.anySelected = anySelected;
   }
 
   _handleDialogClosed(closingReason: CustomEvent) {
@@ -211,10 +230,10 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
   _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     const routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
-      this.set('page', null);
+      this.page = null;
       setTimeout(() => {
         fireEvent(this, 'global-loading', {active: false});
-        this.set('page', afterDataRefreshLandingPage);
+        this.page = afterDataRefreshLandingPage;
         fireEvent(this, 'update-main-path', {path: routePath});
       }, 10);
     } else {
@@ -241,12 +260,12 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
   }
 
   _resetRefreshSelection() {
-    this.set('partnersSelected', false);
-    this.set('agreementsSelected', false);
-    this.set('interventionsSelected', false);
+    this.partnersSelected = false;
+    this.agreementsSelected = false;
+    this.interventionsSelected = false;
   }
 }
 
-window.customElements.define(DataRefreshDialog.is, DataRefreshDialog);
+window.customElements.define('data-refresh-dialog', DataRefreshDialog);
 
 export {DataRefreshDialog};

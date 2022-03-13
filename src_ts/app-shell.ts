@@ -99,6 +99,7 @@ import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
+import {LitElement} from 'lit-element';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -245,7 +246,7 @@ class AppShell extends connect(store)(
         </app-header-layout>
       </app-drawer-layout>
 
-      <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
+      <data-refresh-dialog id="dataRefreshDialog" page="[[module]]"></data-refresh-dialog>
 
       <partners-list-data></partners-list-data>
       <agreements-list-data></agreements-list-data>
@@ -691,7 +692,7 @@ class AppShell extends connect(store)(
 
     // import main module element if needed
     const moduleMainEl = this._getModuleMainElement(appModuleMainElId);
-    const isPolymerElement = moduleMainEl instanceof PolymerElement;
+    const isPolymerElement = moduleMainEl instanceof PolymerElement || moduleMainEl instanceof LitElement;
     if (!isPolymerElement) {
       // moduleMainEl is null => make the import
       import(pageUrl)

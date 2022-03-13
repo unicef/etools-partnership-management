@@ -18,6 +18,7 @@ import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit-element';
+import {PolymerElement} from '@polymer/polymer';
 
 store.addReducers({
   activeLanguage
