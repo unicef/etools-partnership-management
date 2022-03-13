@@ -1,8 +1,5 @@
-import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../redux/store';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin';
-import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin';
+import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
@@ -10,7 +7,6 @@ import {isJsonStrMatch} from '../../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property} from '@polymer/decorators';
 import {
   ExpectedResult,
   FrsDetails,
@@ -23,6 +19,10 @@ import {
   Agreement,
   MinimalAgreement
 } from '@unicef-polymer/etools-types';
+import {LitElement, property} from 'lit-element';
+import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -32,7 +32,7 @@ import {
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
 class InterventionItemData extends connect(store)(
-  EnvironmentFlagsPolymerMixin(AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)))
+  EnvironmentFlagsMixin(AjaxServerErrorsMixin(EndpointsLitMixin(LitElement)))
 ) {
   @property({type: Object})
   pdEndpoints: {
@@ -47,20 +47,19 @@ class InterventionItemData extends connect(store)(
     DELETE: 'interventionDelete'
   };
 
-  @property({type: Object, readOnly: true, notify: true})
+  @property({type: Object})
   intervention!: Intervention;
 
   @property({type: Object})
   originalIntervention!: Intervention;
 
   @property({
-    type: Number,
-    notify: true
+    type: Number
   })
   interventionId!: number;
 
   @property({type: Object})
-  handleResponseAdditionalCallback!: GenericObject;
+  handleResponseAdditionalCallback!: GenericObject | null;
 
   @property({type: Array})
   offices!: Office[];
@@ -105,7 +104,7 @@ class InterventionItemData extends connect(store)(
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const options = {
-      endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
+      endpoint: this.getEndpoint(pmpEdpoints, this.pdEndpoints.DETAILS, {
         id: this.interventionId
       })
     };
@@ -138,12 +137,12 @@ class InterventionItemData extends connect(store)(
   }
 
   _restoreUnsuccessfullyDeletedFrs() {
-    this.set('intervention.frs_details', this.originalIntervention.frs_details);
-    this.set('intervention.frs', this.originalIntervention.frs);
+    this.intervention.frs_details = this.originalIntervention.frs_details;
+    this.intervention.frs = this.originalIntervention.frs;
   }
 
   _restoreInAmmendmentFlag() {
-    this.set('intervention.in_amendment', this.originalIntervention.in_amendment);
+    this.intervention.in_amendment = this.originalIntervention.in_amendment;
   }
 
   _convertIdsToStrings(dataArray: []) {
@@ -170,13 +169,13 @@ class InterventionItemData extends connect(store)(
    */
   _handleResponse(response: Intervention, ajaxMethod: string) {
     // @ts-ignore
-    this._setIntervention(this._handleDataConversions(response));
+    this.intervention = this._handleDataConversions(response);
 
     // call additional callback, if any
     if (typeof this.handleResponseAdditionalCallback === 'function') {
       this.handleResponseAdditionalCallback.bind(this, response)();
       // reset callback
-      this.set('handleResponseAdditionalCallback', null);
+      this.handleResponseAdditionalCallback = null;
     }
 
     if (ajaxMethod !== 'GET') {
@@ -205,7 +204,7 @@ class InterventionItemData extends connect(store)(
       status !== CONSTANTS.STATUSES.Draft.toLowerCase()
     ) {
       sendRequest({
-        endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {
+        endpoint: this.getEndpoint(pmpEdpoints, this.pdEndpoints.AGREEMENT_DETAILS, {
           id: agreementId
         })
       }).then((resp: any) => {
@@ -284,12 +283,12 @@ class InterventionItemData extends connect(store)(
 
       if (intervention.id) {
         // prepare PATCH endpoint
-        endpoint = this.getEndpoint(this.pdEndpoints.DETAILS, {
+        endpoint = this.getEndpoint(pmpEdpoints, this.pdEndpoints.DETAILS, {
           id: intervention.id
         });
       } else {
         // new intervention, use POST method for the same endpoint
-        endpoint = this.getEndpoint(this.pdEndpoints.CREATE);
+        endpoint = this.getEndpoint(pmpEdpoints, this.pdEndpoints.CREATE);
         isNew = true;
       }
 
@@ -298,7 +297,7 @@ class InterventionItemData extends connect(store)(
       }
       // set additional callback if any and only if is new intervention
       if (callback && isNew) {
-        this.set('handleResponseAdditionalCallback', callback);
+        this.handleResponseAdditionalCallback = callback;
       }
 
       if (Array.isArray(intervention.result_links)) {
