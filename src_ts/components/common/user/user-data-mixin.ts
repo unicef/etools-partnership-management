@@ -1,14 +1,15 @@
 import {LitElement, property} from 'lit-element';
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
-import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import pmpEdpoints from '../../endpoints/endpoints';
 
 /**
  * @polymer
@@ -17,7 +18,7 @@ import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef
  * @appliesMixin EndpointsMixin
  */
 function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
-  class UserDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
+  class UserDataClass extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(baseClass)) {
     @property({type: String})
     endpointName = 'myProfile';
 
@@ -32,7 +33,7 @@ function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     public requestUserData() {
       sendRequest({
-        endpoint: this.getEndpoint(this.endpointName)
+        endpoint: this.getEndpoint(pmpEdpoints, this.endpointName)
       })
         .then((res: any) => {
           if (this.redirectToEPDIfNeccessary(res)) {

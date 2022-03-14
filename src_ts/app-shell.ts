@@ -121,8 +121,6 @@ function fetchLangFiles(lang: string) {
 }
 const translationConfig = registerTranslateConfig({loader: (lang: string) => fetchLangFiles(lang)});
 
-setRootPath(BASE_URL);
-
 /**
  * @customElement
  * @polymer
@@ -172,7 +170,7 @@ class AppShell extends connect(store)(
           // Sometimes only __queryParams get changed
           // In this case  detail will contain detail.path = 'route._queryParams'
           // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
+          if (detail.path || !detail.value) {
             // set(this, detail.path, detail.value);
             // this.route = {...this.route};
             return;
@@ -181,11 +179,19 @@ class AppShell extends connect(store)(
           }
         }}"
         @query-params-changed="${({detail}: CustomEvent) => {
+          if (!detail.value) {
+            return;
+          }
           setTimeout(() => {
             this.appLocQueryParams = detail.value;
           });
         }}"
-        @path-changed="${({detail}: CustomEvent) => (this.appLocPath = detail.value)}"
+        @path-changed="${({detail}: CustomEvent) => {
+          if (!detail.value) {
+            return;
+          }
+          this.appLocPath = detail.value;
+        }}"
       >
       </app-location>
 
@@ -202,7 +208,13 @@ class AppShell extends connect(store)(
         }}"
         .tail="${this.subroute}"
         @tail-changed="${({detail}: CustomEvent) => setTimeout(() => (this.subroute = detail.value))}"
-        @route-changed="${this.routeChanged}"
+        @route-changed="${({detail}: CustomEvent) => {
+          if (!detail.value) {
+            return;
+          }
+          this.route = detail.value;
+          this.routeChanged();
+        }}"
       >
       </app-route>
 
