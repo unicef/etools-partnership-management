@@ -292,7 +292,6 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
 
     this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
     this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
-    this._newAgreementSaved = this._newAgreementSaved.bind(this);
   }
 
   updated(changedProperties: PropertyValues) {
@@ -360,11 +359,13 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
 
-    this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
-      if (successfull) {
-        store.dispatch({type: RESET_UNSAVED_UPLOADS});
-      }
-    });
+    this.agreementDataEl
+      .saveAgreement(agreementData, this._newAgreementSaved.bind(this))
+      .then((successfull: boolean) => {
+        if (successfull) {
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+        }
+      });
   }
 
   _updateAgreementStatus(e: CustomEvent) {
@@ -375,9 +376,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   // Go to details page once the new agreement has been saved
   _newAgreementSaved(agreement: Agreement) {
-    fireEvent(this, 'update-main-path', {
-      path: 'agreements/' + agreement.id + '/details'
-    });
+    this.route.path = '/' + agreement.id + '/details';
+    this.route = {...this.route};
   }
 
   _agreementSaveErrors(e: CustomEvent) {
