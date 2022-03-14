@@ -102,7 +102,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
           <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
             <paper-tab>
               <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
-              [[topLevelLocation.title]]
+              [[topLevelLocation.name]]
             </paper-tab>
           </template>
         </paper-tabs>
@@ -122,22 +122,14 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
                     <div class="tab-header">
                       <dl>
                         <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
-                          <dt>
-                            Location progress against [[location.reporting_entity.title]] target:
-                          </dt>
-                          <dd>
-                            [[_formatNumber(location.location_progress.v, '0', 0, ',')]]
-                          </dd>
+                          <dt>Location progress against [[location.reporting_entity.title]] target:</dt>
+                          <dd>[[_formatNumber(location.location_progress.v, '0', 0, ',')]]</dd>
                           <dt>Previous location progress:</dt>
-                          <dd>
-                            [[_formatNumber(location.previous_location_progress.v, '0', 0, ',')]]
-                          </dd>
+                          <dd>[[_formatNumber(location.previous_location_progress.v, '0', 0, ',')]]</dd>
                         </template>
                         <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
                           <dt>Location progress:</dt>
-                          <dd>
-                            [[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]
-                          </dd>
+                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]</dd>
                           <dt>Previous location progress:</dt>
                           <dd>
                             [[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, 1)]]
@@ -237,7 +229,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
       if (typeof acc[locationId] === 'undefined') {
         acc[locationId] = {
-          title: location.location.title,
+          name: location.location.name,
           byEntity: [],
           selected: 0
         };
