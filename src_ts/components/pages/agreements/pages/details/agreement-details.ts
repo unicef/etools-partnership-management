@@ -580,7 +580,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   resetOnLeave() {
     this.staffMembers = [];
-    this.agreement = undefined;
     this.resetControlsValidation();
   }
 
