@@ -65,7 +65,7 @@ workflows:
   version: 2
   build_and_lint:
     jobs:
-      - lint         
+      - lint
       - build_and_deploy:
           filters:
             branches:
@@ -73,3 +73,4 @@ workflows:
                 - master
                 - staging
                 - develop
+                - location-names
