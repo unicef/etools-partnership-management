@@ -101,12 +101,6 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     // @ts-ignore
     this.agreement = response;
 
-    // call additional callback, if any
-    if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-      this.handleSuccResponseAdditionalCallback.bind(this, response)();
-      // reset callback
-      this.handleSuccResponseAdditionalCallback = null;
-    }
     if (ajaxMethod !== 'GET') {
       // 'agreement_number_status' is not retrieved from API
       response.agreement_number_status = this._computeAgrementNumberStatus(response.agreement_number, response.status);
@@ -122,6 +116,14 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
           fireEvent(self, 'reload-list');
         });
     }
+    setTimeout(() => {
+      // call additional callback, if any
+      if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
+        this.handleSuccResponseAdditionalCallback(response);
+        // reset callback
+        this.handleSuccResponseAdditionalCallback = null;
+      }
+    }, 50);
     fireEvent(this, 'global-loading', {
       active: false,
       loadingSource: this.ajaxLoadingMsgSource
