@@ -3,23 +3,23 @@ import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
 
-import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import EnvironmentFlagsPolymerMixin from '../common/environment-flags/environment-flags-mixin';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
 import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement, property} from 'lit-element';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
-  class CommonDataClass extends EnvironmentFlagsPolymerMixin(EndpointsMixin(baseClass)) {
+  class CommonDataClass extends EnvironmentFlagsMixin(EndpointsLitMixin(baseClass)) {
     @property({type: Object})
     commonDataEndpoints = {
       pmp: [
@@ -119,7 +119,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     }
 
     protected _makeRequest(endpointName: string, successHandler: any, errorHandler: any) {
-      this.fireRequest(endpointName, {})
+      this.fireRequest(pmpEdpoints, endpointName, {})
         .then((resp: any) => {
           successHandler.bind(this, resp)();
         })

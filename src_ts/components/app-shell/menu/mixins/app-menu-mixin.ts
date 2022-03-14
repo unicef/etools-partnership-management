@@ -98,7 +98,7 @@ export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     private _toggleDrawer(): void {
       // @ts-ignore
-      this.$.drawer.toggle();
+      this.shadowRoot?.querySelector('#drawer').toggle();
     }
   }
   return AppMenuClass;

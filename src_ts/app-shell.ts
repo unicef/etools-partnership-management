@@ -8,7 +8,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
 import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -97,7 +96,8 @@ import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
-import {LitElement, property} from 'lit-element';
+import {html, LitElement, property} from 'lit-element';
+import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -141,7 +141,9 @@ class AppShell extends connect(store)(
     // eslint-disable-next-line new-cap
     AppMenuMixin(
       ToastNotificationsMixin(
-        ScrollControlMixinLit(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(LitElement)))))
+        ScrollControlMixinLit(
+          EnvironmentFlagsMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(LitElement)))))
+        )
       )
     )
   )
@@ -154,7 +156,11 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics .page="${this.subroute.prefix}" .user="${this.user}" .toast="${this.currentToastMessage}">
+      <etools-piwik-analytics
+        .page="${this.subroute?.prefix}"
+        .user="${this.user}"
+        .toast="${this.currentToastMessage}"
+      >
       </etools-piwik-analytics>
 
       <app-location
@@ -187,7 +193,13 @@ class AppShell extends connect(store)(
         .route="${this.route}"
         .pattern="${BASE_URL}:module"
         .data="${this.routeData}"
-        @data-changed="${({detail}: CustomEvent) => (this.routeData = detail.value)}"
+        @data-changed="${({detail}: CustomEvent) => {
+          if (!detail.value) {
+            return;
+          }
+          this.routeData = detail.value;
+          this._routePageChanged(this.routeData.module);
+        }}"
         .tail="${this.subroute}"
         @tail-changed="${({detail}: CustomEvent) => setTimeout(() => (this.subroute = detail.value))}"
         @route-changed="${this.routeChanged}"
@@ -365,12 +377,8 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   currentLanguageIsSet!: boolean;
 
-  public static get observers() {
-    return ['_routePageChanged(routeData.module)'];
-  }
-
-  ready() {
-    super.ready();
+  public connectedCallback() {
+    super.connectedCallback();
 
     this._initListeners();
     this._createLeavePageDialog();
@@ -391,11 +399,7 @@ class AppShell extends connect(store)(
         loadingSource: 'main-page'
       });
     }
-  }
-
-  public connectedCallback() {
     this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
-    super.connectedCallback();
 
     this.checkAppVersion();
     this.requestUserData();
@@ -439,7 +443,7 @@ class AppShell extends connect(store)(
     this.uploadsStateChanged(state);
 
     // @ts-ignore EndpointsMixin
-    this.envStateChanged(state);
+    this.envFlagsStateChanged(state);
     if (get(state, 'app.toastNotification.active')) {
       fireEvent(this, 'toast', {
         text: state.app!.toastNotification.message,
@@ -526,10 +530,8 @@ class AppShell extends connect(store)(
      * makes appLocRouteChanged be triggered twice,
      * first with changes to the path , without the changes to the query string, which ruins everything
      */
-    this.setProperties({
-      appLocQueryParams: this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
-      appLocPath: this.route.path
-    });
+    this.appLocQueryParams = this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {};
+    this.appLocPath = this.route.path;
   }
 
   public isInterventionReports(path: string) {
@@ -619,14 +621,12 @@ class AppShell extends connect(store)(
   }
 
   private _updateQueryParams(e: CustomEvent) {
-    this.set('appLocQueryParams', e.detail);
+    this.appLocQueryParams = e.detail;
   }
 
   private _updatePath(path: string) {
-    this.setProperties({
-      appLocQueryParams: {},
-      appLocPath: this.rootPath + path
-    });
+    this.appLocQueryParams = {};
+    this.appLocPath = this.rootPath + path;
   }
 
   private _pageNotFound() {
@@ -686,7 +686,7 @@ class AppShell extends connect(store)(
         if (!accessGranted) {
           this._pageNotFound();
         } else {
-          this.set('module', routePage);
+          this.module = routePage;
         }
       });
     });
@@ -785,7 +785,7 @@ class AppShell extends connect(store)(
     if (this.route.path === this.rootPath || this.route.path === '/') {
       // setting the default path when user enters the app
       // redirect from /pmp/ to /pmp/partners/list
-      this.set('route.path', this.rootPath + 'partners/list');
+      this.route.path = this.rootPath + 'partners/list';
       return;
     }
     // redirect from /pmp/<module> to /pmp/<module>/list
@@ -797,7 +797,7 @@ class AppShell extends connect(store)(
       currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
     }
     if (currentPath === this.rootPath + this.routeData.module) {
-      this.set('route.path', this.rootPath + this.routeData.module + '/list');
+      this.route.path = this.rootPath + this.routeData.module + '/list';
     }
   }
 
@@ -808,7 +808,7 @@ class AppShell extends connect(store)(
 
   private _updateLastPartnersModuleActivePage(module: string) {
     if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
-      this.set('_lastActivePartnersModule', module);
+      this._lastActivePartnersModule = module;
     }
   }
 
