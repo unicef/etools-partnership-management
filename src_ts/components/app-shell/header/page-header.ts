@@ -304,10 +304,6 @@ class PageHeader extends connect(store)(
   @property({type: String})
   selectedLanguage!: string;
 
-  // public static get observers() {
-  //   return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
-  // }
-
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();

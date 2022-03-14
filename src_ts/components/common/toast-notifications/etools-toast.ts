@@ -1,16 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
 import {PaperButtonElement} from '@polymer/paper-button/paper-button.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {html, LitElement} from 'lit-element';
 
 /**
  * @polymer
  * @customElement
  */
-class EtoolsToast extends PolymerElement {
-  public static get template() {
+class EtoolsToast extends LitElement {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -51,8 +51,8 @@ class EtoolsToast extends PolymerElement {
           text-align: justify;
         }
       </style>
-      <paper-toast id="toast" class="toast-general-style" on-iron-overlay-closed="toastClosed">
-        <paper-button id="confirmBtn" on-tap="confirmToast" class="toast-dismiss-btn-general-style"> Ok </paper-button>
+      <paper-toast id="toast" class="toast-general-style" @iron-overlay-closed="toastClosed">
+        <paper-button id="confirmBtn" @tap="confirmToast" class="toast-dismiss-btn-general-style"> Ok </paper-button>
       </paper-toast>
     `;
   }
@@ -60,11 +60,11 @@ class EtoolsToast extends PolymerElement {
   public fitInto: GenericObject | null = null;
 
   public show(details: GenericObject) {
-    return (this.$.toast as PaperToastElement).show(details);
+    return (this.shadowRoot?.querySelector('#toast') as PaperToastElement).show(details);
   }
 
   public toggle() {
-    return (this.$.toast as PaperToastElement).toggle();
+    return (this.shadowRoot?.querySelector('#toast') as PaperToastElement).toggle();
   }
 
   public confirmToast() {
@@ -86,7 +86,7 @@ class EtoolsToast extends PolymerElement {
   }
 
   public getMessageWrapper() {
-    return (this.$.toast as PaperToastElement).$.label as HTMLSpanElement;
+    return (this.shadowRoot?.querySelector('#toast') as PaperToastElement).$.label as HTMLSpanElement;
   }
 
   protected _isMultiLine(message: string) {
@@ -97,8 +97,8 @@ class EtoolsToast extends PolymerElement {
   }
 
   prepareToastAndGetShowProperties(detail: any) {
-    const closeToastBtn = this.$.confirmBtn as PaperButtonElement;
-    const toast = this.$.toast;
+    const closeToastBtn = this.shadowRoot?.querySelector('#confirmBtn') as PaperButtonElement;
+    const toast = this.shadowRoot?.querySelector('#toast')!;
 
     if (this._isMultiLine(detail.text)) {
       toast.classList.remove('toast');

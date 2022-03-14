@@ -1,17 +1,16 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import './etools-toast';
 import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
 import {store} from '../../../redux/store';
 import get from 'lodash-es/get';
+import {LitElement, property} from 'lit-element';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ToastNotificationsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ToastNotifsClass extends baseClass {
     @property({type: Object})
     _toast: EtoolsToastEl | null = null;
@@ -47,7 +46,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
 
       if (!this._toastQueue.length) {
-        this.push('_toastQueue', detail);
+        this._toastQueue = [...this._toastQueue, detail];
         const toastProperties = this._toast!.prepareToastAndGetShowProperties(detail);
         this._showToast(toastProperties);
       } else {
@@ -55,7 +54,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
           return JSON.stringify(toastDetail) === JSON.stringify(detail);
         });
         if (alreadyInQueue.length === 0) {
-          this.push('_toastQueue', detail);
+          this._toastQueue = [...this._toastQueue, detail];
         } // else already in the queue
       }
     }
@@ -85,7 +84,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     public dequeueToast() {
-      this.shift('_toastQueue');
+      this._toastQueue.shift();
       if (this._toastQueue.length) {
         const toastProperties = this._toast!.prepareToastAndGetShowProperties(this._toastQueue[0]);
         this._showToast(toastProperties);
@@ -108,7 +107,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     protected _showToast(toastProperties: any) {
-      this.set('currentToastMessage', toastProperties.text);
+      this.currentToastMessage = toastProperties.text;
       this._toast!.show(toastProperties);
     }
   }

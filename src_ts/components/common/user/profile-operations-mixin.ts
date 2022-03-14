@@ -57,7 +57,7 @@ function ProfileOperationsMixin<T extends Constructor<LitElement>>(baseClass: T)
         active: true,
         loadingSource: this.profileSaveLoadingMsgSource
       });
-      this.set('_saveActionInProgress', true);
+      this._saveActionInProgress = true;
       this._dispatchSaveProfileRequest(profile);
     }
 
@@ -72,7 +72,7 @@ function ProfileOperationsMixin<T extends Constructor<LitElement>>(baseClass: T)
           active: false,
           loadingSource: this.profileSaveLoadingMsgSource
         });
-        this.set('_saveActionInProgress', false);
+        this._saveActionInProgress = false;
       }
     }
   }

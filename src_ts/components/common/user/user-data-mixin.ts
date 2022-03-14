@@ -1,4 +1,4 @@
-import {LitElement} from 'lit-element';
+import {LitElement, property} from 'lit-element';
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
@@ -7,7 +7,6 @@ import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
 
@@ -22,13 +21,13 @@ function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: String})
     endpointName = 'myProfile';
 
-    @property({type: Object, readOnly: true, notify: true})
+    @property({type: Object})
     user!: User;
 
-    @property({type: Object, readOnly: true})
+    @property({type: Object})
     userGroups!: UserGroup[];
 
-    @property({type: Object, readOnly: true, notify: true})
+    @property({type: Object})
     permissions!: UserPermissions;
 
     public requestUserData() {
@@ -112,20 +111,20 @@ function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     protected _resetUserAndPermissions() {
       // @ts-ignore
-      this._setUser(undefined);
+      this.user = undefined;
       // @ts-ignore
-      this._setPermissions(undefined);
+      this.permissions = undefined;
     }
 
     protected _setUserData(data: any) {
       const _user = data;
       const _permissions = {};
       // @ts-ignore
-      this._setUser(_user);
+      this.user = _user;
       const permissionsList = getAllPermissions();
       if (!isEmptyObject(data)) {
         // @ts-ignore
-        this._setUserGroups(_user.groups);
+        this.userGroups = _user.groups;
         permissionsList.defaultPermissions.forEach(function (perm: any) {
           // @ts-ignore
           _permissions[perm] = true;
@@ -161,7 +160,7 @@ function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // });
       }
       // @ts-ignore
-      this._setPermissions(_permissions);
+      this.permissions = _permissions;
     }
   }
   return UserDataClass;

@@ -9,7 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
 import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -60,7 +59,7 @@ import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
 import ToastNotificationsMixin from './components/common/toast-notifications/toast-notification-mixin.js';
-import ScrollControlMixin from './components/common/mixins/scroll-control-mixin.js';
+import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
 import './components/app-shell/menu/app-menu.js';
@@ -89,7 +88,6 @@ import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from './components/utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
-import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
@@ -99,7 +97,7 @@ import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
-import {LitElement} from 'lit-element';
+import {LitElement, property} from 'lit-element';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -141,16 +139,14 @@ setRootPath(BASE_URL);
 class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
-    GestureEventListeners(
-      AppMenuMixin(
-        ToastNotificationsMixin(
-          ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
-        )
+    AppMenuMixin(
+      ToastNotificationsMixin(
+        ScrollControlMixinLit(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(LitElement)))))
       )
     )
   )
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -158,38 +154,64 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
+      <etools-piwik-analytics .page="${this.subroute.prefix}" .user="${this.user}" .toast="${this.currentToastMessage}">
       </etools-piwik-analytics>
 
       <app-location
-        route="{{appLocRoute}}"
-        path="{{appLocPath}}"
-        query-params="{{appLocQueryParams}}"
-        url-space-regex="^[[rootPath]]"
+        .route="${this.appLocRoute}"
+        .path="${this.appLocPath}"
+        .queryParams="${this.appLocQueryParams}"
+        .urlSpaceRegex="^${BASE_URL}"
+        @route-changed="${({detail}: CustomEvent) => {
+          // Sometimes only __queryParams get changed
+          // In this case  detail will contain detail.path = 'route._queryParams'
+          // and value will contain only the value for this.route._queryParams and not the entire route object
+          if (detail.path) {
+            // set(this, detail.path, detail.value);
+            // this.route = {...this.route};
+            return;
+          } else {
+            this.appLocRoute = detail.value;
+          }
+        }}"
+        @query-params-changed="${({detail}: CustomEvent) => {
+          setTimeout(() => {
+            this.appLocQueryParams = detail.value;
+          });
+        }}"
+        @path-changed="${({detail}: CustomEvent) => (this.appLocPath = detail.value)}"
       >
       </app-location>
 
       <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:module"
-        data="{{routeData}}"
-        tail="{{subroute}}"
-        on-route-changed="routeChanged"
+        .route="${this.route}"
+        .pattern="${BASE_URL}:module"
+        .data="${this.routeData}"
+        @data-changed="${({detail}: CustomEvent) => (this.routeData = detail.value)}"
+        .tail="${this.subroute}"
+        @tail-changed="${({detail}: CustomEvent) => setTimeout(() => (this.subroute = detail.value))}"
+        @route-changed="${this.routeChanged}"
       >
       </app-route>
 
-      <app-drawer-layout id="layout" responsive-width="850px" fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
+      <app-drawer-layout
+        id="layout"
+        responsive-width="850px"
+        fullbleed
+        ?narrow="${this.narrow}"
+        ?small-menu="${this.smallMenu}"
+      >
         <!-- Drawer content -->
         <app-drawer
           id="drawer"
           slot="drawer"
           transition-duration="350"
-          opened="[[_drawerOpened]]"
-          swipe-open="[[narrow]]"
-          small-menu$="[[smallMenu]]"
+          ?opened="${this._drawerOpened}"
+          ?swipe-open="${this.narrow}"
+          ?small-menu="${this.smallMenu}"
         >
           <!-- App main menu(left sidebar) -->
-          <app-menu root-path="[[rootPath]]" selected-option="[[module]]" small-menu$="[[smallMenu]]"></app-menu>
+          <app-menu .selectedOption="${this.module}" ?small-menu="${this.smallMenu}"></app-menu>
         </app-drawer>
 
         <!-- Main content -->
@@ -199,54 +221,58 @@ class AppShell extends connect(store)(
           </app-header>
 
           <!-- Main content -->
-          <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
-            <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
-              <partners-module
-                id="partners"
-                class="main-page"
-                show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-                current-module="[[_lastActivePartnersModule]]"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
-              </partners-module>
-            </template>
+          <main role="main" id="page-container">
+            <partners-module
+              id="partners"
+              class="main-page"
+              ?hidden="${!this._activeModuleIs(this.module, 'partners|government-partners')}"
+              .showOnlyGovernmentType="${this._showOnlyGovernmentPartners(this._lastActivePartnersModule)}"
+              .currentModule="${this._lastActivePartnersModule}"
+              .route="${this.subroute}"
+              .permissions="${this.permissions}"
+            >
+            </partners-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
-              <agreements-module id="agreements" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
-              </agreements-module>
-            </template>
+            <agreements-module
+              ?hidden="${!this._activeModuleIs(this.module, 'agreements')}"
+              id="agreements"
+              class="main-page"
+              .route="${this.subroute}"
+              .permissions="${this.permissions}"
+            >
+            </agreements-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
-              <interventions-module id="interventions" class="main-page" user-permissions="[[permissions]]">
-              </interventions-module>
-            </template>
+            <interventions-module
+              ?hidden="${this._activeModuleIs(this.module, 'interventions')}"
+              id="interventions"
+              class="main-page"
+              user-permissions="[[permissions]]"
+            >
+            </interventions-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
-              <reports-module id="reports" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
-              </reports-module>
-            </template>
+            <reports-module
+              ?hidden="${!this._activeModuleIs(this.module, 'reports')}"
+              id="reports"
+              class="main-page"
+              .route="${this.subroute}}"
+              .permissions="${this.permissions}"
+            >
+            </reports-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
-              <not-found class="main-page"></not-found>
-            </template>
+            <not-found ?hidden="${!this._activeModuleIs(this.module, 'not-found')}" class="main-page"></not-found>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
-              <settings-module id="settings" class="main-page"></settings-module>
-            </template>
+            <settings-module
+              ?hidden="${!this._activeModuleIs(this.module, 'settings')}"
+              id="settings"
+              class="main-page"
+            ></settings-module>
           </main>
 
           <page-footer></page-footer>
-
-          <div id="floating-footer" hidden>
-            <strong> AMENDMENT MODE </strong>
-            | All fields in the details tab are now open for editing. Please save before clicking "I am done".
-            <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
-          </div>
         </app-header-layout>
       </app-drawer-layout>
 
-      <data-refresh-dialog id="dataRefreshDialog" page="[[module]]"></data-refresh-dialog>
+      <data-refresh-dialog id="dataRefreshDialog" .page="${this.module}"></data-refresh-dialog>
 
       <partners-list-data></partners-list-data>
       <agreements-list-data></agreements-list-data>
@@ -259,17 +285,24 @@ class AppShell extends connect(store)(
   @property({type: String})
   _page = '';
 
+  private _module!: string;
   /**
    * `module` property represents the current displayed module of the PMP app.
    * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
    * Main modules will have other pages and routing (prefixed by app-shell route).
    */
   @property({
-    type: String,
-    reflectToAttribute: true,
-    observer: AppShell.prototype._moduleChanged
+    type: String
   })
-  module!: string;
+  get module() {
+    return this._module;
+  }
+
+  set module(val: string) {
+    this._moduleChanged(val, this._module);
+    this._module = val;
+    this._scrollToTopOnPageChange(this._module);
+  }
 
   @property({type: Object})
   route!: GenericObject;
@@ -285,7 +318,7 @@ class AppShell extends connect(store)(
   @property({type: String})
   rootPath!: string;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean})
   narrow!: boolean;
 
   @property({type: Object})
@@ -303,11 +336,19 @@ class AppShell extends connect(store)(
   @property({type: String})
   _appModuleMainElUrlTmpl = './components/pages/##module##/##main-el-name##-module.js';
 
-  @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
-  appLocRoute!: {
+  private _appLocRoute!: {
     path: string;
     __queryParams: GenericObject;
   };
+  @property({type: Object})
+  get appLocRoute() {
+    return this._appLocRoute;
+  }
+
+  set appLocRoute(val: any) {
+    this._appLocRoute = val;
+    this.appLocRouteChanged(val);
+  }
 
   @property({type: Object})
   leavePageDialog!: EtoolsDialog;
@@ -325,7 +366,7 @@ class AppShell extends connect(store)(
   currentLanguageIsSet!: boolean;
 
   public static get observers() {
-    return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
+    return ['_routePageChanged(routeData.module)'];
   }
 
   ready() {
@@ -333,8 +374,10 @@ class AppShell extends connect(store)(
 
     this._initListeners();
     this._createLeavePageDialog();
-    if (this.$.appHeadLayout) {
-      window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+    if (this.shadowRoot?.querySelector('#appHeadLayout')) {
+      window.EtoolsEsmmFitIntoEl = this.shadowRoot
+        ?.querySelector('appHeadLayout')!
+        .shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
     if (this.module !== 'not-found') {
@@ -525,7 +568,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
+    store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
   }
 
   private _showConfirmNewVersionDialog() {
@@ -596,7 +639,7 @@ class AppShell extends connect(store)(
   }
 
   private _openDataRefreshDialog() {
-    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
+    (this.shadowRoot?.querySelector('#dataRefreshDialog')! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {
@@ -649,7 +692,7 @@ class AppShell extends connect(store)(
     });
 
     // Close a non-persistent drawer when the module & route are changed.
-    const appDrawer = this.$.drawer as AppDrawerElement;
+    const appDrawer = this.shadowRoot?.querySelector('#drawer') as AppDrawerElement;
     if (!appDrawer.persistent) {
       appDrawer.close();
     }

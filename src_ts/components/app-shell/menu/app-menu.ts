@@ -157,7 +157,7 @@ class AppMenu extends connect(store)(
   selectedOption = '';
 
   @property({type: String})
-  rootPath = '';
+  rootPath = BASE_URL;
 
   private _smallMenu = false;
   @property({
