@@ -107,6 +107,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
       // reset callback
       this.handleSuccResponseAdditionalCallback = null;
     }
+
     if (ajaxMethod !== 'GET') {
       // 'agreement_number_status' is not retrieved from API
       response.agreement_number_status = this._computeAgrementNumberStatus(response.agreement_number, response.status);
