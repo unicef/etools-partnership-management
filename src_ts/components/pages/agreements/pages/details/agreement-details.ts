@@ -40,7 +40,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import { isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
