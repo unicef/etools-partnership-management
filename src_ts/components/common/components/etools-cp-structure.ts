@@ -1,4 +1,3 @@
-import {PolymerElement, html} from '@polymer/polymer';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
@@ -11,15 +10,17 @@ import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property} from '@polymer/decorators';
-import CommonMixin from '../../common/mixins/common-mixin';
+import {html, LitElement, property} from 'lit-element';
+import CommonMixinLit from '../mixins/common-mixin-lit';
+import {get as getTranslation} from 'lit-translate';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @customElement
  */
-export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement)) {
-  static get template() {
+export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)) {
+  render() {
     return html`
       ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
@@ -39,17 +40,22 @@ export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement
 
       <etools-dropdown
         id="cpStructure"
-        label="[[_getTranslation('CP_STRUCTURE')]]"
+        .label="${getTranslation('CP_STRUCTURE')}"
         placeholder="&#8212;"
-        options="[[sortedCountryProgrammes]]"
+        .options="${this.sortedCountryProgrammes}"
         option-value="id"
         option-label="name"
-        selected="{{selectedCp}}"
+        .selected="${this.selectedCp}"
         hide-search
-        readonly$="[[!editMode]]"
-        required$="[[required]]"
+        ?readonly="${!this.editMode}"
+        ?required="${this.required}"
         auto-validate
         error-message="Please select CP Structure"
+        trigger-value-change-event
+        @etools-selected-item-changed="${(event: CustomEvent) => {
+          this.selectedCp = event.detail.selectedItem?.id;
+          fireEvent(this, 'selected-cp-changed', {value: this.selectedCp});
+        }}"
       >
       </etools-dropdown>
     `;
@@ -61,11 +67,19 @@ export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement
   @property({type: Array})
   sortedCountryProgrammes!: CountryProgram[];
 
-  @property({type: String, notify: true})
+  @property({type: String})
   selectedCp!: string;
 
+  private _appModuleItem?: GenericObject;
   @property({type: Object})
-  appModuleItem: GenericObject | null = null;
+  get appModuleItem() {
+    return this._appModuleItem;
+  }
+
+  set appModuleItem(val: GenericObject) {
+    this._appModuleItem = val;
+    this._countryProgrammesChanged();
+  }
 
   @property({type: String})
   module!: string;
@@ -78,13 +92,10 @@ export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement
 
   private cpInitDebouncer!: Debouncer;
 
-  static get observers() {
-    return ['_countryProgrammesChanged(countryProgrammes, appModuleItem)'];
-  }
-
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
       this.countryProgrammes = state.commonData!.countryProgrammes;
+      this._countryProgrammesChanged();
     }
   }
 
@@ -109,12 +120,12 @@ export class EtoolsCpStructure extends connect(store)(CommonMixin(PolymerElement
 
     const currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
 
-    this.set('selectedCp', currentCP ? currentCP.id : null);
+    this.selectedCp = currentCP ? currentCP.id : null;
   }
 
-  _countryProgrammesChanged(_countryProgrammes: CountryProgram[], appModuleItem: any) {
+  _countryProgrammesChanged() {
     this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer, timeOut.after(10), () => {
-      if (appModuleItem) {
+      if (this.appModuleItem) {
         this._prepareCpsForDisplay();
 
         if (!this.selectedCp) {

@@ -1,16 +1,15 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {property} from '@polymer/decorators';
+import {html, LitElement, property} from 'lit-element';
 
 /**
  * @polymer
  * @customElement
  */
-class PageContentHeader extends PolymerElement {
+class PageContentHeader extends LitElement {
   static get is() {
-    return 'page-content-header';
+    return '';
   }
 
-  static get template() {
+  render() {
     // language=HTML
     return html`
       <style>
@@ -85,14 +84,14 @@ class PageContentHeader extends PolymerElement {
         <slot name="title-row-actions"></slot>
       </div>
 
-      <div class="content-header-row tabs" hidden$="[[!withTabsVisible]]">
+      <div class="content-header-row tabs" ?hidden="${!this.withTabsVisible}">
         <slot name="tabs"></slot>
       </div>
     `;
   }
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean})
   withTabsVisible = false;
 }
 
-window.customElements.define(PageContentHeader.is, PageContentHeader);
+window.customElements.define('page-content-header', PageContentHeader);

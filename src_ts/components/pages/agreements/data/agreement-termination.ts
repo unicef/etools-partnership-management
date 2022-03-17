@@ -5,7 +5,7 @@ import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
-import '../../../common/components/etools-warn-message';
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-warn-message';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -71,8 +71,8 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
           </etools-upload>
         </div>
         <div class="row-h">
-          <etools-warn-message messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
-          </etools-warn-message>
+          <etools-warn-message-lit .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
+          </etools-warn-message-lit>
         </div>
       </etools-dialog>
     `;

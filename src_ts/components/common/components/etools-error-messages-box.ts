@@ -1,10 +1,9 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {html, LitElement, property} from 'lit-element';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
-import {buttonsStyles} from '../../styles/buttons-styles';
-import {property} from '@polymer/decorators';
+import {buttonsStyles} from '../../styles/buttons-styles-lit';
 
 /**
  * @polymer
@@ -12,8 +11,8 @@ import {property} from '@polymer/decorators';
  * @appliesMixin GestureEventListeners
  */
 /* eslint-disable new-cap */
-class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
-  public static get template() {
+class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
+  render() {
     // language=HTML
     return html`
       ${buttonsStyles}
@@ -72,16 +71,18 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
         }
       </style>
 
-      <etools-content-panel class="errors-box" panel-title="[[title]]">
+      <etools-content-panel ?hidden="${this.hidden}" class="errors-box" .panelTitle="${this.title}">
         <ul>
-          <template is="dom-repeat" items="[[errors]]">
-            <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
-            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">[[item]]</li>
-          </template>
+          ${this.errors.map((item) => {
+            return html`
+              <li ?hidden="${this._startsWithEmptySpace(item)}">${item}</li>
+              <li ?hidden="${!this._startsWithEmptySpace(item)}" class="cancel-li-display">${item}</li>
+            `;
+          })}
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors"> Ok </paper-button>
+          <paper-button class="primary-btn danger-btn" @tap="${this._resetErrors}"> Ok </paper-button>
         </div>
       </etools-content-panel>
     `;
@@ -90,13 +91,19 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   @property({type: String})
   title!: string;
 
-  @property({type: Array, notify: true})
-  errors = [];
+  private _errors: any[] = [];
+  @property({type: Array})
+  get errors() {
+    return this._errors;
+  }
+
+  set errors(val) {
+    this._errors = val;
+    this.hidden = this._errorsLengthChanged(this._errors);
+  }
 
   @property({
-    type: Boolean,
-    computed: '_errorsLengthChanged(errors)',
-    reflectToAttribute: true
+    type: Boolean
   })
   hidden!: boolean;
 
@@ -104,12 +111,12 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
     return val.startsWith(' ');
   }
 
-  _errorsLengthChanged(errors: []) {
+  _errorsLengthChanged(errors: any[]) {
     return !errors || (errors && !errors.length);
   }
 
   _resetErrors() {
-    this.set('errors', []);
+    this.errors = [];
   }
 }
 

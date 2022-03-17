@@ -1,10 +1,8 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
-import {_checkEnvironment} from '../../../config/config';
+import {BASE_URL, _checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -18,6 +16,8 @@ import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
+import {html, LitElement} from 'lit-element';
+import {PolymerElement} from '@polymer/polymer';
 
 store.addReducers({
   activeLanguage
@@ -27,15 +27,14 @@ store.addReducers({
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin GestureEventListeners
  * @appliesMixin ProfileOperationsMixin
  */
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(ProfileOperationsMixin(PolymerElement))
+  ProfileOperationsMixin(LitElement)
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -43,7 +42,7 @@ class PageHeader extends connect(store)(
         app-toolbar {
           padding: 0 16px 0 0;
           height: 60px;
-          background-color: var(--header-bg-color);
+          background-color: ${this.headerColor};
         }
 
         .titlebar {
@@ -205,27 +204,25 @@ class PageHeader extends connect(store)(
 
       <app-toolbar sticky class="content-align header">
         <div class="header__item">
-          <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
+          <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector"></etools-app-selector>
-            <img id="app-logo" alt="" src$="[[rootPath]]images/etools-logo-color-white.svg">
-            <template is="dom-if" if="[[environment]]">
-              <div class="envWarning">
-                <span class='envLong'> - </span>[[environment]]
-                <span class='envLong'>TESTING ENVIRONMENT<span>
-              </div>
-            </template>
+            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
+            <div class="envWarning" ?hidden="${!this.environment}">
+              <span class='envLong'> - </span>${this.environment}
+              <span class='envLong'>TESTING ENVIRONMENT<span>
+            </div>
           </div>
         </div>
 
         <div class="header__item header__right-group">
           <div class="dropdowns">
               <etools-dropdown
-                selected="[[selectedLanguage]]"
-                options="[[languages]]"
+                .selected="${this.selectedLanguage}"
+                .options="${this.languages}"
                 option-label="display_name"
                 option-value="value"
-                on-etools-selected-item-changed="languageChanged"
+                @on-etools-selected-item-changed="${this.languageChanged}"
                 trigger-value-change-event
                 hide-search
                 allow-outside-scroll
@@ -233,25 +230,27 @@ class PageHeader extends connect(store)(
                 auto-width
               ></etools-dropdown>
 
-              <countries-dropdown id="countries" countries="[[countries]]" current-country="[[profile.country]]">
+              <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${
+      this.profile?.country
+    }">
               </countries-dropdown>
 
           </div>
 
           <etools-profile-dropdown
               title="Profile and Sign out"
-              sections="[[allSections]]"
-              offices="[[allOffices]]"
-              users="[[allUsers]]"
-              profile="{{profile}}"
-              on-save-profile="_saveProfile"
-              on-sign-out="_signOut"></etools-profile-dropdown>
+              .sections="${this.allSections}"
+              .offices="${this.allOffices}"
+              .users="${this.allUsers}"
+              .profile="${this.profile}"
+              @save-profile="${this._saveProfile}"
+              @sign-out="${this._signOut}"></etools-profile-dropdown>
 
           <paper-icon-button
             title="Refresh"
             id="refresh"
             icon="refresh"
-            on-tap="_openDataRefreshDialog">
+            @tap="${this._openDataRefreshDialog}">
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -273,21 +272,13 @@ class PageHeader extends connect(store)(
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(sections)'
-  })
+  @property({type: Array})
   allSections: LabelAndValue[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(offices)'
-  })
+  @property({type: Array})
   allOffices: LabelAndValue[] = [];
 
-  @property({type: Array, notify: true, computed: '_convertUsers(users)'})
+  @property({type: Array})
   allUsers: LabelAndValue[] = [];
 
   @property({type: String})
@@ -302,6 +293,9 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
+  @property({type: String})
+  headerColor = 'var(--header-bg-color)';
+
   languages: GenericObject[] = [
     {value: 'en', display_name: 'English'},
     {value: 'ar', display_name: 'Arabic'}
@@ -309,10 +303,6 @@ class PageHeader extends connect(store)(
 
   @property({type: String})
   selectedLanguage!: string;
-
-  public static get observers() {
-    return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
-  }
 
   public connectedCallback() {
     super.connectedCallback();
@@ -326,12 +316,15 @@ class PageHeader extends connect(store)(
     }
     if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
       this.offices = [...state.commonData.offices];
+      this.allOffices = this._convertCollection(this.offices);
     }
     if (!isJsonStrMatch(state.commonData.sections, this.sections)) {
       this.sections = [...state.commonData.sections];
+      this.allSections = this._convertCollection(this.sections);
     }
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
+      this.allUsers = this._convertUsers(this.users);
     }
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
@@ -344,6 +337,8 @@ class PageHeader extends connect(store)(
     }
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
+      this._profileChanged(this.profile);
+      this._updateCountriesList(this.profile.countries_available);
 
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
@@ -358,7 +353,7 @@ class PageHeader extends connect(store)(
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (this.environment) {
-      this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
+      this.headerColor = 'var(--nonprod-header-color)';
     }
   }
 

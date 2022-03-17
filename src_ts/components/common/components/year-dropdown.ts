@@ -1,19 +1,15 @@
-import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {SharedStyles} from '../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
-import {property} from '@polymer/decorators';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {html, LitElement, property} from 'lit-element';
 
 /**
  *
  * @polymer
  * @customElement
  */
-class YearDropdown extends PolymerElement {
-  static get template() {
+class YearDropdown extends LitElement {
+  render() {
     return html`
-      ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           display: block;
@@ -32,9 +28,9 @@ class YearDropdown extends PolymerElement {
 
       <etools-dropdown
         id="yearSelector"
-        label="[[label]]"
-        options="[[years]]"
-        selected="{{selectedYear}}"
+        .label="${this.label}"
+        .options="${this.years}"
+        .selected="${this.selectedYear}"
         allow-outside-scroll
         hide-search
         required
@@ -48,21 +44,21 @@ class YearDropdown extends PolymerElement {
   @property({type: String})
   label = 'Year';
 
-  @property({type: Number, notify: true})
+  @property({type: Number})
   selectedYear!: number;
 
   @property({type: Array})
   years: any[] = [];
 
-  ready() {
-    super.ready();
+  connectedCallback() {
+    super.connectedCallback();
     const year = this._getCurrentYear();
     const optYears = [];
     for (let i = year - 5; i <= year + 5; i++) {
       optYears.push({value: i, label: i});
     }
 
-    this.set('years', optYears);
+    this.years = optYears;
   }
 
   _getCurrentYear() {
@@ -70,7 +66,7 @@ class YearDropdown extends PolymerElement {
   }
 
   validate() {
-    return (this.$.yearSelector as EtoolsDropdownEl).validate();
+    return (this.shadowRoot?.querySelector('#yearSelector') as EtoolsDropdownEl).validate();
   }
 }
 
