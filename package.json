@@ -62,7 +62,7 @@
     "@types/lodash-es": "^4.17.6",
     "@unicef-polymer/etools-ajax": "^4.3.4",
     "@unicef-polymer/etools-app-selector": "^3.1.8",
-    "@unicef-polymer/etools-behaviors": "^3.1.0-rc.4",
+    "@unicef-polymer/etools-behaviors": "^3.1.0",
     "@unicef-polymer/etools-content-panel": "^5.0.0",
     "@unicef-polymer/etools-currency-amount-input": "^3.1.5",
     "@unicef-polymer/etools-data-table": "^6.0.1",
