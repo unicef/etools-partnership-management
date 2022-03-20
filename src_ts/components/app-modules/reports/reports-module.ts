@@ -33,6 +33,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import {ReportRatingDialogEl} from './components/report-rating-dialog';
 import {ReportRejectDialogEl} from './components/report-reject-dialog';
 import {ReportsListEl} from './pages/list/reports-list';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 declare const moment: any;
 
 /**
@@ -45,7 +46,9 @@ declare const moment: any;
  * @appliesMixin ScrollControlMixin
  */
 class ReportsModule extends connect(store)(
-  ScrollControlMixin(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))
+  ScrollControlMixin(
+    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(MatomoMixin(PolymerElement))))
+  )
 ) {
   static get is() {
     return 'reports-module';
@@ -108,9 +111,7 @@ class ReportsModule extends connect(store)(
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            Partner Reports
-          </template>
+          <template is="dom-if" if="[[listActive]]"> Partner Reports </template>
           <template is="dom-if" if="[[tabsActive]]">
             <div class="secondary-title">
               <a target="_blank" href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
@@ -142,7 +143,13 @@ class ReportsModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" hidden$="[[!listActive]]">
-            <paper-menu-button id="export" close-on-activate horizontal-align="right">
+            <paper-menu-button
+              id="export"
+              close-on-activate
+              horizontal-align="right"
+              on-tap="trackAnalytics"
+              tracker="reports export"
+            >
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
@@ -155,15 +162,10 @@ class ReportsModule extends connect(store)(
           </div>
 
           <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
-            <report-status
-              status="[[report.status]]"
-              hidden$="[[statusIs(report.status, 'Sub')]]"
-            ></report-status>
+            <report-status status="[[report.status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
 
             <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
-              <paper-button slot="dropdown-trigger" class="primary-btn">
-                Accept / Send Back
-              </paper-button>
+              <paper-button slot="dropdown-trigger" class="primary-btn"> Accept / Send Back </paper-button>
               <paper-listbox slot="dropdown-content">
                 <paper-item on-tap="_accept">Accept Report</paper-item>
                 <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
@@ -421,11 +423,9 @@ class ReportsModule extends connect(store)(
 
     params.export = type;
 
-    this.fireRequest(
-      'reportIndicatorsExport',
-      {},
-      {method: 'GET', handleAs: 'blob', params: params}
-    ).then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+    this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params}).then(
+      (blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type)
+    );
   }
 
   _downloadAnexC() {

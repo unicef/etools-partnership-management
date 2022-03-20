@@ -26,6 +26,7 @@ import {fireEvent} from '../../utils/fire-custom-event.js';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 /**
  * @polymer
@@ -36,7 +37,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins = ScrollControlMixin(
-  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(PolymerElement)))
+  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(MatomoMixin((PolymerElement))))
 );
 
 /**
@@ -75,7 +76,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]">
+            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="agreements export">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 Export
@@ -362,7 +363,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    const agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown) as AgreementDetails;
+    const agreementDetailsEl = this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails;
     if (!agreementDetailsEl) {
       return false;
     }
