@@ -169,7 +169,7 @@ class PageHeader extends connect(store)(
                               current-country="[[profile.country]]">
           </countries-dropdown>
 
-          <support-btn></support-btn>
+          <support-btn on-tap="trackAnalytics" tracker="Support"></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"

@@ -132,7 +132,13 @@ class AppMenu extends connect(store)(
           <div class="name">Discussion</div>
         </a>
 
-        <a class="nav-menu-item lighter-item last-one" href="http://etoolsinfo.unicef.org" target="_blank">
+        <a
+          class="nav-menu-item lighter-item last-one"
+          href="http://etoolsinfo.unicef.org"
+          target="_blank"
+          on-tap="trackAnalytics"
+          tracker="Information"
+        >
           <iron-icon id="information-icon" icon="icons:info"></iron-icon>
           <paper-tooltip for="information-icon" position="right"> Information </paper-tooltip>
           <div class="name">Information</div>
