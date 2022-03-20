@@ -37,7 +37,7 @@ import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins = ScrollControlMixin(
-  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(MatomoMixin((PolymerElement))))
+  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(MatomoMixin(PolymerElement))))
 );
 
 /**
