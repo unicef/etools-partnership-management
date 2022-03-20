@@ -88,7 +88,7 @@ class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="partners export">
+            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="Partners export">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 Export

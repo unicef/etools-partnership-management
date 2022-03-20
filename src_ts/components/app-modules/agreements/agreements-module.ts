@@ -76,7 +76,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="agreements export">
+            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="Agreements export">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 Export

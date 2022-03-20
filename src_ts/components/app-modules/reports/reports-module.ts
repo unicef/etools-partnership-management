@@ -148,7 +148,7 @@ class ReportsModule extends connect(store)(
               close-on-activate
               horizontal-align="right"
               on-tap="trackAnalytics"
-              tracker="reports export"
+              tracker="Reports export"
             >
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>

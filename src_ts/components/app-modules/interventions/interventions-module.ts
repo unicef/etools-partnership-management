@@ -127,7 +127,7 @@ class InterventionsModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions export-options">
           <div class="action" hidden$="[[!listActive]]">
             <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-              <paper-button slot="dropdown-trigger" on-tap="trackAnalytics" tracker="intervention export">
+              <paper-button slot="dropdown-trigger" on-tap="trackAnalytics" tracker="Intervention export">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>
