@@ -7,6 +7,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
@@ -50,8 +51,10 @@ declare const dayjs: any;
  */
 @customElement('reports-module')
 export class ReportsModule extends connect(store)(
-  ScrollControlMixin(
-    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(CommonMixin(ReportDetailsMixin(LitElement))))
+  MatomoMixin(
+    ScrollControlMixin(
+      ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(CommonMixin(ReportDetailsMixin(LitElement))))
+    )
   )
 ) {
   render() {
@@ -194,8 +197,12 @@ export class ReportsModule extends connect(store)(
                 ${translate('EXPORT')}
               </paper-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._exportIndicatorsPDF}">Export Indicators - PDF</paper-item>
-                <paper-item @click="${this._exportIndicatorsXLS}">Export Indicators - XLS</paper-item>
+                <paper-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
+                  >Export Indicators - PDF</paper-item
+                >
+                <paper-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
+                  >Export Indicators - XLS</paper-item
+                >
               </paper-listbox>
             </paper-menu-button>
           </div>
@@ -440,15 +447,16 @@ export class ReportsModule extends connect(store)(
     return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
   }
 
-  _exportIndicatorsPDF() {
-    this._exportIndicators('pdf');
+  _exportIndicatorsPDF(e: CustomEvent) {
+    this._exportIndicators(e, 'pdf');
   }
 
-  _exportIndicatorsXLS() {
-    this._exportIndicators('xlsx');
+  _exportIndicatorsXLS(e: CustomEvent) {
+    this._exportIndicators(e, 'xlsx');
   }
 
-  _exportIndicators(type: string) {
+  _exportIndicators(e: CustomEvent, type: string) {
+    this.trackAnalytics(e);
     const reportsList = this.shadowRoot!.querySelector('#list') as ReportsListEl;
     if (reportsList instanceof LitElement === false) {
       return;

@@ -18,6 +18,7 @@ import {setLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 store.addReducers({
   activeLanguage
@@ -32,7 +33,7 @@ store.addReducers({
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  ProfileOperationsMixin(LitElement)
+  MatomoMixin(ProfileOperationsMixin(LitElement))
 ) {
   render() {
     // main template
@@ -250,7 +251,8 @@ class PageHeader extends connect(store)(
             title="Refresh"
             id="refresh"
             icon="refresh"
-            @tap="${this._openDataRefreshDialog}">
+            tracker="hard refresh"
+            @tap="${this._onRefreshClick}">
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -404,7 +406,11 @@ class PageHeader extends connect(store)(
     }
   }
 
-  // @ts-ignore
+  private _onRefreshClick(e: CustomEvent) {
+    this.trackAnalytics(e);
+    this._openDataRefreshDialog();
+  }
+
   private _openDataRefreshDialog() {
     fireEvent(this, 'open-data-refresh-dialog');
   }

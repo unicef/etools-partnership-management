@@ -12,6 +12,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement, property} from 'lit-element';
 import {BASE_URL} from '../../../config/config';
 
@@ -23,7 +24,7 @@ import {BASE_URL} from '../../../config/config';
  */
 class AppMenu extends connect(store)(
   // eslint-disable-next-line new-cap
-  EnvironmentFlagsMixin(LitElement)
+  MatomoMixin(EnvironmentFlagsMixin(LitElement))
 ) {
   render() {
     // main template
@@ -128,7 +129,13 @@ class AppMenu extends connect(store)(
           <div class="name">Implementation Intelligence</div>
         </a>
 
-        <a class="nav-menu-item lighter-item" href="http://etools.zendesk.com" target="_blank">
+        <a
+          class="nav-menu-item lighter-item"
+          href="http://etools.zendesk.com"
+          target="_blank"
+          @tap="${this.trackAnalytics}"
+          tracker="Knowledge base"
+        >
           <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
           <paper-tooltip for="knoledge-icon" position="right">Knowledge base</paper-tooltip>
           <div class="name">Knowledge base</div>
@@ -138,13 +145,21 @@ class AppMenu extends connect(store)(
           class="nav-menu-item lighter-item"
           href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
           target="_blank"
+          @tap="${this.trackAnalytics}"
+          tracker="Discussion"
         >
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
           <paper-tooltip for="discussion-icon" position="right">Discussion</paper-tooltip>
           <div class="name">Discussion</div>
         </a>
 
-        <a class="nav-menu-item lighter-item last-one" href="http://etoolsinfo.unicef.org" target="_blank">
+        <a
+          class="nav-menu-item lighter-item last-one"
+          href="http://etoolsinfo.unicef.org"
+          target="_blank"
+          @tap="${this.trackAnalytics}"
+          tracker="Information"
+        >
           <iron-icon id="information-icon" icon="icons:info"></iron-icon>
           <paper-tooltip for="information-icon" position="right">Information</paper-tooltip>
           <div class="name">Information</div>

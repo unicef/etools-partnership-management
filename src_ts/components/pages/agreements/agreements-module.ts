@@ -10,6 +10,7 @@ import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-com
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import CONSTANTS from '../../../config/app-constants.js';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/etools-tabs';
 import '../../common/components/etools-error-messages-box';
@@ -38,8 +39,8 @@ import {isJsonStrMatch} from '../../utils/utils';
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin EndpointsMixin
  */
-const AgreementsModuleRequiredMixins = ScrollControlMixin(
-  CommonMixinLit(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(LitElement)))
+const AgreementsModuleRequiredMixins = MatomoMixin(
+  ScrollControlMixin(CommonMixinLit(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(LitElement))))
 );
 
 /**
@@ -118,7 +119,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" href="${this.csvDownloadUrl}">
+            <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
