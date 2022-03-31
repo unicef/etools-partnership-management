@@ -129,19 +129,19 @@ export class InterventionsList extends connect(store)(
           <etools-data-table-column class="col-3" field="partner_name" sortable>
             ${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="document_type">
+          <etools-data-table-column class="col-1" field="document_type">
             ${translate('INTERVENTIONS_LIST.DOC_TYPE')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="status">
+          <etools-data-table-column class="col-2" field="status">
             ${translate('GENERAL.STATUS')}
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
             ${translate('INTERVENTIONS_LIST.TITLE')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="start" sortable>
+          <etools-data-table-column class="col-1" field="start" sortable>
             ${translate('INTERVENTIONS_LIST.START_DATE')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="end" sortable>
+          <etools-data-table-column class="col-1" field="end" sortable>
             ${translate('INTERVENTIONS_LIST.END_DATE')}
           </etools-data-table-column>
         </etools-data-table-header>
@@ -168,15 +168,11 @@ export class InterventionsList extends connect(store)(
               >
                 <span>${this.getDisplayValue(intervention.partner_name)}</span>
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
                 ${this.getDisplayValue(intervention.document_type)}
               </span>
-              <div
-                class="flex-c capitalize col_type layout-vertical"
-                data-col-header-label="${translate('GENERAL.STATUS')}"
-              >
-                <div>${this.mapStatus(intervention)}</div>
-                <div>${this.getDevelopementStatusDetails(intervention)}</div>
+              <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
+                <div>${this.getStatusCellText(intervention)}</div>
               </div>
               <span
                 class="col-data col-2"
@@ -185,7 +181,7 @@ export class InterventionsList extends connect(store)(
               >
                 ${this.getDisplayValue(intervention.title)}
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon
@@ -201,7 +197,7 @@ export class InterventionsList extends connect(store)(
                   <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon
@@ -558,5 +554,9 @@ export class InterventionsList extends connect(store)(
 
   _convertToInt(data: []) {
     return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
+  }
+
+  getStatusCellText(intervention: ListItemIntervention) {
+    return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
   }
 }
