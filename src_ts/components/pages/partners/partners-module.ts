@@ -13,6 +13,7 @@ import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit'
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
 import '../../styles/page-content-header-slotted-styles';
@@ -56,11 +57,13 @@ import set from 'lodash-es/set';
 @customElement('partners-module')
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
-  GestureEventListeners(
-    CommonMixinLit(
-      // eslint-disable-next-line new-cap
-      ScrollControlMixinLit(
-        ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
+  MatomoMixin(
+    GestureEventListeners(
+      CommonMixinLit(
+        // eslint-disable-next-line new-cap
+        ScrollControlMixinLit(
+          ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
+        )
       )
     )
   )
@@ -140,7 +143,7 @@ export class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" .href="${this.csvDownloadUrl}">
+            <a target="_blank" .href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Export Partners">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
@@ -148,7 +151,11 @@ export class PartnersModule extends connect(store)(
             </a>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <paper-button class="primary-btn with-prefix" @click="${this._openNewPartnerDialog}">
+            <paper-button
+              class="primary-btn with-prefix"
+              tracker="Import Sync Partner"
+              @click="${this._openNewPartnerDialog}"
+            >
               <iron-icon icon="add"></iron-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
             </paper-button>
@@ -471,7 +478,8 @@ export class PartnersModule extends connect(store)(
     return listActive && this._hasEditPermissions(permissions);
   }
 
-  public _openNewPartnerDialog() {
+  public _openNewPartnerDialog(e: CustomEvent) {
+    this.trackAnalytics(e);
     openDialog({
       dialog: 'new-partner-dialog'
     }).then(({confirmed, response}) => {
