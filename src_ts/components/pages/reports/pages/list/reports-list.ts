@@ -112,7 +112,12 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
       ></iron-media-query>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+          .textFilters="${translate('GENERAL.FILTERS')}"
+          .textClearAll="${translate('GENERAL.CLEAR_ALL')}"
+        ></etools-filters>
       </section>
 
       <div id="list" class="paper-material elevation" elevation="1">

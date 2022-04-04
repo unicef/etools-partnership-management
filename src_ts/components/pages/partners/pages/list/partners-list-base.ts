@@ -122,6 +122,8 @@ export class PartnersListBase extends CommonMixin(
           .filterLoadingAbsolute="${true}"
           .filters="${this.allFilters}"
           @filter-change="${this.filtersChange}"
+          .textFilters="${translate('GENERAL.FILTERS')}"
+          .textClearAll="${translate('GENERAL.CLEAR_ALL')}"
         ></etools-filters>
       </section>
 
