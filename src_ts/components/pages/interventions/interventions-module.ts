@@ -7,6 +7,7 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
 import '../../styles/page-content-header-slotted-styles.js';
 import '../../common/components/etools-error-messages-box.js';
@@ -49,9 +50,11 @@ setStore(store);
 
 @customElement('interventions-module')
 export class InterventionsModule extends connect(store)(
-  ScrollControlMixinLit(
-    ModuleMainElCommonFunctionalityMixinLit(
-      ModuleRoutingMixinLit(CommonMixinLit(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement))))
+  MatomoMixin(
+    ScrollControlMixinLit(
+      ModuleMainElCommonFunctionalityMixinLit(
+        ModuleRoutingMixinLit(CommonMixinLit(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement))))
+      )
     )
   )
 ) {
@@ -118,13 +121,13 @@ export class InterventionsModule extends connect(store)(
                   ${this._getTranslation('EXPORT')}
                 </paper-button>
                 <paper-listbox slot="dropdown-content">
-                  <paper-item @tap="${this._exportPdBudget}"
+                  <paper-item @tap="${this._exportPdBudget}" tracker="Export PD Budget"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</paper-item
                   >
-                  <paper-item @tap="${this._exportPdResult}"
+                  <paper-item @tap="${this._exportPdResult}" tracker="Export PD Result"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</paper-item
                   >
-                  <paper-item @tap="${this._exportPdLocations}"
+                  <paper-item @tap="${this._exportPdLocations}" tracker="Export PD Locations"
                     >${this._getTranslation('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</paper-item
                   >
                 </paper-listbox>
@@ -422,22 +425,20 @@ export class InterventionsModule extends connect(store)(
   //   });
   // }
 
-  _exportPdBudget() {
-    // @ts-ignore TODO-convert EtoolsAjaxRequestMixin to module in order for EndpointsMixin members to be visible
-    this._exportPD(pmpEdpoints.interventions.url);
+  _exportPdBudget(e: CustomEvent) {
+    this._exportPD(e, pmpEdpoints.interventions.url);
   }
 
-  _exportPdResult() {
-    // @ts-ignore
-    this._exportPD(pmpEdpoints.resultExports.url);
+  _exportPdResult(e: CustomEvent) {
+    this._exportPD(e, pmpEdpoints.resultExports.url);
   }
 
-  _exportPdLocations() {
-    // @ts-ignore
-    this._exportPD(pmpEdpoints.pdLocationsExport.url);
+  _exportPdLocations(e: CustomEvent) {
+    this._exportPD(e, pmpEdpoints.pdLocationsExport.url);
   }
 
-  _exportPD(url: string) {
+  _exportPD(e: CustomEvent, url: string) {
+    this.trackAnalytics(e);
     const csvDownloadUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + this.csvDownloadQs;
     window.open(csvDownloadUrl, '_blank');
   }

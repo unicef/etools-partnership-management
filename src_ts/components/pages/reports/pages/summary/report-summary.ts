@@ -142,17 +142,7 @@ export class ReportSummary extends CommonMixin(EtoolsCurrency(LitElement)) {
             </etools-form-element-wrapper2>
           </div>
         </div>
-        <div class="row-padding" ?hidden="${this.isPrpSRReport(this.report.report_type)}">
-          ${(this.reportAttachments || []).map(
-            (item: any, index: number) => html`
-              <div class="att">
-                <iron-label for="file_${index}"> ${item.type} </iron-label>
-
-                <a class="primary" id="file_${index}" href="${item.path}" target="_blank"> ${item.file_name} </a>
-              </div>
-            `
-          )}
-        </div>
+        ${this.renderAttachments(this.report.report_type, this.reportAttachments)}
       </div>
     `;
   }
@@ -195,6 +185,25 @@ export class ReportSummary extends CommonMixin(EtoolsCurrency(LitElement)) {
       return '-';
     }
     return val;
+  }
+
+  renderAttachments(report_type: string, reportAttachments: any[]) {
+    // DO NOT RENDER ATTACHMENTS FOR NOW (#28655)
+    return html``;
+
+    return this.isPrpSRReport(report_type)
+      ? html` <div class="row-padding">
+          ${(reportAttachments || []).map(
+            (item: any, index: number) => html`
+              <div class="att">
+                <iron-label for="file_${index}"> ${item.type} </iron-label>
+
+                <a class="primary" id="file_${index}" href="${item.path}" target="_blank"> ${item.file_name} </a>
+              </div>
+            `
+          )}
+        </div>`
+      : html``;
   }
 
   getReportStatus(status: string, username: string) {
