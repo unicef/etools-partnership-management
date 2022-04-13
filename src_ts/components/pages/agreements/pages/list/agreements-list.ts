@@ -122,7 +122,12 @@ export class AgreementsList extends connect(store)(
       </agreements-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+          .textFilters="${translate('GENERAL.FILTERS')}"
+          .textClearAll="${translate('GENERAL.CLEAR_ALL')}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
