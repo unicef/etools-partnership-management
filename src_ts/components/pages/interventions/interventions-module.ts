@@ -249,6 +249,7 @@ export class InterventionsModule extends connect(store)(
       'overview',
       'timing',
       'workplan',
+      'workplan-editor',
       'strategy',
       'attachments',
       'review',

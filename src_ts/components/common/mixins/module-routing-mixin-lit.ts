@@ -119,6 +119,7 @@ function ModuleRoutingMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
           'overview',
           'timing',
           'workplan',
+          'workplan-editor',
           'strategy',
           'attachments',
           'review',

@@ -114,6 +114,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           'overview',
           'timing',
           'workplan',
+          'workplan-editor',
           'strategy',
           'attachments',
           'review',
