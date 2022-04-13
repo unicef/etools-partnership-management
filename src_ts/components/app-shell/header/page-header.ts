@@ -180,7 +180,7 @@ class PageHeader extends connect(store)(
               on-sign-out="_signOut"></etools-profile-dropdown>
 
           <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"
-            on-tap="trackAnalytics" tracker="hard refresh"> 
+            tracker="hard refresh"> 
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -299,7 +299,9 @@ class PageHeader extends connect(store)(
   }
 
   // @ts-ignore
-  private _openDataRefreshDialog() {
+  private _openDataRefreshDialog(e) {
+    // @ts-ignore
+    this.trackAnalytics(e);
     fireEvent(this, 'open-data-refresh-dialog');
   }
 
