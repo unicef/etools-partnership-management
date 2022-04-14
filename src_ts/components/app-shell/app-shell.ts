@@ -54,7 +54,7 @@ import '@polymer/app-route/app-route.js';
 import {AppShellStyles} from './app-shell-styles';
 
 import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
-import 'etools-piwik-analytics/etools-piwik-analytics.js';
+import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from '../common-data-mixins/common-data.js';
 import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
@@ -478,7 +478,7 @@ class AppShell extends connect(store)(
   }
 
   private _openDataRefreshDialog() {
-    ((this.$.dataRefreshDialog! as unknown) as DataRefreshDialog).open();
+    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {

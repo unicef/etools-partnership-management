@@ -37,6 +37,7 @@ import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 /**
  * @polymer
@@ -54,7 +55,9 @@ class InterventionsModule extends connect(store)(
   InterventionPermissionsMixin(
     ScrollControlMixin(
       ModuleMainElCommonFunctionalityMixin(
-        ModuleRoutingMixin(InterventionPageTabsMixin(SaveInterventionMixin(EndpointsMixin(PolymerElement))))
+        ModuleRoutingMixin(
+          InterventionPageTabsMixin(SaveInterventionMixin(EndpointsMixin(MatomoMixin(PolymerElement))))
+        )
       )
     )
   )
@@ -124,7 +127,7 @@ class InterventionsModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions export-options">
           <div class="action" hidden$="[[!listActive]]">
             <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-              <paper-button slot="dropdown-trigger">
+              <paper-button slot="dropdown-trigger" on-tap="trackAnalytics" tracker="Intervention export">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>

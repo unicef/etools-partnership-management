@@ -16,6 +16,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 /**
  * @polymer
@@ -27,7 +28,7 @@ import {property} from '@polymer/decorators';
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(ProfileOperationsMixin(PolymerElement))
+  GestureEventListeners(ProfileOperationsMixin(MatomoMixin(PolymerElement)))
 ) {
   public static get template() {
     // main template
@@ -168,7 +169,7 @@ class PageHeader extends connect(store)(
                               current-country="[[profile.country]]">
           </countries-dropdown>
 
-          <support-btn></support-btn>
+          <support-btn on-tap="trackAnalytics" tracker="Support"></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
@@ -178,7 +179,9 @@ class PageHeader extends connect(store)(
               on-save-profile="_saveProfile"
               on-sign-out="_signOut"></etools-profile-dropdown>
 
-          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
+          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"
+            tracker="hard refresh"> 
+          </paper-icon-button>
         </div>
       </app-toolbar>
     `;
@@ -296,7 +299,9 @@ class PageHeader extends connect(store)(
   }
 
   // @ts-ignore
-  private _openDataRefreshDialog() {
+  private _openDataRefreshDialog(e) {
+    // @ts-ignore
+    this.trackAnalytics(e);
     fireEvent(this, 'open-data-refresh-dialog');
   }
 
