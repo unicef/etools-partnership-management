@@ -159,6 +159,7 @@ documentContainer.innerHTML = `
          /* etools-dialog styles */
         --etools-dialog-primary-color: #FFFFFF;
         --etools-dialog-contrast-text-color: var(--primary-text-color);
+        --epd-profile-dialog-border-b: solid 1px var(--dark-divider-color); 
 
         /* global loading box content */
         --etools-loading-border-color: rgba(255, 255, 255, 0.12);
