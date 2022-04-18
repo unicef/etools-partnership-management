@@ -323,7 +323,7 @@ export class PartnerOverview extends PaginationMixin(
 
   set partner(partner: Partner) {
     this._partner = partner;
-    this._initPaginator(this.partner.interventions);
+    this._initPaginator(this.partner?.interventions);
   }
 
   @property({type: Object})
@@ -353,7 +353,7 @@ export class PartnerOverview extends PaginationMixin(
   }
 
   public _initPaginator(interventions: PartnerIntervention[] = []) {
-    this.allInterventions = interventions;
+    this.allInterventions = interventions || [];
     this.paginatedInterventions = [];
     this.paginator = JSON.parse(
       JSON.stringify({
