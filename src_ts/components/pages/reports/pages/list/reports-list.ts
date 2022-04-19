@@ -186,7 +186,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
                       ? html` <span class="col-data col-2" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                           <a
                             class="pd-ref truncate"
-                            href="interventions/${report.programme_document?.external_id}/details"
+                            href="interventions/${report.programme_document?.external_id}/metadata"
                             title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
                           >
                             ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
