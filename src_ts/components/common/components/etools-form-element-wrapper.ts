@@ -90,7 +90,7 @@ class EtoolsFormElementWrapper extends LitElement {
   })
   required!: boolean;
 
-  @property({type: Boolean})
+  @property({type: Boolean, attribute: 'no-placeholder'})
   noPlaceholder = false;
 
   connectedCallback() {
@@ -101,19 +101,12 @@ class EtoolsFormElementWrapper extends LitElement {
     }
   }
 
-  _getPlaceholderClass(value: string) {
-    const cssclass = typeof value === 'string' && value.trim() !== '' ? '' : this.noPlaceholder ? '' : 'placeholder';
-    return cssclass + ' etools-form-element-wrapper';
-  }
-
   _getDisplayValue(value: string) {
-    return typeof value === 'string' && value.trim() !== ''
-      ? value == '-'
-        ? 'N/A'
-        : value.trim()
-      : this.noPlaceholder
-      ? ''
-      : '—';
+    if (this.noPlaceholder) {
+      return '';
+    }
+
+    return typeof value === 'string' && value.trim() !== '' ? (value == '-' ? 'N/A' : value.trim()) : '—';
   }
 }
 
