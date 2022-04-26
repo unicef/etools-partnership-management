@@ -101,6 +101,9 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
             margin: 5px;
           }
         }
+        #list {
+          position: relative;
+        }
       </style>
 
       <iron-media-query
