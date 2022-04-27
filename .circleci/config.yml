@@ -95,4 +95,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - pd-etools-filter
+                - small-menu
