@@ -12,6 +12,7 @@ import {Action, ActionCreator} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 import {RouteDetails} from '../../components/utils/router';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
+export const UPDATE_SMALLMENU_STATE = 'UPDATE_SMALLMENU_STATE';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
@@ -36,6 +37,13 @@ export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (ope
   return {
     type: UPDATE_DRAWER_STATE,
     opened
+  };
+};
+
+export const updateSmallMenu: any = (smallMenu: boolean) => {
+  return {
+    type: UPDATE_SMALLMENU_STATE,
+    smallMenu
   };
 };
 

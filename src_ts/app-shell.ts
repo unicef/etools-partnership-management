@@ -393,6 +393,7 @@ class AppShell extends connect(store)(
     // TODO: _page is gonna be user with pwa router, not used right now (future improvement)
     // this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
+    this.smallMenu = state.app!.smallMenu;
     this.uploadsStateChanged(state);
 
     // @ts-ignore EndpointsMixin

@@ -17,6 +17,7 @@
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js",
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js",
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js",
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js",
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js",
     "src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js",

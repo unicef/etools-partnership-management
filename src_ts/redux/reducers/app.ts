@@ -9,13 +9,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Reducer} from 'redux';
-import {UPDATE_DRAWER_STATE, AppAction} from '../actions/app.js';
+import {UPDATE_DRAWER_STATE, UPDATE_SMALLMENU_STATE} from '../actions/app.js';
 import {SHOW_TOAST, CLOSE_TOAST, UPDATE_ROUTE_DETAILS} from '../actions/actionsConstants.js';
 import {RouteDetails} from '../../components/utils/router.js';
 
 export class AppState {
   page = '';
   drawerOpened = false;
+  smallMenu = false;
   routeDetails: RouteDetails = {} as RouteDetails;
   toastNotification = {
     active: false,
@@ -26,7 +27,7 @@ export class AppState {
 
 const INITIAL_STATE = new AppState();
 
-const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
+const app: Reducer<AppState, any> = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case UPDATE_ROUTE_DETAILS:
       return {
@@ -37,6 +38,11 @@ const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         drawerOpened: action.opened
+      };
+    case UPDATE_SMALLMENU_STATE:
+      return {
+        ...state,
+        smallMenu: action.smallMenu
       };
     case SHOW_TOAST:
       return {
