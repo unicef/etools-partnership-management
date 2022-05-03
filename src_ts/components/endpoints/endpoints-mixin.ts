@@ -10,12 +10,13 @@ import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
 import get from 'lodash-es/get';
+import {LitElement} from 'lit-element';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function EndpointsMixin<T extends Constructor<PolymerElement | LitElement>>(baseClass: T) {
   class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
     @property({type: Object})
     prpCountries!: GenericObject[];

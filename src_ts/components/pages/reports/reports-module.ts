@@ -158,21 +158,21 @@ export class ReportsModule extends connect(store)(
           ${this.tabsActive
             ? html`
                 <div class="secondary-title">
-                  <a target="_blank" href="${this.rootPath}partners/${this.report.partner_org_id}/details">
-                    ${this.report.partner_org_name} - ${this.report.partner_vendor_number}
+                  <a target="_blank" href="${this.rootPath}partners/${this.report?.partner_org_id}/details">
+                    ${this.report?.partner_org_name} - ${this.report?.partner_vendor_number}
                   </a>
                 </div>
 
                 <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
                   <a
                     class="primary"
-                    href="${this.rootPath}interventions/${this.report.programme_document?.external_id}/reports"
+                    href="${this.rootPath}interventions/${this.report?.programme_document?.external_id}/reports"
                   >
-                    ${this.report.programme_document?.reference_number}
+                    ${this.report?.programme_document?.reference_number}
                   </a>
                 </span>
 
-                <span>: ${this.report.report_type}${this.report.report_number} ${this.report.reporting_period}</span>
+                <span>: ${this.report?.report_type}${this.report?.report_number} ${this.report?.reporting_period}</span>
                 <!-- <sup>
                   <report-status .status="report.status"></report-status>
                 </sup> -->
@@ -183,7 +183,7 @@ export class ReportsModule extends connect(store)(
                   animation-delay="0"
                   offset="0"
                 >
-                  ${this.report.programme_document?.title}
+                  ${this.report?.programme_document?.title}
                 </paper-tooltip>
               `
             : ''}
@@ -209,14 +209,14 @@ export class ReportsModule extends connect(store)(
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
             <report-status
-              .status="${this.report.status}"
-              ?hidden="${this.statusIs(this.report.status, 'Sub')}"
+              .status="${this.report?.status}"
+              ?hidden="${this.statusIs(this.report?.status, 'Sub')}"
             ></report-status>
 
             <paper-menu-button
               close-on-activate
               class="no-right-padd"
-              ?hidden="${!this.statusIs(this.report.status, 'Sub')}"
+              ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
             >
               <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
               <paper-listbox slot="dropdown-content">

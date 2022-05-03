@@ -125,11 +125,11 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
   anySelected = false;
 
   @property({type: String})
-  page!: string;
+  page!: string | null;
 
   open() {
-    if (!(this.shadowRoot.querySelector('#refreshDialog') as EtoolsDialog).opened) {
-      (this.shadowRoot.querySelector('#refreshDialog') as EtoolsDialog).opened = true;
+    if (!(this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened) {
+      (this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened = true;
     }
   }
 
@@ -165,7 +165,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
       active: true
     });
 
-    const afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
+    const afterDataRefreshLandingPage: string | null = this._getAfterRefreshLandingPage();
     const restampLandingPage: boolean =
       this.page === afterDataRefreshLandingPage ||
       (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
@@ -211,7 +211,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
       });
   }
 
-  _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
+  _handleSuccess(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
       text: 'Data successfully refreshed',
@@ -219,7 +219,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
     });
   }
 
-  _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
+  _handleFailure(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
       text: 'There was an error while refreshing the data',
@@ -227,7 +227,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
     });
   }
 
-  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
+  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     const routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
       this.page = null;
