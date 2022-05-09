@@ -13,6 +13,7 @@
     "REQUIRED_FIELD": "This field is required",
     "CANCEL": "Cancel",
     "YES": "Yes",
+    "NO": "No",
     "FILTERS": "Filters",
     "CLEAR_ALL": "CLEAR ALL",
     "COMMENT_MODE": "Comment Mode",
