@@ -265,7 +265,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
       </div>
 
-      <div class="col-8" ?hidden="${!this.newIntervention.contingency_pd}">
+      <div class="col-12" ?hidden="${!this.newIntervention.contingency_pd}">
         <paper-input
           label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
           placeholder="&#8212;"
