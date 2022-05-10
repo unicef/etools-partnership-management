@@ -15,7 +15,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-@customElement('etools-ram-indicators')
+@customElement('etools-ram-indicators-common')
 export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
   render() {
     return html`
