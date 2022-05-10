@@ -5,6 +5,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 import {ListFilterOption} from '../../../typings/filter.types';
 import get from 'lodash-es/get';
 import {LitElement, property} from 'lit-element';
+import {EtoolsDataTableRow} from '@unicef-polymer/etools-data-table/etools-data-table-row';
 
 function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ListsCommonClass extends baseClass {
@@ -59,7 +60,7 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
     _listDataChanged() {
       const rows = this.shadowRoot!.querySelector('#list')!.querySelectorAll(
         'etools-data-table-row'
-      ) as NodeListOf<LitElement> as any;
+      ) as NodeListOf<EtoolsDataTableRow> as any;
       if (rows && rows.length) {
         for (let i = 0; i < rows.length; i++) {
           // @ts-ignore

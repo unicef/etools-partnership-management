@@ -461,7 +461,7 @@ class InterventionItemData extends connect(store)(
       return;
     }
     const reqMethod = 'DELETE';
-    this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod})
+    this.fireRequest(this.pdEndpoints.DELETE as any, {id: id}, {method: reqMethod})
       .then(() => {
         this._handleInterventionDeleteSuccess(id);
       })

@@ -14,12 +14,13 @@ import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
 import pmpEdpoints from '../endpoints/endpoints';
+import {LitElement} from 'lit-element';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(baseClass: T) {
   class CommonDataClass extends EnvironmentFlagsPolymerMixin(EndpointsMixin(baseClass)) {
     @property({type: Object})
     commonDataEndpoints = {

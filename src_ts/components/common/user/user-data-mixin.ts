@@ -1,4 +1,3 @@
-import {LitElement} from 'lit-element';
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
@@ -17,7 +16,7 @@ import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
  */
-function UserDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
+function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
   class UserDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
     @property({type: String})
     endpointName = 'myProfile';

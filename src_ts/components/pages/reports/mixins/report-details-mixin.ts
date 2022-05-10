@@ -14,7 +14,7 @@ import pmpEdpoints from '../../../endpoints/endpoints';
 function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ReportDetailsClass extends EndpointsLitMixin(baseClass) {
     @property({type: Object})
-    report: AnyObject = {};
+    report: AnyObject | null = {};
 
     @property({type: Array})
     reportAttachments!: any[];

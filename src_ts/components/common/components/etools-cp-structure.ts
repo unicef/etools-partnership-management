@@ -14,6 +14,7 @@ import {html, LitElement, property} from 'lit-element';
 import CommonMixinLit from '../mixins/common-mixin-lit';
 import {get as getTranslation} from 'lit-translate';
 import {fireEvent} from '../../utils/fire-custom-event';
+import {PolymerElement} from '@polymer/polymer';
 
 /**
  * @polymer
@@ -68,9 +69,9 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
   sortedCountryProgrammes!: CountryProgram[];
 
   @property({type: String})
-  selectedCp!: string;
+  selectedCp!: string | null;
 
-  private _appModuleItem?: GenericObject;
+  private _appModuleItem!: GenericObject;
   @property({type: Object})
   get appModuleItem() {
     return this._appModuleItem;
@@ -120,7 +121,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
 
     const currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
 
-    this.selectedCp = currentCP ? currentCP.id : null;
+    this.selectedCp = currentCP ? currentCP.id.toString() : null;
   }
 
   _countryProgrammesChanged() {
