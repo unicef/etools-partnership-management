@@ -115,11 +115,11 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
               (result: any, resultIndex: number) => html`
                 <etools-content-panel class="content-section" panel-title="CP Output: ${result.title}">
                   <!-- RAM indicators display -->
-                  <etools-ram-indicators
+                  <etools-ram-indicators-common
                     class="row-h"
                     .interventionId="${this.report.programme_document.external_id}"
                     .cpId="${result.external_cp_output_id}"
-                  ></etools-ram-indicators>
+                  ></etools-ram-indicators-common>
 
                   ${result.ll_outputs.map(
                     (lowerResult: any, lowerResultIndex: number) => html`
