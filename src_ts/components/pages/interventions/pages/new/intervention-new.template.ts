@@ -272,6 +272,8 @@ export function template(this: InterventionNew): TemplateResult {
           ?required="${this.newIntervention.contingency_pd}"
           value="${this.newIntervention.activation_protocol || ''}"
           @value-changed="${({detail}: CustomEvent) => this.setInterventionField('activation_protocol', detail.value)}"
+          @focus="${this.resetError}"
+          @click="${this.resetError}"
         >
         </paper-input>
       </div>
