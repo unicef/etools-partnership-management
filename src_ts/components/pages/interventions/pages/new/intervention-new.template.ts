@@ -270,6 +270,7 @@ export function template(this: InterventionNew): TemplateResult {
           label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
           placeholder="&#8212;"
           ?required="${this.newIntervention.contingency_pd}"
+          error-message=${translate('GENERAL.REQUIRED_FIELD')}
           value="${this.newIntervention.activation_protocol || ''}"
           @value-changed="${({detail}: CustomEvent) => this.setInterventionField('activation_protocol', detail.value)}"
           @focus="${this.resetError}"
