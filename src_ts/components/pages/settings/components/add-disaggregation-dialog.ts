@@ -56,10 +56,7 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .newGroup {
-          width: 80px;
-        }
-
-        .staticGroup {
+          width: 85px;
           padding-inline-end: 6px;
           padding-inline-start: 10px;
         }
@@ -81,10 +78,6 @@ export class AddDisaggregationDialog extends connect(store)(
 
         .group-label {
           padding-top: 9px !important;
-        }
-
-        paper-input[required].staticGroup {
-          --required-star-style_-_background: url('./images/required.svg') no-repeat 99% 20%/6px;
         }
       </style>
 
@@ -124,7 +117,7 @@ export class AddDisaggregationDialog extends connect(store)(
                 ${(this.data || []).map(
                   (item: any, index) => html`
                     <paper-input
-                      class="newGroup staticGroup"
+                      class="newGroup"
                       no-label-float
                       label="${translate('NEW_GROUP')}"
                       .value="${item.value}"
@@ -140,6 +133,7 @@ export class AddDisaggregationDialog extends connect(store)(
                     <paper-icon-button
                       class="action delete no-padding"
                       icon="cancel"
+                      ?hidden="${index < 2}"
                       @click="${(event: CustomEvent) => this._openDeleteConfirmation(event, index)}"
                       ?data-args="${index}"
                       title="${translate('GENERAL.DELETE')}"
@@ -178,7 +172,17 @@ export class AddDisaggregationDialog extends connect(store)(
       active: true,
       disaggregation_values: []
     };
-    this.data = [];
+    // Must have at least 2 groups
+    this.data = [
+      {
+        value: undefined,
+        active: true
+      },
+      {
+        value: undefined,
+        active: true
+      }
+    ];
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
@@ -254,8 +258,8 @@ export class AddDisaggregationDialog extends connect(store)(
   validate() {
     const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
     let validGroups = true;
-    const staticElems = this.shadowRoot!.querySelectorAll('.staticGroup') as unknown as PaperInputElement[];
-    staticElems.forEach((g: PaperInputElement) => (validGroups = validGroups && g.validate()));
+    const groupsElems = this.shadowRoot!.querySelectorAll('.newGroup') as unknown as PaperInputElement[];
+    groupsElems.forEach((g: PaperInputElement) => (validGroups = g.validate() && validGroups));
     return validName && validGroups;
   }
 

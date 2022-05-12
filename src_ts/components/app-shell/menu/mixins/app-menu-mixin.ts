@@ -2,6 +2,8 @@
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {store} from '../../../../redux/store';
+import {updateSmallMenu} from '../../../../redux/actions/app';
 
 /**
  * App menu functionality mixin
@@ -70,6 +72,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
     private _smallMenuValueChanged(newVal: boolean) {
       const localStorageVal: number = newVal ? 1 : 0;
       localStorage.setItem('etoolsAppSmallMenuIsActive', String(localStorageVal));
+      store.dispatch(updateSmallMenu(newVal));
     }
 
     private _updateDrawerStyles(): void {
