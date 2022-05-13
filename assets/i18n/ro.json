@@ -181,7 +181,7 @@
   "AGREEMENTS": "Agreements",
   "ADD_NEW_AGREEMENT": "Add New Agreement",
   "AGREEMENT_DETAILS": "Agreement Details",
-  "DOCUMENT_CAN_NOT_BE_SAVED_BECAUSE_OF_MISSING_DATA_IN_DETAILS_TAB": "Document can not be saved because of missing data in Details tab",
+  "PLEASE_FILL_IN_REQUIRED_DATA": "Please fill in required data",
   "AGREEMENT_REFERENCE_NUMBER": "Agreement Reference Number",
   "PARTNER_FULL_NAME": "Partner Full Name",
   "TYPE": "Type",
