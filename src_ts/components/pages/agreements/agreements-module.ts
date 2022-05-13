@@ -257,7 +257,6 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   @property({type: String})
   moduleName = 'agreements';
 
-  @property({type: Array})
   authorizedOfficers!: [];
 
   originalAgreementData!: Agreement;
@@ -445,7 +444,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     }
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
-        text: this._getTranslation('DOCUMENT_CAN_NOT_BE_SAVED_BECAUSE_OF_MISSING_DATA_IN_DETAILS_TAB'),
+        text: this._getTranslation('PLEASE_FILL_IN_REQUIRED_DATA'),
         showCloseBtn: true
       });
       return false;

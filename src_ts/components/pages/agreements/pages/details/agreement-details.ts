@@ -40,7 +40,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
@@ -326,7 +326,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             .options="${this._getAvailableAuthOfficers(this.staffMembers, this.agreement.authorized_officers)}"
             option-value="id"
             option-label="name"
-            .selectedValues="${this.authorizedOfficers}"
+            .selectedValues="${this.getSelectedAuthOfficers(this.authorizedOfficers)}"
             trigger-value-change-event
             @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
             ?hidden="${!this._allowAuthorizedOfficersEditing(
@@ -486,9 +486,14 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
   @property({type: Object})
   set agreement(newAgr: Agreement) {
-    this._agreement = newAgr;
-    this._agreementChanged(newAgr);
-    this.debouncedPartnerChanged(this.agreement.partner);
+    console.log(newAgr?.id, this._agreement?.id, newAgr);
+    const agrIdChanged = newAgr?.id !== this._agreement?.id;
+    if (agrIdChanged) {
+      console.log('HERE');
+      this._agreement = newAgr;
+      this._agreementChanged(newAgr);
+      this.debouncedPartnerChanged(this.agreement.partner);
+    }
   }
 
   @property({type: Boolean})
@@ -507,7 +512,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   staffMembers: [] = [];
 
   @property({type: Array})
-  authorizedOfficers: string[] = [];
+  authorizedOfficers!: string[];
 
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
@@ -557,6 +562,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (!state.partners) {
       return;
     }
+
+    this.isNewAgreement = state.app?.routeDetails?.params?.itemId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
@@ -570,15 +577,14 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('editMode')) {
+    // @ts-ignore
+    if (changedProperties.has('editMode') && changedProperties['editMode'] != undefined) {
       this._editModeChanged(this.editMode);
     }
-    if (changedProperties.has('isNewAgreement')) {
+    // @ts-ignore
+    if (changedProperties.has('isNewAgreement') && changedProperties['isNewAgreement'] !== undefined) {
       this._isNewAgreementChanged(this.isNewAgreement);
     }
-    // if (changedProperties.has('authorizedOfficers')) {
-    //   this.authorizedOfficersChanged();
-    // }
   }
 
   firstUpdated(changedProperties: PropertyValues): void {
@@ -589,6 +595,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   resetOnLeave() {
     this.staffMembers = [];
+    this.agreement = new Agreement();
     this.resetControlsValidation();
   }
 
@@ -672,6 +679,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this._setDraftStatus(this.editMode, this.isNewAgreement);
       this._resetDropdown('#partner');
       this._resetDropdown('#agreementType');
+      this.authorizedOfficers = [];
     }
     fireEvent(this, 'global-loading', {
       active: false,
@@ -991,5 +999,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   onAmendmentsChanged(e: CustomEvent) {
     this.agreement.amendments = e.detail ? e.detail : [];
+  }
+
+  getSelectedAuthOfficers(authOff: any) {
+    if (authOff !== undefined) {
+      return cloneDeep(authOff);
+    }
+    return undefined;
   }
 }

@@ -93,6 +93,8 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
           id: newId
         })
       });
+    } else {
+      this.agreement = new Agreement();
     }
   }
 
