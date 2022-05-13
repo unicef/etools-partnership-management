@@ -486,10 +486,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
   @property({type: Object})
   set agreement(newAgr: Agreement) {
-    console.log(newAgr?.id, this._agreement?.id, newAgr);
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
     if (agrIdChanged) {
-      console.log('HERE');
       this._agreement = newAgr;
       this._agreementChanged(newAgr);
       this.debouncedPartnerChanged(this.agreement.partner);
