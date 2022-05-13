@@ -29,7 +29,7 @@ import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment
 import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
-import {isJsonStrMatch} from '../../utils/utils';
+import {areEqual, isJsonStrMatch} from '../../utils/utils';
 
 /**
  * @polymer
@@ -172,9 +172,10 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
             name="details"
             ?hidden="${!this._pageEquals(this.activePage, 'details')}"
             .agreement="${this.agreement}"
-            .authorizedOfficers="${this.authorizedOfficers}"
             @authorized-officers-changed="${(e: CustomEvent) => {
-              this.authorizedOfficers = e.detail;
+              if (!areEqual(this.authorizedOfficers, e.detail)) {
+                this.authorizedOfficers = e.detail;
+              }
             }}"
             .editMode="${this._hasEditPermissions(this.permissions)}"
             .isNewAgreement="${this.newAgreementActive}"
@@ -208,7 +209,6 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
 
       <agreement-item-data
         id="agreementData"
-        .agreement="${this.agreement}"
         @agreement-changed="${this.onAgreementChanged}"
         .agreementId="${this.selectedAgreementId}"
         errorEventName="agreement-save-error"

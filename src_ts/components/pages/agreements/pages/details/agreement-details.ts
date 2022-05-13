@@ -53,6 +53,7 @@ import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-drop
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
 import {resetRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 import get from 'lodash-es/get';
+import debounce from 'lodash-es/debounce';
 
 /**
  * @polymer
@@ -479,8 +480,16 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     `;
   }
 
+  private _agreement!: Agreement;
+  get agreement() {
+    return this._agreement;
+  }
   @property({type: Object})
-  agreement!: Agreement;
+  set agreement(newAgr: Agreement) {
+    this._agreement = newAgr;
+    this._agreementChanged(newAgr);
+    this.debouncedPartnerChanged(this.agreement.partner);
+  }
 
   @property({type: Boolean})
   editMode = false;
@@ -524,8 +533,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
+  private debouncedPartnerChanged!: any;
+
   connectedCallback() {
     super.connectedCallback();
+    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
 
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
@@ -558,18 +570,15 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('agreement') && !changedProperties.get('agreement')) {
-      this._agreementChanged(this.agreement);
-    }
     if (changedProperties.has('editMode')) {
       this._editModeChanged(this.editMode);
     }
     if (changedProperties.has('isNewAgreement')) {
       this._isNewAgreementChanged(this.isNewAgreement);
     }
-    if (changedProperties.has('authorizedOfficers')) {
-      this.authorizedOfficersChanged();
-    }
+    // if (changedProperties.has('authorizedOfficers')) {
+    //   this.authorizedOfficersChanged();
+    // }
   }
 
   firstUpdated(changedProperties: PropertyValues): void {
@@ -797,7 +806,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   _initAuthorizedOfficers(authOfficers: PartnerStaffMember[]) {
     if (authOfficers instanceof Array && authOfficers.length) {
       this.authorizedOfficers = authOfficers.map(function (authOfficer) {
-        return authOfficer.id + '';
+        return String(authOfficer.id);
       });
       return;
     }
@@ -893,6 +902,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItems == undefined) {
+      return;
+    }
     this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
   }
 
@@ -908,6 +920,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
     const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
     if (this.agreement.partner !== newPartner) {
       this.agreement.partner = newPartner;
@@ -917,6 +932,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerManagerChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
     if (!this.staffMembers.length && this.agreement.partner_manager) {
       // data is not loaded yet and we already have a partner_manager
       return;
@@ -925,6 +943,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
+    if (e.detail.selectedItem && e.detail.selectedItem.value == this.agreement.agreement_type) {
+      return;
+    }
     this.agreement.agreement_type = e.detail.selectedItem ? e.detail.selectedItem.value : null;
     this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
     this.afterAgreementTypeChanged();
