@@ -975,7 +975,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       return;
     }
     if (this.agreement.agreement_type === 'SSFA') {
-     // SSFAs are readonly (legacy agreements)
+      // SSFAs are readonly (legacy agreements)
       return;
     }
     if (e.detail.selectedItem && e.detail.selectedItem.value == this.agreement.agreement_type) {
