@@ -5,7 +5,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../../redux/store';
-import {SharedStyles} from '../../styles/shared-styles';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
@@ -23,7 +23,7 @@ import {PolymerElement} from '@polymer/polymer';
 export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)) {
   render() {
     return html`
-      ${SharedStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           display: flex;
