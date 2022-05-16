@@ -40,7 +40,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
@@ -53,6 +53,7 @@ import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-drop
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
 import {resetRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 import get from 'lodash-es/get';
+import debounce from 'lodash-es/debounce';
 
 /**
  * @polymer
@@ -339,7 +340,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             .options="${this._getAvailableAuthOfficers(this.staffMembers, this.agreement.authorized_officers)}"
             option-value="id"
             option-label="name"
-            .selectedValues="${this.authorizedOfficers}"
+            .selectedValues="${this.getSelectedAuthOfficers(this.authorizedOfficers)}"
             trigger-value-change-event
             @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
             ?hidden="${!this._allowAuthorizedOfficersEditing(
@@ -493,8 +494,19 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     `;
   }
 
+  private _agreement!: Agreement;
+  get agreement() {
+    return this._agreement;
+  }
   @property({type: Object})
-  agreement!: Agreement;
+  set agreement(newAgr: Agreement) {
+    const agrIdChanged = newAgr?.id !== this._agreement?.id;
+    if (agrIdChanged) {
+      this._agreement = newAgr;
+      this._agreementChanged(newAgr);
+      this.debouncedPartnerChanged(this.agreement.partner);
+    }
+  }
 
   @property({type: Boolean})
   editMode = false;
@@ -512,7 +524,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   staffMembers: [] = [];
 
   @property({type: Array})
-  authorizedOfficers: string[] = [];
+  authorizedOfficers!: string[];
 
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
@@ -541,8 +553,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
+  private debouncedPartnerChanged!: any;
+
   connectedCallback() {
     super.connectedCallback();
+    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
 
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
@@ -562,6 +577,8 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (!state.partners) {
       return;
     }
+
+    this.isNewAgreement = state.app?.routeDetails?.params?.itemId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
@@ -580,17 +597,13 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('agreement') && !changedProperties.get('agreement')) {
-      this._agreementChanged(this.agreement);
-    }
-    if (changedProperties.has('editMode')) {
+    // @ts-ignore
+    if (changedProperties.has('editMode') && changedProperties['editMode'] != undefined) {
       this._editModeChanged(this.editMode);
     }
-    if (changedProperties.has('isNewAgreement')) {
+    // @ts-ignore
+    if (changedProperties.has('isNewAgreement') && changedProperties['isNewAgreement'] !== undefined) {
       this._isNewAgreementChanged(this.isNewAgreement);
-    }
-    if (changedProperties.has('authorizedOfficers')) {
-      this.authorizedOfficersChanged();
     }
   }
 
@@ -602,6 +615,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   resetOnLeave() {
     this.staffMembers = [];
+    this.agreement = new Agreement();
     this.resetControlsValidation();
   }
 
@@ -685,6 +699,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this._setDraftStatus(this.editMode, this.isNewAgreement);
       this._resetDropdown('#partner');
       this._resetDropdown('#agreementType');
+      this.authorizedOfficers = [];
     }
     fireEvent(this, 'global-loading', {
       active: false,
@@ -819,7 +834,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   _initAuthorizedOfficers(authOfficers: PartnerStaffMember[]) {
     if (authOfficers instanceof Array && authOfficers.length) {
       this.authorizedOfficers = authOfficers.map(function (authOfficer) {
-        return authOfficer.id + '';
+        return String(authOfficer.id);
       });
       return;
     }
@@ -915,6 +930,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItems == undefined) {
+      return;
+    }
     this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
   }
 
@@ -930,6 +948,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
     const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
     if (this.agreement.partner !== newPartner) {
       this.agreement.partner = newPartner;
@@ -939,6 +960,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerManagerChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
     if (!this.staffMembers.length && this.agreement.partner_manager) {
       // data is not loaded yet and we already have a partner_manager
       return;
@@ -947,8 +971,14 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
+    if (!e.detail || e.detail.selectedItem == undefined) {
+      return;
+    }
     if (this.agreement.agreement_type === 'SSFA') {
       // SSFAs are readonly (legacy agreements)
+      return;
+    }
+    if (e.detail.selectedItem && e.detail.selectedItem.value == this.agreement.agreement_type) {
       return;
     }
     this.agreement.agreement_type = e.detail.selectedItem ? e.detail.selectedItem.value : null;
@@ -993,5 +1023,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   onAmendmentsChanged(e: CustomEvent) {
     this.agreement.amendments = e.detail ? e.detail : [];
+  }
+
+  getSelectedAuthOfficers(authOff: any) {
+    if (authOff !== undefined) {
+      return cloneDeep(authOff);
+    }
+    return undefined;
   }
 }
