@@ -122,6 +122,15 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         .year-coll {
           width: 105px;
         }
+        .ssfa-text {
+          margin-top: 4px;
+          display: block;
+        }
+        .ssfa-value {
+          font-size: 16px;
+          color: var(--primary-text-color);
+          margin-top: -6px;
+        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="${translate('AGREEMENT_DETAILS')}">
@@ -133,6 +142,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 id="agreementType"
                 label="${translate('AGREEMENT_TYPE')}"
                 placeholder="&#8212;"
+                ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}"
                 .options="${this.agreementTypes}"
                 .selected="${this.agreement.agreement_type}"
                 trigger-value-change-event
@@ -144,6 +154,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                 required
               >
               </etools-dropdown>
+              <div ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+                <label class="paper-label ssfa-text">${translate('AGREEMENT_TYPE')}</label>
+                <label class="paper-label ssfa-value">${this.ssfaTypeText}</label>
+              </div>
             </div>
             <div class="year-col" ?hidden="${!this._showYearDropdown(this.agreement.status)}">
               <year-dropdown
@@ -518,6 +532,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: String})
   generatePCAMessage = getTranslation('SAVE_BEFORE_GENERATING_PCA_TEMPLATE');
 
+  @property({type: String})
+  ssfaTypeText = 'Small Scale Funding Agreement';
+
   @property({type: Boolean})
   allowAoEditForSSFA = false;
 
@@ -552,6 +569,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     const agreementTypes = (state.commonData!.agreementTypes || []).filter((ag: LabelAndValue) => ag.value !== 'SSFA');
     if (!isJsonStrMatch(this.agreementTypes, agreementTypes)) {
       this.agreementTypes = agreementTypes;
+    }
+
+    const ssfaOption = (state.commonData!.agreementTypes || []).find((x) => x.value === 'SSFA');
+    if (ssfaOption) {
+      this.ssfaTypeText = ssfaOption.label;
     }
 
     this.uploadsStateChanged(state);
@@ -925,6 +947,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
+    if (this.agreement.agreement_type === 'SSFA') {
+      // SSFAs are readonly (legacy agreements)
+      return;
+    }
     this.agreement.agreement_type = e.detail.selectedItem ? e.detail.selectedItem.value : null;
     this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
     this.afterAgreementTypeChanged();
