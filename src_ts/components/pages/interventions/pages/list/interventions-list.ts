@@ -292,8 +292,7 @@ export class InterventionsList extends connect(store)(
   prevQueryStringObj: GenericObject = {
     size: 10,
     page: 1,
-    sort: 'partner_name.asc',
-    status: 'draft,signed,active,ended,suspended'
+    sort: 'start.desc'
   };
 
   @property({type: Object})
