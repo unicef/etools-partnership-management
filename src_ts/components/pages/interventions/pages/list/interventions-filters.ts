@@ -61,7 +61,7 @@ export function getInterventionFilters() {
       optionValue: 'id',
       optionLabel: 'name',
       selectedValue: [],
-      selected: true,
+      selected: false,
       minWidth: '400px',
       hideSearch: true
     },
@@ -190,7 +190,7 @@ export function getInterventionFilters() {
       optionLabel: 'name',
       selectionOptions: [],
       selectedValue: [],
-      selected: false,
+      selected: true,
       minWidth: '400px'
     },
     {
