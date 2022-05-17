@@ -164,10 +164,7 @@ export class ReportsModule extends connect(store)(
                 </div>
 
                 <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
-                  <a
-                    class="primary"
-                    href="${this.rootPath}interventions/${this.report?.programme_document?.external_id}/reports"
-                  >
+                  <a class="primary" href="${this._getTitleLink(this.report)}">
                     ${this.report?.programme_document?.reference_number}
                   </a>
                 </span>
@@ -445,6 +442,10 @@ export class ReportsModule extends connect(store)(
 
   _computeReportFilename(report: any) {
     return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
+  }
+
+  _getTitleLink(report: any) {
+    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/progress/reports`;
   }
 
   _exportIndicatorsPDF(e: CustomEvent) {
