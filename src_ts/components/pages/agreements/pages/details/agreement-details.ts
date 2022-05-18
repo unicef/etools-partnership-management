@@ -502,9 +502,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   set agreement(newAgr: Agreement) {
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
     if (agrIdChanged) {
-      this._agreement = newAgr;
-      this._agreementChanged(newAgr);
-      this.debouncedPartnerChanged(this.agreement.partner);
+      setTimeout(() => {
+        this._agreement = newAgr;
+        this._agreementChanged(newAgr);
+        this.debouncedPartnerChanged(this.agreement.partner);
+      });
     }
   }
 
