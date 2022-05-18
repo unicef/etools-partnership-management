@@ -503,6 +503,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
     if (agrIdChanged) {
       setTimeout(() => {
+        // Timeout needed because this code might execute before connectedCallback otherwise
         this._agreement = newAgr;
         this._agreementChanged(newAgr);
         this.debouncedPartnerChanged(this.agreement.partner);
@@ -513,8 +514,16 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Boolean})
   editMode = false;
 
+  private _isNewAgreement = false;
   @property({type: Boolean})
-  isNewAgreement = false;
+  set isNewAgreement(val: boolean) {
+    this._isNewAgreement = val;
+    this._isNewAgreementChanged(val);
+  }
+
+  get isNewAgreement() {
+    return this._isNewAgreement;
+  }
 
   @property({type: Array})
   partnersDropdownData!: any[];
@@ -602,10 +611,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     // @ts-ignore
     if (changedProperties.has('editMode') && changedProperties['editMode'] != undefined) {
       this._editModeChanged(this.editMode);
-    }
-    // @ts-ignore
-    if (changedProperties.has('isNewAgreement') && changedProperties['isNewAgreement'] !== undefined) {
-      this._isNewAgreementChanged(this.isNewAgreement);
     }
   }
 
@@ -998,10 +1003,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.PCA) {
       // reset country_programme as it's available only for PCA type
       this.agreement.country_programme = null;
-      // reset start and end date
-      // TODO: decide if we reset start and end dates when type is changed
-      // this.set('agreement.start', null);
-      // this.set('agreement.end', null);
     } else {
       const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
       if (cpField) {
