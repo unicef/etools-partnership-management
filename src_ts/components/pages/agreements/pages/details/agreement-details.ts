@@ -944,7 +944,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAmendmentsOfficersChanged(e: CustomEvent) {
-    this.setAuthorizedOfficers(e.detail ? e.detail : []);
+    //   this.setAuthorizedOfficers(e.detail ? e.detail : []);
   }
 
   setAuthorizedOfficers(ao: string[]) {

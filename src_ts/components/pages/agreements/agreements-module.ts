@@ -179,7 +179,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
               }
             }}"
             .editMode="${this._hasEditPermissions(this.permissions)}"
-            @save-agreement="${this._validateAndTriggerAgreementSave}"
+            @save-amendment="${this.saveAmendment}"
           >
           </agreement-details>
         </div>
@@ -414,6 +414,17 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
     this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
     fireEvent(this, 'clear-server-errors');
+  }
+
+  saveAmendment(event: CustomEvent) {
+    const agrDataToSave: Partial<Agreement> = {};
+    agrDataToSave.id = this.agreement.id;
+    agrDataToSave.amendments = event.detail.amendment;
+    if (event.detail.ao && event.detail.ao.length > 0) {
+      agrDataToSave.authorized_officers = event.detail.ao;
+    }
+    this._saveAgreement(agrDataToSave);
+    return true;
   }
 
   _validateAndTriggerAgreementSave(e: CustomEvent) {

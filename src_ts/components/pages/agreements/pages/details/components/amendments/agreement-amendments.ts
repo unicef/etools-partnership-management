@@ -234,7 +234,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
 
       if (data.ao instanceof Array && data.ao.length > 0) {
         this.selectedAo = data.ao;
-        fireEvent(this, 'selected-ao-changed', this.selectedAo);
+        // fireEvent(this, 'selected-ao-changed', this.selectedAo);
       }
       this.dispatchEvent(
         new CustomEvent('data-items-changed', {
@@ -243,7 +243,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
           detail: this.dataItems
         })
       );
-      fireEvent(this, 'save-agreement');
+      fireEvent(this, 'save-amendment', {amendment: unsavedAmendment, ao: this.selectedAo});
     }
   }
 
