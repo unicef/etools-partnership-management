@@ -477,8 +477,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         ? html` <agreement-amendments
             id="agreementAmendments"
             class="content-section"
-            .dataItems="${this.agreement.amendments}"
-            @data-items-changed="${this.onAmendmentsChanged}"
+            .dataItems="${cloneDeep(this.amendments)}"
             .agreementType="${this.agreement.agreement_type}"
             .editMode="${this.agreement.permissions?.edit.amendments}"
             .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
@@ -487,7 +486,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               this.agreement.authorized_officers
             )}"
             .selectedAo="${this.authorizedOfficers}"
-            @selected-ao-changed="${this.onAmendmentsOfficersChanged}"
           >
           </agreement-amendments>`
         : ''}
@@ -540,6 +538,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
 
+  // Redundant prop, but doesn't re-render when using directly agreement.amendments
   @property({type: Array})
   amendments: [] = [];
 
@@ -1024,9 +1023,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     this.agreement.reference_number_year = e.detail.value;
   }
 
-  onAmendmentsChanged(e: CustomEvent) {
-    this.agreement.amendments = e.detail ? e.detail : [];
-  }
+  // onAmendmentsChanged(e: CustomEvent) {
+  //   this.agreement.amendments = e.detail ? e.detail : [];
+  // }
 
   getSelectedAuthOfficers(authOff: any) {
     if (authOff !== undefined) {

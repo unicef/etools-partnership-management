@@ -3,7 +3,7 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
-import {store} from '../../../redux/store';
+import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
@@ -25,12 +25,15 @@ import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
-import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {areEqual, isJsonStrMatch} from '../../utils/utils';
 import {AgreementDetails} from './pages/details/agreement-details';
+import {connect} from 'pwa-helpers/connect-mixin';
+import get from 'lodash-es/get';
+import {replaceAppState} from '../../utils/navigation-helper';
 
 /**
  * @polymer
@@ -50,7 +53,7 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
  * @appliesMixin AgreementsModuleRequiredMixins
  */
 @customElement('agreements-module')
-export class AgreementsModule extends AgreementsModuleRequiredMixins {
+export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
   render() {
     // language=HTML
     return html`
@@ -173,6 +176,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
             name="details"
             ?hidden="${!this._pageEquals(this.activePage, 'details')}"
             .agreement="${cloneDeep(this.agreement)}"
+            .amendments="${cloneDeep(this.agreement?.amendments)}"
             @authorized-officers-changed="${(e: CustomEvent) => {
               if (!areEqual(this.authorizedOfficers, e.detail)) {
                 this.authorizedOfficers = e.detail;
@@ -285,6 +289,19 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     super.disconnectedCallback();
     this._removeListeners();
   }
+  stateChanged(state: RootState) {
+    if (get(state, 'app.routeDetails.routeName') != 'agreements') {
+      return;
+    }
+
+    if (!state.app?.routeDetails!.subRouteName) {
+      replaceAppState('/pmp/agreements/list', '', true);
+    }
+
+    const currentAgrId = state.app?.routeDetails?.params?.agreementId;
+    this.newAgreementActive = currentAgrId === 'new';
+    this.selectedAgreementId = isNaN(currentAgrId) ? null : currentAgrId;
+  }
 
   _initListeners() {
     this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
@@ -296,15 +313,15 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('agreement')) {
-      this._agreementChanged(this.agreement);
-    }
-    if (changedProperties.has('routeData')) {
-      this._observeRouteDataId(this.routeData.id);
-    }
-    if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
-      this.newAgreementActive = this._updateNewItemPageFlag();
-    }
+    // if (changedProperties.has('agreement')) {
+    //   this._agreementChanged(this.agreement);
+    // }
+    // if (changedProperties.has('routeData')) {
+    //   this._observeRouteDataId(this.routeData.id);
+    // }
+    // if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
+    //   this.newAgreementActive = this._updateNewItemPageFlag();
+    // }
     if (
       changedProperties.has('listActive') ||
       changedProperties.has('tabsActive') ||
@@ -399,16 +416,16 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     this._handleAgreementSelectionLoadingMsg();
   }
 
-  _observeRouteDataId(idStr: string) {
-    if (typeof idStr === 'undefined') {
-      return;
-    }
-    let id: number | null = parseInt(idStr, 10);
-    if (isNaN(id)) {
-      id = null;
-    }
-    this.selectedAgreementId = id;
-  }
+  // _observeRouteDataId(idStr: string) {
+  //   if (typeof idStr === 'undefined') {
+  //     return;
+  //   }
+  //   let id: number | null = parseInt(idStr, 10);
+  //   if (isNaN(id)) {
+  //     id = null;
+  //   }
+  //   this.selectedAgreementId = id;
+  // }
 
   _agreementChanged(agreement: Agreement) {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
@@ -439,7 +456,7 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
       agrDataToSave = this._prepareNewAgreementDataForSave(currentAgreement);
     } else {
       agrDataToSave = this._getCurrentChanges(currentAgreement);
-      agrDataToSave.id = this.agreement.id; // we need the id
+      agrDataToSave.id = this.agreement.id;
     }
 
     this._saveAgreement(agrDataToSave);
@@ -546,15 +563,15 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
       if (this._primitiveFieldIsModified('country_programme', currentAgreement)) {
         changes.country_programme = currentAgreement.country_programme;
       }
-      if (this._objectFieldIsModified('amendments', currentAgreement)) {
-        // keep only new amendments
-        if (currentAgreement.amendments) {
-          changes.amendments = currentAgreement.amendments.filter(
-            (a: AgreementAmendment) =>
-              !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
-          );
-        }
-      }
+      // if (this._objectFieldIsModified('amendments', currentAgreement)) {
+      //   // keep only new amendments
+      //   if (currentAgreement.amendments) {
+      //     changes.amendments = currentAgreement.amendments.filter(
+      //       (a: AgreementAmendment) =>
+      //         !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
+      //     );
+      //   }
+      // }
     }
 
     return changes;
@@ -616,6 +633,15 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   onAgreementChanged(e: CustomEvent) {
     if (!isJsonStrMatch(this.agreement, e.detail)) {
       this.agreement = cloneDeep(e.detail);
+      this._agreementChanged(e.detail);
+      // this.agreement.amendments = new Proxy(this.agreement.amendments!, {
+      //   set(obj: any, property: string, val: any): void {
+      //     if (!obj[property] || !!obj[property].length) {
+      //       console.trace();
+      //     }
+      //     obj[property] = val;
+      //   }
+      // });
     }
   }
 

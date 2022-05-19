@@ -130,15 +130,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
             (item: any) => html`
               <etools-data-table-row no-collapse>
                 <div slot="row-data">
-                  <span class="col-data col-1">
-                    ${item.id ? html`${item.number}` : ``}
-                    ${!item.id
-                      ? html`<etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
-                          <span slot="field">${translate('NOT_SAVED')}</span>
-                          <span slot="message">${translate('USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT')}</span>
-                        </etools-info-tooltip>`
-                      : ``}
-                  </span>
+                  <span class="col-data col-1"> ${item.id ? html`${item.number}` : ``} </span>
                   <span class="col-data col-4">${this._getReadonlyAmendmentTypes(item.types)}</span>
                   <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
                   <span class="col-data flex-c">
@@ -203,7 +195,7 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('dataItems')) {
-      fireEvent(this, 'data-items-changed', this.dataItems);
+      // fireEvent(this, 'data-items-changed', this.dataItems);
     }
   }
 
@@ -220,29 +212,29 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
       if (!confirmed || !response) {
         return;
       }
-      this.saveNewAmendment(response);
+      this.fireSaveAmendment(response);
     });
   }
 
-  saveNewAmendment(data: any) {
+  fireSaveAmendment(data: any) {
     const unsavedAmendment = data.amendment;
     if (unsavedAmendment) {
-      if (!this.dataItems) {
-        this.dataItems = [];
-      }
-      this.dataItems.push(unsavedAmendment);
+      // if (!this.dataItems) {
+      //   this.dataItems = [];
+      // }
+      // this.dataItems.push(unsavedAmendment);
 
-      if (data.ao instanceof Array && data.ao.length > 0) {
-        this.selectedAo = data.ao;
-        // fireEvent(this, 'selected-ao-changed', this.selectedAo);
-      }
-      this.dispatchEvent(
-        new CustomEvent('data-items-changed', {
-          bubbles: true,
-          composed: true,
-          detail: this.dataItems
-        })
-      );
+      // if (data.ao instanceof Array && data.ao.length > 0) {
+      //   this.selectedAo = data.ao;
+      //   // fireEvent(this, 'selected-ao-changed', this.selectedAo);
+      // }
+      // this.dispatchEvent(
+      //   new CustomEvent('data-items-changed', {
+      //     bubbles: true,
+      //     composed: true,
+      //     detail: this.dataItems
+      //   })
+      // );
       fireEvent(this, 'save-amendment', {amendment: unsavedAmendment, ao: this.selectedAo});
     }
   }
