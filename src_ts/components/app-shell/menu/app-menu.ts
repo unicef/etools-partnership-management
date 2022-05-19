@@ -100,7 +100,7 @@ class AppMenu extends connect(store)(
 
         <a
           class="nav-menu-item lighter-item no-transform"
-          href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/5e60ab16-cce5-4c21-8620-de0c4c6415de/ReportSectionfe8562e6ef8c4eddcb52?chromeless=1"
+          href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
           target="_blank"
         >
           <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
