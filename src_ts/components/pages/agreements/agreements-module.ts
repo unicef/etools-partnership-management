@@ -313,15 +313,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   }
 
   updated(changedProperties: PropertyValues) {
-    // if (changedProperties.has('agreement')) {
-    //   this._agreementChanged(this.agreement);
-    // }
-    // if (changedProperties.has('routeData')) {
-    //   this._observeRouteDataId(this.routeData.id);
-    // }
-    // if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
-    //   this.newAgreementActive = this._updateNewItemPageFlag();
-    // }
     if (
       changedProperties.has('listActive') ||
       changedProperties.has('tabsActive') ||
@@ -415,17 +406,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
     this._handleAgreementSelectionLoadingMsg();
   }
-
-  // _observeRouteDataId(idStr: string) {
-  //   if (typeof idStr === 'undefined') {
-  //     return;
-  //   }
-  //   let id: number | null = parseInt(idStr, 10);
-  //   if (isNaN(id)) {
-  //     id = null;
-  //   }
-  //   this.selectedAgreementId = id;
-  // }
 
   _agreementChanged(agreement: Agreement) {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
@@ -634,14 +614,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     if (!isJsonStrMatch(this.agreement, e.detail)) {
       this.agreement = cloneDeep(e.detail);
       this._agreementChanged(e.detail);
-      // this.agreement.amendments = new Proxy(this.agreement.amendments!, {
-      //   set(obj: any, property: string, val: any): void {
-      //     if (!obj[property] || !!obj[property].length) {
-      //       console.trace();
-      //     }
-      //     obj[property] = val;
-      //   }
-      // });
+      this.requestUpdate();
     }
   }
 

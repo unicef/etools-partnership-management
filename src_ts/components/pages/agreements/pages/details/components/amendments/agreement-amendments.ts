@@ -193,12 +193,6 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
     }
   }
 
-  updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('dataItems')) {
-      // fireEvent(this, 'data-items-changed', this.dataItems);
-    }
-  }
-
   _openAddAgAmendmentDialog() {
     const amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
     openDialog({
@@ -219,22 +213,6 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
   fireSaveAmendment(data: any) {
     const unsavedAmendment = data.amendment;
     if (unsavedAmendment) {
-      // if (!this.dataItems) {
-      //   this.dataItems = [];
-      // }
-      // this.dataItems.push(unsavedAmendment);
-
-      // if (data.ao instanceof Array && data.ao.length > 0) {
-      //   this.selectedAo = data.ao;
-      //   // fireEvent(this, 'selected-ao-changed', this.selectedAo);
-      // }
-      // this.dispatchEvent(
-      //   new CustomEvent('data-items-changed', {
-      //     bubbles: true,
-      //     composed: true,
-      //     detail: this.dataItems
-      //   })
-      // );
       fireEvent(this, 'save-amendment', {amendment: unsavedAmendment, ao: this.selectedAo});
     }
   }

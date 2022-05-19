@@ -493,10 +493,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   private _agreement!: Agreement;
+  @property({type: Object})
   get agreement() {
     return this._agreement;
   }
-  @property({type: Object})
+
   set agreement(newAgr: Agreement) {
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
     if (agrIdChanged) {
@@ -513,12 +514,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   editMode = false;
 
   private _isNewAgreement = false;
-  @property({type: Boolean})
+
   set isNewAgreement(val: boolean) {
     this._isNewAgreement = val;
     this._isNewAgreementChanged(val);
   }
-
+  @property({type: Boolean})
   get isNewAgreement() {
     return this._isNewAgreement;
   }
@@ -588,7 +589,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       return;
     }
 
-    this.isNewAgreement = state.app?.routeDetails?.params?.itemId === 'new';
+    this.isNewAgreement = state.app?.routeDetails?.params?.agreementId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
@@ -942,10 +943,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
   }
 
-  onAmendmentsOfficersChanged(e: CustomEvent) {
-    //   this.setAuthorizedOfficers(e.detail ? e.detail : []);
-  }
-
   setAuthorizedOfficers(ao: string[]) {
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
       this.authorizedOfficers = ao;
@@ -1022,10 +1019,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   onReferenceNumberChanged(e: CustomEvent) {
     this.agreement.reference_number_year = e.detail.value;
   }
-
-  // onAmendmentsChanged(e: CustomEvent) {
-  //   this.agreement.amendments = e.detail ? e.detail : [];
-  // }
 
   getSelectedAuthOfficers(authOff: any) {
     if (authOff !== undefined) {
