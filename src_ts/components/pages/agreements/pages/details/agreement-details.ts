@@ -73,10 +73,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (!this.agreement) return;
 
     return html`
-      ${pageCommonStyles} ${sharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
+      ${sharedStyles} ${pageCommonStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
       <style>
         :host {
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
           width: 100%;
           --esmm-list-wrapper: {
             max-height: 400px;
@@ -86,8 +87,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         .type-warning {
           width: 100%;
           color: var(--warning-color);
-          @apply --layout-self-center;
-          @apply --layout-vertical;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         paper-input,
