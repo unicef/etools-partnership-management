@@ -516,8 +516,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   private _isNewAgreement = false;
 
   set isNewAgreement(val: boolean) {
-    this._isNewAgreement = val;
-    this._isNewAgreementChanged(val);
+    if (this._isNewAgreement !== val) {
+      this._isNewAgreement = val;
+      this._isNewAgreementChanged(val);
+    }
   }
   @property({type: Boolean})
   get isNewAgreement() {
