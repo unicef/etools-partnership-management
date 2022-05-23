@@ -203,6 +203,9 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
           });
         })
         .catch(function (error: any) {
+          if (error.name === 'DatabaseClosedError') {
+            window.location.reload();
+          }
           logError('Error querying interventions: ' + error, 'interventions-list-data');
           fireEvent(self, 'global-loading', {
             active: false,
