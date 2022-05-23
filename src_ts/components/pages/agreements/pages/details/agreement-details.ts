@@ -479,8 +479,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         ? html` <agreement-amendments
             id="agreementAmendments"
             class="content-section"
-            .dataItems="${this.agreement.amendments}"
-            @data-items-changed="${this.onAmendmentsChanged}"
+            .dataItems="${cloneDeep(this.amendments)}"
             .agreementType="${this.agreement.agreement_type}"
             .editMode="${this.agreement.permissions?.edit.amendments}"
             .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
@@ -489,7 +488,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               this.agreement.authorized_officers
             )}"
             .selectedAo="${this.authorizedOfficers}"
-            @selected-ao-changed="${this.onAmendmentsOfficersChanged}"
           >
           </agreement-amendments>`
         : ''}
@@ -497,24 +495,37 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   private _agreement!: Agreement;
+  @property({type: Object})
   get agreement() {
     return this._agreement;
   }
-  @property({type: Object})
+
   set agreement(newAgr: Agreement) {
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
     if (agrIdChanged) {
-      this._agreement = newAgr;
-      this._agreementChanged(newAgr);
-      this.debouncedPartnerChanged(this.agreement.partner);
+      setTimeout(() => {
+        // Timeout needed because this code might execute before connectedCallback otherwise
+        this._agreement = newAgr;
+        this._agreementChanged(newAgr);
+        this.debouncedPartnerChanged(this.agreement.partner);
+      });
     }
   }
 
   @property({type: Boolean})
   editMode = false;
 
+  private _isNewAgreement = false;
+  set isNewAgreement(val: boolean) {
+    if (this._isNewAgreement !== val) {
+      this._isNewAgreement = val;
+      this._isNewAgreementChanged(val);
+    }
+  }
   @property({type: Boolean})
-  isNewAgreement = false;
+  get isNewAgreement() {
+    return this._isNewAgreement;
+  }
 
   @property({type: Array})
   partnersDropdownData!: any[];
@@ -531,6 +542,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
 
+  // Redundant prop, but doesn't re-render when using directly agreement.amendments
   @property({type: Array})
   amendments: [] = [];
 
@@ -580,7 +592,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       return;
     }
 
-    this.isNewAgreement = state.app?.routeDetails?.params?.itemId === 'new';
+    this.isNewAgreement = state.app?.routeDetails?.params?.agreementId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
@@ -602,10 +614,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     // @ts-ignore
     if (changedProperties.has('editMode') && changedProperties['editMode'] != undefined) {
       this._editModeChanged(this.editMode);
-    }
-    // @ts-ignore
-    if (changedProperties.has('isNewAgreement') && changedProperties['isNewAgreement'] !== undefined) {
-      this._isNewAgreementChanged(this.isNewAgreement);
     }
   }
 
@@ -938,10 +946,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
   }
 
-  onAmendmentsOfficersChanged(e: CustomEvent) {
-    this.setAuthorizedOfficers(e.detail ? e.detail : []);
-  }
-
   setAuthorizedOfficers(ao: string[]) {
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
       this.authorizedOfficers = ao;
@@ -998,10 +1002,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.PCA) {
       // reset country_programme as it's available only for PCA type
       this.agreement.country_programme = null;
-      // reset start and end date
-      // TODO: decide if we reset start and end dates when type is changed
-      // this.set('agreement.start', null);
-      // this.set('agreement.end', null);
     } else {
       const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
       if (cpField) {
@@ -1021,10 +1021,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   onReferenceNumberChanged(e: CustomEvent) {
     this.agreement.reference_number_year = e.detail.value;
-  }
-
-  onAmendmentsChanged(e: CustomEvent) {
-    this.agreement.amendments = e.detail ? e.detail : [];
   }
 
   getSelectedAuthOfficers(authOff: any) {

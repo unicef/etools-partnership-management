@@ -3,7 +3,7 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
-import {store} from '../../../redux/store';
+import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
@@ -25,11 +25,16 @@ import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
-import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {areEqual, isJsonStrMatch} from '../../utils/utils';
+import {AgreementDetails} from './pages/details/agreement-details';
+import {connect} from 'pwa-helpers/connect-mixin';
+import get from 'lodash-es/get';
+import {replaceAppState} from '../../utils/navigation-helper';
+
 
 /**
  * @polymer
@@ -49,7 +54,7 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
  * @appliesMixin AgreementsModuleRequiredMixins
  */
 @customElement('agreements-module')
-export class AgreementsModule extends AgreementsModuleRequiredMixins {
+export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
   render() {
     // language=HTML
     return html`
@@ -171,15 +176,15 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
             id="agreementDetails"
             name="details"
             ?hidden="${!this._pageEquals(this.activePage, 'details')}"
-            .agreement="${this.agreement}"
+            .agreement="${cloneDeep(this.agreement)}"
+            .amendments="${cloneDeep(this.agreement?.amendments)}"
             @authorized-officers-changed="${(e: CustomEvent) => {
               if (!areEqual(this.authorizedOfficers, e.detail)) {
                 this.authorizedOfficers = e.detail;
               }
             }}"
             .editMode="${this._hasEditPermissions(this.permissions)}"
-            .isNewAgreement="${this.newAgreementActive}"
-            @save-agreement="${this._validateAndTriggerAgreementSave}"
+            @save-amendment="${this.saveAmendment}"
           >
           </agreement-details>
         </div>
@@ -285,6 +290,19 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     super.disconnectedCallback();
     this._removeListeners();
   }
+  stateChanged(state: RootState) {
+    if (get(state, 'app.routeDetails.routeName') != 'agreements') {
+      return;
+    }
+
+    if (!state.app?.routeDetails!.subRouteName) {
+      replaceAppState('/pmp/agreements/list', '', true);
+    }
+
+    const currentAgrId = state.app?.routeDetails?.params?.agreementId;
+    this.newAgreementActive = currentAgrId === 'new';
+    this.selectedAgreementId = isNaN(currentAgrId) ? null : currentAgrId;
+  }
 
   _initListeners() {
     this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
@@ -296,15 +314,6 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('agreement')) {
-      this._agreementChanged(this.agreement);
-    }
-    if (changedProperties.has('routeData')) {
-      this._observeRouteDataId(this.routeData.id);
-    }
-    if (changedProperties.has('routeData') || changedProperties.has('listActive')) {
-      this.newAgreementActive = this._updateNewItemPageFlag();
-    }
     if (
       changedProperties.has('listActive') ||
       changedProperties.has('tabsActive') ||
@@ -399,21 +408,21 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     this._handleAgreementSelectionLoadingMsg();
   }
 
-  _observeRouteDataId(idStr: string) {
-    if (typeof idStr === 'undefined') {
-      return;
-    }
-    let id: number | null = parseInt(idStr, 10);
-    if (isNaN(id)) {
-      id = null;
-    }
-    this.selectedAgreementId = id;
-  }
-
   _agreementChanged(agreement: Agreement) {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
     this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
     fireEvent(this, 'clear-server-errors');
+  }
+
+  saveAmendment(event: CustomEvent) {
+    const agrDataToSave: Partial<Agreement> = {};
+    agrDataToSave.id = this.agreement.id;
+    agrDataToSave.amendments = event.detail.amendment;
+    if (event.detail.ao && event.detail.ao.length > 0) {
+      agrDataToSave.authorized_officers = event.detail.ao;
+    }
+    this._saveAgreement(agrDataToSave);
+    return true;
   }
 
   _validateAndTriggerAgreementSave(e: CustomEvent) {
@@ -423,11 +432,12 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     }
 
     let agrDataToSave: GenericObject;
+    const currentAgreement = this.shadowRoot?.querySelector<AgreementDetails>('agreement-details')!.agreement!;
     if (this.newAgreementActive) {
-      agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement);
+      agrDataToSave = this._prepareNewAgreementDataForSave(currentAgreement);
     } else {
-      agrDataToSave = this._getCurrentChanges();
-      agrDataToSave.id = this.agreement.id; // we need the id
+      agrDataToSave = this._getCurrentChanges(currentAgreement);
+      agrDataToSave.id = this.agreement.id;
     }
 
     this._saveAgreement(agrDataToSave);
@@ -490,66 +500,67 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   // Get agreement changed properties
-  _getCurrentChanges() {
+  _getCurrentChanges(currentAgreement: Agreement) {
     const changes: GenericObject = {};
-    if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
+    if (!currentAgreement || currentAgreement.id !== this.originalAgreementData.id) {
       // prevent the possibility of checking 2 different agreements
       return {};
     }
 
-    if (this._primitiveFieldIsModified('partner')) {
-      changes.partner = this.agreement.partner;
+    if (this._primitiveFieldIsModified('partner', currentAgreement)) {
+      changes.partner = currentAgreement.partner;
     }
-    if (this._primitiveFieldIsModified('reference_number_year')) {
-      changes.reference_number_year = this.agreement.reference_number_year;
-    }
-
-    if (this._primitiveFieldIsModified('special_conditions_pca')) {
-      changes.special_conditions_pca = this.agreement.special_conditions_pca;
+    if (this._primitiveFieldIsModified('reference_number_year', currentAgreement)) {
+      changes.reference_number_year = currentAgreement.reference_number_year;
     }
 
-    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (this._primitiveFieldIsModified('special_conditions_pca', currentAgreement)) {
+      changes.special_conditions_pca = currentAgreement.special_conditions_pca;
+    }
+
+    if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
       if (this._authorizedOfficersChanged()) {
         changes.authorized_officers = this.authorizedOfficers;
       }
     }
-    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
+    if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
       const signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date', 'attachment'];
       signedByFields.forEach((fieldName: string) => {
-        if (this._primitiveFieldIsModified(fieldName)) {
-          changes[fieldName] = this.agreement[fieldName];
+        if (this._primitiveFieldIsModified(fieldName, currentAgreement)) {
+          changes[fieldName] = currentAgreement[fieldName];
         }
       });
     }
 
-    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (currentAgreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
       ['start', 'end'].forEach((fieldName: string) => {
-        if (this._primitiveFieldIsModified(fieldName)) {
-          changes[fieldName] = this.agreement[fieldName];
+        if (this._primitiveFieldIsModified(fieldName, currentAgreement)) {
+          changes[fieldName] = currentAgreement[fieldName];
         }
       });
     }
 
-    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
-      if (this._primitiveFieldIsModified('country_programme')) {
-        changes.country_programme = this.agreement.country_programme;
+    if (currentAgreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
+      if (this._primitiveFieldIsModified('country_programme', currentAgreement)) {
+        changes.country_programme = currentAgreement.country_programme;
       }
-      if (this._objectFieldIsModified('amendments')) {
-        // keep only new amendments
-        if (this.agreement.amendments) {
-          changes.amendments = this.agreement.amendments.filter(
-            (a: AgreementAmendment) =>
-              !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
-          );
-        }
-      }
+      
+      // if (this._objectFieldIsModified('amendments', currentAgreement)) {
+      //   // keep only new amendments
+      //   if (currentAgreement.amendments) {
+      //     changes.amendments = currentAgreement.amendments.filter(
+      //       (a: AgreementAmendment) =>
+      //         !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
+      //     );
+      //   }
+      // }
     }
 
     return changes;
   }
 
-  _primitiveFieldIsModified(fieldName: string) {
-    return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
+  _primitiveFieldIsModified(fieldName: string, currentAgreement: Agreement) {
+    return this.originalAgreementData[fieldName] !== currentAgreement[fieldName];
   }
 
   _authorizedOfficersChanged() {
@@ -557,8 +568,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
   }
 
-  _objectFieldIsModified(fieldName: string) {
-    return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(this.agreement[fieldName]);
+  _objectFieldIsModified(fieldName: string, currentAgreement: Agreement) {
+    return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(currentAgreement[fieldName]);
   }
 
   _getInitialAuthorizedOfficersIds() {
@@ -604,6 +615,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   onAgreementChanged(e: CustomEvent) {
     if (!isJsonStrMatch(this.agreement, e.detail)) {
       this.agreement = cloneDeep(e.detail);
+      this._agreementChanged(e.detail);
+      this.requestUpdate();
     }
   }
 
