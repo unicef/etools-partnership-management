@@ -30,6 +30,7 @@ import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {areEqual, isJsonStrMatch} from '../../utils/utils';
+import {AgreementDetails} from './pages/details/agreement-details';
 
 /**
  * @polymer
@@ -171,14 +172,13 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
             id="agreementDetails"
             name="details"
             ?hidden="${!this._pageEquals(this.activePage, 'details')}"
-            .agreement="${this.agreement}"
+            .agreement="${cloneDeep(this.agreement)}"
             @authorized-officers-changed="${(e: CustomEvent) => {
               if (!areEqual(this.authorizedOfficers, e.detail)) {
                 this.authorizedOfficers = e.detail;
               }
             }}"
             .editMode="${this._hasEditPermissions(this.permissions)}"
-            .isNewAgreement="${this.newAgreementActive}"
             @save-agreement="${this._validateAndTriggerAgreementSave}"
           >
           </agreement-details>
@@ -423,10 +423,11 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     }
 
     let agrDataToSave: GenericObject;
+    const currentAgreement = this.shadowRoot?.querySelector<AgreementDetails>('agreement-details')!.agreement!;
     if (this.newAgreementActive) {
-      agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement);
+      agrDataToSave = this._prepareNewAgreementDataForSave(currentAgreement);
     } else {
-      agrDataToSave = this._getCurrentChanges();
+      agrDataToSave = this._getCurrentChanges(currentAgreement);
       agrDataToSave.id = this.agreement.id; // we need the id
     }
 
@@ -490,54 +491,54 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   // Get agreement changed properties
-  _getCurrentChanges() {
+  _getCurrentChanges(currentAgreement: Agreement) {
     const changes: GenericObject = {};
-    if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
+    if (!currentAgreement || currentAgreement.id !== this.originalAgreementData.id) {
       // prevent the possibility of checking 2 different agreements
       return {};
     }
 
-    if (this._primitiveFieldIsModified('partner')) {
-      changes.partner = this.agreement.partner;
+    if (this._primitiveFieldIsModified('partner', currentAgreement)) {
+      changes.partner = currentAgreement.partner;
     }
-    if (this._primitiveFieldIsModified('reference_number_year')) {
-      changes.reference_number_year = this.agreement.reference_number_year;
-    }
-
-    if (this._primitiveFieldIsModified('special_conditions_pca')) {
-      changes.special_conditions_pca = this.agreement.special_conditions_pca;
+    if (this._primitiveFieldIsModified('reference_number_year', currentAgreement)) {
+      changes.reference_number_year = currentAgreement.reference_number_year;
     }
 
-    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (this._primitiveFieldIsModified('special_conditions_pca', currentAgreement)) {
+      changes.special_conditions_pca = currentAgreement.special_conditions_pca;
+    }
+
+    if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
       if (this._authorizedOfficersChanged()) {
         changes.authorized_officers = this.authorizedOfficers;
       }
     }
-    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
+    if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
       const signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date', 'attachment'];
       signedByFields.forEach((fieldName: string) => {
-        if (this._primitiveFieldIsModified(fieldName)) {
-          changes[fieldName] = this.agreement[fieldName];
+        if (this._primitiveFieldIsModified(fieldName, currentAgreement)) {
+          changes[fieldName] = currentAgreement[fieldName];
         }
       });
     }
 
-    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (currentAgreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
       ['start', 'end'].forEach((fieldName: string) => {
-        if (this._primitiveFieldIsModified(fieldName)) {
-          changes[fieldName] = this.agreement[fieldName];
+        if (this._primitiveFieldIsModified(fieldName, currentAgreement)) {
+          changes[fieldName] = currentAgreement[fieldName];
         }
       });
     }
 
-    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
-      if (this._primitiveFieldIsModified('country_programme')) {
-        changes.country_programme = this.agreement.country_programme;
+    if (currentAgreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
+      if (this._primitiveFieldIsModified('country_programme', currentAgreement)) {
+        changes.country_programme = currentAgreement.country_programme;
       }
-      if (this._objectFieldIsModified('amendments')) {
+      if (this._objectFieldIsModified('amendments', currentAgreement)) {
         // keep only new amendments
-        if (this.agreement.amendments) {
-          changes.amendments = this.agreement.amendments.filter(
+        if (currentAgreement.amendments) {
+          changes.amendments = currentAgreement.amendments.filter(
             (a: AgreementAmendment) =>
               !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
           );
@@ -548,8 +549,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     return changes;
   }
 
-  _primitiveFieldIsModified(fieldName: string) {
-    return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
+  _primitiveFieldIsModified(fieldName: string, currentAgreement: Agreement) {
+    return this.originalAgreementData[fieldName] !== currentAgreement[fieldName];
   }
 
   _authorizedOfficersChanged() {
@@ -557,8 +558,8 @@ export class AgreementsModule extends AgreementsModuleRequiredMixins {
     return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
   }
 
-  _objectFieldIsModified(fieldName: string) {
-    return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(this.agreement[fieldName]);
+  _objectFieldIsModified(fieldName: string, currentAgreement: Agreement) {
+    return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(currentAgreement[fieldName]);
   }
 
   _getInitialAuthorizedOfficersIds() {
