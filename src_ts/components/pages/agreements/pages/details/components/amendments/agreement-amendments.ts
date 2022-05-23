@@ -131,7 +131,9 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
               <etools-data-table-row no-collapse>
                 <div slot="row-data">
                   <span class="col-data col-1"> ${item.id ? html`${item.number}` : ``} </span>
-                  <span class="col-data col-4">${this._getReadonlyAmendmentTypes(item.types)}</span>
+                  <span class="col-data col-4"
+                    >${this._getReadonlyAmendmentTypes(this._amendmentTypes, item.types)}</span
+                  >
                   <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
                   <span class="col-data flex-c">
                     <iron-icon icon="attachment" class="attachment"></iron-icon>
@@ -231,13 +233,13 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
     return _amendmentTypes;
   }
 
-  _getReadonlyAmendmentTypes(types: any) {
-    if (types instanceof Array && types.length > 0) {
+  _getReadonlyAmendmentTypes(amendmentTypes: LabelAndValue[], types: any) {
+    if (amendmentTypes instanceof Array && types instanceof Array && types.length > 0) {
       const legacyAmTypesFiltered = [];
       let amTypesFiltered = [];
 
       // search for item amendments types
-      const amTypes = this._amendmentTypes.filter((t: any) => types.indexOf(t.value) > -1);
+      const amTypes = amendmentTypes.filter((t: any) => types.indexOf(t.value) > -1);
 
       if (amTypes.length) {
         // map to get the labels
