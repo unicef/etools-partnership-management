@@ -1,7 +1,7 @@
 import {property} from '@polymer/decorators';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {PolymerElement} from '@polymer/polymer';
-import {updateAppState} from '../../utils/navigation-helper';
+import {replaceAppState} from '../../utils/navigation-helper';
 import {isEmptyObject} from '../../utils/utils';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
@@ -212,7 +212,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
       if (qs !== lastUrlQueryStr) {
         // update URL
-        updateAppState(currentPageUrlPath, qs, true);
+        replaceAppState(currentPageUrlPath, qs, true);
         // filter agreements
         if (this.requiredDataLoaded) {
           filterData();
@@ -221,7 +221,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         if (location.search === '') {
           // only update URL query string, without location change event being fired(no page refresh)
           // used to keep prev list filters values when navigating from details to list page
-          updateAppState(currentPageUrlPath, qs, false);
+          replaceAppState(currentPageUrlPath, qs, false);
         }
         if (this.forceDataRefresh && this.requiredDataLoaded) {
           // re-filter list data
