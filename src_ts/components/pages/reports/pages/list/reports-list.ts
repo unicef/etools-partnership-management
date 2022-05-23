@@ -162,7 +162,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
                         <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
                         ${report.is_final ? html`<span class="final-badge">final</span>` : ``}
                       </span>
-                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right" fit-to-visible-bounds>
+                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right">
                         ${report.programme_document.title}
                       </paper-tooltip>
                     </span>
