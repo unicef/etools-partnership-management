@@ -105,6 +105,9 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
     if (changedProperties.has('status') || changedProperties.has('agreementId')) {
       this._handleStatusChange(this.status);
     }
+    if (changedProperties.has('status')) {
+      this._computeAvailableStatuses(this.status);
+    }
   }
 
   setPossibleStatuses() {
@@ -140,7 +143,6 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       }
     ];
     this.possibleStatuses = [...this.possibleStatuses];
-    this._computeAvailableStatuses(this.status);
   }
 
   _computeAvailableActions(status: string) {
