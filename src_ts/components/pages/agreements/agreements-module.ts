@@ -35,6 +35,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {replaceAppState} from '../../utils/navigation-helper';
 
+
 /**
  * @polymer
  * @mixinFunction
@@ -543,6 +544,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       if (this._primitiveFieldIsModified('country_programme', currentAgreement)) {
         changes.country_programme = currentAgreement.country_programme;
       }
+      
       // if (this._objectFieldIsModified('amendments', currentAgreement)) {
       //   // keep only new amendments
       //   if (currentAgreement.amendments) {
