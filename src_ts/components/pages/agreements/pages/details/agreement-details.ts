@@ -768,6 +768,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       return;
     }
 
+    const showLoading = currentPartnerId !== this.oldSelectedPartnerId;
     this.staffMembers = [];
     if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
       // partner not set or changed, reset related fields
@@ -776,7 +777,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this.agreement.authorized_officers = [];
       this.oldSelectedPartnerId = currentPartnerId;
     }
-    this.getPartnerStaffMembers(currentPartnerId);
+    this.getPartnerStaffMembers(currentPartnerId, showLoading);
   }
 
   _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: PartnerStaffMember[]) {
