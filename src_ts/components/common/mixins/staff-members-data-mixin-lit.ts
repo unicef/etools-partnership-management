@@ -22,13 +22,15 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
 
     // This method will be used in the main element as observer for agreement.partner
     // or in other partner id changed observer
-    getPartnerStaffMembers(newId: number) {
+    getPartnerStaffMembers(newId: number, showLoading: boolean) {
       if (newId > 0) {
-        fireEvent(this, 'global-loading', {
-          message: 'Loading...',
-          active: true,
-          loadingSource: this.staffLoadingMsgSource
-        });
+        if (showLoading) {
+          fireEvent(this, 'global-loading', {
+            message: 'Loading...',
+            active: true,
+            loadingSource: this.staffLoadingMsgSource
+          });
+        }
         const endpoint = this.getEndpoint(pmpEdpoints, 'partnerStaffMembers', {id: newId});
 
         sendRequest({
