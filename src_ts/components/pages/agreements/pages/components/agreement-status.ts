@@ -105,7 +105,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
     if (changedProperties.has('status') || changedProperties.has('agreementId')) {
       this._handleStatusChange(this.status);
     }
-    if (changedProperties.has('status')) {
+    if (changedProperties.has('status') || changedProperties.has('editMode')) {
       this._computeAvailableStatuses(this.status);
     }
   }
