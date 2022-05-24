@@ -138,6 +138,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         paper-input[readonly],
         etools-dropdown[readonly] {
           --paper-input-container-underline_-_display: none;
+          --paper-input-container-underline-focus_-_display: none;
         }
       </style>
 
