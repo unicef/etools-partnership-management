@@ -124,6 +124,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
       </section>
 
       <div id="list" class="paper-material elevation" elevation="1">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         ${!(this.reports || []).length
           ? html` <div class="row-h">
               <p>There are no reports yet.</p>
@@ -241,6 +242,9 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
 
   @property({type: Object})
   routeDetails!: RouteDetails | null;
+
+  @property({type: Boolean})
+  listLoadingActive = false;
 
   @property({type: Object})
   prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc', status: 'Sen,Sub,Ove'};
@@ -393,11 +397,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
   }
 
   _loadReportsData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'reports-list'
-    });
+    this.listLoadingActive = true;
 
     // abort previous req and then fire a new one with updated params
     abortRequestByKey(this._endpointName);
@@ -408,10 +408,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
           this.reports = response.results;
           this.updatePaginatorTotalResults(response);
         }
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'reports-list'
-        });
+        this.listLoadingActive = false;
       })
       .catch((error: any) => {
         if (error.status === 0) {
@@ -421,10 +418,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
         logError('Reports list data request failed!', 'reports-list', error);
 
         parseRequestErrorsAndShowAsToastMsgs(error, this);
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'reports-list'
-        });
+        this.listLoadingActive = false;
       });
   }
 

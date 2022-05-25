@@ -85,10 +85,8 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
     const self = this;
 
     if (showQueryLoading) {
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
-        active: true,
-        loadingSource: 'pd-list'
+      fireEvent(this, 'list-loading', {
+        active: true
       });
     }
     this.waitForListDataRequestToFinish().then(() => {
@@ -197,16 +195,14 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
           // @ts-ignore
           self.filteredInterventions = result;
           fireEvent(self, 'filtered-interventions-changed', result);
-          fireEvent(self, 'global-loading', {
-            active: false,
-            loadingSource: 'pd-list'
+          fireEvent(self, 'list-loading', {
+            active: false
           });
         })
         .catch(function (error: any) {
           logError('Error querying interventions: ' + error, 'interventions-list-data');
-          fireEvent(self, 'global-loading', {
-            active: false,
-            loadingSource: 'pd-list'
+          fireEvent(self, 'list-loading', {
+            active: false
           });
         });
     });
