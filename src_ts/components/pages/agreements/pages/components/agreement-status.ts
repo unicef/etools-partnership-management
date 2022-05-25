@@ -151,7 +151,6 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   _computeAvailableActions(status: string) {
     this._setAllActionsToHidden();
-    console.log('_computeAvailableActions, editMode:', this.editMode);
     if (!this.editMode) {
       return;
     }
@@ -197,8 +196,6 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       }
     }
     this.possibleActions = [...this.possibleActions];
-    console.log(`_computeAvailableActions, availableOptions:`, availableOptions);
-    console.log(`_computeAvailableActions, possibleActions:`, this.possibleActions);
   }
 
   _computeAvailableStatuses(status: string) {

@@ -582,12 +582,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     super.connectedCallback();
     this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
 
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'ag-page'
-    });
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -629,6 +623,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
+    // Disable loading message for details tab elements load,
+    // triggered by parent element on stamp
+    setTimeout(() => {
+      this.stopGlobalLoading('ag-page');
+    }, 200);
     this.autoValidate = true;
   }
 
