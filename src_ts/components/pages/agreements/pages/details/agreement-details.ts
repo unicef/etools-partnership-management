@@ -42,7 +42,7 @@ import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
