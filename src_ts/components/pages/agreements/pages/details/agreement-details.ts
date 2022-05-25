@@ -508,13 +508,16 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   set agreement(newAgr: Agreement) {
     const agrIdChanged = newAgr?.id !== this._agreement?.id;
-    if (agrIdChanged) {
-      setTimeout(() => {
-        // Timeout needed because this code might execute before connectedCallback otherwise
-        this._agreement = newAgr;
-        this._agreementChanged(newAgr);
-        this.debouncedPartnerChanged(this.agreement.partner);
-      });
+    const agrChanged = !isJsonStrMatch(newAgr, this._agreement);
+    if (agrIdChanged || agrChanged) {
+      this._agreement = newAgr;
+      if (agrIdChanged) {
+        setTimeout(() => {
+          // Timeout needed because this code might execute before connectedCallback otherwise
+          this._agreementChanged(newAgr);
+          this.debouncedPartnerChanged(this.agreement.partner);
+        });
+      }
     }
   }
 
