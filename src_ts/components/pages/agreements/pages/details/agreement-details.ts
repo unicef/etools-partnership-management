@@ -34,7 +34,7 @@ import '../../../../endpoints/endpoints.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {buttonsStyles} from '../../../../styles/buttons-styles-lit';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -66,14 +66,14 @@ import debounce from 'lodash-es/debounce';
 @customElement('agreement-details')
 export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [gridLayoutStylesLit, buttonsStyles];
   }
 
   render() {
     if (!this.agreement) return;
 
     return html`
-      ${sharedStyles} ${pageCommonStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
+      ${sharedStyles} ${pageCommonStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           display: flex;
@@ -133,6 +133,12 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           font-size: 16px;
           color: var(--primary-text-color);
           margin-top: -6px;
+        }
+        datepicker-lite[readonly],
+        paper-input[readonly],
+        etools-dropdown[readonly] {
+          --paper-input-container-underline_-_display: none;
+          --paper-input-container-underline-focus_-_display: none;
         }
       </style>
 

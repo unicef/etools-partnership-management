@@ -110,7 +110,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       this._handleStatusChange(this.status);
     }
     if (changedProperties.has('status') || changedProperties.has('editMode')) {
-      this._computeAvailableStatuses(this.status);
+      this._computeAvailableActions(this.status);
     }
   }
 
@@ -151,6 +151,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   _computeAvailableActions(status: string) {
     this._setAllActionsToHidden();
+    console.log('_computeAvailableActions, editMode:', this.editMode);
     if (!this.editMode) {
       return;
     }
@@ -196,6 +197,8 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       }
     }
     this.possibleActions = [...this.possibleActions];
+    console.log(`_computeAvailableActions, availableOptions:`, availableOptions);
+    console.log(`_computeAvailableActions, possibleActions:`, this.possibleActions);
   }
 
   _computeAvailableStatuses(status: string) {
