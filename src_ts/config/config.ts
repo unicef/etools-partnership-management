@@ -91,6 +91,10 @@ export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
     switch (_checkEnvironment()) {
       case 'LOCAL':
+        // If you want to use dev.partnerreportingportal.org on local setup then use following url
+        // 'http://localhost:8888/https://dev.partnerreportingportal.org'
+        // Start cors-anywhere with command 'npm run start:cors' in pmp root folder
+        // Don't forget to do the same configuration in @etools-modules-common/dist/config.js for reports to work
         return 'http://127.0.0.1:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
