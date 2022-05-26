@@ -78,6 +78,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('interventionId') || changedProperties.has('cpId')) {
+      this.ramIndicators = [];
       this._getRamIndicatorsData(this.interventionId, this.cpId);
     }
   }
