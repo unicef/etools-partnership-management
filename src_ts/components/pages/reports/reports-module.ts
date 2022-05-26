@@ -572,30 +572,33 @@ export class ReportsModule extends connect(store)(
   }
 
   _updateReportDataOnList(report: any) {
-    const list = this.shadowRoot!.querySelector('#list');
-    if (list) {
-      const reportsDisplayList = list.shadowRoot!.querySelector('reports-display-list') as GenericObject;
-      if (reportsDisplayList && !isEmptyObject(reportsDisplayList.reports)) {
-        const currentReports = reportsDisplayList.reports;
-        let index = -1;
-        for (let i = 0; i < currentReports.length; i++) {
-          if (currentReports[i].id === report.id) {
-            index = i;
-            break;
-          }
-        }
-        if (index > -1) {
-          // updates report found in list => update shown data
-          reportsDisplayList.set(['reports', index, 'status'], report.status);
-          // TODO: find out if any of the next report properties can change on accept/send back
-          reportsDisplayList.set(['reports', index, 'due_date'], report.due_date);
-          reportsDisplayList.set(['reports', index, 'submission_date'], report.submission_date);
-          reportsDisplayList.set(['reports', index, 'review_date'], report.review_date);
-          reportsDisplayList.set(['reports', index, 'reporting_period'], report.reporting_period);
-          reportsDisplayList.set(['reports', index, 'sent_back_feedback'], report.sent_back_feedback);
+    const list = this.shadowRoot!.querySelector<ReportsListEl>('#list');
+    if (list && this.elementIsImported(list)) {
+      const currentReports = list.reports as any[];
+      let index = -1;
+      for (let i = 0; i < currentReports.length; i++) {
+        if (currentReports[i].id === report.id) {
+          index = i;
+          break;
         }
       }
+      if (index > -1) {
+        // updates report found in list => update shown data
+        currentReports[index].status = report.status;
+        // TODO: find out if any of the next report properties can change on accept/send back
+        currentReports[index].due_date = report.due_date;
+        currentReports[index].submission_date = report.submission_date;
+        currentReports[index].review_date = report.review_date;
+        currentReports[index].reporting_period = report.reporting_period;
+        currentReports[index].sent_back_feedback = report.sent_back_feedback;
+        list.requestUpdate();
+      }
     }
+  }
+
+  //For lazy loaded components
+  elementIsImported(element: any) {
+    return !!element.shadowRoot;
   }
 
   statusIs(currentStatus: string, status: string) {

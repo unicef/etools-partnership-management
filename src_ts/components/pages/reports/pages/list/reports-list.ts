@@ -45,7 +45,7 @@ import pmpEdpoints from '../../../../endpoints/endpoints';
  * @appliesMixin PaginationMixin
  */
 @customElement('reports-list')
-export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
+class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
