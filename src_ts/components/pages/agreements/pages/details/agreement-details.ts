@@ -42,7 +42,7 @@ import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -582,12 +582,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     super.connectedCallback();
     this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
 
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'ag-page'
-    });
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -629,6 +623,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
+    // Disable loading message for details tab elements load,
+    // triggered by parent element on stamp
+    setTimeout(() => {
+      this.stopGlobalLoading('ag-page');
+    }, 200);
     this.autoValidate = true;
   }
 
