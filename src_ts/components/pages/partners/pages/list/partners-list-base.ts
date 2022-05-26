@@ -114,6 +114,7 @@ export class PartnersListBase extends CommonMixin(
         }}"
         list-data-path="filteredPartners"
         fireDataLoaded
+        no-auto-refresh
       >
       </partners-list-data>
 
