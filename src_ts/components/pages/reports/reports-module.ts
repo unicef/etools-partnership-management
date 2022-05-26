@@ -596,7 +596,7 @@ export class ReportsModule extends connect(store)(
     }
   }
 
-  //For lazy loaded components
+  // For lazy loaded components
   elementIsImported(element: any) {
     return !!element.shadowRoot;
   }
