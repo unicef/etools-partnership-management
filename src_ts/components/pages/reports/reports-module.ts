@@ -152,7 +152,7 @@ export class ReportsModule extends connect(store)(
         }}"
       ></app-route>
 
-      <page-content-header ?with-tabs-visible="${this.tabsActive}">
+      <page-content-header ?withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
           ${this.listActive ? html`<span>${translate('PARTNER_REPORTS')}</span>` : ''}
           ${this.tabsActive
