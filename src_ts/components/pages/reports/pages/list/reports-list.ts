@@ -45,7 +45,7 @@ import pmpEdpoints from '../../../../endpoints/endpoints';
  * @appliesMixin PaginationMixin
  */
 @customElement('reports-list')
-export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
+class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -163,7 +163,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
                         <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
                         ${report.is_final ? html`<span class="final-badge">final</span>` : ``}
                       </span>
-                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right" fit-to-visible-bounds>
+                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right">
                         ${report.programme_document.title}
                       </paper-tooltip>
                     </span>
@@ -433,7 +433,7 @@ export class ReportsList extends connect(store)(PaginationMixin(CommonMixin(Endp
       unicef_focal_points: queryParams.unicef_focal_points,
       report_type: queryParams.report_type,
       page: queryParams.page ? Number(queryParams.page) : 1,
-      page_size: queryParams.page_size ? Number(queryParams.page_size) : CONSTANTS.DEFAULT_LIST_SIZE
+      page_size: queryParams.size ? Number(queryParams.size) : CONSTANTS.DEFAULT_LIST_SIZE
     };
     Object.keys(filterValues).forEach((key) => {
       if (!filterValues[key]) {

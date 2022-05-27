@@ -150,6 +150,9 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
         });
       })
       .catch(function (error: any) {
+        if (error.name === 'DatabaseClosedError') {
+          window.location.reload();
+        }
         logError('Error querying agreements: ', 'agreements-list-data', error);
         fireEvent(self, 'list-loading', {
           active: false

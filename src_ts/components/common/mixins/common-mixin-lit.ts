@@ -2,6 +2,7 @@
 import {prettyDate} from '../../utils/date-utils';
 import {LitElement} from 'lit-element';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
+import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {get as getTranslation, translate} from 'lit-translate';
 import {PolymerElement} from '@polymer/polymer';
 
@@ -119,6 +120,13 @@ function CommonMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
 
     _translate(key: string) {
       return translate(key);
+    }
+
+    stopGlobalLoading(source: string) {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: source
+      });
     }
   }
 

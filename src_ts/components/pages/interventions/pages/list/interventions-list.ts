@@ -10,6 +10,7 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-s
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
+import {customIcons} from '@unicef-polymer/etools-modules-common/dist/styles/custom-icons';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
@@ -49,8 +50,7 @@ export class InterventionsList extends connect(store)(
 
   render() {
     return html`
-      ${listFilterStyles}
-
+      ${customIcons} ${listFilterStyles}
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} :host {
           box-sizing: border-box;
@@ -89,6 +89,7 @@ export class InterventionsList extends connect(store)(
           }
         }
       </style>
+
       <iron-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
@@ -191,7 +192,7 @@ export class InterventionsList extends connect(store)(
                   class="fr-nr-warn"
                   custom-icon
                   icon-first
-                  hide-tooltip="${this._hideDateFrsWarningTooltip(
+                  ?hide-tooltip="${this._hideDateFrsWarningTooltip(
                     intervention.start,
                     intervention.frs_earliest_start_date!,
                     intervention.status
@@ -207,7 +208,7 @@ export class InterventionsList extends connect(store)(
                   class="fr-nr-warn"
                   custom-icon
                   icon-first
-                  hide-tooltip="${this._hideDateFrsWarningTooltip(
+                  ?hide-tooltip="${this._hideDateFrsWarningTooltip(
                     intervention.end,
                     intervention.frs_latest_end_date!,
                     intervention.status

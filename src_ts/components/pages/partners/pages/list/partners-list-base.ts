@@ -118,6 +118,7 @@ export class PartnersListBase extends CommonMixin(
         @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredPartners"
         fireDataLoaded
+        no-auto-refresh
       >
       </partners-list-data>
 

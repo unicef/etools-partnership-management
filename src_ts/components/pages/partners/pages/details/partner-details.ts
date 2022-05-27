@@ -331,14 +331,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
   public connectedCallback() {
     super.connectedCallback();
-    /**
-     * Disable loading message for details tab elements load,
-     * triggered by parent element on stamp or by tap event on tabs
-     */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
+
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -368,6 +361,16 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
   public _canEditCVA(attachment: any, archived?: boolean) {
     return !attachment && !archived;
+  }
+
+  firstUpdated(changedProperties: PropertyValues): void {
+    super.firstUpdated(changedProperties);
+
+    // Disable loading message for details tab elements load,
+    // triggered by parent element on stamp
+    setTimeout(() => {
+      this.stopGlobalLoading('partners-page');
+    }, 200);
   }
 
   updated(changedProperties: PropertyValues) {

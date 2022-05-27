@@ -122,6 +122,7 @@ export class AgreementsList extends connect(store)(
         @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredAgreements"
         fireDataLoaded
+        no-auto-refresh
       >
       </agreements-list-data>
 
