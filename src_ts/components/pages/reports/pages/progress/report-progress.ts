@@ -129,74 +129,75 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
                       ></report-overall>
 
                       ${this._getLowerResultIndicatorReports(lowerResult.id).map(
-                        (indicatorReport: any, indicatorReportIndex: number) => html`
-                          <div class="indicator">
-                            <div class="layout-horizontal">
-                              <div class="indicator-toggle ${this._getClusterIndicatorClass(indicatorReport)}">
-                                <paper-icon-button
-                                  @click="${this._toggle}"
-                                  toggles-ind-details="${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                                  .icon="${this._computeIcon(
-                                    this.toggleFlags[`${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}`]
-                                  )}"
-                                >
-                                </paper-icon-button>
-                              </div>
+                        (indicatorReport: any, indicatorReportIndex: number) => {
+                          const uniqueKey = `${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}`;
+                          return html`
+                            <div class="indicator">
+                              <div class="layout-horizontal">
+                                <div class="indicator-toggle ${this._getClusterIndicatorClass(indicatorReport)}">
+                                  <paper-icon-button
+                                    @click="${this._toggle}"
+                                    toggles-ind-details="${uniqueKey}"
+                                    .icon="${this._computeIcon(this.toggleFlags[uniqueKey])}"
+                                  >
+                                  </paper-icon-button>
+                                </div>
 
-                              <div class="indicator-header layout-horizontal flex-c">
-                                <div class="col col-8 indicator-header-title">
-                                  <h3>
-                                    ${this._ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')}
-                                    ${indicatorReport.reportable.blueprint.title}
-                                  </h3>
-                                  <div class="layout-horizontal calculation-formula">
-                                    <span>
-                                      calculation method across locations:
-                                      <strong>${this._calculationAcrossLocations(indicatorReport)}</strong>
-                                    </span>
-                                    <span class="calculation-formula-delimiter">|</span>
-                                    <span>
-                                      calculation across reporting periods:
-                                      <strong>${this._calculationFormulaAcrossPeriods(indicatorReport)}</strong>
-                                    </span>
+                                <div class="indicator-header layout-horizontal flex-c">
+                                  <div class="col col-8 indicator-header-title">
+                                    <h3>
+                                      ${this._ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')}
+                                      ${indicatorReport.reportable.blueprint.title}
+                                    </h3>
+                                    <div class="layout-horizontal calculation-formula">
+                                      <span>
+                                        calculation method across locations:
+                                        <strong>${this._calculationAcrossLocations(indicatorReport)}</strong>
+                                      </span>
+                                      <span class="calculation-formula-delimiter">|</span>
+                                      <span>
+                                        calculation across reporting periods:
+                                        <strong>${this._calculationFormulaAcrossPeriods(indicatorReport)}</strong>
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div class="col col-4 indicator-header-target">
+                                    <indicator-report-target2
+                                      .displayType="${indicatorReport.reportable.blueprint.display_type}"
+                                      .target="${indicatorReport.reportable.target}"
+                                      .cumulativeProgress="${this._ternary(
+                                        indicatorReport.reportable.blueprint.display_type,
+                                        'number',
+                                        indicatorReport.reportable.achieved.v,
+                                        indicatorReport.reportable.achieved.c
+                                      )}"
+                                      .achievement="${this._ternary(
+                                        indicatorReport.reportable.blueprint.display_type,
+                                        'number',
+                                        indicatorReport.total.v,
+                                        indicatorReport.total.c
+                                      )}"
+                                      bold
+                                    ></indicator-report-target2>
                                   </div>
                                 </div>
-                                <div class="col col-4 indicator-header-target">
-                                  <indicator-report-target2
-                                    .displayType="${indicatorReport.reportable.blueprint.display_type}"
-                                    .target="${indicatorReport.reportable.target}"
-                                    .cumulativeProgress="${this._ternary(
-                                      indicatorReport.reportable.blueprint.display_type,
-                                      'number',
-                                      indicatorReport.reportable.achieved.v,
-                                      indicatorReport.reportable.achieved.c
-                                    )}"
-                                    .achievement="${this._ternary(
-                                      indicatorReport.reportable.blueprint.display_type,
-                                      'number',
-                                      indicatorReport.total.v,
-                                      indicatorReport.total.c
-                                    )}"
-                                    bold
-                                  ></indicator-report-target2>
-                                </div>
                               </div>
-                            </div>
 
-                            <iron-collapse
-                              id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                              .opened="${indicatorReport.expanded}"
-                              @transitioning-changed="${this._indicatorDetailsTransitioningComplete}"
-                            >
-                              <indicator-details
-                                id="indicator-details-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                                .indicatorReportId="${indicatorReport.id}"
-                                ?isClusterIndicator="${indicatorReport.is_cluster_indicator}"
+                              <iron-collapse
+                                id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
+                                .opened="${indicatorReport.expanded}"
+                                @transitioning-changed="${this._indicatorDetailsTransitioningComplete}"
                               >
-                              </indicator-details>
-                            </iron-collapse>
-                          </div>
-                        `
+                                <indicator-details
+                                  id="indicator-details-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
+                                  .indicatorReportId="${indicatorReport.id}"
+                                  ?isClusterIndicator="${indicatorReport.is_cluster_indicator}"
+                                >
+                                </indicator-details>
+                              </iron-collapse>
+                            </div>
+                          `;
+                        }
                       )}
                     `
                   )}
