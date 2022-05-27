@@ -136,7 +136,9 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
                                 <paper-icon-button
                                   @click="${this._toggle}"
                                   toggles-ind-details="${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                                  .icon="${this._computeIcon(indicatorReport.expanded)}"
+                                  .icon="${this._computeIcon(
+                                    this.toggleFlags[`${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}`]
+                                  )}"
                                 >
                                 </paper-icon-button>
                               </div>
@@ -211,6 +213,9 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
   @property({type: Object})
   reportAttachments!: GenericObject;
 
+  @property({type: Object})
+  toggleFlags: GenericObject = {};
+
   connectedCallback() {
     super.connectedCallback();
     /**
@@ -228,13 +233,15 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
   }
 
   _toggle(e: CustomEvent) {
-    const toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
-    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as any & {
+    const toggleInd = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
+    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggleInd) as any & {
       toggle(): void;
     };
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();
     }
+    this.toggleFlags[toggleInd!] = !this.toggleFlags[toggleInd!];
+    this.toggleFlags = {...this.toggleFlags};
   }
 
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
