@@ -81,7 +81,7 @@ export function getReportFilters() {
       selectedValue: null,
       optionValue: 'value',
       optionLabel: 'label',
-      selected: false,
+      selected: true,
       minWidth: '400px',
       hideSearch: false
     },

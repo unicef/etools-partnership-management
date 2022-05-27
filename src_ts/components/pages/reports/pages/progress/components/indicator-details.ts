@@ -255,7 +255,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
 
       if (typeof acc[locationId] === 'undefined') {
         acc[locationId] = {
-          title: location.location.title,
+          title: location.location.name,
           byEntity: [],
           selected: 0
         };

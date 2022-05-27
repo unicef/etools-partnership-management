@@ -45,6 +45,8 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
     handleErrorResponse!: (e: any) => void;
     dataLoadedEventName!: string;
     // -----
+    @property({type: Boolean, attribute: 'no-auto-refresh'})
+    noAutoRefresh = false;
 
     disconnectedCallback() {
       super.disconnectedCallback();
@@ -108,7 +110,12 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       if (typeof newEndpoint === 'undefined') {
         return;
       }
-      if (newEndpoint && Object.prototype.hasOwnProperty.call(newEndpoint, 'exp') && newEndpoint.exp > 0) {
+      if (
+        newEndpoint &&
+        Object.prototype.hasOwnProperty.call(newEndpoint, 'exp') &&
+        newEndpoint.exp > 0 &&
+        !this.noAutoRefresh
+      ) {
         this._removeAutomaticDataRefreshLoop();
         this._setAutomaticDataRefreshLoop(newEndpoint);
       }
