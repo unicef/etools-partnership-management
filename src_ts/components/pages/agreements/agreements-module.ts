@@ -35,7 +35,6 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {replaceAppState} from '../../utils/navigation-helper';
 
-
 /**
  * @polymer
  * @mixinFunction
@@ -301,7 +300,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
     const currentAgrId = state.app?.routeDetails?.params?.agreementId;
     this.newAgreementActive = currentAgrId === 'new';
-    this.selectedAgreementId = isNaN(currentAgrId) ? null : currentAgrId;
+    this.selectedAgreementId = !currentAgrId || isNaN(Number(currentAgrId)) ? null : Number(currentAgrId);
   }
 
   _initListeners() {
@@ -544,7 +543,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       if (this._primitiveFieldIsModified('country_programme', currentAgreement)) {
         changes.country_programme = currentAgreement.country_programme;
       }
-      
+
       // if (this._objectFieldIsModified('amendments', currentAgreement)) {
       //   // keep only new amendments
       //   if (currentAgreement.amendments) {
