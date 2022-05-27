@@ -389,16 +389,25 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   loadListData() {
-    this._loadReportsData();
-  }
-
-  _loadReportsData() {
     fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'reports-list'
     });
+    this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
+  }
 
+  public waitForPrpCountriesToLoad() {
+    return new Promise((resolve) => {
+      const check = setInterval(() => {
+        if (this.prpCountries && this.prpCountries.length) {
+          clearInterval(check);
+          resolve(true);
+        }
+      }, 50);
+    });
+  }
+  _loadReportsData() {
     // abort previous req and then fire a new one with updated params
     abortRequestByKey(this._endpointName);
 
