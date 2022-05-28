@@ -201,7 +201,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
                   <div slot="row-data-details">
                     <div class="row-details-content">
                       <span class="rdc-title flex-c">UNICEF Focal Points</span>
-                      <span>${this.getDisplayValue(report.unicef_focal_points, ',', false)}</span>
+                      <span>${this.getDisplayValue(report.unicef_focal_points, ', ', false)}</span>
                     </div>
                   </div>
                 </etools-data-table-row>`
