@@ -404,6 +404,14 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           clearInterval(check);
           resolve(true);
         }
+        setTimeout(() => {
+          clearInterval(check);
+          fireEvent(this, 'global-loading', {
+            message: 'Loading...',
+            active: false,
+            loadingSource: 'reports-list'
+          });
+        }, 20000);
       }, 50);
     });
   }
