@@ -26,7 +26,7 @@ import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
 import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin-lit';
 
@@ -64,7 +64,7 @@ import debounce from 'lodash-es/debounce';
  * @appliesMixin UploadsMixin
  */
 @customElement('agreement-details')
-export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit, buttonsStyles];
   }
