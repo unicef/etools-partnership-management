@@ -84,6 +84,9 @@ export const _checkEnvironment = () => {
   if (location.indexOf(LOCAL_DOMAIN) > -1) {
     return 'LOCAL';
   }
+  if (location.indexOf(PROD_DOMAIN) > -1) {
+    return 'PROD';
+  }
   return null;
 };
 
@@ -104,7 +107,7 @@ export const tokenEndpointsHost = (host: string) => {
         return 'https://demo.partnerreportingportal.org';
       case 'STAGING':
         return 'https://staging.partnerreportingportal.org';
-      case null:
+      case 'PROD':
         return 'https://www.partnerreportingportal.org';
       default:
         return 'https://dev.partnerreportingportal.org';
