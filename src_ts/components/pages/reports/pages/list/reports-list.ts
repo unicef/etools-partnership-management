@@ -200,7 +200,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
                   <div slot="row-data-details">
                     <div class="row-details-content">
                       <span class="rdc-title flex-c">UNICEF Focal Points</span>
-                      <span>${this.getDisplayValue(report.unicef_focal_points, ',', false)}</span>
+                      <span>${this.getDisplayValue(report.unicef_focal_points, ', ', false)}</span>
                     </div>
                   </div>
                 </etools-data-table-row>`
@@ -399,16 +399,33 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   loadListData() {
-    this._loadReportsData();
-  }
-
-  _loadReportsData() {
     fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'reports-list'
     });
+    this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
+  }
 
+  public waitForPrpCountriesToLoad() {
+    return new Promise((resolve) => {
+      const check = setInterval(() => {
+        if (this.prpCountries && this.prpCountries.length) {
+          clearInterval(check);
+          resolve(true);
+        }
+        setTimeout(() => {
+          clearInterval(check);
+          fireEvent(this, 'global-loading', {
+            message: 'Loading...',
+            active: false,
+            loadingSource: 'reports-list'
+          });
+        }, 60000);
+      }, 50);
+    });
+  }
+  _loadReportsData() {
     // abort previous req and then fire a new one with updated params
     abortRequestByKey(this._endpointName);
 
