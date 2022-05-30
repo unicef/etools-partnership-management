@@ -95,4 +95,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - agreement-fixes
