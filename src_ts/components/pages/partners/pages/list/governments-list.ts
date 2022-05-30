@@ -2,7 +2,7 @@ import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-c
 import {customElement} from 'lit-element';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
-import {getGovernmentFilters} from './governments-filters';
+import {getGovernmentFilters, GovernmentFiltersHelper} from './governments-filters';
 import {selectedValueTypeByFilterKey} from './partners-filters';
 import {PartnersListBase} from './partners-list-base';
 
@@ -37,7 +37,7 @@ export class GovernmentsList extends connect(store)(PartnersListBase) {
     return ['Government'];
   }
 
-  getSelectedValueTypeByFilterKey() {
-    return selectedValueTypeByFilterKey;
+  getFiltersHelper() {
+    return GovernmentFiltersHelper;
   }
 }

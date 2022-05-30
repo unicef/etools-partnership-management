@@ -19,8 +19,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {ReportsFilterKeys, getReportFilters} from './reports-filters';
-import {updateFilterSelectionOptions, updateFiltersSelectedValues} from '@unicef-polymer/etools-filters/src/filters';
+import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './reports-filters';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
@@ -328,12 +327,20 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.external_partner_id, this.partners);
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.cp_output, commonData!.cpOutputs);
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.section, commonData!.sections);
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.report_type, commonData!.reportTypes);
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.status, commonData!.reportStatuses);
-    updateFilterSelectionOptions(allFilters, ReportsFilterKeys.unicef_focal_points, commonData!.unicefUsersData);
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.external_partner_id, this.partners);
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.cp_output, commonData!.cpOutputs);
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.section, commonData!.sections);
+    ReportsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      ReportsFilterKeys.report_type,
+      commonData!.reportTypes
+    );
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.status, commonData!.reportStatuses);
+    ReportsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      ReportsFilterKeys.unicef_focal_points,
+      commonData!.unicefUsersData
+    );
   }
 
   filtersChange(e: CustomEvent) {
@@ -360,7 +367,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     if (this.allFilters) {
       // update filter selection and assign the result to etools-filters(trigger render)
       const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
+      this.allFilters = ReportsFiltersHelper.updateFiltersSelectedValues(
+        omit(currentParams, ['page', 'size', 'sort']),
+        this.allFilters
+      );
     }
   }
 

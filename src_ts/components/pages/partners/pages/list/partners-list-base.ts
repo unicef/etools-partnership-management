@@ -38,18 +38,14 @@ import omit from 'lodash-es/omit';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
-import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
-import {
-  setselectedValueTypeByFilterKey,
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues
-} from '@unicef-polymer/etools-filters/src/filters';
+import {GenericObject} from '@unicef-polymer/etools-types';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {RootState} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 
 export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
@@ -305,7 +301,6 @@ export class PartnersListBase extends CommonMixin(
 
   initFiltersForDisplay(commonData: CommonDataState) {
     let availableFilters = [];
-    setselectedValueTypeByFilterKey(this.getSelectedValueTypeByFilterKey());
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(this.getAllFilters()));
       this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
@@ -315,7 +310,10 @@ export class PartnersListBase extends CommonMixin(
     }
 
     const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-    this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), availableFilters);
+    this.allFilters = this.getFiltersHelper().updateFiltersSelectedValues(
+      omit(currentParams, ['page', 'size', 'sort']),
+      availableFilters
+    );
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
@@ -328,9 +326,9 @@ export class PartnersListBase extends CommonMixin(
     return [];
   }
 
-  protected getSelectedValueTypeByFilterKey(): AnyObject {
+  protected getFiltersHelper(): FiltersHelper {
     console.log('getSelectedValueTypeByFilterKey / To be implemented in derived class');
-    return {};
+    return new FiltersHelper({});
   }
 
   loadListData() {
@@ -437,10 +435,22 @@ export class PartnersListBase extends CommonMixin(
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.partner_types, commonData!.partnerTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, commonData!.csoTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.risk_ratings, commonData!.partnerRiskRatings);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.sea_risk_ratings, commonData!.seaRiskRatings);
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.partner_types,
+      commonData!.partnerTypes
+    );
+    this.getFiltersHelper().updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, commonData!.csoTypes);
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.risk_ratings,
+      commonData!.partnerRiskRatings
+    );
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.sea_risk_ratings,
+      commonData!.seaRiskRatings
+    );
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
