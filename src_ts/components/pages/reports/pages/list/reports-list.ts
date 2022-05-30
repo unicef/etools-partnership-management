@@ -411,7 +411,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
             active: false,
             loadingSource: 'reports-list'
           });
-        }, 20000);
+        }, 60000);
       }, 50);
     });
   }
