@@ -1,6 +1,6 @@
 import {LitElement, html, property, customElement} from 'lit-element';
 import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
-import CommonMixin from '../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../common/mixins/common-mixin-lit';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
@@ -22,7 +22,7 @@ import {translate} from 'lit-translate';
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
 @customElement('agreement-termination')
-export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixin(LitElement)) {
+export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixinLit(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }

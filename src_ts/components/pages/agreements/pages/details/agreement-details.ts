@@ -48,6 +48,7 @@ import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import {stopGlobalLoading} from '../../../../utils/utils';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
@@ -626,7 +627,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      this.stopGlobalLoading('ag-page');
+      stopGlobalLoading(this, 'ag-page');
     }, 200);
     this.autoValidate = true;
   }

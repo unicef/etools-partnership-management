@@ -7,7 +7,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '../../../../common/components/etools-form-element-wrapper';
 
 import './sent-bk-comments.js';
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
@@ -24,7 +24,7 @@ import {openDialog} from '../../../../utils/dialog';
  * @appliesMixin EtoolsCurrency
  */
 @customElement('report-summary')
-export class ReportSummary extends CommonMixin(EtoolsCurrency(LitElement)) {
+export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit, elevationStyles];
   }
