@@ -72,8 +72,10 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       if (!this.endpointName) {
         logWarn('Please specify an endpointName property', 'list-data-mixin');
       } else {
-        this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
-        this._requestListData();
+        if (!['partners-partners-list', 'partners-governments-list'].includes(this.id)) {
+          this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
+          this._requestListData();
+        }
       }
     }
 

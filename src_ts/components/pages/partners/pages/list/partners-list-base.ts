@@ -99,7 +99,7 @@ export class PartnersListBase extends CommonMixin(
       ></iron-media-query>
 
       <partners-list-data
-        id="partners"
+        id="partners-${this.localName}"
         @filtered-partners-changed="${(e: CustomEvent) => {
           this.filteredPartners = e.detail;
         }}"
