@@ -341,8 +341,9 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadFilteredPartners() {
-    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListData;
+    const partners = this.shadowRoot!.querySelector('#partners-' + this.localName) as PartnersListData;
     if (!partners) {
+      console.warn('<partners-list-data> component is null');
       return;
     }
     const queryParams = this.routeDetails?.queryParams;
