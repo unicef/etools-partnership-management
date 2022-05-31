@@ -74,7 +74,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       } else {
         if (!this.noGetRequest) {
           // List data is retrieved by <...-list-data> comp. from app-shell
-          // exclude the ones
+          // exclude the other ones
           this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
           this._requestListData();
         }
