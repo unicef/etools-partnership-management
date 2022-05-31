@@ -73,7 +73,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
         logWarn('Please specify an endpointName property', 'list-data-mixin');
       } else {
         if (!this.noAutoRefresh) {
-          // Partners collection retrieved by <partners-list-data comp. from app-shell
+          // Partners collection is retrieved by <partners-list-data comp. from app-shell
           // exclude the ones from partners-list-base
           this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
           this._requestListData();
