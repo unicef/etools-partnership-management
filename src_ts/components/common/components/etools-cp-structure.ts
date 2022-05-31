@@ -6,7 +6,6 @@ import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../../redux/store';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {requiredFieldStarredStyles} from '../../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../../utils/utils';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
@@ -23,7 +22,7 @@ import {PolymerElement} from '@polymer/polymer';
 export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)) {
   render() {
     return html`
-      ${sharedStyles} ${requiredFieldStarredStyles}
+      ${sharedStyles}
       <style>
         :host {
           display: flex;
