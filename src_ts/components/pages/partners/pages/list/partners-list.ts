@@ -4,7 +4,7 @@ import {store, RootState} from '../../../../../redux/store';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PartnersListBase} from './partners-list-base';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {getPartnerFilters, selectedValueTypeByFilterKey} from './partners-filters';
+import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
 
 /**
  * @polymer
@@ -46,7 +46,7 @@ export class PartnersList extends connect(store)(PartnersListBase) {
     return JSON.parse(JSON.stringify(getPartnerFilters()));
   }
 
-  getSelectedValueTypeByFilterKey() {
-    return selectedValueTypeByFilterKey;
+  getFiltersHelper() {
+    return PartnersFiltersHelper;
   }
 }

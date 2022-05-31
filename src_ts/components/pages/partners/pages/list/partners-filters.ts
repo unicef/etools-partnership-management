@@ -1,6 +1,6 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {get as getTranslation} from 'lit-translate';
-import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-filters/src/filters';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 import {EtoolsFilterTypes} from '@unicef-polymer/etools-filters/src/etools-filters';
 
 export enum PartnerFilterKeys {
@@ -25,7 +25,7 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [PartnerFilterKeys.hidden]: 'boolean'
 };
 
-setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
+export const PartnersFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
 
 export function getPartnerFilters() {
   return [
