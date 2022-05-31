@@ -45,8 +45,8 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
     handleErrorResponse!: (e: any) => void;
     dataLoadedEventName!: string;
     // -----
-    @property({type: Boolean, attribute: 'no-auto-refresh'})
-    noAutoRefresh = false;
+    @property({type: Boolean, attribute: 'no-get-request'})
+    noGetRequest = false;
 
     disconnectedCallback() {
       super.disconnectedCallback();
@@ -72,9 +72,9 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       if (!this.endpointName) {
         logWarn('Please specify an endpointName property', 'list-data-mixin');
       } else {
-        if (!this.noAutoRefresh) {
-          // Partners collection is retrieved by <partners-list-data comp. from app-shell
-          // exclude the ones from partners-list-base
+        if (!this.noGetRequest) {
+          // List data is retrieved by <...-list-data> comp. from app-shell
+          // exclude the ones
           this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
           this._requestListData();
         }
@@ -118,7 +118,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
         newEndpoint &&
         Object.prototype.hasOwnProperty.call(newEndpoint, 'exp') &&
         newEndpoint.exp > 0 &&
-        !this.noAutoRefresh
+        !this.noGetRequest
       ) {
         this._removeAutomaticDataRefreshLoop();
         this._setAutomaticDataRefreshLoop(newEndpoint);
