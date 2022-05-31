@@ -36,13 +36,8 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues,
-  setselectedValueTypeByFilterKey
-} from '@unicef-polymer/etools-filters/src/filters';
 import {translate} from 'lit-translate';
-import {AgreementsFilterKeys, getAgreementFilters, selectedValueTypeByFilterKey} from './agreements-filters';
+import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
@@ -371,17 +366,32 @@ export class AgreementsList extends connect(store)(
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
-    setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
     const availableFilters = JSON.parse(JSON.stringify(getAgreementFilters()));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.cpStructures, commonData!.countryProgrammes);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.partners, this.partnersDropdownData);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.type, commonData!.agreementTypes);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.status, commonData!.agreementStatuses);
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.cpStructures,
+      commonData!.countryProgrammes
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.partners,
+      this.partnersDropdownData
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.type,
+      commonData!.agreementTypes
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.status,
+      commonData!.agreementStatuses
+    );
   }
 
   filtersChange(e: CustomEvent) {
@@ -406,7 +416,10 @@ export class AgreementsList extends connect(store)(
     if (this.allFilters) {
       // update filter selection and assign the result to etools-filters(trigger render)
       const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
+      this.allFilters = AgreementsFiltersHelper.updateFiltersSelectedValues(
+        omit(currentParams, ['page', 'size', 'sort']),
+        this.allFilters
+      );
     }
   }
 

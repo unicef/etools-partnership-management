@@ -1,6 +1,6 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {get as getTranslation} from 'lit-translate';
-import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-filters/src/filters';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 import {EtoolsFilterTypes} from '@unicef-polymer/etools-filters/src/etools-filters';
 
 export enum ReportsFilterKeys {
@@ -23,7 +23,7 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [ReportsFilterKeys.unicef_focal_points]: 'Array'
 };
 
-setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
+export const ReportsFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
 
 export function getReportFilters() {
   return [
