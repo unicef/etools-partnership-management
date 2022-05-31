@@ -3,7 +3,6 @@ import {customElement} from 'lit-element';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
 import {getGovernmentFilters, GovernmentFiltersHelper} from './governments-filters';
-import {selectedValueTypeByFilterKey} from './partners-filters';
 import {PartnersListBase} from './partners-list-base';
 
 @customElement('governments-list')
