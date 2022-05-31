@@ -13,7 +13,7 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
 
@@ -22,7 +22,7 @@ import {translate} from 'lit-translate';
  * @customElement
  */
 @customElement('add-ag-amendment-dialog')
-export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
+export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
