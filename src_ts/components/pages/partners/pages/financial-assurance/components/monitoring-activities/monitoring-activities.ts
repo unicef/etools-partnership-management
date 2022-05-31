@@ -174,7 +174,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
       endpoint: this.getEndpoint(pmpEdpoints, 'partnerActivities', {id: this._partnerId})
     })
       .then((response: any) => {
-        this.activities = response.results;
+        this.activities = response;
         this.mapActivitiesToGroups();
       })
       .catch((err: any) => {
