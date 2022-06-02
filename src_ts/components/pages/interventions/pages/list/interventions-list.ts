@@ -330,7 +330,6 @@ export class InterventionsList extends connect(store)(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
-
       this.routeDetails = cloneDeep(stateRouteDetails);
 
       fireEvent(this, 'global-loading', {
