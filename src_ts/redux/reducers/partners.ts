@@ -5,6 +5,7 @@ import {Reducer, Action} from 'redux';
 
 export class PartnersState {
   list: [] = [];
+  listIsLoaded = false;
 }
 
 const INITIAL_STATE = new PartnersState();
@@ -13,7 +14,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
   switch (action.type) {
     case a.SET_PARTNERS:
       return {
-        list: action.partners
+        list: action.partners,
+        listIsLoaded: true
       };
     case a.DELETE_PARTNER: {
       const partnersCopy = state.list.slice(0);
@@ -23,7 +25,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
       }
 
       return {
-        list: partnersCopy
+        list: partnersCopy,
+        listIsLoaded: true
       };
     }
 

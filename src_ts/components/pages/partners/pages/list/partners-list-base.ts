@@ -99,7 +99,7 @@ export class PartnersListBase extends CommonMixin(
       ></iron-media-query>
 
       <partners-list-data
-        id="partners"
+        id="partners-${this.localName}"
         @filtered-partners-changed="${(e: CustomEvent) => {
           this.filteredPartners = e.detail;
         }}"
@@ -110,7 +110,7 @@ export class PartnersListBase extends CommonMixin(
         }}"
         list-data-path="filteredPartners"
         fireDataLoaded
-        no-auto-refresh
+        no-get-request
       >
       </partners-list-data>
 
@@ -282,7 +282,7 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
       return;
     }
 
@@ -293,7 +293,6 @@ export class PartnersListBase extends CommonMixin(
 
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.initFiltersForDisplay(state.commonData!);
-      // this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
@@ -341,8 +340,9 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadFilteredPartners() {
-    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListData;
+    const partners = this.shadowRoot!.querySelector('#partners-' + this.localName) as PartnersListData;
     if (!partners) {
+      console.warn('<partners-list-data> component is null');
       return;
     }
     const queryParams = this.routeDetails?.queryParams;
