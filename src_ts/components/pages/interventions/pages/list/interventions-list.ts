@@ -330,6 +330,7 @@ export class InterventionsList extends connect(store)(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+
       this.routeDetails = cloneDeep(stateRouteDetails);
 
       fireEvent(this, 'global-loading', {
@@ -386,8 +387,11 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+  dataRequiredByFiltersHasBeenLoaded(state: RootState) {
+    if (!this.partners || !this.partners.length) {
+      this.partners = partnersDropdownDataSelector(state);
+    }
+    return state.commonData?.commonDataIsLoaded && this.partners.length;
   }
 
   protected initFiltersForDisplay(state: RootState): void {
@@ -416,7 +420,7 @@ export class InterventionsList extends connect(store)(
       [InterventionFilterKeys.offices, state.commonData!.offices],
       [InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
       [InterventionFilterKeys.donors, state.commonData!.donors],
-      [InterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
+      [InterventionFilterKeys.partners, [...this.partners]],
       [InterventionFilterKeys.grants, state.commonData!.grants],
       [InterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
       [InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
@@ -429,7 +433,6 @@ export class InterventionsList extends connect(store)(
         ]
       ]
     ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
-    this.partners = partnersDropdownDataSelector(state);
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
