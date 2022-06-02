@@ -113,7 +113,7 @@ export class AgreementsList extends connect(store)(
         }}"
         list-data-path="filteredAgreements"
         fireDataLoaded
-        no-auto-refresh
+        no-get-request
       >
       </agreements-list-data>
 
