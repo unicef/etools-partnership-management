@@ -10,6 +10,11 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import pmpEdpoints from '../../endpoints/endpoints';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import {setAgreements} from '../../../redux/actions/agreements';
+import {setPartners} from '../../../redux/actions/partners';
 
 /**
  * @polymer
@@ -17,7 +22,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
+class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -178,6 +183,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
       return;
     }
 
+    const endpointNames: string[] = [];
     // clear only data sets
     window.EtoolsPmpApp.DexieDb.transaction(
       'rw',
@@ -189,26 +195,53 @@ class DataRefreshDialog extends EtoolsPageRefreshMixinLit(LitElement) {
         if (this.partnersSelected) {
           window.EtoolsPmpApp.DexieDb.partners.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
+          endpointNames.push('partners');
         }
         if (this.agreementsSelected) {
           window.EtoolsPmpApp.DexieDb.agreements.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
+          endpointNames.push('agreements');
         }
         if (this.interventionsSelected) {
           window.EtoolsPmpApp.DexieDb.interventions.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+          endpointNames.push('interventions');
         }
       }
     )
       .then(() => {
         // transaction succeeded
-        this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+        this.reloadData(endpointNames).then(() => {
+          this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+        });
       })
       .catch((error: any) => {
         // transaction failed
         logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
         this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
       });
+  }
+
+  reloadData(endpointNames: string[]) {
+    const promisses = endpointNames.map((endpointName: string) => {
+      return sendRequest({endpoint: this.getEndpoint(pmpEdpoints, endpointName)}).then((response) => {
+        this.afterDataLoaded(endpointName, response);
+      });
+    });
+    return Promise.allSettled(promisses);
+  }
+
+  afterDataLoaded(endpointName: string, respose: []) {
+    switch (endpointName) {
+      case 'partners':
+        store.dispatch(setPartners(respose));
+        break;
+      case 'agreements':
+        store.dispatch(setAgreements(respose));
+        break;
+      default:
+        break;
+    }
   }
 
   _handleSuccess(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
