@@ -7,7 +7,7 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
-import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
@@ -31,7 +31,7 @@ import {translate} from 'lit-translate';
  * @appliesMixin CommonMixin
  */
 @customElement('agreement-amendments')
-export class AgreementAmendments extends connect(store)(CommonMixin(LitElement)) {
+export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }

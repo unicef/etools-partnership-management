@@ -1,4 +1,5 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import difference from 'lodash-es/difference';
 import {formatDate} from './date-utils';
 
@@ -113,6 +114,13 @@ export const areEqual = (obj1: any, obj2: any): boolean => {
     return false;
   }
   return true;
+};
+
+export const stopGlobalLoading = (el: any, source: string) => {
+  fireEvent(el, 'global-loading', {
+    active: false,
+    loadingSource: source
+  });
 };
 
 function _formatYYYY_MM_DD(obj2: string | Date) {

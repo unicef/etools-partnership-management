@@ -26,7 +26,7 @@ import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
 import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin-lit';
 
@@ -48,6 +48,7 @@ import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import {stopGlobalLoading} from '../../../../utils/utils';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
@@ -64,7 +65,7 @@ import debounce from 'lodash-es/debounce';
  * @appliesMixin UploadsMixin
  */
 @customElement('agreement-details')
-export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit, buttonsStyles];
   }
@@ -626,7 +627,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      this.stopGlobalLoading('ag-page');
+      stopGlobalLoading(this, 'ag-page');
     }, 200);
     this.autoValidate = true;
   }
