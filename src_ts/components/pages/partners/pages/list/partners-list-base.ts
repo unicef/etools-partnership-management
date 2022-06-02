@@ -282,7 +282,7 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
       return;
     }
 
@@ -293,7 +293,6 @@ export class PartnersListBase extends CommonMixin(
 
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.initFiltersForDisplay(state.commonData!);
-      // this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
