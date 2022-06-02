@@ -261,7 +261,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
   }
 
   _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
-    const routePath = afterDataRefreshLandingPage;
+    const routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
       this.page = null;
       setTimeout(() => {
