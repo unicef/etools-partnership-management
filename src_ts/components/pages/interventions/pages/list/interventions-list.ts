@@ -386,12 +386,13 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+  dataRequiredByFiltersHasBeenLoaded(state: RootState) {
+    return state.commonData?.commonDataIsLoaded && state.partners?.listIsLoaded;
   }
 
   protected initFiltersForDisplay(state: RootState): void {
     let availableFilters = [];
+
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
