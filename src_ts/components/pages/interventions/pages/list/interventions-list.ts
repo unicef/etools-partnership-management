@@ -322,6 +322,10 @@ export class InterventionsList extends connect(store)(
       return;
     }
 
+    if (!this.partners || !this.partners.length) {
+      this.partners = partnersDropdownDataSelector(state);
+    }
+
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       return;
     }
@@ -387,9 +391,6 @@ export class InterventionsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
-    if (!this.partners || !this.partners.length) {
-      this.partners = partnersDropdownDataSelector(state);
-    }
     return state.commonData?.commonDataIsLoaded && this.partners.length;
   }
 
