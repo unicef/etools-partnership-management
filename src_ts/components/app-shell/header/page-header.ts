@@ -308,7 +308,7 @@ class PageHeader extends connect(store)(
   ];
 
   @property({type: String})
-  selectedLanguage!: string;
+  selectedLanguage = 'en';
 
   public connectedCallback() {
     super.connectedCallback();
