@@ -322,10 +322,6 @@ export class InterventionsList extends connect(store)(
       return;
     }
 
-    if (!this.partners || !this.partners.length) {
-      this.partners = partnersDropdownDataSelector(state);
-    }
-
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       return;
     }
@@ -391,11 +387,12 @@ export class InterventionsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
-    return state.commonData?.commonDataIsLoaded && this.partners.length;
+    return state.commonData?.commonDataIsLoaded && state.partners?.listIsLoaded;
   }
 
   protected initFiltersForDisplay(state: RootState): void {
     let availableFilters = [];
+
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
@@ -420,7 +417,7 @@ export class InterventionsList extends connect(store)(
       [InterventionFilterKeys.offices, state.commonData!.offices],
       [InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
       [InterventionFilterKeys.donors, state.commonData!.donors],
-      [InterventionFilterKeys.partners, [...this.partners]],
+      [InterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
       [InterventionFilterKeys.grants, state.commonData!.grants],
       [InterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
       [InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
@@ -433,6 +430,7 @@ export class InterventionsList extends connect(store)(
         ]
       ]
     ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
+    this.partners = partnersDropdownDataSelector(state);
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
