@@ -494,7 +494,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.staffMembers,
               this.agreement.authorized_officers
             )}"
-            .selectedAo="${this.authorizedOfficers}"
           >
           </agreement-amendments>`
         : ''}
