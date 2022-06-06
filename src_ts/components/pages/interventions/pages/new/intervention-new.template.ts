@@ -165,7 +165,7 @@ export function template(this: InterventionNew): TemplateResult {
             <info-icon-tooltip
               slot="label-suffix"
               position="top"
-              offset="24"
+              offset="48"
               .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
             ></info-icon-tooltip>
           </etools-dropdown-multi>
@@ -230,6 +230,7 @@ export function template(this: InterventionNew): TemplateResult {
             <info-icon-tooltip
               slot="label-suffix"
               position="top"
+              offset="48"
               .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
           </etools-dropdown>
