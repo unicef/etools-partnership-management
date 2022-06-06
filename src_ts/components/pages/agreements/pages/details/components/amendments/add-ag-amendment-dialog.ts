@@ -153,11 +153,11 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   uploadInProgress = false;
 
   set dialogData(data: any) {
-    const {agrAuthorizedOfficers, showAuthorizedOfficers, amendmentTypes}: any = data;
+    const {allStaffMembers, showAuthorizedOfficers, amendmentTypes}: any = data;
 
     this.amendment = new AgreementAmendment();
     this.amendmentTypes = amendmentTypes;
-    this.authorizedOfficersOptions = agrAuthorizedOfficers;
+    this.authorizedOfficersOptions = allStaffMembers;
     this.selAuthorizedOfficers = [];
     this.showAuthorizedOfficers = showAuthorizedOfficers;
     this.autoValidate = true;

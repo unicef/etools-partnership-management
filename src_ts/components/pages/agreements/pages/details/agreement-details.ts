@@ -790,6 +790,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
+
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }

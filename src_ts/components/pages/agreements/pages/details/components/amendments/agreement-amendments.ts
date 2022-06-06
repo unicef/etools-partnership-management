@@ -197,7 +197,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
     openDialog({
       dialog: 'add-ag-amendment-dialog',
       dialogData: {
-        agrAuthorizedOfficers: this.authorizedOfficers,
+        allStaffMembers: this.authorizedOfficers,
         showAuthorizedOfficers: this.showAuthorizedOfficers,
         amendmentTypes: amendmentTypes
       }
