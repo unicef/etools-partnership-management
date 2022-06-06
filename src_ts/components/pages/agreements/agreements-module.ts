@@ -368,10 +368,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
 
-    this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
-      if (successfull) {
-        store.dispatch({type: RESET_UNSAVED_UPLOADS});
-      }
+    return new Promise((resolve) => {
+      this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
+        if (successfull) {
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+        }
+        resolve(successfull);
+      });
     });
   }
 
@@ -427,7 +430,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   _validateAndTriggerAgreementSave(e: CustomEvent) {
     e.stopImmediatePropagation();
     if (!this.validateAgreement()) {
-      return false;
+      return;
     }
 
     let agrDataToSave: GenericObject;
@@ -439,8 +442,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agrDataToSave.id = this.agreement.id;
     }
 
-    this._saveAgreement(agrDataToSave);
-    return true;
+    this._saveAgreement(agrDataToSave).then((resp) => {
+      if (!resp && this.newAgreementActive) {
+        // if we have a new record and save failed, set agreement object with data from detail page
+        // to avoid losing entered data by the user
+        this.agreement = {...this.agreement, ...agrDataToSave};
+      }
+    });
   }
 
   validateAgreement() {
