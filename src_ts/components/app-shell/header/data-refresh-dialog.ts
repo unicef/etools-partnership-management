@@ -177,7 +177,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
 
     if (this.allSelected) {
       fireEvent(this, 'update-main-path', {
-        path: afterDataRefreshLandingPage
+        path: afterDataRefreshLandingPage + '/list'
       });
       this.refresh();
       return;

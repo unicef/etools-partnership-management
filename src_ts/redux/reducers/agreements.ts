@@ -3,6 +3,7 @@ import {MinimalAgreement} from '@unicef-polymer/etools-types';
 
 export class AgreementsState {
   list: MinimalAgreement[] = [];
+  listIsLoaded = false;
 }
 
 const INITIAL_STATE = new AgreementsState();
@@ -12,7 +13,8 @@ const agreements = (state = INITIAL_STATE, action: any) => {
     case a.SET_AGREEMENTS:
       return {
         ...state,
-        list: action.agreements
+        list: action.agreements,
+        listIsLoaded: true
       };
     case a.ADD_EDIT_AGREEMENT: {
       const agreementsCopy: MinimalAgreement[] = state.list.slice(0);
@@ -26,7 +28,8 @@ const agreements = (state = INITIAL_STATE, action: any) => {
         agreementsCopy.push(action.agreement);
       }
       return {
-        list: agreementsCopy
+        list: agreementsCopy,
+        listIsLoaded: true
       };
     }
 

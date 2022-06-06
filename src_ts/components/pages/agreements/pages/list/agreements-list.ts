@@ -244,7 +244,7 @@ export class AgreementsList extends connect(store)(
         active: false,
         loadingSource: 'ag-page'
       });
-    }, 10);
+    }, 100);
   }
 
   stateChanged(state: RootState) {
@@ -252,7 +252,7 @@ export class AgreementsList extends connect(store)(
       return;
     }
 
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.agreements?.listIsLoaded) {
       return;
     }
 
