@@ -166,6 +166,9 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   @property({type: String})
   agreementType = '';
 
+  @property({type: Date})
+  agreementStart!: Date | string;
+
   @property({type: Array})
   _amendmentTypes: LabelAndValue[] = [];
 
@@ -202,7 +205,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
       dialogData: {
         authorizedOfficers: this.authorizedOfficers,
         showAuthorizedOfficers: this.showAuthorizedOfficers,
-        amendmentTypes: amendmentTypes
+        amendmentTypes: amendmentTypes,
+        agreementStart: this.agreementStart
       }
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {

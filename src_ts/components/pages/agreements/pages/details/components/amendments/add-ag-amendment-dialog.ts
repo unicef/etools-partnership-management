@@ -16,6 +16,8 @@ import {AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
+import {convertDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -56,6 +58,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
               .open="${this.datePickerOpen}"
               .autoValidate="${this.autoValidate}"
               .maxDate="${this.getCurrentDate()}"
+              .minDate="${this.getMinDate()}"
               required
               selected-date-display-format="D MMM YYYY"
               fire-date-has-changed
@@ -151,11 +154,15 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   @property({type: Boolean})
   uploadInProgress = false;
 
+  @property({type: Date})
+  agreementStart!: Date | string;
+
   set dialogData(data: any) {
-    const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes}: any = data;
+    const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes, agreementStart}: any = data;
 
     this.amendment = new AgreementAmendment();
     this.amendmentTypes = amendmentTypes;
+    this.agreementStart = agreementStart;
     this.authorizedOfficersOptions = authorizedOfficers;
     this.authorizedOfficers = [];
     this.showAuthorizedOfficers = showAuthorizedOfficers;
@@ -224,5 +231,16 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
 
   getCurrentDate() {
     return new Date();
+  }
+
+  getMinDate() {
+    if (!this.agreementStart) {
+      return null;
+    }
+    const stDt = this.agreementStart instanceof Date ? this.agreementStart : convertDate(this.agreementStart);
+    if (stDt) {
+      return dayjs(stDt).utcOffset(0).startOf('date').subtract(1, 'day').toDate();
+    }
+    return null;
   }
 }
