@@ -237,11 +237,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                     id="startDateField"
                     label="${translate('START_DATE')}"
                     .value="${this.agreement.start}"
+                    max-date="${this.agreement.end}"
                     ?readonly="${!this.agreement.permissions?.edit.start}"
                     ?required="${this.agreement.permissions?.required.start}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.start = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.start = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>
@@ -250,11 +254,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                     id="endDateField"
                     label="${translate('END_DATE')}"
                     .value="${this.agreement.end}"
+                    min-date="${this.agreement.start}"
                     ?readonly="${!this.agreement.permissions?.edit.end}"
                     ?required="${this.agreement.permissions?.required.end}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.end = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.end = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>`
