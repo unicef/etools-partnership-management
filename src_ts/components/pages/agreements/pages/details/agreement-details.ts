@@ -431,7 +431,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.agreement.status
             )}"
           >
-            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper w100" always-float-label>
               <!-- Generate PCA -->
               <label slot="label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <paper-button
