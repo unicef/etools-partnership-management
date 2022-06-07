@@ -502,7 +502,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.staffMembers,
               this.agreement.authorized_officers
             )}"
-            .selectedAo="${this.authorizedOfficers}"
           >
           </agreement-amendments>`
         : ''}
@@ -520,13 +519,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     const agrChanged = !isJsonStrMatch(newAgr, this._agreement);
     if (agrIdChanged || agrChanged) {
       this._agreement = newAgr;
-      if (agrIdChanged) {
-        setTimeout(() => {
-          // Timeout needed because this code might execute before connectedCallback otherwise
-          this._agreementChanged(newAgr);
-          this.debouncedPartnerChanged(this.agreement.partner);
-        });
-      }
+      setTimeout(() => {
+        // Timeout needed because this code might execute before connectedCallback otherwise
+        this._agreementChanged(newAgr);
+        this.debouncedPartnerChanged(this.agreement.partner);
+      });
     }
   }
 
@@ -801,6 +798,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
+
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }

@@ -423,7 +423,12 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     if (event.detail.ao && event.detail.ao.length > 0) {
       agrDataToSave.authorized_officers = event.detail.ao;
     }
-    this._saveAgreement(agrDataToSave);
+    this._saveAgreement(agrDataToSave).then((response: any) => {
+      if (response.id) {
+        this.agreement = response;
+        this.originalAgreementData = JSON.parse(JSON.stringify(response));
+      }
+    });
     return true;
   }
 

@@ -70,7 +70,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     return sendRequest(options)
       .then((resp: any) => {
         this._handleSuccResponse(resp, ajaxMethod);
-        return true;
+        return resp;
       })
       .catch((error: any) => {
         if (error instanceof EtoolsRequestError === false) {
@@ -243,20 +243,9 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
       });
       return Promise.resolve(false);
     } else {
-      let endpoint = null;
-      let isNew = false;
+      const endpoint = this.buildEndpoint(agreement);
+      const isNew = !agreement.id;
 
-      if (agreement.id) {
-        // prepare PATCH endpoint
-        endpoint = this.getEndpoint(pmpEdpoints, this.agreementEndpoints.DETAILS, {
-          id: agreement.id
-        });
-      } else {
-        // new agreement, use POST method for the same endpoint
-        endpoint = this.getEndpoint(pmpEdpoints, this.agreementEndpoints.CREATE);
-        isNew = true;
-      }
-      // remove id from data
       if (agreement.id) {
         delete agreement.id;
       }
@@ -271,10 +260,9 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
-        // fire in the hole
-        const method = isNew ? 'POST' : 'PATCH';
+
         return this._triggerAgreementRequest({
-          method: method,
+          method: isNew ? 'POST' : 'PATCH',
           endpoint: endpoint,
           body: agreement
         });
@@ -285,6 +273,16 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         });
         return Promise.resolve(false);
       }
+    }
+  }
+
+  private buildEndpoint(agreement: any) {
+    if (agreement.id) {
+      return this.getEndpoint(pmpEdpoints, this.agreementEndpoints.DETAILS, {
+        id: agreement.id
+      });
+    } else {
+      return this.getEndpoint(pmpEdpoints, this.agreementEndpoints.CREATE);
     }
   }
 
