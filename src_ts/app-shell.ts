@@ -751,7 +751,7 @@ class AppShell extends connect(store)(
     if (currentPath.indexOf('settings') > -1) {
       return;
     }
-    if (currentPath.substr(-1) === '/') {
+    if (currentPath[currentPath.length - 1] === '/') {
       currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
     }
     if (currentPath === this.rootPath + this.routeData.module) {
