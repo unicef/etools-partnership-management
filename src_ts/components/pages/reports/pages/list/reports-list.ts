@@ -58,6 +58,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           --paper-tooltip: {
             text-align: center;
             line-height: 1.4;
+            font-size: 12px;
           }
         }
 
