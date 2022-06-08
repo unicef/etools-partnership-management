@@ -98,7 +98,7 @@ export const tokenEndpointsHost = (host: string) => {
         // 'http://localhost:8888/https://dev.partnerreportingportal.org'
         // Start cors-anywhere with command 'npm run start:cors' in pmp root folder
         // Don't forget to do the same configuration in @etools-modules-common/dist/config.js for reports to work
-        return 'http://localhost:8888/https://dev.partnerreportingportal.org';
+        return 'http://prp.localhost:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
       case 'TEST':
@@ -110,7 +110,7 @@ export const tokenEndpointsHost = (host: string) => {
       case 'PROD':
         return 'https://www.partnerreportingportal.org';
       default:
-        return 'https://dev.partnerreportingportal.org';
+        return 'http://prp.localhost:8081';
     }
   }
   return null;
