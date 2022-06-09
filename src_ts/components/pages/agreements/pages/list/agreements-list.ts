@@ -331,7 +331,7 @@ export class AgreementsList extends connect(store)(
         queryParams?.start || '',
         queryParams?.end || '',
         this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
-        queryParams?.special_conditions_pca || 'false',
+        queryParams?.special_conditions_pca,
         queryParams?.page ? Number(queryParams.page) : 1,
         queryParams?.size ? Number(queryParams.size) : 10,
         false
