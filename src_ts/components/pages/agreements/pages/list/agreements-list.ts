@@ -274,7 +274,7 @@ export class AgreementsList extends connect(store)(
 
     if (
       this.filteringParamsHaveChanged(stateRouteDetails) ||
-      this.shouldReloadListBecauseOfEditsOnItems(state.agreements.listItemsChanged)
+      this.shouldReloadListBecauseOfEditsOnItems(state.agreements.shouldReloadList)
     ) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
@@ -286,8 +286,8 @@ export class AgreementsList extends connect(store)(
     }
   }
 
-  shouldReloadListBecauseOfEditsOnItems(listItemsChanged: boolean) {
-    return listItemsChanged;
+  shouldReloadListBecauseOfEditsOnItems(shouldReloadList: boolean) {
+    return shouldReloadList;
   }
 
   /**

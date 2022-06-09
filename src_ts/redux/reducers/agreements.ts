@@ -4,7 +4,7 @@ import {MinimalAgreement} from '@unicef-polymer/etools-types';
 export class AgreementsState {
   list: MinimalAgreement[] = [];
   listIsLoaded = false;
-  listItemsChanged = false;
+  shouldReloadList = false;
 }
 
 const INITIAL_STATE = new AgreementsState();
@@ -31,7 +31,7 @@ const agreements = (state = INITIAL_STATE, action: any) => {
       return {
         list: agreementsCopy,
         listIsLoaded: true,
-        listItemsChanged: true
+        shouldReloadList: true
       };
     }
 

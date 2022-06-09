@@ -328,7 +328,7 @@ export class InterventionsList extends connect(store)(
 
     if (
       this.filteringParamsHaveChanged(stateRouteDetails) ||
-      this.shouldReloadListBecauseOfEditsOnItems(state.interventions?.listItemsChanged)
+      this.shouldReloadListBecauseOfEditsOnItems(state.interventions?.shouldReGetList)
     ) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
@@ -383,8 +383,8 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  shouldReloadListBecauseOfEditsOnItems(listItemsChanged: boolean) {
-    return listItemsChanged;
+  shouldReloadListBecauseOfEditsOnItems(shouldReloadList: boolean) {
+    return shouldReloadList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
