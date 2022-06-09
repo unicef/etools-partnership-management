@@ -312,6 +312,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             <div class="col col-3">
               <!-- Signed By Partner Date -->
               <datepicker-lite
+                class="w100"
                 id="signedByPartnerDateField"
                 label="${translate('SIGNED_BY_PARTNER_DATE')}"
                 .value="${this.agreement.signed_by_partner_date}"
@@ -334,6 +335,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <datepicker-lite
+                class="w100"
                 id="signedByUnicefDateField"
                 label="${translate('SIGNED_BY_UNICEF_DATE')}"
                 .value="${this.agreement.signed_by_unicef_date}"
