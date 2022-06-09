@@ -972,7 +972,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
@@ -995,7 +995,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     if (this.agreement.agreement_type === 'SSFA') {
