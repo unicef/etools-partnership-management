@@ -184,9 +184,6 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   showAuthorizedOfficers = false;
 
   @property({type: Array})
-  selectedAo: [] = [];
-
-  @property({type: Array})
   dataItems: any[] = [];
 
   @property({type: Boolean})
@@ -203,7 +200,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
     openDialog({
       dialog: 'add-ag-amendment-dialog',
       dialogData: {
-        authorizedOfficers: this.authorizedOfficers,
+        allStaffMembers: this.authorizedOfficers,
         showAuthorizedOfficers: this.showAuthorizedOfficers,
         amendmentTypes: amendmentTypes,
         agreementStart: this.agreementStart
@@ -219,7 +216,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   fireSaveAmendment(data: any) {
     const unsavedAmendment = data.amendment;
     if (unsavedAmendment) {
-      fireEvent(this, 'save-amendment', {amendment: unsavedAmendment, ao: this.selectedAo});
+      fireEvent(this, 'save-amendment', {amendment: unsavedAmendment, ao: data.ao});
     }
   }
 

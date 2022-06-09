@@ -2,7 +2,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
 
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
@@ -16,8 +16,7 @@ import {AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
-import {convertDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
-declare const dayjs: any;
+import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
  * @polymer
@@ -110,7 +109,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
                 .options="${this.authorizedOfficersOptions}"
                 option-value="id"
                 option-label="name"
-                .selectedValues="${this.authorizedOfficers}"
+                .selectedValues="${cloneDeep(this.selAuthorizedOfficers)}"
                 trigger-value-change-event
                 @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
                 error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"
@@ -146,7 +145,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   authorizedOfficersOptions: [] = [];
 
   @property({type: Array})
-  authorizedOfficers: [] = [];
+  selAuthorizedOfficers: [] = [];
 
   @property({type: Boolean})
   _aoTypeSelected = false;
@@ -158,14 +157,14 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   agreementStart!: Date | string;
 
   set dialogData(data: any) {
-    const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes, agreementStart}: any = data;
+    const {allStaffMembers, showAuthorizedOfficers, amendmentTypes, agreementStart}: any = data;
 
     this.amendment = new AgreementAmendment();
     this.amendmentTypes = amendmentTypes;
-    this.agreementStart = agreementStart;
-    this.authorizedOfficersOptions = authorizedOfficers;
-    this.authorizedOfficers = [];
+    this.authorizedOfficersOptions = allStaffMembers;
+    this.selAuthorizedOfficers = [];
     this.showAuthorizedOfficers = showAuthorizedOfficers;
+    this.agreementStart = agreementStart;
     this.autoValidate = true;
     this._aoTypeSelected = false;
   }
@@ -176,7 +175,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         confirmed: true,
         response: {
           amendment: this.amendment,
-          ao: this.authorizedOfficers
+          ao: this.selAuthorizedOfficers
         }
       });
     }
@@ -204,8 +203,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
     const selectedOfficers = e.detail.selectedItems.map((i: any) => String(i['id']));
-    if (!isJsonStrMatch(selectedOfficers, this.authorizedOfficers)) {
-      this.authorizedOfficers = selectedOfficers;
+    if (!isJsonStrMatch(selectedOfficers, this.selAuthorizedOfficers)) {
+      this.selAuthorizedOfficers = selectedOfficers;
     }
   }
 
@@ -237,10 +236,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
     if (!this.agreementStart) {
       return null;
     }
-    const stDt = this.agreementStart instanceof Date ? this.agreementStart : convertDate(this.agreementStart);
-    if (stDt) {
-      return dayjs(stDt).utcOffset(0).startOf('date').subtract(1, 'day').toDate();
-    }
-    return null;
+    const date = this.agreementStart instanceof Date ? this.agreementStart : new Date(this.agreementStart);
+    date.setDate(date.getDate() - 1);
+    return date;
   }
 }

@@ -237,11 +237,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                     id="startDateField"
                     label="${translate('START_DATE')}"
                     .value="${this.agreement.start}"
+                    max-date="${this.agreement.end}"
                     ?readonly="${!this.agreement.permissions?.edit.start}"
                     ?required="${this.agreement.permissions?.required.start}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.start = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.start = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>
@@ -250,11 +254,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                     id="endDateField"
                     label="${translate('END_DATE')}"
                     .value="${this.agreement.end}"
+                    min-date="${this.agreement.start}"
                     ?readonly="${!this.agreement.permissions?.edit.end}"
                     ?required="${this.agreement.permissions?.required.end}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.end = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.end = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>`
@@ -423,7 +431,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.agreement.status
             )}"
           >
-            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper w100" always-float-label>
               <!-- Generate PCA -->
               <label slot="label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <paper-button
@@ -495,7 +503,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.staffMembers,
               this.agreement.authorized_officers
             )}"
-            .selectedAo="${this.authorizedOfficers}"
           >
           </agreement-amendments>`
         : ''}
@@ -513,13 +520,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     const agrChanged = !isJsonStrMatch(newAgr, this._agreement);
     if (agrIdChanged || agrChanged) {
       this._agreement = newAgr;
-      if (agrIdChanged) {
-        setTimeout(() => {
-          // Timeout needed because this code might execute before connectedCallback otherwise
-          this._agreementChanged(newAgr);
-          this.debouncedPartnerChanged(this.agreement.partner);
-        });
-      }
+      setTimeout(() => {
+        // Timeout needed because this code might execute before connectedCallback otherwise
+        this._agreementChanged(newAgr);
+        this.debouncedPartnerChanged(this.agreement.partner);
+      });
     }
   }
 
@@ -794,6 +799,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
+
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }
