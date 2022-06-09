@@ -465,7 +465,7 @@ export class PartnersListBase extends CommonMixin(
       rating: queryStringObj.risk_ratings,
       sea_risk_rating: queryStringObj.sea_risk_ratings,
       psea_assessment_date_before: queryStringObj.psea_assessment_date_before,
-      psea_assessment_date_after: queryStringObj.psea_assessment_date_before,
+      psea_assessment_date_after: queryStringObj.psea_assessment_date_after,
       hidden: queryStringObj.hidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'partners').url);
