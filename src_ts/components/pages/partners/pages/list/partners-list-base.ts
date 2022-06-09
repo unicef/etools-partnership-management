@@ -286,7 +286,10 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (
+      this.filteringParamsHaveChanged(stateRouteDetails) ||
+      this.shouldReloadListBecauseOfEditsOnItems(state.partners?.listItemsChanged)
+    ) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -410,9 +413,8 @@ export class PartnersListBase extends CommonMixin(
     return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  shouldReloadListBecauseOfEditsOnItems(listItemsChanged: boolean) {
+    return listItemsChanged;
   }
 
   /**

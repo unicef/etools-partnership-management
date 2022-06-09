@@ -6,6 +6,7 @@ import {Reducer, Action} from 'redux';
 export class PartnersState {
   list: [] = [];
   listIsLoaded = false;
+  listItemsChanged = false;
 }
 
 const INITIAL_STATE = new PartnersState();
@@ -26,7 +27,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
 
       return {
         list: partnersCopy,
-        listIsLoaded: true
+        listIsLoaded: true,
+        listItemsChanged: true
       };
     }
 

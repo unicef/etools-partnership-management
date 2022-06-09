@@ -272,7 +272,10 @@ export class AgreementsList extends connect(store)(
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+    if (
+      this.filteringParamsHaveChanged(stateRouteDetails) ||
+      this.shouldReloadListBecauseOfEditsOnItems(state.agreements.listItemsChanged)
+    ) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -281,6 +284,10 @@ export class AgreementsList extends connect(store)(
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
+  }
+
+  shouldReloadListBecauseOfEditsOnItems(listItemsChanged: boolean) {
+    return listItemsChanged;
   }
 
   /**

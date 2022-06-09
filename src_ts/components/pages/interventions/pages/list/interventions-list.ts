@@ -326,7 +326,10 @@ export class InterventionsList extends connect(store)(
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (
+      this.filteringParamsHaveChanged(stateRouteDetails) ||
+      this.shouldReloadListBecauseOfEditsOnItems(state.interventions?.listItemsChanged)
+    ) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -380,9 +383,8 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  shouldReloadListBecauseOfEditsOnItems(listItemsChanged: boolean) {
+    return listItemsChanged;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
