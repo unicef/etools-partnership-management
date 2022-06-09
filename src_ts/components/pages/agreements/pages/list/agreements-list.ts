@@ -398,7 +398,7 @@ export class AgreementsList extends connect(store)(
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: any = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
