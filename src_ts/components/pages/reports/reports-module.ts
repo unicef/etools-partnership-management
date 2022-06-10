@@ -10,7 +10,6 @@ import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '../../styles/page-content-header-slotted-styles';
 import '../../common/components/etools-tabs';
 
 import './components/report-status';

@@ -9,7 +9,6 @@ import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
-import '../../styles/page-content-header-slotted-styles.js';
 import '../../common/components/etools-error-messages-box.js';
 import '../../common/components/etools-tabs.js';
 import './data/intervention-item-data.js';
