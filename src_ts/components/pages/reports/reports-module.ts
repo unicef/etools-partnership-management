@@ -10,7 +10,6 @@ import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '../../styles/page-content-header-slotted-styles';
 import '../../common/components/etools-tabs';
 
 import './components/report-status';
@@ -189,7 +188,7 @@ export class ReportsModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" ?hidden="${!this.listActive}">
             <paper-menu-button id="export" close-on-activate horizontal-align="right">
-              <paper-button slot="dropdown-trigger">
+              <paper-button slot="dropdown-trigger" class="focus-as-link">
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
               </paper-button>
