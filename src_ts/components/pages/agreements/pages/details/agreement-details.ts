@@ -967,6 +967,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   setAuthorizedOfficers(ao: string[]) {
     if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
       this.authorizedOfficers = ao;
+      this.agreement.authorized_officers = ao as any;
       this.authorizedOfficersChanged();
     }
   }
