@@ -80,12 +80,6 @@ export class InterventionsModule extends connect(store)(
           width: 105px;
         }
 
-        paper-menu-button {
-          --paper-menu-button: {
-            padding: 8px 0 0 0;
-          }
-        }
-
         #pdExportMenuBtn paper-item {
           --paper-item-selected: {
             font-weight: normal !important;
@@ -103,7 +97,7 @@ export class InterventionsModule extends connect(store)(
       </style>
 
       <div ?hidden="${this.showNewPMP(this.activePage)}">
-        <page-content-header with-tabs-visible="${this.tabsActive}">
+        <page-content-header ?with-tabs-visible="${this.tabsActive}">
           <div slot="page-title">
             <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> PD/SPDs </span>
             <span ?hidden="${!this._pageEquals(this.activePage, 'new')}">
@@ -116,7 +110,7 @@ export class InterventionsModule extends connect(store)(
           <div slot="title-row-actions" class="content-header-actions export-options">
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-                <paper-button slot="dropdown-trigger">
+                <paper-button slot="dropdown-trigger" class="focus-as-link">
                   <iron-icon icon="file-download"></iron-icon>
                   ${this._getTranslation('EXPORT')}
                 </paper-button>
