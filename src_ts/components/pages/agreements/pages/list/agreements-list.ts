@@ -45,7 +45,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {reloadAgreements} from '../../../../../redux/actions/agreements';
+import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**
  * @polymer
@@ -267,9 +267,9 @@ export class AgreementsList extends connect(store)(
       return;
     }
 
-    if (state.agreements.reloadList) {
+    if (state.agreements.shouldReloadList) {
       this.loadListData();
-      store.dispatch(reloadAgreements(false));
+      store.dispatch(setShouldReloadAgreements(false));
       return;
     }
 

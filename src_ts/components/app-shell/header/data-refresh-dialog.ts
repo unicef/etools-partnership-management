@@ -13,7 +13,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {reloadAgreements, setAgreements} from '../../../redux/actions/agreements';
+import {setShouldReloadAgreements, setAgreements} from '../../../redux/actions/agreements';
 import {setPartners} from '../../../redux/actions/partners';
 
 /**
@@ -238,7 +238,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
         break;
       case 'agreements':
         store.dispatch(setAgreements(response));
-        store.dispatch(reloadAgreements(true));
+        store.dispatch(setShouldReloadAgreements(true));
         break;
       default:
         break;
