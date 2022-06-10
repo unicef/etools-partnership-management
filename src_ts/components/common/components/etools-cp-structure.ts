@@ -90,7 +90,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
   @property({type: Boolean})
   required = false;
 
-  private sortedCountryProgrammesInited: boolean = false;
+  private sortedCountryProgrammesInited = false;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
