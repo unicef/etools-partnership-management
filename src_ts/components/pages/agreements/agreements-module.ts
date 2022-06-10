@@ -397,7 +397,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     // set module agreement property with what we have in details page,
     // in case Save fails and details is re-rendered this will prevent triggering logic for agreement changed
     this.agreement = {...currentAgreement, ...agrDataToSave};
-    this._saveAgreement(agrDataToSave);
+    this._saveAgreement(agrDataToSave)
+      .then()
+      .catch((error: any) => {
+        console.log(error);
+      });
   }
 
   validateAgreement() {
