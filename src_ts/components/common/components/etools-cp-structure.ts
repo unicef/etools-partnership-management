@@ -1,5 +1,3 @@
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
@@ -53,8 +51,10 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
         error-message="Please select CP Structure"
         trigger-value-change-event
         @etools-selected-item-changed="${(event: CustomEvent) => {
-          this.selectedCp = event.detail.selectedItem?.id;
-          fireEvent(this, 'selected-cp-changed', {value: this.selectedCp});
+          if (this.sortedCountryProgrammesInited && this.selectedCp !== event.detail.selectedItem?.id) {
+            this.selectedCp = event.detail.selectedItem?.id;
+            fireEvent(this, 'selected-cp-changed', {value: this.selectedCp});
+          }
         }}"
       >
       </etools-dropdown>
@@ -90,7 +90,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
   @property({type: Boolean})
   required = false;
 
-  private cpInitDebouncer!: Debouncer;
+  private sortedCountryProgrammesInited: boolean = false;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
@@ -124,19 +124,16 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
   }
 
   _countryProgrammesChanged() {
-    this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer, timeOut.after(10), () => {
-      if (this.appModuleItem) {
-        this._prepareCpsForDisplay();
-
-        if (!this.selectedCp) {
-          this.setDefaultSelectedCpStructure();
-        } else {
-          if (this._hasExpiredCpAssigned(this.selectedCp)) {
-            logWarn(this._getExpiredCPWarning());
-          }
+    if (this.appModuleItem) {
+      this._prepareCpsForDisplay();
+      if (!this.selectedCp) {
+        this.setDefaultSelectedCpStructure();
+      } else {
+        if (this._hasExpiredCpAssigned(this.selectedCp)) {
+          logWarn(this._getExpiredCPWarning());
         }
       }
-    });
+    }
   }
 
   _prepareCpsForDisplay() {
@@ -151,6 +148,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
     // }
 
     this.sortedCountryProgrammes = displayableCps;
+    this.sortedCountryProgrammesInited = true;
   }
 
   // _markExpiredCpsAsDisabled(sortedCps) {
