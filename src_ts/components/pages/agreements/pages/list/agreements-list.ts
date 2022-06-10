@@ -313,7 +313,7 @@ export class AgreementsList extends connect(store)(
   async loadFilteredAgreements() {
     this.waitForAgreementsListDataToLoad().then(async () => {
       const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-      const queryParams = this.routeDetails?.queryParams;
+      const queryParams = this.routeDetails?.queryParams || {};
       const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
 
       agreements.query(
@@ -404,6 +404,10 @@ export class AgreementsList extends connect(store)(
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
+    if (this.prevQueryStringObj.sort !== newParams.sort) {
+      // if sorting changed, reset to first page because we can get a different number of records from Dexie
+      newParams.page = '1';
+    }
     this.prevQueryStringObj = newParams;
 
     fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
