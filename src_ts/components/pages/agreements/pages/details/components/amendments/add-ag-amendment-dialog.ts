@@ -17,6 +17,7 @@ import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
+import {convertDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils.js';
 
 /**
  * @polymer
@@ -236,8 +237,10 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
     if (!this.agreementStart) {
       return null;
     }
-    const date = this.agreementStart instanceof Date ? this.agreementStart : new Date(this.agreementStart);
-    date.setDate(date.getDate() - 1);
+    const date = this.agreementStart instanceof Date ? this.agreementStart : convertDate(this.agreementStart);
+    if (date) {
+      date.setDate(date.getDate() - 1);
+    }
     return date;
   }
 }
