@@ -57,8 +57,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
               max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
               .open="${this.datePickerOpen}"
               .autoValidate="${this.autoValidate}"
-              .maxDate="${this.getCurrentDate()}"
-              .minDate="${this.getMinDate()}"
+              max-date="${this.getCurrentDate()}"
+              min-date="${this.agreementStart}"
               required
               selected-date-display-format="D MMM YYYY"
               fire-date-has-changed
@@ -231,16 +231,5 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
 
   getCurrentDate() {
     return new Date();
-  }
-
-  getMinDate() {
-    if (!this.agreementStart) {
-      return null;
-    }
-    const date = this.agreementStart instanceof Date ? this.agreementStart : convertDate(this.agreementStart);
-    if (date) {
-      date.setDate(date.getDate() - 1);
-    }
-    return date;
   }
 }
