@@ -75,6 +75,10 @@ export class InterventionsList extends connect(store)(
           padding: 8px 24px;
         }
 
+        .filters {
+          position: relative;
+        }
+
         @media (max-width: 576px) {
           section.page-content.filters {
             margin: 5px 0;
@@ -109,11 +113,7 @@ export class InterventionsList extends connect(store)(
       </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters
-          .filterLoadingAbsolute="${true}"
-          .filters="${this.allFilters}"
-          @filter-change="${this.filtersChange}"
-        ></etools-filters>
+        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
@@ -331,17 +331,16 @@ export class InterventionsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+      this.listLoadingActive = true;
       return;
     }
 
     if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+      this.listLoadingActive = true;
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
       this.routeDetails = cloneDeep(stateRouteDetails);
-
-      this.listLoadingActive = true;
-
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadFilteredInterventions();

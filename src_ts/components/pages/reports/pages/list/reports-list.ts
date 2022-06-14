@@ -93,6 +93,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           padding: 8px 24px;
         }
 
+        .filters {
+          position: relative;
+        }
+
         @media (max-width: 576px) {
           section.page-content.filters {
             padding: 5px;
@@ -257,12 +261,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'reports-page'
-      });
-    }, 1000);
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'reports-page'
+    });
   }
 
   stateChanged(state: RootState) {
@@ -271,6 +273,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+      this.listLoadingActive = true;
       return;
     }
 
@@ -293,6 +296,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     this.endStateChanged(state);
 
     if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+      this.listLoadingActive = true;
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -404,13 +408,6 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   loadListData() {
-    this.listLoadingActive = true;
-
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'reports-list'
-    });
     this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
   }
 
@@ -423,12 +420,8 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
         }
         setTimeout(() => {
           clearInterval(check);
-          fireEvent(this, 'global-loading', {
-            message: 'Loading...',
-            active: false,
-            loadingSource: 'reports-list'
-          });
-        }, 60000);
+          this.listLoadingActive = false;
+        }, 30000);
       }, 50);
     });
   }
