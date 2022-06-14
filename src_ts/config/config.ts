@@ -84,6 +84,9 @@ export const _checkEnvironment = () => {
   if (location.indexOf(LOCAL_DOMAIN) > -1) {
     return 'LOCAL';
   }
+  if (location.indexOf(PROD_DOMAIN) > -1) {
+    return 'PROD';
+  }
   return null;
 };
 
@@ -95,17 +98,19 @@ export const tokenEndpointsHost = (host: string) => {
         // 'http://localhost:8888/https://dev.partnerreportingportal.org'
         // Start cors-anywhere with command 'npm run start:cors' in pmp root folder
         // Don't forget to do the same configuration in @etools-modules-common/dist/config.js for reports to work
-        return 'http://127.0.0.1:8081';
+        return 'http://prp.localhost:8081';
       case 'DEVELOPMENT':
+        return 'https://dev.partnerreportingportal.org';
+      case 'TEST':
         return 'https://dev.partnerreportingportal.org';
       case 'DEMO':
         return 'https://demo.partnerreportingportal.org';
       case 'STAGING':
         return 'https://staging.partnerreportingportal.org';
-      case null:
+      case 'PROD':
         return 'https://www.partnerreportingportal.org';
       default:
-        return 'https://dev.partnerreportingportal.org';
+        return 'http://prp.localhost:8081';
     }
   }
   return null;

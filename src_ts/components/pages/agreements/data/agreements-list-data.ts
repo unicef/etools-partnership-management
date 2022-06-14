@@ -46,7 +46,7 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
     startDate: string,
     endDate: string,
     cpStructures: string[],
-    isSpecialConditionsPca: string,
+    isSpecialConditionsPca: string | undefined,
     pageNumber: number,
     pageSize: number,
     showQueryLoading = false

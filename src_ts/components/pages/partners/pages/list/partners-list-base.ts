@@ -38,18 +38,14 @@ import omit from 'lodash-es/omit';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
-import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
-import {
-  setselectedValueTypeByFilterKey,
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues
-} from '@unicef-polymer/etools-filters/src/filters';
+import {GenericObject} from '@unicef-polymer/etools-types';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {RootState} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 
 export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
@@ -106,7 +102,7 @@ export class PartnersListBase extends CommonMixin(
       ></iron-media-query>
 
       <partners-list-data
-        id="partners"
+        id="partners-${this.localName}"
         @filtered-partners-changed="${(e: CustomEvent) => {
           this.filteredPartners = e.detail;
         }}"
@@ -118,7 +114,7 @@ export class PartnersListBase extends CommonMixin(
         @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredPartners"
         fireDataLoaded
-        no-auto-refresh
+        no-get-request
       >
       </partners-list-data>
 
@@ -294,7 +290,7 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
       return;
     }
 
@@ -305,7 +301,6 @@ export class PartnersListBase extends CommonMixin(
 
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.initFiltersForDisplay(state.commonData!);
-      // this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
     }
@@ -313,7 +308,6 @@ export class PartnersListBase extends CommonMixin(
 
   initFiltersForDisplay(commonData: CommonDataState) {
     let availableFilters = [];
-    setselectedValueTypeByFilterKey(this.getSelectedValueTypeByFilterKey());
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(this.getAllFilters()));
       this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
@@ -323,7 +317,10 @@ export class PartnersListBase extends CommonMixin(
     }
 
     const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-    this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), availableFilters);
+    this.allFilters = this.getFiltersHelper().updateFiltersSelectedValues(
+      omit(currentParams, ['page', 'size', 'sort']),
+      availableFilters
+    );
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
@@ -336,9 +333,9 @@ export class PartnersListBase extends CommonMixin(
     return [];
   }
 
-  protected getSelectedValueTypeByFilterKey(): AnyObject {
+  protected getFiltersHelper(): FiltersHelper {
     console.log('getSelectedValueTypeByFilterKey / To be implemented in derived class');
-    return {};
+    return new FiltersHelper({});
   }
 
   loadListData() {
@@ -347,8 +344,9 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadFilteredPartners() {
-    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListData;
+    const partners = this.shadowRoot!.querySelector('#partners-' + this.localName) as PartnersListData;
     if (!partners) {
+      console.warn('<partners-list-data> component is null');
       return;
     }
     const queryParams = this.routeDetails?.queryParams;
@@ -441,10 +439,22 @@ export class PartnersListBase extends CommonMixin(
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.partner_types, commonData!.partnerTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, commonData!.csoTypes);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.risk_ratings, commonData!.partnerRiskRatings);
-    updateFilterSelectionOptions(allFilters, PartnerFilterKeys.sea_risk_ratings, commonData!.seaRiskRatings);
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.partner_types,
+      commonData!.partnerTypes
+    );
+    this.getFiltersHelper().updateFilterSelectionOptions(allFilters, PartnerFilterKeys.cso_types, commonData!.csoTypes);
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.risk_ratings,
+      commonData!.partnerRiskRatings
+    );
+    this.getFiltersHelper().updateFilterSelectionOptions(
+      allFilters,
+      PartnerFilterKeys.sea_risk_ratings,
+      commonData!.seaRiskRatings
+    );
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
@@ -459,7 +469,7 @@ export class PartnersListBase extends CommonMixin(
       rating: queryStringObj.risk_ratings,
       sea_risk_rating: queryStringObj.sea_risk_ratings,
       psea_assessment_date_before: queryStringObj.psea_assessment_date_before,
-      psea_assessment_date_after: queryStringObj.psea_assessment_date_before,
+      psea_assessment_date_after: queryStringObj.psea_assessment_date_after,
       hidden: queryStringObj.hidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'partners').url);

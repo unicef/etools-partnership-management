@@ -1,7 +1,7 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {get as getTranslation} from 'lit-translate';
-import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-filters/src/filters';
 import {EtoolsFilterTypes} from '@unicef-polymer/etools-filters/src/etools-filters';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 
 export enum InterventionFilterKeys {
   search = 'search',
@@ -42,7 +42,7 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [InterventionFilterKeys.editable_by]: 'string'
 };
 
-setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
+export const InterventionsFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
 
 export function getInterventionFilters() {
   return [

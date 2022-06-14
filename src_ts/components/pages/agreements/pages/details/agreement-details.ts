@@ -26,7 +26,7 @@ import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import CommonMixin from '../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
 import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin-lit';
 
@@ -48,6 +48,7 @@ import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import {stopGlobalLoading} from '../../../../utils/utils';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
@@ -64,7 +65,7 @@ import debounce from 'lodash-es/debounce';
  * @appliesMixin UploadsMixin
  */
 @customElement('agreement-details')
-export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
     return [gridLayoutStylesLit, buttonsStyles];
   }
@@ -136,8 +137,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
         }
         datepicker-lite[readonly],
         paper-input[readonly],
-        etools-dropdown[readonly] {
-          --paper-input-container-underline_-_display: none;
+        etools-dropdown[readonly],
+        .secondary-btn-wrapper {
+          --paper-input-container-underline_-_display: none !important;
           --paper-input-container-underline-focus_-_display: none;
         }
       </style>
@@ -236,11 +238,15 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                     id="startDateField"
                     label="${translate('START_DATE')}"
                     .value="${this.agreement.start}"
+                    max-date="${this.agreement.end}"
                     ?readonly="${!this.agreement.permissions?.edit.start}"
                     ?required="${this.agreement.permissions?.required.start}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.start = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.start = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>
@@ -249,11 +255,15 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
                     id="endDateField"
                     label="${translate('END_DATE')}"
                     .value="${this.agreement.end}"
+                    min-date="${this.agreement.start}"
                     ?readonly="${!this.agreement.permissions?.edit.end}"
                     ?required="${this.agreement.permissions?.required.end}"
                     selected-date-display-format="D MMM YYYY"
                     fire-date-has-changed
-                    @date-has-changed="${(e: CustomEvent) => (this.agreement.end = e.detail.date)}"
+                    @date-has-changed="${(e: CustomEvent) => {
+                      this.agreement.end = e.detail.date;
+                      this.requestUpdate();
+                    }}"
                   >
                   </datepicker-lite>
                 </div>`
@@ -303,6 +313,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             <div class="col col-3">
               <!-- Signed By Partner Date -->
               <datepicker-lite
+                class="w100"
                 id="signedByPartnerDateField"
                 label="${translate('SIGNED_BY_PARTNER_DATE')}"
                 .value="${this.agreement.signed_by_partner_date}"
@@ -325,6 +336,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <datepicker-lite
+                class="w100"
                 id="signedByUnicefDateField"
                 label="${translate('SIGNED_BY_UNICEF_DATE')}"
                 .value="${this.agreement.signed_by_unicef_date}"
@@ -422,7 +434,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               this.agreement.status
             )}"
           >
-            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper w100" always-float-label>
               <!-- Generate PCA -->
               <label slot="label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <paper-button
@@ -493,7 +505,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               this.staffMembers,
               this.agreement.authorized_officers
             )}"
-            .selectedAo="${this.authorizedOfficers}"
           >
           </agreement-amendments>`
         : ''}
@@ -511,13 +522,11 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     const agrChanged = !isJsonStrMatch(newAgr, this._agreement);
     if (agrIdChanged || agrChanged) {
       this._agreement = newAgr;
-      if (agrIdChanged) {
-        setTimeout(() => {
-          // Timeout needed because this code might execute before connectedCallback otherwise
-          this._agreementChanged(newAgr);
-          this.debouncedPartnerChanged(this.agreement.partner);
-        });
-      }
+      setTimeout(() => {
+        // Timeout needed because this code might execute before connectedCallback otherwise
+        this._agreementChanged(newAgr);
+        this.debouncedPartnerChanged(this.agreement.partner);
+      });
     }
   }
 
@@ -626,7 +635,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      this.stopGlobalLoading('ag-page');
+      stopGlobalLoading(this, 'ag-page');
     }, 200);
     this.autoValidate = true;
   }
@@ -792,6 +801,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
+
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }
@@ -963,7 +973,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
@@ -986,7 +996,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     if (this.agreement.agreement_type === 'SSFA') {

@@ -1,7 +1,6 @@
-import {LitElement, html, property, query, customElement, PropertyValues} from 'lit-element';
+import {LitElement, html, property, query, customElement} from 'lit-element';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {RootState, store} from '../../../redux/store';
 
@@ -26,7 +25,6 @@ import './pages/components/agreement-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
-import set from 'lodash-es/set';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {areEqual, isJsonStrMatch} from '../../utils/utils';
@@ -34,6 +32,7 @@ import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {replaceAppState} from '../../utils/navigation-helper';
+import {EtoolsRouter} from '../../utils/routes';
 
 /**
  * @polymer
@@ -64,55 +63,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         }
       </style>
 
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        pattern="/list"
-        .queryParams="${this.listPageQueryParams}"
-        @query-params-changed="${({detail}: CustomEvent) => {
-          setTimeout(() => {
-            this.listPageQueryParams = detail.value;
-          }, 100);
-        }}"
-        .active="${this.listActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.listActive = detail.value;
-        }}"
-      ></app-route>
-
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        @data-changed="${({detail}: CustomEvent) => {
-          this.routeData = detail.value;
-        }}"
-        pattern="/:id/:details"
-        .active="${this.tabsActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.tabsActive = detail.value;
-        }}"
-      ></app-route>
-
       <page-content-header ?with-tabs-visible="${this._showPageTabs(this.activePage)}">
         <div slot="page-title">
           ${this.listActive ? html`<span>${translate('AGREEMENTS')}</span>` : ''}
@@ -124,7 +74,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
-              <paper-button>
+              <paper-button tabindex="-1">
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
               </paper-button>
@@ -167,7 +117,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
             @csvDownloadUrl-changed=${(e: any) => {
               this.csvDownloadUrl = e.detail;
             }}
-            .url-params="${this.preservedListQueryParams}"
           >
           </agreements-list>
 
@@ -268,6 +217,9 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   @query('#agreementData')
   agreementDataEl!: AgreementItemDataEl;
 
+  @property({type: Object})
+  prevRouteDetails!: any;
+
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
@@ -298,9 +250,17 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       replaceAppState('/pmp/agreements/list', '', true);
     }
 
-    const currentAgrId = state.app?.routeDetails?.params?.agreementId;
-    this.newAgreementActive = currentAgrId === 'new';
-    this.selectedAgreementId = !currentAgrId || isNaN(Number(currentAgrId)) ? null : Number(currentAgrId);
+    const routeDetials = state.app?.routeDetails;
+    if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
+      this.prevRouteDetails = routeDetials;
+      this.listActive = routeDetials!.subRouteName == 'list';
+      this.tabsActive = routeDetials!.subRouteName == 'details';
+      const currentAgrId = state.app?.routeDetails?.params?.agreementId;
+      this.newAgreementActive = currentAgrId === 'new';
+
+      this.selectedAgreementId = !currentAgrId || isNaN(Number(currentAgrId)) ? null : Number(currentAgrId);
+      this._pageChanged(this.listActive, this.tabsActive, this.newAgreementActive);
+    }
   }
 
   _initListeners() {
@@ -310,16 +270,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
     this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
     this._newAgreementSaved = this._newAgreementSaved.bind(this);
-  }
-
-  updated(changedProperties: PropertyValues) {
-    if (
-      changedProperties.has('listActive') ||
-      changedProperties.has('tabsActive') ||
-      changedProperties.has('newAgreementActive')
-    ) {
-      this._pageChanged(this.listActive, this.tabsActive, this.newAgreementActive);
-    }
   }
 
   _removeListeners() {
@@ -368,10 +318,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
 
-    this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
-      if (successfull) {
-        store.dispatch({type: RESET_UNSAVED_UPLOADS});
-      }
+    return new Promise((resolve) => {
+      this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
+        if (successfull) {
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+        }
+        resolve(successfull);
+      });
     });
   }
 
@@ -383,9 +336,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   // Go to details page once the new agreement has been saved
   _newAgreementSaved(agreement: Agreement) {
-    fireEvent(this, 'update-main-path', {
-      path: 'agreements/' + agreement.id + '/details'
-    });
+    EtoolsRouter.updateAppLocation('agreements/' + agreement.id + '/details');
   }
 
   _agreementSaveErrors(e: CustomEvent) {
@@ -420,14 +371,19 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     if (event.detail.ao && event.detail.ao.length > 0) {
       agrDataToSave.authorized_officers = event.detail.ao;
     }
-    this._saveAgreement(agrDataToSave);
+    this._saveAgreement(agrDataToSave).then((response: any) => {
+      if (response.id) {
+        this.agreement = response;
+        this.originalAgreementData = JSON.parse(JSON.stringify(response));
+      }
+    });
     return true;
   }
 
   _validateAndTriggerAgreementSave(e: CustomEvent) {
     e.stopImmediatePropagation();
     if (!this.validateAgreement()) {
-      return false;
+      return;
     }
 
     let agrDataToSave: GenericObject;
@@ -439,8 +395,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agrDataToSave.id = this.agreement.id;
     }
 
-    this._saveAgreement(agrDataToSave);
-    return true;
+    this._saveAgreement(agrDataToSave).then((resp) => {
+      if (!resp && this.newAgreementActive) {
+        // if we have a new record and save failed, set agreement object with data from detail page
+        // to avoid losing entered data by the user
+        this.agreement = {...this.agreement, ...agrDataToSave};
+      }
+    });
   }
 
   validateAgreement() {

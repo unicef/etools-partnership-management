@@ -36,13 +36,8 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues,
-  setselectedValueTypeByFilterKey
-} from '@unicef-polymer/etools-filters/src/filters';
 import {translate} from 'lit-translate';
-import {AgreementsFilterKeys, getAgreementFilters, selectedValueTypeByFilterKey} from './agreements-filters';
+import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
@@ -122,7 +117,7 @@ export class AgreementsList extends connect(store)(
         @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredAgreements"
         fireDataLoaded
-        no-auto-refresh
+        no-get-request
       >
       </agreements-list-data>
 
@@ -257,7 +252,7 @@ export class AgreementsList extends connect(store)(
         active: false,
         loadingSource: 'ag-page'
       });
-    }, 10);
+    }, 100);
   }
 
   stateChanged(state: RootState) {
@@ -265,7 +260,7 @@ export class AgreementsList extends connect(store)(
       return;
     }
 
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.agreements?.listIsLoaded) {
       return;
     }
 
@@ -322,7 +317,7 @@ export class AgreementsList extends connect(store)(
   async loadFilteredAgreements() {
     this.waitForAgreementsListDataToLoad().then(async () => {
       const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-      const queryParams = this.routeDetails?.queryParams;
+      const queryParams = this.routeDetails?.queryParams || {};
       const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
 
       agreements.query(
@@ -340,7 +335,7 @@ export class AgreementsList extends connect(store)(
         queryParams?.start || '',
         queryParams?.end || '',
         this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
-        queryParams?.special_conditions_pca || 'false',
+        queryParams?.special_conditions_pca,
         queryParams?.page ? Number(queryParams.page) : 1,
         queryParams?.size ? Number(queryParams.size) : 10,
         false
@@ -375,17 +370,32 @@ export class AgreementsList extends connect(store)(
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
-    setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
     const availableFilters = JSON.parse(JSON.stringify(getAgreementFilters()));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: CommonDataState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.cpStructures, commonData!.countryProgrammes);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.partners, this.partnersDropdownData);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.type, commonData!.agreementTypes);
-    updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.status, commonData!.agreementStatuses);
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.cpStructures,
+      commonData!.countryProgrammes
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.partners,
+      this.partnersDropdownData
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.type,
+      commonData!.agreementTypes
+    );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(
+      allFilters,
+      AgreementsFilterKeys.status,
+      commonData!.agreementStatuses
+    );
   }
 
   filtersChange(e: CustomEvent) {
@@ -398,6 +408,10 @@ export class AgreementsList extends connect(store)(
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
+    if (this.prevQueryStringObj.sort !== newParams.sort) {
+      // if sorting changed, reset to first page because we can get a different number of records from Dexie
+      newParams.page = '1';
+    }
     this.prevQueryStringObj = newParams;
 
     fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
@@ -410,7 +424,10 @@ export class AgreementsList extends connect(store)(
     if (this.allFilters) {
       // update filter selection and assign the result to etools-filters(trigger render)
       const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-      this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), this.allFilters);
+      this.allFilters = AgreementsFiltersHelper.updateFiltersSelectedValues(
+        omit(currentParams, ['page', 'size', 'sort']),
+        this.allFilters
+      );
     }
   }
 

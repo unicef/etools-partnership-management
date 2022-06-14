@@ -13,16 +13,17 @@ import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/s
 
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixin from '../../../../../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
  * @polymer
  * @customElement
  */
 @customElement('add-ag-amendment-dialog')
-export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
+export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -107,7 +108,7 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
                 .options="${this.authorizedOfficersOptions}"
                 option-value="id"
                 option-label="name"
-                .selectedValues="${this.authorizedOfficers}"
+                .selectedValues="${cloneDeep(this.selAuthorizedOfficers)}"
                 trigger-value-change-event
                 @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
                 error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"
@@ -143,7 +144,7 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
   authorizedOfficersOptions: [] = [];
 
   @property({type: Array})
-  authorizedOfficers: [] = [];
+  selAuthorizedOfficers: [] = [];
 
   @property({type: Boolean})
   _aoTypeSelected = false;
@@ -152,12 +153,12 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
   uploadInProgress = false;
 
   set dialogData(data: any) {
-    const {authorizedOfficers, showAuthorizedOfficers, amendmentTypes}: any = data;
+    const {allStaffMembers, showAuthorizedOfficers, amendmentTypes}: any = data;
 
     this.amendment = new AgreementAmendment();
     this.amendmentTypes = amendmentTypes;
-    this.authorizedOfficersOptions = authorizedOfficers;
-    this.authorizedOfficers = [];
+    this.authorizedOfficersOptions = allStaffMembers;
+    this.selAuthorizedOfficers = [];
     this.showAuthorizedOfficers = showAuthorizedOfficers;
     this.autoValidate = true;
     this._aoTypeSelected = false;
@@ -169,7 +170,7 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
         confirmed: true,
         response: {
           amendment: this.amendment,
-          ao: this.authorizedOfficers
+          ao: this.selAuthorizedOfficers
         }
       });
     }
@@ -197,8 +198,8 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
 
   onAuthorizedOfficersChanged(e: CustomEvent) {
     const selectedOfficers = e.detail.selectedItems.map((i: any) => String(i['id']));
-    if (!isJsonStrMatch(selectedOfficers, this.authorizedOfficers)) {
-      this.authorizedOfficers = selectedOfficers;
+    if (!isJsonStrMatch(selectedOfficers, this.selAuthorizedOfficers)) {
+      this.selAuthorizedOfficers = selectedOfficers;
     }
   }
 

@@ -30,12 +30,7 @@ import {InterventionsListData} from '../../data/interventions-list-data.js';
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
-import {
-  setselectedValueTypeByFilterKey,
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues
-} from '@unicef-polymer/etools-filters/src/filters';
-import {getInterventionFilters, InterventionFilterKeys, selectedValueTypeByFilterKey} from './interventions-filters';
+import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelper} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {ListFilterOption} from '../../../../../typings/filter.types';
@@ -395,13 +390,13 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+  dataRequiredByFiltersHasBeenLoaded(state: RootState) {
+    return state.commonData?.commonDataIsLoaded && state.partners?.listIsLoaded;
   }
 
   protected initFiltersForDisplay(state: RootState): void {
     let availableFilters = [];
-    setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
+
     if (!this.allFilters) {
       availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
@@ -412,30 +407,34 @@ export class InterventionsList extends connect(store)(
 
     // update filter selection and assign the result to etools-filters(trigger render)
     const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
-    this.allFilters = updateFiltersSelectedValues(omit(currentParams, ['page', 'size', 'sort']), availableFilters);
+    this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
+      omit(currentParams, ['page', 'size', 'sort']),
+      availableFilters
+    );
   }
 
   populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.type, state.commonData!.documentTypes);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.status, state.commonData!.interventionStatuses);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.section, state.commonData!.sections);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.offices, state.commonData!.offices);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.donors, state.commonData!.donors);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.partners, partnersDropdownDataSelector(state));
+    [
+      [InterventionFilterKeys.type, state.commonData!.documentTypes],
+      [InterventionFilterKeys.status, state.commonData!.interventionStatuses],
+      [InterventionFilterKeys.section, state.commonData!.sections],
+      [InterventionFilterKeys.offices, state.commonData!.offices],
+      [InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
+      [InterventionFilterKeys.donors, state.commonData!.donors],
+      [InterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
+      [InterventionFilterKeys.grants, state.commonData!.grants],
+      [InterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
+      [InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
+      [InterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes],
+      [
+        InterventionFilterKeys.editable_by,
+        [
+          {label: 'UNICEF', value: 'unicef'},
+          {label: this._getTranslation('PARTNER'), value: 'partner'}
+        ]
+      ]
+    ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
     this.partners = partnersDropdownDataSelector(state);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.grants, state.commonData!.grants);
-    updateFilterSelectionOptions(
-      allFilters,
-      InterventionFilterKeys.unicef_focal_points,
-      state.commonData!.unicefUsersData
-    );
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes);
-    updateFilterSelectionOptions(allFilters, InterventionFilterKeys.editable_by, [
-      {label: 'UNICEF', value: 'unicef'},
-      {label: this._getTranslation('PARTNER'), value: 'partner'}
-    ]);
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {

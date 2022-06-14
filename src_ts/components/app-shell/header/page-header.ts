@@ -223,7 +223,7 @@ class PageHeader extends connect(store)(
                 .options="${this.languages}"
                 option-label="display_name"
                 option-value="value"
-                @on-etools-selected-item-changed="${this.languageChanged}"
+                @etools-selected-item-changed="${this.languageChanged}"
                 trigger-value-change-event
                 hide-search
                 allow-outside-scroll

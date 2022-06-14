@@ -1,7 +1,10 @@
-import {PartnerFilterKeys, getPartnerFilters} from './partners-filters';
+import {PartnerFilterKeys, getPartnerFilters, selectedValueTypeByFilterKey} from './partners-filters';
+import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+
+export const GovernmentFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
 
 export function getGovernmentFilters() {
-  const filters = JSON.parse(JSON.stringify(getPartnerFilters()));
+  const filters = getPartnerFilters();
   const partnerTypesFilter = filters.find(
     (f: {filterKey: PartnerFilterKeys}) => f.filterKey == PartnerFilterKeys.partner_types
   );
