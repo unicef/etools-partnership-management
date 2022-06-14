@@ -166,8 +166,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   @property({type: String})
   agreementType = '';
 
-  @property({type: Date})
-  agreementStart!: Date | string;
+  @property({type: String})
+  agreementStart!: string;
 
   @property({type: Array})
   _amendmentTypes: LabelAndValue[] = [];

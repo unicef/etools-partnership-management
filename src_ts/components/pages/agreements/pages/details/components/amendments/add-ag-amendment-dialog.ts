@@ -154,8 +154,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   @property({type: Boolean})
   uploadInProgress = false;
 
-  @property({type: Date})
-  agreementStart!: Date | string;
+  @property({type: String})
+  agreementStart!: string;
 
   set dialogData(data: any) {
     const {allStaffMembers, showAuthorizedOfficers, amendmentTypes, agreementStart}: any = data;
