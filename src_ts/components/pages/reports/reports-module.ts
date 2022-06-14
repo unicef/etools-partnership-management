@@ -84,22 +84,6 @@ export class ReportsModule extends connect(store)(
           font-weight: bold;
           color: var(--primary-color);
         }
-
-        /* TODO: refactor export btn styles (maybe use a common style module) */
-        #export paper-item {
-          --paper-item-selected: {
-            font-weight: normal !important;
-          }
-          /* Prevent first item highlighted by default */
-          --paper-item-focused-before: {
-            background: none;
-            opacity: 0;
-          }
-          --paper-item-focused-after: {
-            background: none;
-            opacity: 0;
-          }
-        }
       </style>
 
       <app-route
