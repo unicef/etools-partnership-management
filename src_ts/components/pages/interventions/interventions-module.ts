@@ -78,21 +78,6 @@ export class InterventionsModule extends connect(store)(
         .export-dd {
           width: 105px;
         }
-
-        #pdExportMenuBtn paper-item {
-          --paper-item-selected: {
-            font-weight: normal !important;
-          }
-          /* Prevent first item highlighted by default */
-          --paper-item-focused-before: {
-            background: none;
-            opacity: 0;
-          }
-          --paper-item-focused-after: {
-            background: none;
-            opacity: 0;
-          }
-        }
       </style>
 
       <div ?hidden="${this.showNewPMP(this.activePage)}">
