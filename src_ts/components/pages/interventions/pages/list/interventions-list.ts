@@ -34,6 +34,8 @@ import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelp
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {ListFilterOption} from '../../../../../typings/filter.types';
+import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -326,7 +328,7 @@ export class InterventionsList extends connect(store)(
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -341,6 +343,10 @@ export class InterventionsList extends connect(store)(
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadFilteredInterventions();
+
+      if (state.interventions.shouldReGetList) {
+        getStore().dispatch(setShouldReGetList(false));
+      }
     }
   }
 
@@ -381,9 +387,8 @@ export class InterventionsList extends connect(store)(
     return false;
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  shouldReGetListBecauseOfEditsOnItems(state: RootState) {
+    return state.interventions.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {

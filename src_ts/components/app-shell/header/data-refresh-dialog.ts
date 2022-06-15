@@ -15,6 +15,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {setShouldReloadAgreements, setAgreements} from '../../../redux/actions/agreements';
 import {setPartners} from '../../../redux/actions/partners';
+import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
 
 /**
  * @polymer
@@ -238,7 +239,9 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
         break;
       case 'agreements':
         store.dispatch(setAgreements(response));
-        store.dispatch(setShouldReloadAgreements(true));
+        break;
+      case 'interventions':
+        store.dispatch(setShouldReGetList(true));
         break;
       default:
         break;

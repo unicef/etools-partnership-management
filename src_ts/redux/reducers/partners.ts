@@ -6,6 +6,7 @@ import {Reducer, Action} from 'redux';
 export class PartnersState {
   list: [] = [];
   listIsLoaded = false;
+  shouldReloadList = false;
 }
 
 const INITIAL_STATE = new PartnersState();
@@ -15,7 +16,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
     case a.SET_PARTNERS:
       return {
         list: action.partners,
-        listIsLoaded: true
+        listIsLoaded: true,
+        shouldReloadList: true
       };
     case a.DELETE_PARTNER: {
       const partnersCopy = state.list.slice(0);
@@ -26,7 +28,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
 
       return {
         list: partnersCopy,
-        listIsLoaded: true
+        listIsLoaded: true,
+        shouldReloadList: true
       };
     }
 

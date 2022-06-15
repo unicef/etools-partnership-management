@@ -267,19 +267,13 @@ export class AgreementsList extends connect(store)(
       return;
     }
 
-    if (state.agreements.shouldReloadList) {
-      this.loadListData();
-      store.dispatch(setShouldReloadAgreements(false));
-      return;
-    }
-
     this.partnersDropdownData = partnersDropdownDataSelector(state);
 
     if (!this.allFilters) {
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -287,6 +281,10 @@ export class AgreementsList extends connect(store)(
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+
+      if (state.agreements.shouldReloadList) {
+        store.dispatch(setShouldReloadAgreements(false));
+      }
     }
   }
 

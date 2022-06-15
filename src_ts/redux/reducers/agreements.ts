@@ -15,7 +15,8 @@ const agreements = (state = INITIAL_STATE, action: any) => {
       return {
         ...state,
         list: action.agreements,
-        listIsLoaded: true
+        listIsLoaded: true,
+        shouldReloadList: true
       };
     case a.SET_SHOULD_RELOAD_AGREEMENTS:
       return {
@@ -35,7 +36,8 @@ const agreements = (state = INITIAL_STATE, action: any) => {
       }
       return {
         list: agreementsCopy,
-        listIsLoaded: true
+        listIsLoaded: true,
+        shouldReloadList: true
       };
     }
 
