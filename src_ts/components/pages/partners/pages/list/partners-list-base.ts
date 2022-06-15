@@ -41,11 +41,12 @@ import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
-import {RootState} from '../../../../../redux/store';
+import {RootState, store} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {setShouldReloadPartners} from '../../../../../redux/actions/partners';
 
 export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
@@ -295,6 +296,9 @@ export class PartnersListBase extends CommonMixin(
       this.initFiltersForDisplay(state.commonData!);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+      if (state.partners.shouldReloadList) {
+        store.dispatch(setShouldReloadPartners(false));
+      }
     }
   }
 

@@ -33,6 +33,13 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
       };
     }
 
+    case a.SET_SHOULD_RELOAD_PARTNERS: {
+      return {
+        ...state,
+        shouldReloadList: action.shouldReloadList
+      };
+    }
+
     default:
       return state;
   }
