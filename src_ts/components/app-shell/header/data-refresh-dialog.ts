@@ -13,7 +13,6 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {setShouldReloadAgreements, setAgreements} from '../../../redux/actions/agreements';
 import {setPartners} from '../../../redux/actions/partners';
 import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
 
