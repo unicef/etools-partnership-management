@@ -17,7 +17,8 @@ export const addEditAgreement = (agreement: Partial<MinimalAgreement>) => {
     agreement
   };
 };
-export const setShouldReloadAgrements = (shouldReloadList: boolean) => {
+
+export const setShouldReloadAgreements = (shouldReloadList: boolean) => {
   return {
     type: SET_SHOULD_RELOAD_AGREEMENTS,
     shouldReloadList

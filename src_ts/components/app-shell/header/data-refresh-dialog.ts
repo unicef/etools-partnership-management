@@ -13,8 +13,9 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {setAgreements} from '../../../redux/actions/agreements';
 import {setPartners} from '../../../redux/actions/partners';
+import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
+import {setAgreements} from '../../../redux/actions/agreements';
 
 /**
  * @polymer
@@ -231,13 +232,16 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
     return Promise.allSettled(promisses);
   }
 
-  afterDataLoaded(endpointName: string, respose: []) {
+  afterDataLoaded(endpointName: string, response: []) {
     switch (endpointName) {
       case 'partners':
-        store.dispatch(setPartners(respose));
+        store.dispatch(setPartners(response));
         break;
       case 'agreements':
-        store.dispatch(setAgreements(respose));
+        store.dispatch(setAgreements(response));
+        break;
+      case 'interventions':
+        store.dispatch(setShouldReGetList(true));
         break;
       default:
         break;

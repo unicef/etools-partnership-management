@@ -16,7 +16,8 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
     case a.SET_PARTNERS:
       return {
         list: action.partners,
-        listIsLoaded: true
+        listIsLoaded: true,
+        shouldReloadList: true
       };
     case a.SET_SHOULD_RELOAD_PARTNERS:
       return {

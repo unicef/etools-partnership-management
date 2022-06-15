@@ -45,6 +45,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
+import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**
  * @polymer
@@ -272,10 +273,7 @@ export class AgreementsList extends connect(store)(
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (
-      this.filteringParamsHaveChanged(stateRouteDetails) ||
-      this.shouldReloadListBecauseOfEditsOnItems(state.agreements.shouldReloadList)
-    ) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -283,6 +281,10 @@ export class AgreementsList extends connect(store)(
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+
+      if (state.agreements.shouldReloadList) {
+        store.dispatch(setShouldReloadAgreements(false));
+      }
     }
   }
 
