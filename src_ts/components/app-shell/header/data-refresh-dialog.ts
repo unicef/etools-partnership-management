@@ -15,6 +15,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {setPartners} from '../../../redux/actions/partners';
 import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
+import {setAgreements} from '../../../redux/actions/agreements';
 
 /**
  * @polymer
