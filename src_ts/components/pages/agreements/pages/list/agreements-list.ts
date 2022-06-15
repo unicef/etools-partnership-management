@@ -288,10 +288,6 @@ export class AgreementsList extends connect(store)(
     }
   }
 
-  shouldReloadListBecauseOfEditsOnItems(shouldReloadList: boolean) {
-    return shouldReloadList;
-  }
-
   /**
    * - When the page hasn't been visited before (or on page refresh),
    *  the url is initialized with prevQueryStringObj's default value
