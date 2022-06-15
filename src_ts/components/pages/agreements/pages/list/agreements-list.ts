@@ -286,10 +286,10 @@ export class AgreementsList extends connect(store)(
     }
 
     if (this.filteringParamsHaveChanged(stateRouteDetails)) {
-      this.listLoadingActive = true;
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
