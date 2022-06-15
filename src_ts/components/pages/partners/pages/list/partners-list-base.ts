@@ -383,7 +383,7 @@ export class PartnersListBase extends CommonMixin(
     fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
-    EtoolsRouter.replaceAppLocation(`partners/list?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`${this.currentModule}/list?${stringParams}`);
   }
 
   // Override from lists-common-mixin

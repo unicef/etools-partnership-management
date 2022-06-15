@@ -24,6 +24,7 @@ export class GovernmentsList extends connect(store)(PartnersListBase) {
       return;
     }
 
+    this.currentModule = 'government-partners';
     this.prevQueryStringObj.partner_types = 'Government';
     this.baseStateChanged(state);
   }
