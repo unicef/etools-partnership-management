@@ -410,7 +410,6 @@ export class PartnersListBase extends CommonMixin(
     return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
   }
 
-
   /**
    * Or because of IndexedDb Refresh
    */

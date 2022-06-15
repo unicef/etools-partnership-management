@@ -412,13 +412,15 @@ export class AgreementsList extends connect(store)(
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
 
-    this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
-    
+    const newParams = cloneDeep({...currentParams, ...paramsToUpdate});
+
     if (this.prevQueryStringObj.sort !== newParams.sort) {
       // if sorting changed, reset to first page because we can get a different number of records from Dexie
-      this.prevQueryStringObj.page = '1';
+      newParams.page = '1';
     }
-  
+
+    this.prevQueryStringObj = newParams;
+
     fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj));
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
