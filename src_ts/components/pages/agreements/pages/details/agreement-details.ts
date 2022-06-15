@@ -137,8 +137,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         }
         datepicker-lite[readonly],
         paper-input[readonly],
-        etools-dropdown[readonly] {
-          --paper-input-container-underline_-_display: none;
+        etools-dropdown[readonly],
+        .secondary-btn-wrapper {
+          --paper-input-container-underline_-_display: none !important;
           --paper-input-container-underline-focus_-_display: none;
         }
       </style>
@@ -972,7 +973,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onAgreementPartnerChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     const newPartner = e.detail.selectedItem ? e.detail.selectedItem.value : null;
@@ -995,7 +996,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onAgreementTypeChanged(e: CustomEvent) {
-    if (!e.detail || e.detail.selectedItem == undefined) {
+    if (!e.detail || !e.detail.selectedItem) {
       return;
     }
     if (this.agreement.agreement_type === 'SSFA') {

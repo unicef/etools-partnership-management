@@ -74,7 +74,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
-              <paper-button>
+              <paper-button tabindex="-1">
                 <iron-icon icon="file-download"></iron-icon>
                 ${translate('EXPORT')}
               </paper-button>
