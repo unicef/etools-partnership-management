@@ -61,10 +61,8 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
     const self = this;
 
     if (showQueryLoading) {
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
-        active: true,
-        loadingSource: 'ag-list'
+      fireEvent(self, 'list-loading', {
+        active: true
       });
     }
     const agreementsDexieTable = window.EtoolsPmpApp.DexieDb.agreements;
@@ -147,9 +145,8 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
     })
       .then(function (result: any) {
         fireEvent(self, 'filtered-agreements-changed', result);
-        fireEvent(self, 'global-loading', {
-          active: false,
-          loadingSource: 'ag-list'
+        fireEvent(self, 'list-loading', {
+          active: false
         });
       })
       .catch(function (error: any) {
@@ -157,9 +154,8 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
           window.location.reload();
         }
         logError('Error querying agreements: ', 'agreements-list-data', error);
-        fireEvent(self, 'global-loading', {
-          active: false,
-          loadingSource: 'ag-list'
+        fireEvent(self, 'list-loading', {
+          active: false
         });
       });
   }

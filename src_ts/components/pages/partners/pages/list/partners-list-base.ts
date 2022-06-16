@@ -75,6 +75,9 @@ export class PartnersListBase extends CommonMixin(
         .page-content {
           margin: 0 0 24px 0;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
@@ -108,6 +111,7 @@ export class PartnersListBase extends CommonMixin(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredPartners"
         fireDataLoaded
         no-get-request
@@ -125,6 +129,7 @@ export class PartnersListBase extends CommonMixin(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -257,6 +262,9 @@ export class PartnersListBase extends CommonMixin(
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   /**
    * Used to preserve previously selected filters and pagination when navigating away from the list and comming back
    * & to initialize pagination
@@ -331,11 +339,7 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'partners-list'
-    });
+    this.listLoadingActive = true;
     this.loadFilteredPartners();
   }
 

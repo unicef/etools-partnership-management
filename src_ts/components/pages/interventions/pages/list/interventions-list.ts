@@ -67,6 +67,9 @@ export class InterventionsList extends connect(store)(
         .capitalize {
           text-transform: capitalize;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
@@ -99,6 +102,7 @@ export class InterventionsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredInterventions"
         fire-data-loaded
       >
@@ -113,6 +117,7 @@ export class InterventionsList extends connect(store)(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -300,6 +305,9 @@ export class InterventionsList extends connect(store)(
   @property({type: Array})
   partners = [];
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
 
@@ -332,11 +340,7 @@ export class InterventionsList extends connect(store)(
       }
       this.routeDetails = cloneDeep(stateRouteDetails);
 
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
-        active: true,
-        loadingSource: 'pd-list'
-      });
+      this.listLoadingActive = true;
 
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);

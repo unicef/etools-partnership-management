@@ -74,6 +74,9 @@ export class AgreementsList extends connect(store)(
         .page-content {
           margin: 0 0 24px 0;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
@@ -111,6 +114,7 @@ export class AgreementsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredAgreements"
         fireDataLoaded
         no-get-request
@@ -127,6 +131,7 @@ export class AgreementsList extends connect(store)(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -228,6 +233,9 @@ export class AgreementsList extends connect(store)(
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   @property({type: Object})
   prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc', status: 'draft,signed,suspended'};
 
@@ -302,11 +310,7 @@ export class AgreementsList extends connect(store)(
   }
 
   loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'ag-list'
-    });
+    this.listLoadingActive = true;
     this.loadFilteredAgreements();
   }
 
