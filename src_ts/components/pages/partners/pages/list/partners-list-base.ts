@@ -41,11 +41,12 @@ import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
-import {RootState} from '../../../../../redux/store';
+import {RootState, store} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {setShouldReloadPartners} from '../../../../../redux/actions/partners';
 
 export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
@@ -298,7 +299,7 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -307,6 +308,9 @@ export class PartnersListBase extends CommonMixin(
       this.initFiltersForDisplay(state.commonData!);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+      if (state.partners.shouldReloadList) {
+        store.dispatch(setShouldReloadPartners(false));
+      }
     }
   }
 
@@ -377,17 +381,16 @@ export class PartnersListBase extends CommonMixin(
     return types ? types.split(',') : [];
   }
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
-    this.prevQueryStringObj = newParams;
+    this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams) as any);
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`${this.currentModule}/list?${stringParams}`);
   }
 
   // Override from lists-common-mixin
@@ -418,9 +421,11 @@ export class PartnersListBase extends CommonMixin(
     return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  /**
+   * Or because of IndexedDb Refresh
+   */
+  shouldReGetListBecauseOfEditsOnItems(state: RootState) {
+    return state.partners?.shouldReloadList;
   }
 
   /**
@@ -434,7 +439,6 @@ export class PartnersListBase extends CommonMixin(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }

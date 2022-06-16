@@ -35,6 +35,7 @@ export class PartnersList extends connect(store)(PartnersListBase) {
     if (state.app?.routeDetails?.routeName !== 'partners') {
       return;
     }
+    this.currentModule = 'partners';
     this.baseStateChanged(state);
   }
 

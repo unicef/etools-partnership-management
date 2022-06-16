@@ -45,6 +45,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
+import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**
  * @polymer
@@ -285,7 +286,7 @@ export class AgreementsList extends connect(store)(
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -294,6 +295,10 @@ export class AgreementsList extends connect(store)(
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+
+      if (state.agreements.shouldReloadList) {
+        store.dispatch(setShouldReloadAgreements(false));
+      }
     }
   }
 
@@ -308,7 +313,6 @@ export class AgreementsList extends connect(store)(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
@@ -408,21 +412,24 @@ export class AgreementsList extends connect(store)(
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
+
+    const newParams = cloneDeep({...currentParams, ...paramsToUpdate});
+
     if (this.prevQueryStringObj.sort !== newParams.sort) {
       // if sorting changed, reset to first page because we can get a different number of records from Dexie
       newParams.page = '1';
     }
+
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj));
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`agreements/list?${stringParams}`);
   }
 
   private setSelectedValuesInFilters() {
