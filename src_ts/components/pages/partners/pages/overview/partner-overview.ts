@@ -6,7 +6,6 @@ import '@unicef-polymer/etools-data-table/etools-data-table';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
-import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin-lit';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -17,6 +16,7 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
+import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
 
 /**
  * @polymer
