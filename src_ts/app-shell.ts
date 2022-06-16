@@ -59,7 +59,7 @@ import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
-import ToastNotificationsMixin from './components/common/toast-notifications/toast-notification-mixin.js';
+import '@unicef-polymer/etools-toasts';
 import ScrollControlMixin from './components/common/mixins/scroll-control-mixin.js';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
@@ -142,11 +142,7 @@ class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
     GestureEventListeners(
-      AppMenuMixin(
-        ToastNotificationsMixin(
-          ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
-        )
-      )
+      AppMenuMixin(ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement))))))
     )
   )
 ) {
@@ -160,6 +156,7 @@ class AppShell extends connect(store)(
 
       <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
+      <etools-toasts></etools-toasts>
 
       <app-location
         route="{{appLocRoute}}"
@@ -360,8 +357,8 @@ class AppShell extends connect(store)(
     this.loadCommonData();
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
-
-    this.createToastNotificationElement();
+    // @ts-ignore
+    this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
   }
 
   checkAppVersion() {
@@ -397,12 +394,6 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-    if (get(state, 'app.toastNotification.active')) {
-      fireEvent(this, 'toast', {
-        text: state.app!.toastNotification.message,
-        showCloseBtn: state.app!.toastNotification.showCloseBtn
-      });
-    }
 
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;

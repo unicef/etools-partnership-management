@@ -234,7 +234,7 @@ export class InterventionsList extends connect(store)(
                   )} interventions-list"
                   icon-first
                   custom-icon
-                  hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
+                  ?hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
                     intervention.all_currencies_are_consistent,
                     intervention.unicef_cash,
                     intervention.frs_total_frs_amt,
