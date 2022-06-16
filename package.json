@@ -70,6 +70,7 @@
     "@unicef-polymer/etools-date-time": "^3.0.1",
     "@unicef-polymer/etools-dexie-caching": "^1.0.3",
     "@unicef-polymer/etools-dialog": "^6.0.3",
+    "@unicef-polymer/etools-toasts": "^1.0.0",
     "@unicef-polymer/etools-dropdown": "^3.7.13",
     "@unicef-polymer/etools-filters": "^0.0.8",
     "@unicef-polymer/etools-info-tooltip": "^4.1.4",
