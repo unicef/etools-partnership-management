@@ -82,6 +82,10 @@ export class AgreementsList extends connect(store)(
           padding: 8px 24px;
         }
 
+        .filters {
+          position: relative;
+        }
+
         @media (max-width: 576px) {
           section.page-content.filters {
             margin: 5px 0;
@@ -252,7 +256,7 @@ export class AgreementsList extends connect(store)(
         active: false,
         loadingSource: 'ag-page'
       });
-    }, 100);
+    });
   }
 
   stateChanged(state: RootState) {
@@ -261,6 +265,7 @@ export class AgreementsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.agreements?.listIsLoaded) {
+      this.listLoadingActive = true;
       return;
     }
 
@@ -284,6 +289,7 @@ export class AgreementsList extends connect(store)(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
@@ -310,7 +316,6 @@ export class AgreementsList extends connect(store)(
   }
 
   loadListData() {
-    this.listLoadingActive = true;
     this.loadFilteredAgreements();
   }
 
@@ -366,7 +371,7 @@ export class AgreementsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+    return Boolean(state.commonData?.commonDataIsLoaded) && Boolean(state.partners?.listIsLoaded);
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {

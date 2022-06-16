@@ -83,6 +83,10 @@ export class PartnersListBase extends CommonMixin(
           padding: 8px 24px;
         }
 
+        .filters {
+          position: relative;
+        }
+
         @media (max-width: 576px) {
           section.page-content.filters {
             margin: 5px 0;
@@ -120,7 +124,6 @@ export class PartnersListBase extends CommonMixin(
 
       <section class="elevation page-content filters" elevation="1">
         <etools-filters
-          .filterLoadingAbsolute="${true}"
           .filters="${this.allFilters}"
           @filter-change="${this.filtersChange}"
           .textFilters="${translate('GENERAL.FILTERS')}"
@@ -291,6 +294,7 @@ export class PartnersListBase extends CommonMixin(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
+      this.listLoadingActive = true;
       return;
     }
 
@@ -298,7 +302,7 @@ export class PartnersListBase extends CommonMixin(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
-
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.initFiltersForDisplay(state.commonData!);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
@@ -339,7 +343,6 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadListData() {
-    this.listLoadingActive = true;
     this.loadFilteredPartners();
   }
 

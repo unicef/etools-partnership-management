@@ -337,7 +337,7 @@ class AppShell extends connect(store)(
       /*
        * Activate the global loading with default message.
        * This will be triggered once at page load or, after page load, on menu option tap event.
-       * The loading message is disabled by *-module.html elements ready callback (in both cases)
+       * The loading message is de-activated by *-module.ts elements connectedCallback (in both cases)
        */
       fireEvent(this, 'global-loading', {
         active: true,
