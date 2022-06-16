@@ -424,7 +424,7 @@ class InterventionItemData extends connect(store)(
 
   _getSelectedOfficesNames(responseDetail: any) {
     const selectedOffices = this.offices.filter(function (office: any) {
-      return responseDetail.offices.indexOf(office.id.toString()) > -1;
+      return responseDetail.offices.indexOf(office.id) > -1;
     });
     if (!selectedOffices) {
       return [];

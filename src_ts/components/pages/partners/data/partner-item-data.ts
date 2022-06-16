@@ -3,7 +3,7 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
-import {deletePartner} from '../../../../redux/actions/partners';
+import {deletePartner, setShouldReloadPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
@@ -105,6 +105,9 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
     if (ajaxMethod === 'DELETE') {
       store.dispatch(deletePartner(this.deletedPartnerId));
       this._deletePartnerFromDexie(this.deletedPartnerId);
+    }
+    if (['PATCH', 'DELETE', 'POST'].includes(ajaxMethod)) {
+      store.dispatch(setShouldReloadPartners(true));
     }
   }
 

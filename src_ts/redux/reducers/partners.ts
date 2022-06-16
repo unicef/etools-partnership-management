@@ -19,6 +19,11 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
         listIsLoaded: true,
         shouldReloadList: true
       };
+    case a.SET_SHOULD_RELOAD_PARTNERS:
+      return {
+        ...state,
+        shouldReloadList: action.shouldReloadList
+      };
     case a.DELETE_PARTNER: {
       const partnersCopy = state.list.slice(0);
       const index = partnersCopy.findIndex((p: any) => p.id === action.partnerId);
@@ -30,13 +35,6 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
         list: partnersCopy,
         listIsLoaded: true,
         shouldReloadList: true
-      };
-    }
-
-    case a.SET_SHOULD_RELOAD_PARTNERS: {
-      return {
-        ...state,
-        shouldReloadList: action.shouldReloadList
       };
     }
 

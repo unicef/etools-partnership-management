@@ -380,7 +380,6 @@ export class InterventionsList extends connect(store)(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
@@ -497,17 +496,16 @@ export class InterventionsList extends connect(store)(
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
-    this.prevQueryStringObj = newParams;
+    this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
-    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(newParams) as any);
+    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`interventions/list?${stringParams}`);
   }
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
