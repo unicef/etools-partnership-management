@@ -24,7 +24,7 @@ import {
   resetCurrentItem,
   // navigate,
   updateDrawerState,
-  updateStoreRouteDetails,
+  updateStoreRouteDetails
 } from './redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
