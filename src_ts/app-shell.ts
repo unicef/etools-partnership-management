@@ -21,9 +21,10 @@ import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
 import {
+  resetCurrentItem,
   // navigate,
   updateDrawerState,
-  updateStoreRouteDetails
+  updateStoreRouteDetails,
 } from './redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
@@ -380,7 +381,11 @@ class AppShell extends connect(store)(
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
     }
-    if (!isJsonStrMatch(routeDetails, get(store.getState(), 'app.routeDetails'))) {
+    const currentRouteDetails = get(store.getState(), 'app.routeDetails');
+    if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
+      store.dispatch(resetCurrentItem());
+    }
+    if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
       store.dispatch(updateStoreRouteDetails(routeDetails));
     }
   }

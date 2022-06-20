@@ -76,7 +76,8 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
         path: params.matchDetails[0],
         queryParams: params.queryParams,
         params: {
-          interventionId: params.matchDetails[1]
+          interventionId: params.matchDetails[1],
+          id: params.matchDetails[1]
         }
       };
     }
