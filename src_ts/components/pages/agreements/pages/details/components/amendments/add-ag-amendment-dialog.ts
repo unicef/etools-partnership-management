@@ -17,7 +17,6 @@ import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {isJsonStrMatch} from '../../../../../../utils/utils.js';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {convertDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils.js';
 
 /**
  * @polymer
