@@ -34,6 +34,8 @@ import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelp
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {ListFilterOption} from '../../../../../typings/filter.types';
+import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -67,9 +69,16 @@ export class InterventionsList extends connect(store)(
         .capitalize {
           text-transform: capitalize;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
+        }
+
+        .filters {
+          position: relative;
         }
 
         @media (max-width: 576px) {
@@ -99,20 +108,18 @@ export class InterventionsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredInterventions"
         fire-data-loaded
       >
       </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters
-          .filterLoadingAbsolute="${true}"
-          .filters="${this.allFilters}"
-          @filter-change="${this.filtersChange}"
-        ></etools-filters>
+        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -229,7 +236,7 @@ export class InterventionsList extends connect(store)(
                   )} interventions-list"
                   icon-first
                   custom-icon
-                  hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
+                  ?hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
                     intervention.all_currencies_are_consistent,
                     intervention.unicef_cash,
                     intervention.frs_total_frs_amt,
@@ -300,6 +307,9 @@ export class InterventionsList extends connect(store)(
   @property({type: Array})
   partners = [];
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
 
@@ -323,24 +333,23 @@ export class InterventionsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+      this.listLoadingActive = true;
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
-
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
-        active: true,
-        loadingSource: 'pd-list'
-      });
-
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadFilteredInterventions();
+
+      if (state.interventions.shouldReGetList) {
+        getStore().dispatch(setShouldReGetList(false));
+      }
     }
   }
 
@@ -374,16 +383,14 @@ export class InterventionsList extends connect(store)(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
     return false;
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  shouldReGetListBecauseOfEditsOnItems(state: RootState) {
+    return state.interventions.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
@@ -492,17 +499,16 @@ export class InterventionsList extends connect(store)(
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
-    this.prevQueryStringObj = newParams;
+    this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
-    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(newParams) as any);
+    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`interventions/list?${stringParams}`);
   }
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {

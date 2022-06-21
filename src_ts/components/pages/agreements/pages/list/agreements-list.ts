@@ -45,6 +45,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
+import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**
  * @polymer
@@ -74,9 +75,16 @@ export class AgreementsList extends connect(store)(
         .page-content {
           margin: 0 0 24px 0;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
+        }
+
+        .filters {
+          position: relative;
         }
 
         @media (max-width: 576px) {
@@ -111,6 +119,7 @@ export class AgreementsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredAgreements"
         fireDataLoaded
         no-get-request
@@ -127,6 +136,7 @@ export class AgreementsList extends connect(store)(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -228,6 +238,9 @@ export class AgreementsList extends connect(store)(
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   @property({type: Object})
   prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc', status: 'draft,signed,suspended'};
 
@@ -244,7 +257,7 @@ export class AgreementsList extends connect(store)(
         active: false,
         loadingSource: 'ag-page'
       });
-    }, 100);
+    });
   }
 
   stateChanged(state: RootState) {
@@ -253,6 +266,7 @@ export class AgreementsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.agreements?.listIsLoaded) {
+      this.listLoadingActive = true;
       return;
     }
 
@@ -272,14 +286,19 @@ export class AgreementsList extends connect(store)(
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+
+      if (state.agreements.shouldReloadList) {
+        store.dispatch(setShouldReloadAgreements(false));
+      }
     }
   }
 
@@ -294,7 +313,6 @@ export class AgreementsList extends connect(store)(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
@@ -302,18 +320,13 @@ export class AgreementsList extends connect(store)(
   }
 
   loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'ag-list'
-    });
     this.loadFilteredAgreements();
   }
 
   async loadFilteredAgreements() {
     this.waitForAgreementsListDataToLoad().then(async () => {
       const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-      const queryParams = this.routeDetails?.queryParams;
+      const queryParams = this.routeDetails?.queryParams || {};
       const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
 
       agreements.query(
@@ -331,7 +344,7 @@ export class AgreementsList extends connect(store)(
         queryParams?.start || '',
         queryParams?.end || '',
         this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
-        queryParams?.special_conditions_pca || 'false',
+        queryParams?.special_conditions_pca,
         queryParams?.page ? Number(queryParams.page) : 1,
         queryParams?.size ? Number(queryParams.size) : 10,
         false
@@ -362,7 +375,7 @@ export class AgreementsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+    return Boolean(state.commonData?.commonDataIsLoaded) && Boolean(state.partners?.listIsLoaded);
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
@@ -399,17 +412,24 @@ export class AgreementsList extends connect(store)(
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
+
+    const newParams = cloneDeep({...currentParams, ...paramsToUpdate});
+
+    if (this.prevQueryStringObj.sort !== newParams.sort) {
+      // if sorting changed, reset to first page because we can get a different number of records from Dexie
+      newParams.page = '1';
+    }
+
     this.prevQueryStringObj = newParams;
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams));
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj));
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`agreements/list?${stringParams}`);
   }
 
   private setSelectedValuesInFilters() {

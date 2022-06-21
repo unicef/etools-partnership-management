@@ -58,6 +58,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           --paper-tooltip: {
             text-align: center;
             line-height: 1.4;
+            font-size: 12px;
           }
         }
 
@@ -92,6 +93,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           padding: 8px 24px;
         }
 
+        .filters {
+          position: relative;
+        }
+
         @media (max-width: 576px) {
           section.page-content.filters {
             padding: 5px;
@@ -123,6 +128,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
       </section>
 
       <div id="list" class="paper-material elevation" elevation="1">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         ${!(this.reports || []).length
           ? html` <div class="row-h">
               <p>There are no reports yet.</p>
@@ -241,6 +247,9 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   @property({type: Object})
   prevQueryStringObj: GenericObject = {size: 10, sort: 'partner_name.asc', status: 'Sen,Sub,Ove'};
 
@@ -252,12 +261,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'reports-page'
-      });
-    }, 1000);
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'reports-page'
+    });
   }
 
   stateChanged(state: RootState) {
@@ -266,6 +273,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
+      this.listLoadingActive = true;
       return;
     }
 
@@ -288,6 +296,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     this.endStateChanged(state);
 
     if (this.filteringParamsHaveChanged(stateRouteDetails)) {
+      this.listLoadingActive = true;
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
@@ -399,11 +408,6 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'reports-list'
-    });
     this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
   }
 
@@ -416,15 +420,12 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
         }
         setTimeout(() => {
           clearInterval(check);
-          fireEvent(this, 'global-loading', {
-            message: 'Loading...',
-            active: false,
-            loadingSource: 'reports-list'
-          });
-        }, 60000);
+          this.listLoadingActive = false;
+        }, 30000);
       }, 50);
     });
   }
+
   _loadReportsData() {
     // abort previous req and then fire a new one with updated params
     abortRequestByKey(this._endpointName);
@@ -435,10 +436,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
           this.reports = response.results;
           this.updatePaginatorTotalResults(response);
         }
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'reports-list'
-        });
+        this.listLoadingActive = false;
       })
       .catch((error: any) => {
         if (error.status === 0) {
@@ -448,10 +446,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
         logError('Reports list data request failed!', 'reports-list', error);
 
         parseRequestErrorsAndShowAsToastMsgs(error, this);
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'reports-list'
-        });
+        this.listLoadingActive = false;
       });
   }
 

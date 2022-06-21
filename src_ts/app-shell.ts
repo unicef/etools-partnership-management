@@ -21,6 +21,7 @@ import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
 import {
+  resetCurrentItem,
   // navigate,
   updateDrawerState,
   updateStoreRouteDetails
@@ -59,7 +60,7 @@ import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
-import ToastNotificationsMixin from './components/common/toast-notifications/toast-notification-mixin.js';
+import '@unicef-polymer/etools-toasts';
 import ScrollControlMixin from './components/common/mixins/scroll-control-mixin.js';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
@@ -142,11 +143,7 @@ class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
     GestureEventListeners(
-      AppMenuMixin(
-        ToastNotificationsMixin(
-          ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
-        )
-      )
+      AppMenuMixin(ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement))))))
     )
   )
 ) {
@@ -160,6 +157,7 @@ class AppShell extends connect(store)(
 
       <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
+      <etools-toasts></etools-toasts>
 
       <app-location
         route="{{appLocRoute}}"
@@ -213,8 +211,7 @@ class AppShell extends connect(store)(
             </template>
 
             <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
-              <agreements-module id="agreements" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
-              </agreements-module>
+              <agreements-module id="agreements" class="main-page" permissions="[[permissions]]"> </agreements-module>
             </template>
 
             <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
@@ -341,7 +338,7 @@ class AppShell extends connect(store)(
       /*
        * Activate the global loading with default message.
        * This will be triggered once at page load or, after page load, on menu option tap event.
-       * The loading message is disabled by *-module.html elements ready callback (in both cases)
+       * The loading message is de-activated by *-module.ts elements connectedCallback (in both cases)
        */
       fireEvent(this, 'global-loading', {
         active: true,
@@ -361,8 +358,8 @@ class AppShell extends connect(store)(
     this.loadCommonData();
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
-
-    this.createToastNotificationElement();
+    // @ts-ignore
+    this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
   }
 
   checkAppVersion() {
@@ -384,7 +381,11 @@ class AppShell extends connect(store)(
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
     }
-    if (!isJsonStrMatch(routeDetails, get(store.getState(), 'app.routeDetails'))) {
+    const currentRouteDetails = get(store.getState(), 'app.routeDetails');
+    if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
+      store.dispatch(resetCurrentItem());
+    }
+    if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
       store.dispatch(updateStoreRouteDetails(routeDetails));
     }
   }
@@ -398,12 +399,6 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-    if (get(state, 'app.toastNotification.active')) {
-      fireEvent(this, 'toast', {
-        text: state.app!.toastNotification.message,
-        showCloseBtn: state.app!.toastNotification.showCloseBtn
-      });
-    }
 
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
@@ -751,7 +746,7 @@ class AppShell extends connect(store)(
     if (currentPath.indexOf('settings') > -1) {
       return;
     }
-    if (currentPath.substr(-1) === '/') {
+    if (currentPath[currentPath.length - 1] === '/') {
       currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
     }
     if (currentPath === this.rootPath + this.routeData.module) {

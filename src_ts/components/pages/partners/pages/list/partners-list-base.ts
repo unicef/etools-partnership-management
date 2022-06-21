@@ -41,11 +41,12 @@ import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {PartnerFilterKeys} from './partners-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
-import {RootState} from '../../../../../redux/store';
+import {RootState, store} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {setShouldReloadPartners} from '../../../../../redux/actions/partners';
 
 export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
@@ -75,9 +76,16 @@ export class PartnersListBase extends CommonMixin(
         .page-content {
           margin: 0 0 24px 0;
         }
+        #list {
+          position: relative;
+        }
 
         section.page-content.filters {
           padding: 8px 24px;
+        }
+
+        .filters {
+          position: relative;
         }
 
         @media (max-width: 576px) {
@@ -108,6 +116,7 @@ export class PartnersListBase extends CommonMixin(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
+        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
         list-data-path="filteredPartners"
         fireDataLoaded
         no-get-request
@@ -116,7 +125,6 @@ export class PartnersListBase extends CommonMixin(
 
       <section class="elevation page-content filters" elevation="1">
         <etools-filters
-          .filterLoadingAbsolute="${true}"
           .filters="${this.allFilters}"
           @filter-change="${this.filtersChange}"
           .textFilters="${translate('GENERAL.FILTERS')}"
@@ -125,6 +133,7 @@ export class PartnersListBase extends CommonMixin(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
+        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -257,6 +266,9 @@ export class PartnersListBase extends CommonMixin(
   @property({type: Object})
   routeDetails!: RouteDetails | null;
 
+  @property({type: Boolean})
+  listLoadingActive = false;
+
   /**
    * Used to preserve previously selected filters and pagination when navigating away from the list and comming back
    * & to initialize pagination
@@ -283,18 +295,22 @@ export class PartnersListBase extends CommonMixin(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
+      this.listLoadingActive = true;
       return;
     }
 
-    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems()) {
+    if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
-
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.initFiltersForDisplay(state.commonData!);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
+      if (state.partners.shouldReloadList) {
+        store.dispatch(setShouldReloadPartners(false));
+      }
     }
   }
 
@@ -331,11 +347,6 @@ export class PartnersListBase extends CommonMixin(
   }
 
   loadListData() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: 'partners-list'
-    });
     this.loadFilteredPartners();
   }
 
@@ -370,17 +381,16 @@ export class PartnersListBase extends CommonMixin(
     return types ? types.split(',') : [];
   }
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
-    const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
-    this.prevQueryStringObj = newParams;
+    this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
-    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(newParams) as any);
+    fireEvent(this, 'csvDownloadUrl-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
 
-    const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
+    EtoolsRouter.replaceAppLocation(`${this.currentModule}/list?${stringParams}`);
   }
 
   // Override from lists-common-mixin
@@ -411,9 +421,11 @@ export class PartnersListBase extends CommonMixin(
     return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
   }
 
-  shouldReGetListBecauseOfEditsOnItems() {
-    // return state.partners.shouldReGetList;  TODO -NOT Implemented
-    return false;
+  /**
+   * Or because of IndexedDb Refresh
+   */
+  shouldReGetListBecauseOfEditsOnItems(state: RootState) {
+    return state.partners?.shouldReloadList;
   }
 
   /**
@@ -427,7 +439,6 @@ export class PartnersListBase extends CommonMixin(
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
@@ -465,7 +476,7 @@ export class PartnersListBase extends CommonMixin(
       rating: queryStringObj.risk_ratings,
       sea_risk_rating: queryStringObj.sea_risk_ratings,
       psea_assessment_date_before: queryStringObj.psea_assessment_date_before,
-      psea_assessment_date_after: queryStringObj.psea_assessment_date_before,
+      psea_assessment_date_after: queryStringObj.psea_assessment_date_after,
       hidden: queryStringObj.hidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(exportParams, this.getEndpoint(pmpEdpoints, 'partners').url);

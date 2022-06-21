@@ -9,7 +9,6 @@ import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
-import '../../styles/page-content-header-slotted-styles.js';
 import '../../common/components/etools-error-messages-box.js';
 import '../../common/components/etools-tabs.js';
 import './data/intervention-item-data.js';
@@ -79,31 +78,10 @@ export class InterventionsModule extends connect(store)(
         .export-dd {
           width: 105px;
         }
-
-        paper-menu-button {
-          --paper-menu-button: {
-            padding: 8px 0 0 0;
-          }
-        }
-
-        #pdExportMenuBtn paper-item {
-          --paper-item-selected: {
-            font-weight: normal !important;
-          }
-          /* Prevent first item highlighted by default */
-          --paper-item-focused-before: {
-            background: none;
-            opacity: 0;
-          }
-          --paper-item-focused-after: {
-            background: none;
-            opacity: 0;
-          }
-        }
       </style>
 
       <div ?hidden="${this.showNewPMP(this.activePage)}">
-        <page-content-header with-tabs-visible="${this.tabsActive}">
+        <page-content-header ?with-tabs-visible="${this.tabsActive}">
           <div slot="page-title">
             <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> PD/SPDs </span>
             <span ?hidden="${!this._pageEquals(this.activePage, 'new')}">
@@ -116,7 +94,7 @@ export class InterventionsModule extends connect(store)(
           <div slot="title-row-actions" class="content-header-actions export-options">
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-                <paper-button slot="dropdown-trigger">
+                <paper-button slot="dropdown-trigger" class="focus-as-link">
                   <iron-icon icon="file-download"></iron-icon>
                   ${this._getTranslation('EXPORT')}
                 </paper-button>

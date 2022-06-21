@@ -118,58 +118,46 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         ${(this.locationData || []).map(
           (topLevelLocation: any) => html`
             <div>
-              <paper-tabs .selected="${topLevelLocation.selected}" selectable="paper-tab" scrollable>
-                ${topLevelLocation.byEntity.map(
-                  (location: any) => html`<paper-tab>${location.reporting_entity.title}</paper-tab>`
-                )}
-              </paper-tabs>
+              ${topLevelLocation.byEntity.map(
+                (location: any) => html`
+                  <div>
+                    <div class="tab-header">
+                      <dl>
+                        ${this._equals(location.display_type, 'number')
+                          ? html`
+                              <dt>Location progress against ${location.reporting_entity.title} target:</dt>
+                              <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
+                              <dt>Previous location progress:</dt>
+                              <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
+                            `
+                          : html` <dt>Location progress:</dt>
+                              <dd>
+                                ${this._formatIndicatorValue(location.display_type, location.location_progress.c, true)}
+                              </dd>
+                              <dt>Previous location progress:</dt>
+                              <dd>
+                                ${this._formatIndicatorValue(
+                                  location.display_type,
+                                  location.previous_location_progress?.c,
+                                  true
+                                )}
+                              </dd>`}
+                      </dl>
+                    </div>
 
-              <iron-pages .selected="${topLevelLocation.selected}">
-                ${topLevelLocation.byEntity.map(
-                  (location: any) => html`
-                    <div>
-                      <div class="tab-header">
-                        <dl>
-                          ${this._equals(location.display_type, 'number')
-                            ? html`
-                                <dt>Location progress against ${location.reporting_entity.title} target:</dt>
-                                <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
-                                <dt>Previous location progress:</dt>
-                                <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
-                              `
-                            : html` <dt>Location progress:</dt>
-                                <dd>
-                                  ${this._formatIndicatorValue(
-                                    location.display_type,
-                                    location.location_progress.c,
-                                    true
-                                  )}
-                                </dd>
-                                <dt>Previous location progress:</dt>
-                                <dd>
-                                  ${this._formatIndicatorValue(
-                                    location.display_type,
-                                    location.previous_location_progress?.c,
-                                    true
-                                  )}
-                                </dd>`}
-                        </dl>
-                      </div>
-
-                      <div class="table-container app-grid">
-                        <div class="item">
-                          <disaggregation-table
-                            .data="${location}"
-                            .mapping="${this.indicatorReport.disagg_lookup_map}"
-                            .labels="${this.indicatorReport.labels}"
-                          >
-                          </disaggregation-table>
-                        </div>
+                    <div class="table-container app-grid">
+                      <div class="item">
+                        <disaggregation-table
+                          .data="${location}"
+                          .mapping="${this.indicatorReport.disagg_lookup_map}"
+                          .labels="${this.indicatorReport.labels}"
+                        >
+                        </disaggregation-table>
                       </div>
                     </div>
-                  `
-                )}
-              </iron-pages>
+                  </div>
+                `
+              )}
             </div>
           `
         )}

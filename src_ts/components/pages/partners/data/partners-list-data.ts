@@ -65,10 +65,8 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
     const self = this;
 
     if (showQueryLoading) {
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
-        active: true,
-        loadingSource: 'partners-list'
+      fireEvent(self, 'list-loading', {
+        active: true
       });
     }
 
@@ -157,9 +155,8 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
       .then(function (result: any[]) {
         // @ts-ignore
         fireEvent(self, 'filtered-partners-changed', result);
-        fireEvent(self, 'global-loading', {
-          active: false,
-          loadingSource: 'partners-list'
+        fireEvent(self, 'list-loading', {
+          active: false
         });
       })
       .catch(function (error: any) {
@@ -167,9 +164,8 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
           window.location.reload();
         }
         logError('Error querying partners!', 'partners-list-data', error);
-        fireEvent(self, 'global-loading', {
-          active: false,
-          loadingSource: 'partners-list'
+        fireEvent(self, 'list-loading', {
+          active: false
         });
       });
   }
