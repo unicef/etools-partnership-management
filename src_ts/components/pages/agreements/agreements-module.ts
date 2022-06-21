@@ -394,14 +394,10 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agrDataToSave = this._getCurrentChanges(currentAgreement);
       agrDataToSave.id = this.agreement.id;
     }
-
-    this._saveAgreement(agrDataToSave).then((resp) => {
-      if (!resp && this.newAgreementActive) {
-        // if we have a new record and save failed, set agreement object with data from detail page
-        // to avoid losing entered data by the user
-        this.agreement = {...this.agreement, ...agrDataToSave};
-      }
-    });
+    // set module agreement property with what we have in details page,
+    // in case Save fails and details is re-rendered this will prevent triggering logic for agreement changed
+    this.agreement = {...currentAgreement, ...agrDataToSave};
+    this._saveAgreement(agrDataToSave);
   }
 
   validateAgreement() {
