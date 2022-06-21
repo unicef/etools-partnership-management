@@ -357,6 +357,7 @@ export function template(this: InterventionNew): TemplateResult {
             maxlength="256"
             placeholder="&#8212;"
             required
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
             .value="${this.newIntervention?.title}"
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
