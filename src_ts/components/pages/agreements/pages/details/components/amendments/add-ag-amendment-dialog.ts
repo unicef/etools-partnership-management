@@ -2,7 +2,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
 
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
@@ -56,7 +56,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
               max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
               .open="${this.datePickerOpen}"
               .autoValidate="${this.autoValidate}"
-              .maxDate="${this.getCurrentDate()}"
+              max-date="${this.getCurrentDate()}"
+              min-date="${this.agreementStart}"
               required
               selected-date-display-format="D MMM YYYY"
               fire-date-has-changed
@@ -152,14 +153,18 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   @property({type: Boolean})
   uploadInProgress = false;
 
+  @property({type: String})
+  agreementStart!: string;
+
   set dialogData(data: any) {
-    const {allStaffMembers, showAuthorizedOfficers, amendmentTypes}: any = data;
+    const {allStaffMembers, showAuthorizedOfficers, amendmentTypes, agreementStart}: any = data;
 
     this.amendment = new AgreementAmendment();
     this.amendmentTypes = amendmentTypes;
     this.authorizedOfficersOptions = allStaffMembers;
     this.selAuthorizedOfficers = [];
     this.showAuthorizedOfficers = showAuthorizedOfficers;
+    this.agreementStart = agreementStart;
     this.autoValidate = true;
     this._aoTypeSelected = false;
   }

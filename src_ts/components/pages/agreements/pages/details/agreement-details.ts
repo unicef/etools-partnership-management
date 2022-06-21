@@ -498,6 +498,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             id="agreementAmendments"
             class="content-section"
             .dataItems="${cloneDeep(this.amendments)}"
+            .agreementStart="${this.agreement.start}"
             .agreementType="${this.agreement.agreement_type}"
             .editMode="${this.agreement.permissions?.edit.amendments}"
             .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
