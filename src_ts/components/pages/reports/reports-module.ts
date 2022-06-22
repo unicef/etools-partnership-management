@@ -202,7 +202,7 @@ export class ReportsModule extends connect(store)(
               close-on-activate
               class="no-right-padd"
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
-              tabindex="${this.statusIs(this.report?.status, 'Sub') ? 0 : -1}"
+              tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
               <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
               <paper-listbox slot="dropdown-content">
@@ -211,7 +211,7 @@ export class ReportsModule extends connect(store)(
               </paper-listbox>
             </paper-menu-button>
 
-            <paper-menu-button close-on-activate horizontal-align="right" tabindex="0">
+            <paper-menu-button close-on-activate horizontal-align="right">
               <paper-button slot="dropdown-trigger" class="dropdown-trigger">
                 <iron-icon icon="more-vert"></iron-icon>
               </paper-button>
