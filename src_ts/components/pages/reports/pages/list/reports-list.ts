@@ -280,6 +280,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
+        stateRouteDetails &&
         this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
         stateRouteDetails.subRouteName === 'list'
       )
@@ -368,7 +369,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     this.prevQueryStringObj = newParams;
 
     const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`reports/list?${stringParams}`);
   }
 
   private setSelectedValuesInFilters() {
