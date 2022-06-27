@@ -1,15 +1,18 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@unicef-polymer/etools-loading/etools-loading.js';
-declare const dayjs: any;
-import CommonMixin from '../../common/mixins/common-mixin';
-import EndpointsMixin from '../../endpoints/endpoints-mixin';
+import CommonMixinLit from '../mixins/common-mixin-lit';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {isEmptyObject} from '../../utils/utils';
-import {SharedStyles} from '../../styles/shared-styles';
-import {gridLayoutStyles} from '../../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators';
+
+import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
+import pmpEndpoints from '../../endpoints/endpoints';
+import {repeat} from 'lit-html/directives/repeat';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -18,12 +21,16 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
-  static get template() {
+@customElement('monitoring-visits-list2')
+export class MonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
+
+  render() {
     return html`
-      ${SharedStyles} ${gridLayoutStyles}
-      <style include="data-table-styles">
-        :host {
+      <style>
+        ${sharedStyles} ${dataTableStylesLit} :host {
           @apply --layout-flex;
         }
 
@@ -38,12 +45,12 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       </style>
 
       <div class="monitoring-visits-container">
-        <etools-loading id="monitoring" loading-text="Loading..." active$="[[showLoading]]"></etools-loading>
+        <etools-loading id="monitoring" loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
 
-        <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+        <div ?hidden="${this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}">
           <etools-data-table-header
             id="listHeader"
-            label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results"
+            label="Showing ${this._getVisitsCount(this.monitoringVisits.length, this.tpmActivities.length)} results"
             no-collapse
           >
             <etools-data-table-column class="col-2" field="reference_number">Reference #</etools-data-table-column>
@@ -54,65 +61,69 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
             <etools-data-table-column class="col-2" field="status">Status</etools-data-table-column>
           </etools-data-table-header>
 
-          <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit">
-            <etools-data-table-row no-collapse>
+          ${repeat(
+            this.monitoringVisits || [],
+            (visit: any) => html` <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-2">
                   <a
                     class="truncate"
-                    href$="/t2f/edit-travel/[[visit.trip_id]]"
-                    title="[[visit.reference_number]]"
+                    href="/t2f/edit-travel/${visit.trip_id}"
+                    title="${visit.reference_number}"
                     target="_blank"
                   >
-                    [[visit.reference_number]]
+                    ${visit.reference_number}
                   </a>
                 </span>
-                <span class="col-data col-2" title="[[visit.primary_traveler]]">
-                  <span class="truncate"> [[visit.primary_traveler]] </span>
+                <span class="col-data col-2" title="${visit.primary_traveler}">
+                  <span class="truncate"> ${visit.primary_traveler} </span>
                 </span>
-                <span class="col-data col-2" title="[[visit.travel_type]]">[[visit.travel_type]]</span>
-                <span class="col-data col-2" title="[[getDateDisplayValue(visit.travel_latest_date)]]">
-                  [[getDateDisplayValue(visit.travel_latest_date)]]
+                <span class="col-data col-2" title="${visit.travel_type}">${visit.travel_type}</span>
+                <span class="col-data col-2" title="${this.getDateDisplayValue(visit.travel_latest_date)}">
+                  ${this.getDateDisplayValue(visit.travel_latest_date)}
                 </span>
-                <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
-                  [[getDisplayValue(visit.locations)]]
+                <span class="col-data col-2" title="${this.getDisplayValue(visit.locations)}">
+                  ${this.getDisplayValue(visit.locations)}
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">[[visit.status]]</span>
+                <span class="col-data col-2 capitalize" title="${visit.status}">${visit.status}</span>
               </div>
-            </etools-data-table-row>
-          </template>
-
-          <template id="rows" is="dom-repeat" items="[[tpmActivities]]" as="visit">
-            <etools-data-table-row no-collapse>
+            </etools-data-table-row>`
+          )}
+          ${repeat(
+            this.tpmActivities || [],
+            (visit: any) => html` <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-2">
                   <a
                     class="truncate"
-                    href$="/tpm/visits/[[visit.tpm_visit]]/details"
-                    title="[[visit.visit_reference]]"
+                    href="/tpm/visits/${visit.tpm_visit}/details"
+                    title="${visit.visit_reference}"
                     target="_blank"
                   >
-                    [[visit.visit_reference]]
+                    ${visit.visit_reference}
                   </a>
                 </span>
-                <span class="col-data col-2" title="[[visit.tpm_partner_name]]">
-                  <span class="truncate"> [[visit.tpm_partner_name]] </span>
+                <span class="col-data col-2" title="${visit.tpm_partner_name}">
+                  <span class="truncate"> ${visit.tpm_partner_name} </span>
                 </span>
-                <span class="col-data col-2" title="[[getDisplayType(visit.is_pv)]]">
-                  [[getDisplayType(visit.is_pv)]]
+                <span class="col-data col-2" title="${this.getDisplayType(visit.is_pv)}">
+                  ${this.getDisplayType(visit.is_pv)}
                 </span>
-                <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
-                  [[getDateDisplayValue(visit.date)]]
+                <span class="col-data col-2" title="${this.getDateDisplayValue(visit.date)}">
+                  ${this.getDateDisplayValue(visit.date)}
                 </span>
-                <span class="col-data col-2" title="[[getLocNames(visit.locations_details)]]">
-                  [[getLocNames(visit.locations_details)]]
+                <span class="col-data col-2" title="${this.getLocNames(visit.locations_details)}">
+                  ${this.getLocNames(visit.locations_details)}
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">[[visit.status]]</span>
+                <span class="col-data col-2 capitalize" title="${visit.status}">${visit.status}</span>
               </div>
-            </etools-data-table-row>
-          </template>
+            </etools-data-table-row>`
+          )}
         </div>
-        <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+        <div
+          class="row-h"
+          ?hidden="${!this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}"
+        >
           <p>There are no activities.</p>
         </div>
       </div>
@@ -134,39 +145,49 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
   @property({type: Array})
   tpmActivities: any[] = [];
 
-  @property({type: Number, observer: '_interventionIdChanged'})
+  @property({type: Number})
   interventionId!: number;
 
-  @property({type: Number, observer: '_partnerIdChanged'})
+  @property({type: Number})
   partnerId!: number;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean, reflect: true, attribute: 'show-tpm-visits'})
   showTpmVisits = false;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean, reflect: true, attribute: 'intervention-overview'})
   interventionOverview = false;
 
-  static get observers() {
-    return ['showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'];
+  updated(changedProperties: PropertyValues) {
+    console.log(changedProperties);
+    console.log(this.interventionId, this.partnerId);
+    if (changedProperties.has('interventionId')) {
+      this._interventionIdChanged(this.interventionId);
+    }
+    if (changedProperties.has('partnerId')) {
+      this._partnerIdChanged(this.partnerId);
+    }
+    if (changedProperties.has('partnerId') || changedProperties.has('showTpmVisits')) {
+      this.showTpmVisitsAndIdChanged(this.partnerId, this.showTpmVisits);
+    }
   }
 
-  _interventionIdChanged(intervId: string) {
+  _interventionIdChanged(intervId: number) {
     this._getT2fVisits(intervId, 'monitoringVisits');
   }
 
-  _partnerIdChanged(partnerId: string) {
+  _partnerIdChanged(partnerId: number) {
     if (!this.interventionOverview) {
       this._getT2fVisits(partnerId, 'partnerT2fProgrammaticVisits');
     }
   }
 
-  _getT2fVisits(interventionOrPartnerId: string, endpointName: string) {
+  _getT2fVisits(interventionOrPartnerId: number, endpointName: string) {
     if (!interventionOrPartnerId) {
       return;
     }
 
-    this.set('showLoading', true);
-    const monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
+    this.showLoading = true;
+    const monitoringVisitsEndpoint = this.getEndpoint(pmpEndpoints, endpointName, {
       id: interventionOrPartnerId,
       year: dayjs().year()
     });
@@ -174,11 +195,11 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       endpoint: monitoringVisitsEndpoint
     })
       .then((resp: any) => {
-        this.set('monitoringVisits', resp);
-        this.set('showLoading', false);
+        this.monitoringVisits = resp;
+        this.showLoading = false;
       })
       .catch((error: any) => {
-        this.set('showLoading', false);
+        this.showLoading = false;
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
@@ -199,17 +220,17 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     return shouldHide;
   }
 
-  showTpmVisitsAndIdChanged(partnerId: string, showTpmVisits: boolean) {
+  showTpmVisitsAndIdChanged(partnerId: number, showTpmVisits: boolean) {
     if (!showTpmVisits || !partnerId) {
-      this.set('tpmActivities', []);
+      this.tpmActivities = [];
       return;
     }
     const endpoint = this.interventionId
-      ? this.getEndpoint('interventionTPMActivities', {
+      ? this.getEndpoint(pmpEndpoints, 'interventionTPMActivities', {
           year: dayjs().year(),
           interventionId: this.interventionId
         })
-      : this.getEndpoint('partnerTPMActivities', {
+      : this.getEndpoint(pmpEndpoints, 'partnerTPMActivities', {
           year: dayjs().year(),
           partnerId: this.partnerId
         });
@@ -218,11 +239,11 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       endpoint: endpoint
     })
       .then((resp: any) => {
-        this.set('tpmActivities', resp);
-        this.set('showLoading', false);
+        this.tpmActivities = resp;
+        this.showLoading = false;
       })
       .catch((_error: any) => {
-        this.set('showLoading', false);
+        this.showLoading = false;
         logError('Error on get TPM visits');
       });
   }
@@ -238,5 +259,3 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     return locations.map((a: any) => (a.name ? a.name : '')).join(', ');
   }
 }
-
-window.customElements.define('monitoring-visits-list2', MonitoringVisitsList);

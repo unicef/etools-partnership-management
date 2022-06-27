@@ -432,7 +432,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         class="content-section"
         panel-title=" ${translate('PROGRAMMATIC_VISITS_S_CASE')}"
       >
-        <monitoring-visits-list2 partner-id="${this.partner.id}" show-tpm-visits> </monitoring-visits-list2>
+        <monitoring-visits-list2 .partnerId="${this.partner.id}" show-tpm-visits> </monitoring-visits-list2>
       </etools-content-panel>
 
       <monitoring-activities
