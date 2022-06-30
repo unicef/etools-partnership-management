@@ -1,8 +1,8 @@
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@unicef-polymer/etools-loading/etools-loading.js';
-import CommonMixinLit from '../mixins/common-mixin-lit';
+import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject} from '../../../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
@@ -10,7 +10,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import pmpEndpoints from '../../endpoints/endpoints';
+import pmpEndpoints from '../../../../../endpoints/endpoints';
 import {repeat} from 'lit-html/directives/repeat';
 declare const dayjs: any;
 
@@ -21,8 +21,8 @@ declare const dayjs: any;
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-@customElement('monitoring-visits-list2')
-export class MonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
+@customElement('partner-monitoring-visits-list')
+export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -146,49 +146,28 @@ export class MonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitEl
   tpmActivities: any[] = [];
 
   @property({type: Number})
-  interventionId!: number;
-
-  @property({type: Number})
   partnerId!: number;
 
   @property({type: Boolean, reflect: true, attribute: 'show-tpm-visits'})
   showTpmVisits = false;
 
-  @property({type: Boolean, reflect: true, attribute: 'intervention-overview'})
-  interventionOverview = false;
-
   updated(changedProperties: PropertyValues) {
-    console.log(changedProperties);
-    console.log(this.interventionId, this.partnerId);
-    if (changedProperties.has('interventionId')) {
-      this._interventionIdChanged(this.interventionId);
-    }
     if (changedProperties.has('partnerId')) {
-      this._partnerIdChanged(this.partnerId);
+      this._getT2fVisits(this.partnerId, 'partnerT2fProgrammaticVisits');
     }
     if (changedProperties.has('partnerId') || changedProperties.has('showTpmVisits')) {
       this.showTpmVisitsAndIdChanged(this.partnerId, this.showTpmVisits);
     }
   }
 
-  _interventionIdChanged(intervId: number) {
-    this._getT2fVisits(intervId, 'monitoringVisits');
-  }
-
-  _partnerIdChanged(partnerId: number) {
-    if (!this.interventionOverview) {
-      this._getT2fVisits(partnerId, 'partnerT2fProgrammaticVisits');
-    }
-  }
-
-  _getT2fVisits(interventionOrPartnerId: number, endpointName: string) {
-    if (!interventionOrPartnerId) {
+  _getT2fVisits(partnerId: number, endpointName: string) {
+    if (!partnerId) {
       return;
     }
 
     this.showLoading = true;
     const monitoringVisitsEndpoint = this.getEndpoint(pmpEndpoints, endpointName, {
-      id: interventionOrPartnerId,
+      id: partnerId,
       year: dayjs().year()
     });
     sendRequest({
@@ -225,15 +204,10 @@ export class MonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitEl
       this.tpmActivities = [];
       return;
     }
-    const endpoint = this.interventionId
-      ? this.getEndpoint(pmpEndpoints, 'interventionTPMActivities', {
-          year: dayjs().year(),
-          interventionId: this.interventionId
-        })
-      : this.getEndpoint(pmpEndpoints, 'partnerTPMActivities', {
-          year: dayjs().year(),
-          partnerId: this.partnerId
-        });
+    const endpoint = this.getEndpoint(pmpEndpoints, 'partnerTPMActivities', {
+      year: dayjs().year(),
+      partnerId: this.partnerId
+    });
 
     sendRequest({
       endpoint: endpoint
