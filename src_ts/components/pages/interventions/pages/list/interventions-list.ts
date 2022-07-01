@@ -325,6 +325,7 @@ export class InterventionsList extends connect(store)(
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
+        stateRouteDetails &&
         this.localName.indexOf(stateRouteDetails.routeName?.split('-')[0]) > -1 &&
         stateRouteDetails?.subRouteName === 'list'
       )

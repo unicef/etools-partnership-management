@@ -280,6 +280,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
+        stateRouteDetails &&
         this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
         stateRouteDetails.subRouteName === 'list'
       )
@@ -296,10 +297,10 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     this.endStateChanged(state);
 
     if (this.filteringParamsHaveChanged(stateRouteDetails)) {
-      this.listLoadingActive = true;
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.setSelectedValuesInFilters();
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
@@ -318,7 +319,6 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
       (!stateRouteDetails.queryParams || Object.keys(stateRouteDetails.queryParams).length === 0) &&
       this.prevQueryStringObj
     ) {
-      this.routeDetails = cloneDeep(stateRouteDetails);
       this.updateCurrentParams(this.prevQueryStringObj);
       return true;
     }
@@ -361,7 +361,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
-    let currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
       currentParams = pick(currentParams, ['sort', 'size', 'page']);
     }
@@ -369,7 +369,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
     this.prevQueryStringObj = newParams;
 
     const stringParams: string = buildUrlQueryString(newParams);
-    EtoolsRouter.replaceAppLocation(`${this.routeDetails!.path}?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`reports/list?${stringParams}`);
   }
 
   private setSelectedValuesInFilters() {
