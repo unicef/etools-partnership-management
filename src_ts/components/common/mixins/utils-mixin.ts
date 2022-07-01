@@ -1,5 +1,5 @@
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '@unicef-polymer/etools-types';
+import {Constructor, Indicator} from '@unicef-polymer/etools-types';
 
 function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
   class UtilsClass extends baseClass {
@@ -80,6 +80,31 @@ function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
 
     _ternary(value: any, expected: any, value1: any, value2: any) {
       return value === expected ? value1 : value2;
+    }
+
+    // Both unit and displayType are used because of inconsitencies in the db.
+    getIndicatorDisplayType(indicator: Indicator) {
+      const unit = indicator.indicator ? indicator.indicator!.unit : '';
+      const displayType = indicator.indicator ? indicator.indicator!.display_type : '';
+      if (!unit) {
+        return '';
+      }
+      let typeChar = '';
+      switch (unit) {
+        case 'number':
+          typeChar = '#';
+          break;
+        case 'percentage':
+          if (displayType === 'percentage') {
+            typeChar = '%';
+          } else if (displayType === 'ratio') {
+            typeChar = '÷';
+          }
+          break;
+        default:
+          break;
+      }
+      return typeChar;
     }
 
     _withDefault(value: any, defaultValue?: any) {
