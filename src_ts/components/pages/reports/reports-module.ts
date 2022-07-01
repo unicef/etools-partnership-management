@@ -26,6 +26,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
+import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -83,6 +84,9 @@ export class ReportsModule extends connect(store)(
           font-size: 12px;
           font-weight: bold;
           color: var(--primary-color);
+        }
+        paper-button:focus {
+          ${elevation2}
         }
       </style>
 
@@ -191,12 +195,14 @@ export class ReportsModule extends connect(store)(
             <report-status
               .status="${this.report?.status}"
               ?hidden="${this.statusIs(this.report?.status, 'Sub')}"
+              tabindex="-1"
             ></report-status>
 
             <paper-menu-button
               close-on-activate
               class="no-right-padd"
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
+              tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
               <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
               <paper-listbox slot="dropdown-content">
@@ -206,7 +212,9 @@ export class ReportsModule extends connect(store)(
             </paper-menu-button>
 
             <paper-menu-button close-on-activate horizontal-align="right">
-              <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
+              <paper-button slot="dropdown-trigger" class="dropdown-trigger">
+                <iron-icon icon="more-vert"></iron-icon>
+              </paper-button>
               <paper-listbox slot="dropdown-content">
                 <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
                 <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
