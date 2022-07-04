@@ -95,4 +95,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - list-filters
+                - currency-element-migration
