@@ -160,7 +160,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                 @etools-selected-item-changed="${this.onAgreementTypeChanged}"
                 hide-search
                 ?readonly="${this._isAgreementTypeReadonly(this.agreement)}"
-                ?auto-validate="${this.autoValidate}"
+                @focus="${this.resetError}"
+                @click="${this.resetError}"
                 error-message="${translate('PLEASE_SELECT_AGREEMENT_TYPE')}"
                 required
               >
@@ -218,7 +219,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               trigger-value-change-event
               @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
               ?hidden="${!this.agreement.permissions?.edit.partner}"
-              ?auto-validate="${this.autoValidate}"
+              @focus="${this.resetError}"
+              @click="${this.resetError}"
               error-message="${translate('PLEASE_SELECT_A_PARTNER')}"
               required
             >
@@ -571,9 +573,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   @property({type: Boolean})
   enableEditForAuthorizedOfficers = false;
 
-  @property({type: Boolean})
-  autoValidate = false;
-
   @property({type: String})
   generatePCAMessage = getTranslation('SAVE_BEFORE_GENERATING_PCA_TEMPLATE');
 
@@ -638,20 +637,16 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     setTimeout(() => {
       stopGlobalLoading(this, 'ag-page');
     }, 200);
-    this.autoValidate = true;
   }
 
   resetOnLeave() {
     this.staffMembers = [];
     this.agreement = new Agreement();
-    this.resetControlsValidation();
+    resetRequiredFields(this);
   }
 
-  resetControlsValidation() {
-    if (this.autoValidate) {
-      this.autoValidate = false;
-      resetRequiredFields(this);
-    }
+  resetError(event: any): void {
+    event.target.invalid = false;
   }
 
   authorizedOfficersChanged() {
