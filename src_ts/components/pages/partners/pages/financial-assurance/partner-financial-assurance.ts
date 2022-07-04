@@ -26,7 +26,7 @@ declare const dayjs: any;
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
-import '../../../../common/components/monitoring-visits-list';
+import './components/partner-monitoring-visits-list';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PartnerAssessment} from '../../../../../models/partners.models';
 import './components/hact-edit-dialog';
@@ -432,7 +432,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         class="content-section"
         panel-title=" ${translate('PROGRAMMATIC_VISITS_S_CASE')}"
       >
-        <monitoring-visits-list2 partner-id="${this.partner.id}" show-tpm-visits> </monitoring-visits-list2>
+        <partner-monitoring-visits-list .partnerId="${this.partner.id}" show-tpm-visits>
+        </partner-monitoring-visits-list>
       </etools-content-panel>
 
       <monitoring-activities
