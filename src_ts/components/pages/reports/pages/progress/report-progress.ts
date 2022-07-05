@@ -146,7 +146,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                 <div class="indicator-header layout-horizontal flex-c">
                                   <div class="col col-8 indicator-header-title">
                                     <h3>
-                                      ${this.getIndicatorDisplayType(indicatorReport)}
+                                      ${this.getIndicatorDisplayType(indicatorReport.reportable.blueprint)}
                                       ${indicatorReport.reportable.blueprint.title}
                                     </h3>
                                     <div class="layout-horizontal calculation-formula">
