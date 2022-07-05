@@ -1,5 +1,5 @@
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor, Indicator} from '@unicef-polymer/etools-types';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
   class UtilsClass extends baseClass {
