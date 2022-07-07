@@ -83,6 +83,27 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return value === expected ? value1 : value2;
     }
 
+    // Both unit and displayType are used because of inconsitencies in the db.
+    _getIndicatorDisplayType(unit: string, displayType: string) {
+      if (!unit) {
+        return '';
+      }
+
+      switch (unit) {
+        case 'number':
+          return '# ';
+        case 'percentage':
+          if (displayType === 'percentage') {
+            return '% ';
+          } else if (displayType === 'ratio') {
+            return '÷ ';
+          }
+          return '';
+        default:
+          return '';
+      }
+    }
+
     _withDefault(value: any, defaultValue: any) {
       if (typeof defaultValue === 'undefined') {
         defaultValue = '-';
