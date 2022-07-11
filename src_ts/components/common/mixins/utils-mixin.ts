@@ -1,5 +1,5 @@
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor, Indicator} from '@unicef-polymer/etools-types';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
   class UtilsClass extends baseClass {
@@ -83,9 +83,9 @@ function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
     }
 
     // Both unit and displayType are used because of inconsitencies in the db.
-    getIndicatorDisplayType(indicator: Indicator) {
-      const unit = indicator.indicator ? indicator.indicator!.unit : '';
-      const displayType = indicator.indicator ? indicator.indicator!.display_type : '';
+    getIndicatorDisplayType(indicator: any) {
+      const unit = indicator ? indicator.unit : '';
+      const displayType = indicator ? indicator.display_type : '';
       if (!unit) {
         return '';
       }
