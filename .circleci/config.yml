@@ -87,6 +87,7 @@ workflows:
                 - staging
                 - develop
                 - epd
+                - agreements-refactoring
       - build_and_deploy:
           filters:
             branches:
@@ -96,3 +97,4 @@ workflows:
                 - develop
                 - epd
                 - currency-element-migration
+                - agreements-refactoring

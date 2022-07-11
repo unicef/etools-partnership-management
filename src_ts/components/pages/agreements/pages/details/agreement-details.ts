@@ -52,7 +52,6 @@ import {stopGlobalLoading} from '../../../../utils/utils';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
-import {resetRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
 
@@ -362,7 +361,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             .options="${this._getAvailableAuthOfficers(this.staffMembers, this.agreement.authorized_officers)}"
             option-value="id"
             option-label="name"
-            .selectedValues="${this.getSelectedAuthOfficers(this.authorizedOfficers)}"
+            .selectedValues="${this.getSelectedAuthOfficeIDs(this.agreement.authorized_officers)}"
             trigger-value-change-event
             @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
             ?hidden="${!this._allowAuthorizedOfficersEditing(
@@ -383,7 +382,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.editMode,
               this.allowAoEditForSSFA
             )}"
-            .value="${this._getReadonlyAuthorizedOfficers(this.agreement, this.authorizedOfficers, this.staffMembers)}"
+            .value="${this._getReadonlyAuthorizedOfficers(this.agreement.authorized_officers, this.staffMembers)}"
           >
           </etools-form-element-wrapper2>
         </div>
@@ -499,7 +498,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         ? html` <agreement-amendments
             id="agreementAmendments"
             class="content-section"
-            .dataItems="${cloneDeep(this.amendments)}"
+            .dataItems="${cloneDeep(this.agreement.amendments)}"
             .agreementStart="${this.agreement.start}"
             .agreementType="${this.agreement.agreement_type}"
             .editMode="${this.agreement.permissions?.edit.amendments}"
@@ -540,7 +539,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   set isNewAgreement(val: boolean) {
     if (this._isNewAgreement !== val) {
       this._isNewAgreement = val;
-      this._isNewAgreementChanged(val);
+      this._setDraftStatus(this.editMode, val);
     }
   }
   @property({type: Boolean})
@@ -557,15 +556,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   @property({type: Array})
   staffMembers: [] = [];
 
-  @property({type: Array})
-  authorizedOfficers!: string[];
-
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
-
-  // Redundant prop, but doesn't re-render when using directly agreement.amendments
-  @property({type: Array})
-  amendments: [] = [];
 
   @property({type: Number})
   oldSelectedPartnerId: number | null = null;
@@ -596,7 +588,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   stateChanged(state: RootState) {
     if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
-      this.resetOnLeave();
       return;
     }
 
@@ -639,18 +630,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     }, 200);
   }
 
-  resetOnLeave() {
-    this.staffMembers = [];
-    this.agreement = new Agreement();
-    resetRequiredFields(this);
-  }
-
   resetError(event: any): void {
     event.target.invalid = false;
-  }
-
-  authorizedOfficersChanged() {
-    fireEvent(this, 'authorized-officers-changed', this.authorizedOfficers);
   }
 
   _handleSpecialConditionsPca(isSpecialConditionsPCA: boolean, agreementType: string) {
@@ -673,11 +654,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   // Editing Agreement Type is allowed only if Agreement is new/unsaved
   _isAgreementTypeReadonly(agreement: Agreement) {
     return agreement && agreement.id;
-  }
-
-  _isNewAgreementChanged(isNew: boolean) {
-    this.authorizedOfficers = [];
-    this._setDraftStatus(this.editMode, isNew);
   }
 
   _editModeChanged(editMode: boolean) {
@@ -715,33 +691,14 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         cpField.resetCpDropdownInvalidState();
       }
       this.enableEditForAuthorizedOfficers = false;
-      this.resetAttachedAgreementElem(agreement);
-      this._initAuthorizedOfficers(agreement.authorized_officers!);
     } else {
       // new agreement, update status to draft and reset fields
       this._setDraftStatus(this.editMode, this.isNewAgreement);
-      this._resetDropdown('#partner');
-      this._resetDropdown('#agreementType');
-      this.authorizedOfficers = [];
     }
     fireEvent(this, 'global-loading', {
       active: false,
       loadingSource: 'ag-data'
     });
-  }
-
-  resetAttachedAgreementElem(agreement: Agreement) {
-    // forces etools-upload to redraw the element
-    if (!agreement.attachment) {
-      this.agreement.attachment = undefined;
-    }
-  }
-
-  _resetDropdown(selector: string) {
-    const field = this.fieldValidationReset(selector, false);
-    if (field) {
-      field.set('selected', null);
-    }
   }
 
   // Verify if agreement status is 'draft'
@@ -786,7 +743,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
       // partner not set or changed, reset related fields
       this.agreement.partner_manager = null;
-      this.authorizedOfficers = [];
       this.agreement.authorized_officers = [];
       this.oldSelectedPartnerId = currentPartnerId;
     }
@@ -821,22 +777,21 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     return '';
   }
 
-  _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: any[], staffMembers: MinimalStaffMember[]) {
+  _getReadonlyAuthorizedOfficers(agreementAuthOfficers: any[], staffMembers: MinimalStaffMember[]) {
     let ao: (MinimalStaffMember | PartnerStaffMember)[] = [];
-    const aoSelected = selection instanceof Array && selection.length > 0;
-    if (aoSelected) {
-      const selectedIds = selection.map((s) => parseInt(s, 10));
-      ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!).filter(
+    if ((agreementAuthOfficers || []).length) {
+      const selectedIds = agreementAuthOfficers.map((item) => parseInt(item.id, 10));
+      ao = this._getAvailableAuthOfficers(staffMembers, agreementAuthOfficers).filter(
         (a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1
       );
     } else {
-      ao = agreement && agreement.authorized_officers instanceof Array ? agreement.authorized_officers : [];
+      ao = agreementAuthOfficers || [];
     }
     if (!ao || !ao.length) {
       return '';
     }
-    const names = ao.map((officer: MinimalStaffMember | PartnerStaffMember) =>
-      aoSelected ? officer.name : officer.first_name + ' ' + officer.last_name
+    const names = ao.map(
+      (officer: MinimalStaffMember | PartnerStaffMember) => officer.first_name + ' ' + officer.last_name
     );
     return names.join(' | ');
   }
@@ -854,16 +809,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         agreementId: agreementId
       }
     });
-  }
-
-  _initAuthorizedOfficers(authOfficers: PartnerStaffMember[]) {
-    if (authOfficers instanceof Array && authOfficers.length) {
-      this.authorizedOfficers = authOfficers.map(function (authOfficer) {
-        return String(authOfficer.id);
-      });
-      return;
-    }
-    this.authorizedOfficers = [];
   }
 
   // set authorized officers field readonly mode
@@ -896,7 +841,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   _cancelAoEdit() {
-    this._initAuthorizedOfficers(this.agreement.authorized_officers);
     (this.shadowRoot?.querySelector('#officers') as EtoolsDropdownMultiEl).resetInvalidState();
     this.allowAoEditForSSFA = false;
   }
@@ -958,14 +902,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (!e.detail || e.detail.selectedItems == undefined) {
       return;
     }
-    this.setAuthorizedOfficers(e.detail.selectedItems.map((i: any) => String(i['id'])));
-  }
-
-  setAuthorizedOfficers(ao: string[]) {
-    if (!isJsonStrMatch(this.authorizedOfficers, ao)) {
-      this.authorizedOfficers = ao;
-      this.agreement.authorized_officers = ao as any;
-      this.authorizedOfficersChanged();
+    if (!isJsonStrMatch(this.agreement.authorized_officers, e.detail.selectedItems)) {
+      this.agreement.authorized_officers = e.detail.selectedItems;
+      this.requestUpdate();
     }
   }
 
@@ -1039,10 +978,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     this.agreement.reference_number_year = e.detail.value;
   }
 
-  getSelectedAuthOfficers(authOff: any) {
-    if (authOff !== undefined) {
-      return cloneDeep(authOff);
-    }
-    return undefined;
+  getSelectedAuthOfficeIDs(authOff: any) {
+    return (authOff || []).map((item: any) => item.id);
   }
 }

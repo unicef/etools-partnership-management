@@ -27,7 +27,7 @@ import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
-import {areEqual, isJsonStrMatch} from '../../utils/utils';
+import {isJsonStrMatch} from '../../utils/utils';
 import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
@@ -111,7 +111,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
           <agreements-list
             id="list"
             name="list"
-            ?hidden="${!this._pageEquals(this.activePage, 'list')}"
+            ?hidden="${!this.listActive}"
             .active="${this.listActive}"
             .csv-download-url="${this.csvDownloadUrl}"
             @csvDownloadUrl-changed=${(e: any) => {
@@ -119,22 +119,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
             }}
           >
           </agreements-list>
-
-          <agreement-details
-            id="agreementDetails"
-            name="details"
-            ?hidden="${!this._pageEquals(this.activePage, 'details')}"
-            .agreement="${cloneDeep(this.agreement)}"
-            .amendments="${cloneDeep(this.agreement?.amendments)}"
-            @authorized-officers-changed="${(e: CustomEvent) => {
-              if (!areEqual(this.authorizedOfficers, e.detail)) {
-                this.authorizedOfficers = e.detail;
-              }
-            }}"
-            .editMode="${this._hasEditPermissions(this.permissions)}"
-            @save-amendment="${this.saveAmendment}"
-          >
-          </agreement-details>
+          ${this.tabsActive
+            ? html` <agreement-details
+                id="agreementDetails"
+                name="details"
+                .agreement="${cloneDeep(this.agreement)}"
+                .editMode="${this._hasEditPermissions(this.permissions)}"
+                @save-amendment="${this.saveAmendment}"
+              >
+              </agreement-details>`
+            : ``}
         </div>
         <!-- page content end -->
 
@@ -209,8 +203,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   @property({type: String})
   moduleName = 'agreements';
-
-  authorizedOfficers!: [];
 
   originalAgreementData!: Agreement;
 
@@ -358,12 +350,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     this._handleAgreementSelectionLoadingMsg();
   }
 
-  _agreementChanged(agreement: Agreement) {
-    // keep a copy of the agreement before changes are made and use it later to save only the changes
-    this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
-    fireEvent(this, 'clear-server-errors');
-  }
-
   saveAmendment(event: CustomEvent) {
     const agrDataToSave: Partial<Agreement> = {};
     agrDataToSave.id = this.agreement.id;
@@ -394,9 +380,12 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agrDataToSave = this._getCurrentChanges(currentAgreement);
       agrDataToSave.id = this.agreement.id;
     }
-    // set module agreement property with what we have in details page,
-    // in case Save fails and details is re-rendered this will prevent triggering logic for agreement changed
-    this.agreement = {...currentAgreement, ...agrDataToSave};
+    // sync agreement with the agreement from details page
+    this.agreement = {
+      ...currentAgreement,
+      ...agrDataToSave,
+      ...{authorized_officers: currentAgreement.authorized_officers}
+    };
     this._saveAgreement(agrDataToSave);
   }
 
@@ -425,7 +414,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       agreement_type: agreement.agreement_type,
       partner: agreement.partner,
       reference_number_year: agreement.reference_number_year,
-      authorized_officers: this.authorizedOfficers
+      authorized_officers: (agreement.authorized_officers || []).map((item) => item.id) as any[]
     };
 
     if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA) {
@@ -475,8 +464,9 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     }
 
     if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
-      if (this._authorizedOfficersChanged()) {
-        changes.authorized_officers = this.authorizedOfficers;
+      const currentAuthOfficeIDs = (currentAgreement.authorized_officers || []).map((item: any) => String(item.id));
+      if (this._authorizedOfficersChanged(currentAuthOfficeIDs)) {
+        changes.authorized_officers = currentAuthOfficeIDs;
       }
     }
     if (currentAgreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
@@ -519,9 +509,9 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     return this.originalAgreementData[fieldName] !== currentAgreement[fieldName];
   }
 
-  _authorizedOfficersChanged() {
+  _authorizedOfficersChanged(currentAuthorizedOfficers: string[]) {
     const initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
-    return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
+    return JSON.stringify(initialAuthOfficers) !== JSON.stringify(currentAuthorizedOfficers);
   }
 
   _objectFieldIsModified(fieldName: string, currentAgreement: Agreement) {
@@ -530,7 +520,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   _getInitialAuthorizedOfficersIds() {
     if (!this.originalAgreementData.authorized_officers) {
-      return null;
+      return [];
     }
     return this.originalAgreementData.authorized_officers.map(function (off: any) {
       return off.id.toString();
@@ -574,6 +564,12 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       this._agreementChanged(e.detail);
       this.requestUpdate();
     }
+  }
+
+  _agreementChanged(agreement: Agreement) {
+    // keep a copy of the agreement before changes are made and use it later to save only the changes
+    this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
+    fireEvent(this, 'clear-server-errors');
   }
 
   onErrorsChanged(e: CustomEvent) {
