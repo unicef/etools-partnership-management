@@ -260,7 +260,8 @@ class InterventionProgress extends connect(store)(
                     <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                       <div class="row-h indicator-report">
                         <div class="col-data col-9">
-                          [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                          [[_getIndicatorDisplayType(indicatorReport.reportable.blueprint.unit,
+                            indicatorReport.reportable.blueprint.display_type)]]
                           [[indicatorReport.reportable.blueprint.title]]
                         </div>
                         <div class="col-data col-3 progress-bar">

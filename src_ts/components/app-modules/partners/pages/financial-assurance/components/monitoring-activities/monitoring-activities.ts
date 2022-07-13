@@ -162,7 +162,7 @@ export class MonitoringActivities extends EndpointsMixin(PolymerElement) {
     sendRequest({
       endpoint: this.getEndpoint('partnerActivities', {id: this._partnerId})
     }).then((response: any) => {
-      this.activities = response.results;
+      this.activities = response;
       this.mapActivitiesToGroups();
       this.loading = false;
     });
