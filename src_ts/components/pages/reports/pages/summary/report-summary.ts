@@ -16,6 +16,7 @@ import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
  * @polymer
@@ -220,7 +221,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     openDialog({
       dialog: 'sent-bk-comments',
       dialogData: {
-        report: this.report
+        report: cloneDeep(this.report)
       }
     });
   }

@@ -36,6 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import {translate} from 'lit-translate';
 import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 declare const dayjs: any;
 
@@ -346,7 +347,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     openDialog({
       dialog: 'edit-core-values-assessment',
       dialogData: {
-        item: e.detail,
+        item: cloneDeep(e.detail),
         parent: this
       }
     });

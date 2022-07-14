@@ -38,6 +38,7 @@ import {openDialog} from '../../utils/dialog';
 import set from 'lodash-es/set';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
+import cloneDeep from 'lodash-es/cloneDeep';
 declare const dayjs: any;
 
 /**
@@ -407,7 +408,7 @@ export class ReportsModule extends connect(store)(
     openDialog({
       dialog: 'report-rating-dialog',
       dialogData: {
-        report: this.report
+        report: cloneDeep(this.report)
       }
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {
@@ -421,7 +422,7 @@ export class ReportsModule extends connect(store)(
     openDialog({
       dialog: 'report-reject-dialog',
       dialogData: {
-        report: this.report
+        report: cloneDeep(this.report)
       }
     }).then(({confirmed, response}) => {
       if (!confirmed || !response) {
