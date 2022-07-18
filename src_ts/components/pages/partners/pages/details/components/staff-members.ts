@@ -15,6 +15,7 @@ import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {openDialog} from '../../../../../utils/dialog';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
  * @polymer
@@ -189,9 +190,9 @@ export class StaffMembers extends LitElement {
     openDialog({
       dialog: 'add-edit-staff-members',
       dialogData: {
-        item: item,
+        item: cloneDeep(item),
         partnerId: this.partnerId,
-        dataItems: this.dataItems,
+        dataItems: cloneDeep(this.dataItems),
         mainEl: this
       }
     });

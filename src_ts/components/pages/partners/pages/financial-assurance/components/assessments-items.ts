@@ -20,6 +20,7 @@ import {PartnerAssessment} from '../../../../../../models/partners.models';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {openDialog} from '../../../../../utils/dialog';
 import {translate} from 'lit-translate';
+import cloneDeep from 'lodash-es/cloneDeep.js';
 
 /**
  * @customElement
@@ -221,7 +222,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
     openDialog({
       dialog: 'assessment-dialog',
       dialogData: {
-        assessment: assessment,
+        assessment: cloneDeep(assessment),
         partnerId: partnerId
       }
     }).then(({confirmed, response}) => {
