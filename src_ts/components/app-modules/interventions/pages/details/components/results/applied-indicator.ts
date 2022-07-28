@@ -10,6 +10,7 @@ import '../../../../../../layout/icons-actions.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../store';
 import {property} from '@polymer/decorators';
+import UtilsMixin from '../../../../../../mixins/utils-mixin';
 import {
   Indicator,
   Location,
@@ -22,7 +23,7 @@ import {GenericObject} from '../../../../../../../typings/globals.types';
  * @polymer
  * @customElement
  */
-class AppliedIndicator extends connect(store)(PolymerElement) {
+class AppliedIndicator extends connect(store)(UtilsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles}
@@ -333,27 +334,6 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     }, '');
 
     return groups.substring(1, groups.length);
-  }
-
-  // Both unit and displayType are used because of inconsitencies in the db.
-  _getIndicatorDisplayType(unit: string, displayType: string) {
-    if (!unit) {
-      return '';
-    }
-
-    switch (unit) {
-      case 'number':
-        return '# ';
-      case 'percentage':
-        if (displayType === 'percentage') {
-          return '% ';
-        } else if (displayType === 'ratio') {
-          return '÷ ';
-        }
-        return '';
-      default:
-        return '';
-    }
   }
 
   _getIndicatorTitle(indicator: any) {

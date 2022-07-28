@@ -149,7 +149,8 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                     <div class="indicator-header layout-horizontal flex-c">
                       <div class="col col-8 indicator-header-title">
                         <h3>
-                          [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                          [[_getIndicatorDisplayType(indicatorReport.reportable.blueprint.unit,
+                            indicatorReport.reportable.blueprint.display_type)]]
                           [[indicatorReport.reportable.blueprint.title]]
                         </h3>
                         <div class="layout-horizontal calculation-formula">
