@@ -10,7 +10,8 @@ export enum ReportsFilterKeys {
   section = 'section',
   status = 'status',
   report_type = 'report_type',
-  unicef_focal_points = 'unicef_focal_points'
+  unicef_focal_points = 'unicef_focal_points',
+  year = 'year'
 }
 
 export const selectedValueTypeByFilterKey: AnyObject = {
@@ -20,10 +21,20 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [ReportsFilterKeys.section]: 'string',
   [ReportsFilterKeys.status]: 'Array',
   [ReportsFilterKeys.report_type]: 'string',
-  [ReportsFilterKeys.unicef_focal_points]: 'Array'
+  [ReportsFilterKeys.unicef_focal_points]: 'Array',
+  [ReportsFilterKeys.year]: 'string'
 };
 
 export const ReportsFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
+
+function getYears() {
+  const currentY = new Date().getFullYear();
+  const years = [];
+  for (let i = currentY - 5; i <= currentY + 5; i++) {
+    years.push({value: i, label: i});
+  }
+  return years;
+}
 
 export function getReportFilters() {
   return [
@@ -71,6 +82,17 @@ export function getReportFilters() {
       selected: false,
       minWidth: '400px',
       hideSearch: true
+    },
+    {
+      filterName: 'Year',
+      filterKey: ReportsFilterKeys.year,
+      type: EtoolsFilterTypes.Dropdown,
+      selectionOptions: getYears(),
+      selectedValue: [],
+      optionValue: 'value',
+      optionLabel: 'label',
+      selected: false,
+      minWidth: '400px'
     },
     {
       filterName: 'Report Type',

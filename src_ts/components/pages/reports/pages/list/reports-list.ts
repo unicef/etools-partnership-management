@@ -458,6 +458,7 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
       cp_output: queryParams.cp_output,
       section: queryParams.section,
       status: queryParams.status,
+      year: queryParams.year,
       unicef_focal_points: queryParams.unicef_focal_points,
       report_type: queryParams.report_type,
       page: queryParams.page ? Number(queryParams.page) : 1,
