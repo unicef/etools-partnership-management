@@ -30,7 +30,7 @@ export const ReportsFiltersHelper = new FiltersHelper(selectedValueTypeByFilterK
 function getYears() {
   const currentY = new Date().getFullYear();
   const years = [];
-  for (let i = currentY - 5; i <= currentY + 5; i++) {
+  for (let i = currentY - 5; i <= currentY + 1; i++) {
     years.push({value: i, label: i});
   }
   return years;
