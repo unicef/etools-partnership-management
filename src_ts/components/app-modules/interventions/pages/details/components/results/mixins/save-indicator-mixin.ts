@@ -129,19 +129,25 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     validate() {
       let valid = true;
-      const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {
-        validate(): boolean;
-      }).validate();
+      const sectionSelected = (
+        this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {
+          validate(): boolean;
+        }
+      ).validate();
       if (this.isCluster) {
         valid =
-          (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {
-            validate(): boolean;
-          }).validate() && sectionSelected;
+          (
+            this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {
+              validate(): boolean;
+            }
+          ).validate() && sectionSelected;
       } else {
         valid =
-          (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {
-            validate(): boolean;
-          }).validate() && sectionSelected;
+          (
+            this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {
+              validate(): boolean;
+            }
+          ).validate() && sectionSelected;
       }
       return valid;
     }
@@ -209,6 +215,15 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           this._resetLabel(indicator);
         }
       }
+      this._ensureNumbersInsteadOfStrings(indicator.target);
+      this._ensureNumbersInsteadOfStrings(indicator.baseline);
+    }
+
+    _ensureNumbersInsteadOfStrings(item: {v: number; d: number}) {
+      if (item.v !== null) {
+        item.v = Number(item.v);
+      }
+      item.d = Number(item.d);
     }
 
     _updateBaselineTargetD(indicator: any, d: number) {
