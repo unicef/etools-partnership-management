@@ -19,6 +19,10 @@ import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax';
+import pmpEdpoints from '../../endpoints/endpoints';
+import {updateUserData} from '../../../redux/actions/user';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 store.addReducers({
   activeLanguage
@@ -304,7 +308,7 @@ class PageHeader extends connect(store)(
   ];
 
   @property({type: String})
-  selectedLanguage!: string;
+  selectedLanguage = 'en';
 
   public connectedCallback() {
     super.connectedCallback();
@@ -328,23 +332,30 @@ class PageHeader extends connect(store)(
       this.users = [...state.commonData.unicefUsersData];
       this.allUsers = this._convertUsers(this.users);
     }
-    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
-      this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      const htmlTag = document.querySelector('html');
-      if (this.selectedLanguage === 'ar') {
-        htmlTag!.setAttribute('dir', 'rtl');
-      } else if (htmlTag!.getAttribute('dir')) {
-        htmlTag!.removeAttribute('dir');
-      }
-    }
+
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
+      if (this.profile.preferences?.language) {
+        this.selectedLanguage = this.profile.preferences?.language;
+        this.setLanguageDirection();
+      }
       this._profileChanged(this.profile);
+
+      // TODO _updateCountriesList called 2 times bellow
       this._updateCountriesList(this.profile.countries_available);
 
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
       }
+    }
+  }
+
+  private setLanguageDirection() {
+    const htmlTag = document.querySelector('html');
+    if (this.selectedLanguage === 'ar') {
+      htmlTag!.setAttribute('dir', 'rtl');
+    } else if (htmlTag!.getAttribute('dir')) {
+      htmlTag!.removeAttribute('dir');
     }
   }
 
@@ -401,11 +412,23 @@ class PageHeader extends connect(store)(
     if (language !== this.selectedLanguage) {
       localStorage.setItem('defaultLanguage', language);
       use(language)
-        .then(() => store.dispatch(setLanguage(language)))
+        .then(() => {
+          if (this.profile.preferences?.language != language) {
+            this.updateUserPreference(language);
+          }
+        })
         .finally(() => location.reload());
     }
   }
 
+  private updateUserPreference(language: string) {
+    sendRequest({endpoint: pmpEdpoints.myProfile, method: 'PATCH', body: {preferences: {language: language}}})
+      .then((response) => {
+        store.dispatch(updateUserData(response));
+        store.dispatch(setLanguage(language));
+      })
+      .catch((err: any) => parseRequestErrorsAndShowAsToastMsgs(err, this));
+  }
   private _onRefreshClick(e: CustomEvent) {
     this.trackAnalytics(e);
     this._openDataRefreshDialog();
