@@ -104,7 +104,9 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues" class="secondary-btn"> CLEAR ALL </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+                CLEAR ALL
+              </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -163,8 +165,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
     section: null,
     status: [],
     report_type: null,
-    unicef_focal_points: [],
-    year: null
+    unicef_focal_points: []
   };
 
   @property({type: Object})
@@ -188,7 +189,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       '_init(active)',
       '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
         'queryParams.cp_output, queryParams.section, queryParams.status.length, queryParams.report_type, ' +
-        'queryParams.unicef_focal_points.length, queryParams.year)'
+        'queryParams.unicef_focal_points.length)'
     ];
   }
 
@@ -327,30 +328,9 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
         path: 'queryParams.unicef_focal_points',
         selected: false,
         minWidth: '400px'
-      },
-      {
-        filterName: 'Year',
-        type: 'etools-dropdown',
-        singleSelection: true,
-        optionValue: 'value',
-        optionLabel: 'label',
-        selectionOptions: this.getYears(),
-        selectedValue: [],
-        path: 'queryParams.year',
-        selected: false,
-        minWidth: '400px'
       }
     ]);
     this._updateSelectedFiltersValues();
-  }
-
-  getYears() {
-    const currentY = new Date().getFullYear();
-    const years = [];
-    for (let i = currentY - 5; i <= currentY + 1; i++) {
-      years.push({value: i, label: i});
-    }
-    return years;
   }
 
   // update selected filters(prezent in URL) at page refresh
@@ -380,10 +360,6 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
         {
           filterName: 'UNICEF focal points',
           selectedValue: this.queryParams.unicef_focal_points
-        },
-        {
-          filterName: 'Year',
-          selectedValue: this.queryParams.year
         }
       ];
       this.updateShownFilters(filtersValues);
@@ -410,7 +386,6 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
         ? urlQueryParams.unicef_focal_points.split('|')
         : [],
       'queryParams.report_type': urlQueryParams.report_type ? urlQueryParams.report_type : null,
-      'queryParams.year': urlQueryParams.year ? urlQueryParams.year : null,
       'paginator.page': urlQueryParams.page ? Number(urlQueryParams.page) : 1,
       'paginator.page_size': urlQueryParams.page_size ? Number(urlQueryParams.page_size) : CONSTANTS.DEFAULT_LIST_SIZE
     });

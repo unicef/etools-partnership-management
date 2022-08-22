@@ -421,10 +421,6 @@ class ReportsModule extends connect(store)(
       params.unicef_focal_points = reportsList.queryParams.unicef_focal_points;
     }
 
-    if (reportsList.queryParams.year) {
-      params.year = reportsList.queryParams.year;
-    }
-
     params.export = type;
 
     this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params}).then(
