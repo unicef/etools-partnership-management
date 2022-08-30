@@ -19,7 +19,9 @@
     "src_ts/**/*.ts",
     "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/en.json",
     "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ro.json",
-    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ar.json"
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ar.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ru.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/pt.json"
   ],
   "exclude": []
 }
