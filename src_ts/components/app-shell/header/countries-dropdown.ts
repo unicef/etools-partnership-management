@@ -116,7 +116,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(Endpoin
     setTimeout(() => {
       const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
       (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).fitInto = fitInto;
-    }, 1000);
+    }, 0);
   }
 
   public stateChanged(state: RootState) {
