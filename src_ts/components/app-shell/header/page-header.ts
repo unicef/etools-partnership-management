@@ -23,6 +23,11 @@ import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {updateUserData} from '../../../redux/actions/user';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import 'dayjs/locale/fr.js';
+import 'dayjs/locale/ru.js';
+import 'dayjs/locale/pt.js';
+import 'dayjs/locale/ar.js';
+import 'dayjs/locale/ro.js';
 
 store.addReducers({
   activeLanguage
@@ -410,13 +415,18 @@ class PageHeader extends connect(store)(
       return;
     }
 
-    const language = e.detail.selectedItem.value;
-    if (language !== this.selectedLanguage) {
-      localStorage.setItem('defaultLanguage', language);
-      use(language)
+    const newLanguage = e.detail.selectedItem.value;
+    if (newLanguage) {
+      window.dayjs.locale(newLanguage);
+      // Event caught by self translating npm packages
+      fireEvent(this, 'language-changed', {language: newLanguage});
+    }
+    if (newLanguage !== this.selectedLanguage) {
+      localStorage.setItem('defaultLanguage', newLanguage);
+      use(newLanguage)
         .then(() => {
-          if (this.profile.preferences?.language != language) {
-            this.updateUserPreference(language);
+          if (this.profile.preferences?.language != newLanguage) {
+            this.updateUserPreference(newLanguage);
           }
         })
         .finally(() => location.reload());
