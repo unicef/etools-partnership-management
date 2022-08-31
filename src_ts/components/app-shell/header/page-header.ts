@@ -304,7 +304,9 @@ class PageHeader extends connect(store)(
 
   languages: GenericObject[] = [
     {value: 'en', display_name: 'English'},
-    {value: 'ar', display_name: 'Arabic'}
+    {value: 'ar', display_name: 'Arabic'},
+    {value: 'pt', display_name: 'Portuguese'},
+    {value: 'ru', display_name: 'Russian'}
   ];
 
   @property({type: String})
