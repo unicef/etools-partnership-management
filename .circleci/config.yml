@@ -79,16 +79,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - lint:
-          filters:
-            branches:
-              ignore:
-                - master
-                - staging
-                - develop
-                - epd
-                - agreements-refactoring
+      - lint
       - build_and_deploy:
+          requires:
+            - lint
           filters:
             branches:
               only:
@@ -96,5 +90,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - currency-element-migration
-                - agreements-refactoring
