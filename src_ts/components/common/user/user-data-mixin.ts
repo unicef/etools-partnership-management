@@ -9,6 +9,8 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
+import {appLanguages} from '../../../config/app-constants';
+import {setLanguage} from '../../../redux/actions/active-language';
 
 /**
  * @polymer
@@ -44,6 +46,8 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
           // TODO - storing in state.user also to match with intervention-tab-pages expectations
           store.dispatch(updateUserData(res));
 
+          this.setCurrentLanguage(res.preferences?.language);
+
           this.checkDexieCountryIsUserCountry(res);
         })
         .catch((error: any) => {
@@ -66,6 +70,18 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         return true;
       }
       return false;
+    }
+
+    setCurrentLanguage(lngCode: string) {
+      if (lngCode) {
+        lngCode = lngCode.substring(0, 2);
+        // set store activeLanguage only if profile language exists in app
+        if (appLanguages.some((lng) => lng.value === lngCode)) {
+          store.dispatch(setLanguage(lngCode));
+        } else {
+          console.log(`User profile language ${lngCode} missing`);
+        }
+      }
     }
 
     public checkDexieCountryIsUserCountry(user: any) {

@@ -28,6 +28,7 @@ import 'dayjs/locale/ru.js';
 import 'dayjs/locale/pt.js';
 import 'dayjs/locale/ar.js';
 import 'dayjs/locale/ro.js';
+import {appLanguages} from '../../../config/app-constants';
 
 store.addReducers({
   activeLanguage
@@ -229,7 +230,7 @@ class PageHeader extends connect(store)(
           <div class="dropdowns">
               <etools-dropdown
                 .selected="${this.selectedLanguage}"
-                .options="${this.languages}"
+                .options="${appLanguages}"
                 option-label="display_name"
                 option-value="value"
                 @etools-selected-item-changed="${this.languageChanged}"
@@ -307,13 +308,6 @@ class PageHeader extends connect(store)(
   @property({type: String})
   headerColor = 'var(--header-bg-color)';
 
-  languages: GenericObject[] = [
-    {value: 'en', display_name: 'English'},
-    {value: 'ar', display_name: 'Arabic'},
-    {value: 'pt', display_name: 'Portuguese'},
-    {value: 'ru', display_name: 'Russian'}
-  ];
-
   @property({type: String})
   selectedLanguage = 'en';
 
@@ -342,10 +336,7 @@ class PageHeader extends connect(store)(
 
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
-      if (this.profile.preferences?.language) {
-        this.selectedLanguage = this.profile.preferences?.language;
-        this.setLanguageDirection();
-      }
+
       this._profileChanged(this.profile);
 
       // TODO _updateCountriesList called 2 times bellow
@@ -354,6 +345,12 @@ class PageHeader extends connect(store)(
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
       }
+    }
+
+    if (state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      localStorage.setItem('defaultLanguage', this.selectedLanguage);
+      this.setLanguageDirection();
     }
   }
 
@@ -381,7 +378,7 @@ class PageHeader extends connect(store)(
     const location = window.location.host;
     const devDomains = ['localhost', 'etools-dev', 'etools-test'];
     if (devDomains.some((x) => location.indexOf(x) > -1)) {
-      this.languages.splice(1, 0, {value: 'ro', display_name: 'Romanian'});
+      appLanguages.splice(1, 0, {value: 'ro', display_name: 'Romanian'});
     }
   }
 
