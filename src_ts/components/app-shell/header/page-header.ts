@@ -6,6 +6,7 @@ import {BASE_URL, _checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
@@ -16,7 +17,7 @@ import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
 import {setLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
-import {html, LitElement} from 'lit-element';
+import {html, LitElement, query} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
@@ -228,6 +229,7 @@ class PageHeader extends connect(store)(
         <div class="header__item header__right-group">
           <div class="dropdowns">
               <etools-dropdown
+                id="languageSelector"
                 .selected="${this.selectedLanguage}"
                 .options="${this.languages}"
                 option-label="display_name"
@@ -317,10 +319,17 @@ class PageHeader extends connect(store)(
   @property({type: String})
   selectedLanguage = 'en';
 
+  @query('#languageSelector') private languageDropdown!: EtoolsDropdownEl;
+
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
     this.showLanguagesForDevDomains();
+
+    setTimeout(() => {
+      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+      this.languageDropdown.set('fitInto', fitInto);
+    }, 0);
   }
 
   public stateChanged(state: RootState) {
