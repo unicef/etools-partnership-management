@@ -97,10 +97,11 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use} from 'lit-translate';
+import {registerTranslateConfig, use, listenForLangChanged } from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';
+import {setLanguageFileLoaded} from './redux/actions/active-language';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -360,6 +361,12 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
+
+    listenForLangChanged(() => {
+      setTimeout(() => {
+        store.dispatch(setLanguageFileLoaded(true));
+      }, 1000);
+    });
   }
 
   checkAppVersion() {
@@ -399,11 +406,10 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-    if (
-      state.activeLanguage!.activeLanguage &&
-      !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
-    ) {
-      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+    // !!! need to have activeLanguage even if userProfile not loaded, otherwise will see left menu untranslated
+    const activeLanguage = state.activeLanguage!.activeLanguage || 'en';
+    if (!isJsonStrMatch(activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = activeLanguage;
       this.loadLocalization();
     }
   }
