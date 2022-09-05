@@ -309,7 +309,7 @@ class PageHeader extends connect(store)(
   headerColor = 'var(--header-bg-color)';
 
   @property({type: String})
-  selectedLanguage = 'en';
+  selectedLanguage = '';
 
   public connectedCallback() {
     super.connectedCallback();
@@ -347,7 +347,7 @@ class PageHeader extends connect(store)(
       }
     }
 
-    if (state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
+    if (state.activeLanguage!.activeLanguage && state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
       localStorage.setItem('defaultLanguage', this.selectedLanguage);
       this.setLanguageDirection();

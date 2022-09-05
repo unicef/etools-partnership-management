@@ -3,13 +3,12 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {updateUserData} from '../../../redux/actions/user';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject, languageIsAvailableInApp} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
-import {appLanguages} from '../../../config/app-constants';
 import {setLanguage} from '../../../redux/actions/active-language';
 
 /**
@@ -73,15 +72,25 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
     }
 
     setCurrentLanguage(lngCode: string) {
+      let currentLanguage = '';
       if (lngCode) {
         lngCode = lngCode.substring(0, 2);
-        // set store activeLanguage only if profile language exists in app
-        if (appLanguages.some((lng) => lng.value === lngCode)) {
-          store.dispatch(setLanguage(lngCode));
+        if (languageIsAvailableInApp(lngCode)) {
+          currentLanguage = lngCode;
         } else {
           console.log(`User profile language ${lngCode} missing`);
         }
       }
+      if (!currentLanguage) {
+        const storageLang = localStorage.getItem('defaultLanguage');
+        if (storageLang && languageIsAvailableInApp(storageLang)) {
+          currentLanguage = storageLang;
+        }
+      }
+      if (!currentLanguage) {
+        currentLanguage = 'en';
+      }
+      store.dispatch(setLanguage(currentLanguage));
     }
 
     public checkDexieCountryIsUserCountry(user: any) {

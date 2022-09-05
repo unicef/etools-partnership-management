@@ -5,7 +5,7 @@ export interface ActiveLanguageState {
 }
 
 const INITIAL_STATE: ActiveLanguageState = {
-  activeLanguage: localStorage.getItem('defaultLanguage') || 'en'
+  activeLanguage: ''
 };
 
 export const activeLanguage = (state = INITIAL_STATE, action: any) => {
