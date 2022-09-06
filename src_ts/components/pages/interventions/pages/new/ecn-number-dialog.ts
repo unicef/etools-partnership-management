@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html, customElement, property, query} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -13,6 +13,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/
 import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import {MinimalAgreement} from '@unicef-polymer/etools-types';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -34,7 +36,6 @@ export class EcnNumberDialog extends LitElement {
         id="ecnDialog"
         size="md"
         ok-btn-text="Save"
-        ?disable-confirm-btn="${this.numberIsEmpty}"
         dialog-title="${translate('IMPORT_ECN')}"
         keep-dialog-open
         ?show-spinner="${this.loadingInProcess}"
@@ -102,6 +103,12 @@ export class EcnNumberDialog extends LitElement {
   @property({type: String})
   selectedAgreementId!: string;
 
+  @query('#agreement')
+  agreementDropdown!: EtoolsDropdownEl;
+
+  @query('#ecnNo')
+  ecnNoEl!: PaperInputElement;
+
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
@@ -111,8 +118,14 @@ export class EcnNumberDialog extends LitElement {
     this.allAgreements = (store.getState() as RootState).agreements!.list;
   }
 
+  validate() {
+    let valid = this.ecnNoEl.validate();
+    valid = this.agreementDropdown.validate() && valid;
+    return valid;
+  }
+
   save() {
-    if (!this.ecnNumber.trim() || !this.selectedAgreementId) {
+    if (!this.validate()) {
       return;
     }
     this.loadingInProcess = true;
