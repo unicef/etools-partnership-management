@@ -97,7 +97,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, listenForLangChanged } from 'lit-translate';
+import {registerTranslateConfig, use, listenForLangChanged} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';

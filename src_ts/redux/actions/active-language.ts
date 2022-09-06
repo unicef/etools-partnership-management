@@ -10,7 +10,6 @@ export interface LanguageFileLoadedSet extends Action<'SET_LANGUAGE_FILE_LOADED'
   payload: boolean;
 }
 
-
 export const setLanguage: ActionCreator<LanguageActionSet> = (payload: string) => {
   return {
     type: SET_LANGUAGE,
