@@ -4,6 +4,7 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
+import '@polymer/paper-icon-button/paper-icon-button';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
@@ -32,6 +33,9 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import pmpEdpoints from '../../endpoints/endpoints';
+import {openDialog} from '../../utils/dialog';
+import {translate} from 'lit-translate';
+import './pages/new/ecn-number-dialog';
 
 // @ts-ignore
 setStore(store);
@@ -78,6 +82,46 @@ export class InterventionsModule extends connect(store)(
         .export-dd {
           width: 105px;
         }
+
+        .option-button {
+          height: 36px;
+          border-left: 2px solid rgba(255, 255, 255, 0.12);
+        }
+        .main-button.with-additional {
+          padding: 0 0 0 18px;
+        }
+
+        .main-button.with-additional span {
+          margin-right: 15px;
+        }
+
+        .main-button span {
+          margin-right: 7px;
+          vertical-align: middle;
+          line-height: 36px;
+        }
+        .main-button {
+          height: 36px;
+          padding: 0 18px;
+          color: white;
+          background: var(--primary-color);
+          font-weight: 500;
+          text-transform: uppercase;
+          border-radius: 3px;
+        }
+        paper-button paper-menu-button {
+          padding: 8px 2px;
+          margin-inline-start: 10px;
+        }
+        .other-options {
+          padding: 10px 24px;
+          color: var(--primary-text-color);
+          white-space: nowrap;
+        }
+
+        .other-options:hover {
+          background-color: var(--secondary-background-color);
+        }
       </style>
 
       <div ?hidden="${this.showNewPMP(this.activePage)}">
@@ -116,9 +160,32 @@ export class InterventionsModule extends connect(store)(
               class="action"
               ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.userPermissions)}"
             >
-              <paper-button class="primary-btn with-prefix" @tap="${this._goToNewInterventionPage}">
+              <paper-button
+                class="primary-btn with-prefix main-button with-additional"
+                style="position:relative;z-index:0;"
+                @tap="${this._goToNewInterventionPage}"
+              >
                 <iron-icon icon="add"></iron-icon>
                 ${this._getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')}
+                <paper-menu-button
+                  style="position:relative;z-index:15;"
+                  horizontal-align="right"
+                  @click="${(event: MouseEvent) => {
+                    event.stopImmediatePropagation();
+                    console.log('HERE');
+                  }}"
+                >
+                  <paper-icon-button
+                    slot="dropdown-trigger"
+                    class="option-button"
+                    icon="expand-more"
+                  ></paper-icon-button>
+                  <div slot="dropdown-content">
+                    <div class="other-options" @click="${() => this.openDialogFor_eCNNumber()}">
+                      ${translate('IMPORT_ECN')}
+                    </div>
+                  </div>
+                </paper-menu-button>
               </paper-button>
             </div>
           </div>
@@ -237,6 +304,16 @@ export class InterventionsModule extends connect(store)(
     ].includes(activePage);
   }
 
+  openDialogFor_eCNNumber() {
+    openDialog({
+      dialog: 'ecn-number-dialog'
+    }).then(({confirmed, response}) => {
+      if (!confirmed || !response) {
+        return null;
+      }
+    });
+  }
+
   connectedCallback() {
     super.connectedCallback();
     fireEvent(this, 'global-loading', {
@@ -346,16 +423,15 @@ export class InterventionsModule extends connect(store)(
 
   _goToNewInterventionPage() {
     // go to new intervention
-    if (!this._hasEditPermissions(this.userPermissions)) {
-      return;
-    }
-
-    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
-    window.dispatchEvent(new CustomEvent('popstate'));
-    fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'interv-page'
-    });
+    // if (!this._hasEditPermissions(this.userPermissions)) {
+    //   return;
+    // }
+    // history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
+    // window.dispatchEvent(new CustomEvent('popstate'));
+    // fireEvent(this, 'global-loading', {
+    //   active: true,
+    //   loadingSource: 'interv-page'
+    // });
   }
 
   _visibleTabContent(activePage: string, expectedPage: string, newInterventionActive: boolean) {

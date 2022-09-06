@@ -260,5 +260,7 @@
   "SEND_BACK_TO_PARTNER": "Врнуть партнеру",
   "DOWNLOAD_REPORT": "Скачать отчет",
   "ADD_ACTION_POINTS": "Добавить пункт к выполнению",
-  "EDITABLE_BY": "Изменено следующими лицами"
+  "EDITABLE_BY": "Изменено следующими лицами",
+  "IMPORT_ECN": "Import eCN",
+  "ECN_NUMBER": "eCN Number"
 }

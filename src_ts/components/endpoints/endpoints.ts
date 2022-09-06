@@ -290,6 +290,9 @@ const pmpEdpoints = {
   },
   interventionPVLinkDelete: {
     template: '/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/'
+  },
+  importECN: {
+    url: '/api/ecn/v1/interventions/import/ecn/' // TODO
   }
 };
 

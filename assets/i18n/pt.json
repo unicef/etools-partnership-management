@@ -261,5 +261,7 @@
   "SEND_BACK_TO_PARTNER": "Enviar de volta ao parceiro",
   "DOWNLOAD_REPORT": "Baixar relatório",
   "ADD_ACTION_POINTS": "Adicionar ponto de ação",
-  "EDITABLE_BY": "Editado por"
+  "EDITABLE_BY": "Editado por",
+  "IMPORT_ECN": "Import eCN",
+  "ECN_NUMBER": "eCN Number"
 }
