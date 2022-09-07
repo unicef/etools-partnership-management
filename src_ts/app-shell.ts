@@ -122,7 +122,10 @@ function fetchLangFiles(lang: string) {
     return Object.assign(response[0].value, response[1].value);
   });
 }
-const translationConfig = registerTranslateConfig({loader: (lang: string) => fetchLangFiles(lang)});
+const translationConfig = registerTranslateConfig({
+  empty: (key) => `${key && key[0].toUpperCase() + key.slice(1).toLowerCase()}`,
+  loader: (lang: string) => fetchLangFiles(lang)
+});
 
 setRootPath(BASE_URL);
 
@@ -399,8 +402,10 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-
-    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+    if (
+      state.activeLanguage!.activeLanguage &&
+      !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
+    ) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }

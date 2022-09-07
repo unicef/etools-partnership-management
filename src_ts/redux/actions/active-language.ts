@@ -1,13 +1,13 @@
 import {ActionCreator, Action} from 'redux';
-export const SET_LANGUAGE = 'SET_LANGUAGE';
+export const SET_ACTIVE_LANGUAGE = 'SET_ACTIVE_LANGUAGE';
 
-export interface LanguageActionSet extends Action<'SET_LANGUAGE'> {
+export interface LanguageActionSet extends Action<'SET_ACTIVE_LANGUAGE'> {
   payload: string;
 }
 
-export const setLanguage: ActionCreator<LanguageActionSet> = (payload: string) => {
+export const setActiveLanguage: ActionCreator<LanguageActionSet> = (payload: string) => {
   return {
-    type: SET_LANGUAGE,
+    type: SET_ACTIVE_LANGUAGE,
     payload
   };
 };
