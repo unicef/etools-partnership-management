@@ -402,10 +402,8 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-    // !!! need to have activeLanguage even if userProfile not loaded, otherwise will see left menu untranslated
-    const activeLanguage = state.activeLanguage!.activeLanguage || 'en';
-    if (!isJsonStrMatch(activeLanguage, this.selectedLanguage)) {
-      this.selectedLanguage = activeLanguage;
+    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }
   }
