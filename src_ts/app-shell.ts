@@ -402,7 +402,10 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
-    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+    if (
+      state.activeLanguage!.activeLanguage &&
+      !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
+    ) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }
