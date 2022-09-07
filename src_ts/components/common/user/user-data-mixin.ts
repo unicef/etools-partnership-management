@@ -9,7 +9,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
-import {setLanguage} from '../../../redux/actions/active-language';
+import {setActiveLanguage} from '../../../redux/actions/active-language';
 
 /**
  * @polymer
@@ -90,7 +90,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
       if (!currentLanguage) {
         currentLanguage = 'en';
       }
-      store.dispatch(setLanguage(currentLanguage));
+      store.dispatch(setActiveLanguage(currentLanguage));
     }
 
     public checkDexieCountryIsUserCountry(user: any) {

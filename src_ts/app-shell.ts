@@ -97,11 +97,10 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, listenForLangChanged} from 'lit-translate';
+import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';
-import {setLanguageFileLoaded} from './redux/actions/active-language';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -123,7 +122,10 @@ function fetchLangFiles(lang: string) {
     return Object.assign(response[0].value, response[1].value);
   });
 }
-const translationConfig = registerTranslateConfig({loader: (lang: string) => fetchLangFiles(lang)});
+const translationConfig = registerTranslateConfig({
+  empty: (key) => `${key && key[0].toUpperCase() + key.slice(1).toLowerCase()}`,
+  loader: (lang: string) => fetchLangFiles(lang)
+});
 
 setRootPath(BASE_URL);
 
@@ -361,12 +363,6 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
-
-    listenForLangChanged(() => {
-      setTimeout(() => {
-        store.dispatch(setLanguageFileLoaded(true));
-      }, 1000);
-    });
   }
 
   checkAppVersion() {

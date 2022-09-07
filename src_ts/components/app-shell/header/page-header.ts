@@ -14,7 +14,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
-import {setLanguage} from '../../../redux/actions/active-language.js';
+import {setActiveLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
@@ -422,7 +422,7 @@ class PageHeader extends connect(store)(
       localStorage.setItem('defaultLanguage', newLanguage);
       use(newLanguage)
         .then(() => {
-          if (this.profile.preferences?.language != newLanguage) {
+          if (this.profile?.preferences?.language != newLanguage) {
             this.updateUserPreference(newLanguage);
           }
         })
@@ -434,7 +434,7 @@ class PageHeader extends connect(store)(
     sendRequest({endpoint: pmpEdpoints.myProfile, method: 'PATCH', body: {preferences: {language: language}}})
       .then((response) => {
         store.dispatch(updateUserData(response));
-        store.dispatch(setLanguage(language));
+        store.dispatch(setActiveLanguage(language));
       })
       .catch((err: any) => parseRequestErrorsAndShowAsToastMsgs(err, this));
   }
