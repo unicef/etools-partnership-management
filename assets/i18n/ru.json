@@ -261,6 +261,7 @@
   "ADD_ACTION_POINTS": "Добавить пункт к выполнению",
   "EDITABLE_BY": "Изменено следующими лицами",
   "IMPORT_ECN": "Import eCN",
+  "IMPORT": "импорт",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Договор"
 }

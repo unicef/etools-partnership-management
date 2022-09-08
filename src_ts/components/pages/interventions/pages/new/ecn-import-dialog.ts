@@ -20,8 +20,8 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
  * @polymer
  * @customElement
  */
-@customElement('ecn-number-dialog')
-export class EcnNumberDialog extends LitElement {
+@customElement('ecn-import-dialog')
+export class EcnImportDialog extends LitElement {
   render() {
     // language=HTML
     return html`
@@ -35,7 +35,7 @@ export class EcnNumberDialog extends LitElement {
       <etools-dialog
         id="ecnDialog"
         size="md"
-        ok-btn-text="Save"
+        ok-btn-text="${translate('IMPORT')}"
         dialog-title="${translate('IMPORT_ECN')}"
         keep-dialog-open
         ?show-spinner="${this.loadingInProcess}"

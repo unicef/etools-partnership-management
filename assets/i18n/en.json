@@ -262,6 +262,7 @@
   "ADD_ACTION_POINTS": "Add Action Point",
   "EDITABLE_BY": "Editable by",
   "IMPORT_ECN": "Import eCN",
+  "IMPORT": "Import",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Agreement"
 }

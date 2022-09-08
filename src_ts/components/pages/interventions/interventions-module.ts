@@ -35,7 +35,7 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '../../utils/dialog';
 import {translate} from 'lit-translate';
-import './pages/new/ecn-number-dialog';
+import './pages/new/ecn-import-dialog';
 
 // @ts-ignore
 setStore(store);
@@ -181,7 +181,7 @@ export class InterventionsModule extends connect(store)(
                     icon="expand-more"
                   ></paper-icon-button>
                   <div slot="dropdown-content">
-                    <div class="other-options" @click="${() => this.openDialogFor_eCNNumber()}">
+                    <div class="other-options" @click="${() => this.openEcnImportDialog()}">
                       ${translate('IMPORT_ECN')}
                     </div>
                   </div>
@@ -304,13 +304,9 @@ export class InterventionsModule extends connect(store)(
     ].includes(activePage);
   }
 
-  openDialogFor_eCNNumber() {
+  openEcnImportDialog() {
     openDialog({
-      dialog: 'ecn-number-dialog'
-    }).then(({confirmed, response}) => {
-      if (!confirmed || !response) {
-        return null;
-      }
+      dialog: 'ecn-import-dialog'
     });
   }
 
