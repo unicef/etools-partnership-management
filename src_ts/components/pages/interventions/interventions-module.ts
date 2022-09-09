@@ -36,6 +36,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '../../utils/dialog';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
+import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
 
 // @ts-ignore
 setStore(store);
@@ -162,26 +163,27 @@ export class InterventionsModule extends connect(store)(
             >
               <paper-button
                 class="primary-btn with-prefix main-button with-additional"
-                style="position:relative;z-index:0;"
-                @tap="${this._goToNewInterventionPage}"
+                @click="${this._goToNewInterventionPage}"
               >
                 <iron-icon icon="add"></iron-icon>
                 ${this._getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')}
-                <paper-menu-button
-                  style="position:relative;z-index:15;"
-                  horizontal-align="right"
-                  @click="${(event: MouseEvent) => {
-                    event.stopImmediatePropagation();
-                    console.log('HERE');
-                  }}"
-                >
+                <paper-menu-button id="importEcn" horizontal-align="right">
                   <paper-icon-button
                     slot="dropdown-trigger"
                     class="option-button"
                     icon="expand-more"
+                    @click="${(event: MouseEvent) => {
+                      event.stopImmediatePropagation();
+                    }}"
                   ></paper-icon-button>
                   <div slot="dropdown-content">
-                    <div class="other-options" @click="${() => this.openEcnImportDialog()}">
+                    <div
+                      class="other-options"
+                      @click="${(e) => {
+                        e.stopImmediatePropagation();
+                        this.openEcnImportDialog();
+                      }}"
+                    >
                       ${translate('IMPORT_ECN')}
                     </div>
                   </div>
@@ -305,9 +307,17 @@ export class InterventionsModule extends connect(store)(
   }
 
   openEcnImportDialog() {
+    this.closeEcnDropdown();
     openDialog({
       dialog: 'ecn-import-dialog'
     });
+  }
+
+  closeEcnDropdown() {
+    const element: PaperMenuButton | null = this.shadowRoot!.querySelector('paper-menu-button#importEcn');
+    if (element) {
+      element.close();
+    }
   }
 
   connectedCallback() {
@@ -418,16 +428,17 @@ export class InterventionsModule extends connect(store)(
   }
 
   _goToNewInterventionPage() {
+    console.log('GO TO NEW PAGE');
     // go to new intervention
-    // if (!this._hasEditPermissions(this.userPermissions)) {
-    //   return;
-    // }
-    // history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
-    // window.dispatchEvent(new CustomEvent('popstate'));
-    // fireEvent(this, 'global-loading', {
-    //   active: true,
-    //   loadingSource: 'interv-page'
-    // });
+    if (!this._hasEditPermissions(this.userPermissions)) {
+      return;
+    }
+    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
+    window.dispatchEvent(new CustomEvent('popstate'));
+    fireEvent(this, 'global-loading', {
+      active: true,
+      loadingSource: 'interv-page'
+    });
   }
 
   _visibleTabContent(activePage: string, expectedPage: string, newInterventionActive: boolean) {
