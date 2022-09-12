@@ -29,7 +29,6 @@
     "INITIAL_DETAILS": "Insira os dados iniciais",
     "PARTNER_ORGANIZATION": "Organização Parceira",
     "PARTNER_REQUIRED": "Necessário indicar Parceiro",
-    "AGREEMENT": "Acordo",
     "AGREEMENT_REQUIRED": "Acordo requerido",
     "PARTNER_VENDOR_NUMBER": "Número do Vendor do Parceiro",
     "AGREEMENT_AUTH_OFFICERS": "Oficiais Autorizados do Contrato ",
@@ -264,5 +263,9 @@
   "SEND_BACK_TO_PARTNER": "Enviar de volta ao parceiro",
   "DOWNLOAD_REPORT": "Baixar relatório",
   "ADD_ACTION_POINTS": "Adicionar ponto de ação",
-  "EDITABLE_BY": "Editado por"
+  "EDITABLE_BY": "Editado por",
+  "IMPORT_ECN": "Import eCN",
+  "IMPORT": "Importar",
+  "ECN_NUMBER": "eCN Number",
+  "AGREEMENT": "Acordo"
 }

@@ -61,7 +61,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
         ok-btn-text="Refresh data"
         cancel-btn-text="Cancel"
         dialog-title="Refresh data"
-        ?disableConfirmBtn="${!this.anySelected}"
+        .disableConfirmBtn="${!this.anySelected}"
         @close="${this._handleDialogClosed}"
       >
         <div id="content-box">

@@ -429,13 +429,11 @@ class PageHeader extends connect(store)(
     }
     if (newLanguage !== this.selectedLanguage) {
       localStorage.setItem('defaultLanguage', newLanguage);
-      use(newLanguage)
-        .then(() => {
-          if (this.profile?.preferences?.language != newLanguage) {
-            this.updateUserPreference(newLanguage);
-          }
-        })
-        .finally(() => location.reload());
+      use(newLanguage).then(() => {
+        if (this.profile.preferences?.language != newLanguage) {
+          this.updateUserPreference(newLanguage);
+        }
+      });
     }
   }
 
