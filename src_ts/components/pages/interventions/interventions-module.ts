@@ -427,7 +427,6 @@ export class InterventionsModule extends connect(store)(
   }
 
   _goToNewInterventionPage() {
-    console.log('GO TO NEW PAGE');
     // go to new intervention
     if (!this._hasEditPermissions(this.userPermissions)) {
       return;
