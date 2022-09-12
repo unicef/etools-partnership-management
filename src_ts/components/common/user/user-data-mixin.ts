@@ -3,12 +3,13 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {updateUserData} from '../../../redux/actions/user';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject, languageIsAvailableInApp} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
+import {setActiveLanguage} from '../../../redux/actions/active-language';
 
 /**
  * @polymer
@@ -44,6 +45,8 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
           // TODO - storing in state.user also to match with intervention-tab-pages expectations
           store.dispatch(updateUserData(res));
 
+          this.setCurrentLanguage(res.preferences?.language);
+
           this.checkDexieCountryIsUserCountry(res);
         })
         .catch((error: any) => {
@@ -66,6 +69,28 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         return true;
       }
       return false;
+    }
+
+    setCurrentLanguage(lngCode: string) {
+      let currentLanguage = '';
+      if (lngCode) {
+        lngCode = lngCode.substring(0, 2);
+        if (languageIsAvailableInApp(lngCode)) {
+          currentLanguage = lngCode;
+        } else {
+          console.log(`User profile language ${lngCode} missing`);
+        }
+      }
+      if (!currentLanguage) {
+        const storageLang = localStorage.getItem('defaultLanguage');
+        if (storageLang && languageIsAvailableInApp(storageLang)) {
+          currentLanguage = storageLang;
+        }
+      }
+      if (!currentLanguage) {
+        currentLanguage = 'en';
+      }
+      store.dispatch(setActiveLanguage(currentLanguage));
     }
 
     public checkDexieCountryIsUserCountry(user: any) {

@@ -2,6 +2,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import difference from 'lodash-es/difference';
 import {formatDate} from './date-utils';
+import {appLanguages} from '../../config/app-constants';
 
 export const isObject = (a: any) => {
   return a && a.constructor === Object;
@@ -129,3 +130,7 @@ function _formatYYYY_MM_DD(obj2: string | Date) {
   }
   return formatDate(obj2, 'YYYY-MM-DD');
 }
+
+export const languageIsAvailableInApp = (lngCode: string) => {
+  return appLanguages.some((lng) => lng.value === lngCode);
+};

@@ -15,6 +15,7 @@ import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mi
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement, property} from 'lit-element';
 import {BASE_URL} from '../../../config/config';
+import {translate} from 'lit-translate';
 
 /**
  * PMP main menu
@@ -70,14 +71,14 @@ class AppMenu extends connect(store)(
         >
           <a class="nav-menu-item" menu-name="partners" href="${BASE_URL}partners/list">
             <iron-icon id="partners-icon" icon="social:people"></iron-icon>
-            <paper-tooltip for="partners-icon" position="right">Partners</paper-tooltip>
-            <div class="name">Partners</div>
+            <paper-tooltip for="partners-icon" position="right">${translate('PARTNERS')}</paper-tooltip>
+            <div class="name">${translate('PARTNERS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="agreements" href="${BASE_URL}agreements/list">
             <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
-            <paper-tooltip for="agreements-icon" position="right">Agreements</paper-tooltip>
-            <div class="name">Agreements</div>
+            <paper-tooltip for="agreements-icon" position="right">${translate('AGREEMENTS')}</paper-tooltip>
+            <div class="name">${translate('AGREEMENTS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
@@ -88,8 +89,8 @@ class AppMenu extends connect(store)(
 
           <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
             <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
-            <paper-tooltip for="gov-icon" position="right">Government</paper-tooltip>
-            <div class="name">Government</div>
+            <paper-tooltip for="gov-icon" position="right">${translate('GOVERNMENT')}</paper-tooltip>
+            <div class="name">${translate('GOVERNMENT')}</div>
           </a>
 
           <a
@@ -99,8 +100,8 @@ class AppMenu extends connect(store)(
             href="${BASE_URL}reports/list"
           >
             <iron-icon id="reports-icon" icon="assignment"></iron-icon>
-            <paper-tooltip for="reports-icon" position="right">Reports</paper-tooltip>
-            <div class="name">Reports</div>
+            <paper-tooltip for="reports-icon" position="right">${translate('REPORTS')}</paper-tooltip>
+            <div class="name">${translate('REPORTS')}</div>
           </a>
 
           <a
@@ -110,8 +111,8 @@ class AppMenu extends connect(store)(
             href="${BASE_URL}settings"
           >
             <iron-icon id="settings-icon" icon="settings"></iron-icon>
-            <paper-tooltip for="settings-icon" position="right">Settings</paper-tooltip>
-            <div class="name">Settings</div>
+            <paper-tooltip for="settings-icon" position="right">${translate('SETTINGS')}</paper-tooltip>
+            <div class="name">${translate('SETTINGS')}</div>
           </a>
         </iron-selector>
 
@@ -180,7 +181,6 @@ class AppMenu extends connect(store)(
   get smallMenu() {
     return this._smallMenu;
   }
-
   set smallMenu(val: boolean) {
     this._menuSizeChange(val, this._smallMenu);
     this._smallMenu = val;
