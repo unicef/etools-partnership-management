@@ -105,7 +105,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-dropdown
             id="agreements"
-            label=${translate('NEW_INTERVENTION.AGREEMENT')}
+            label=${translate('AGREEMENT')}
             placeholder="&#8212;"
             .readonly="${!this.newIntervention?.partner}"
             .options="${this.filteredAgreements}"

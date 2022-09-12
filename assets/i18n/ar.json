@@ -29,7 +29,6 @@
     "INITIAL_DETAILS": "Enter initial details",
     "PARTNER_ORGANIZATION": "Partner Organization",
     "PARTNER_REQUIRED": "Partner is required",
-    "AGREEMENT": "Agreement",
     "AGREEMENT_REQUIRED": "Agreement required",
     "PARTNER_VENDOR_NUMBER": "Partner Vendor Number",
     "AGREEMENT_AUTH_OFFICERS": "Agreement Authorized Officers",
@@ -265,5 +264,9 @@
   "SEND_BACK_TO_PARTNER": "Send Back to Partner",
   "DOWNLOAD_REPORT": "Download Report",
   "ADD_ACTION_POINTS": "Add Action Point",
-  "EDITABLE_BY": "Editable by"
+  "EDITABLE_BY": "Editable by",
+  "IMPORT_ECN": "Import eCN",
+  "IMPORT": "يستورد",
+  "ECN_NUMBER": "eCN Number",
+  "AGREEMENT": "Agreement"
 }

@@ -29,7 +29,6 @@
     "INITIAL_DETAILS": "Introduceti detaliile initiale",
     "PARTNER_ORGANIZATION": "Organizatie Partener",
     "PARTNER_REQUIRED": "Partenerul este necesar",
-    "AGREEMENT": "Acord",
     "AGREEMENT_REQUIRED": "Acord necesar",
     "PARTNER_VENDOR_NUMBER": "Numar referinta al Partenerului",
     "AGREEMENT_AUTH_OFFICERS": "Ofiteri Autorizati ai Acordului",
@@ -265,5 +264,9 @@
   "SEND_BACK_TO_PARTNER": "Send Back to Partner",
   "DOWNLOAD_REPORT": "Download Report",
   "ADD_ACTION_POINTS": "Add Action Point",
-  "EDITABLE_BY": "Editable by"
+  "EDITABLE_BY": "Editabil de",
+  "IMPORT_ECN": "Importă eCN",
+  "IMPORT": "Importă",
+  "ECN_NUMBER": "Număr eCN",
+  "AGREEMENT": "Acord"
 }

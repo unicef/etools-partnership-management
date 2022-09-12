@@ -29,7 +29,6 @@
     "INITIAL_DETAILS": "Введите основную информация",
     "PARTNER_ORGANIZATION": "Партнерская организация",
     "PARTNER_REQUIRED": "Наименование партнера обязательно",
-    "AGREEMENT": "Договор",
     "AGREEMENT_REQUIRED": "Договор обязателен",
     "PARTNER_VENDOR_NUMBER": "Регистрационный номер партнера",
     "AGREEMENT_AUTH_OFFICERS": "Уполномоченные лица",
@@ -264,5 +263,9 @@
   "SEND_BACK_TO_PARTNER": "Врнуть партнеру",
   "DOWNLOAD_REPORT": "Скачать отчет",
   "ADD_ACTION_POINTS": "Добавить пункт к выполнению",
-  "EDITABLE_BY": "Изменено следующими лицами"
+  "EDITABLE_BY": "Изменено следующими лицами",
+  "IMPORT_ECN": "Import eCN",
+  "IMPORT": "импорт",
+  "ECN_NUMBER": "eCN Number",
+  "AGREEMENT": "Договор"
 }
