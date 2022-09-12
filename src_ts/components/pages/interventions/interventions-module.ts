@@ -284,7 +284,6 @@ export class InterventionsModule extends connect(store)(
       const currentPD = get(state, 'interventions.current');
       if (!isJsonStrMatch(this.intervention, currentPD) && currentPD) {
         this.updateDexieData(currentPD);
-        console.log('Updated Intervention list Dexie data');
         this.intervention = currentPD;
       }
     }
@@ -428,7 +427,6 @@ export class InterventionsModule extends connect(store)(
   }
 
   _goToNewInterventionPage() {
-    console.log('GO TO NEW PAGE');
     // go to new intervention
     if (!this._hasEditPermissions(this.userPermissions)) {
       return;
