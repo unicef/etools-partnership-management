@@ -29,6 +29,7 @@ import 'dayjs/locale/ru.js';
 import 'dayjs/locale/pt.js';
 import 'dayjs/locale/ar.js';
 import 'dayjs/locale/ro.js';
+import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
 
 store.addReducers({
