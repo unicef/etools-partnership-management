@@ -165,11 +165,11 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
       method: 'POST',
       body: this.data
     })
-      .then((interventionId: number) => {
+      .then((intervention: any) => {
         this.loadingInProcess = false;
         store.dispatch(setShouldReGetList(true));
         fireEvent(this, 'dialog-closed', {confirmed: true});
-        history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${interventionId}/metadata`);
+        history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
       })
       .catch((err: any) => {
