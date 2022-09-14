@@ -51,7 +51,8 @@ import {
   CountryProgram,
   GenericObject,
   Office,
-  Country
+  Country,
+  LocationObject
 } from '@unicef-polymer/etools-types';
 
 export class CommonDataState {
@@ -68,7 +69,7 @@ export class CommonDataState {
   interventionStatuses: LabelAndValue[] = [];
   sections: GenericObject[] = [];
   unicefUsersData: MinimalUser[] = [];
-  locations: Location[] = [];
+  locations: LocationObject[] = [];
   offices: Office[] = [];
   agreementsDropdownData: GenericObject[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
