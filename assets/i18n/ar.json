@@ -166,6 +166,7 @@
   "OUTSTANDING_FINDINGS": "Outstanding Findings",
   "REPORT": "Report",
   "REPORT_TYPE": "Report Type",
+  "REPORT_STATUS": "وضع تقرير",
   "VIEW_REPORT": "View Report",
   "PROGRAMMATIC_VISITS_S_CASE": "Programmatic Visits",
   "EDIT_HACT_ASSURANCE_PLAN": "Edit HACT Assurance Plan",
@@ -269,5 +270,6 @@
   "IMPORT_ECN": "Import eCN",
   "IMPORT": "يستورد",
   "ECN_NUMBER": "eCN Number",
-  "AGREEMENT": "Agreement"
+  "AGREEMENT": "Agreement",
+  "CP_OUTPUT": "مخرجات البرنامج القطري"
 }

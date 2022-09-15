@@ -128,8 +128,8 @@ export function getReportFilters() {
       hideSearch: false
     },
     {
-      filterName: getTranslation('UNICEF_FOCAL_POINTS'),
-      filterNameKey: 'UNICEF_FOCAL_POINTS',
+      filterName: getTranslation('NEW_INTERVENTION.UNICEF_FOCAL_POINTS'),
+      filterNameKey: 'NEW_INTERVENTION.UNICEF_FOCAL_POINTS',
       filterKey: ReportsFilterKeys.unicef_focal_points,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],

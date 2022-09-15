@@ -166,6 +166,7 @@
   "OUTSTANDING_FINDINGS": "Constatations en suspens",
   "REPORT": "Rapport",
   "REPORT_TYPE": "Type de rapport",
+  "REPORT_STATUS": "État du rapport",
   "VIEW_REPORT": "Afficher le rapport",
   "PROGRAMMATIC_VISITS_S_CASE": "Visites programmatiques",
   "EDIT_HACT_ASSURANCE_PLAN": "Modifier le plan d'assurance HACT",
@@ -266,5 +267,6 @@
   "IMPORT_ECN": "Import eCN",
   "IMPORT": "Import",
   "ECN_NUMBER": "eCN Number",
-  "AGREEMENT": "Accord "
+  "AGREEMENT": "Accord",
+  "CP_OUTPUT": "Sortie CP"
 }

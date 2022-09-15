@@ -165,6 +165,7 @@
   "OUTSTANDING_FINDINGS": "Descobertas pendentes",
   "REPORT": "Relatório",
   "REPORT_TYPE": "Tipo de relatório",
+  "REPORT_STATUS": "Status do Relatório",
   "VIEW_REPORT": "Ver relatório",
   "PROGRAMMATIC_VISITS_S_CASE": "PVisitas Programáticas",
   "EDIT_HACT_ASSURANCE_PLAN": "Editar plano de garantia HACT",
@@ -268,5 +269,6 @@
   "IMPORT_ECN": "Import eCN",
   "IMPORT": "Importar",
   "ECN_NUMBER": "eCN Number",
-  "AGREEMENT": "Acordo"
+  "AGREEMENT": "Acordo",
+  "CP_OUTPUT": "Resultado CP"
 }
