@@ -31,6 +31,7 @@ export function getPartnerFilters() {
   return [
     {
       filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
+      filterNameKey: 'GENERAL.SEARCH_RECORDS',
       filterKey: PartnerFilterKeys.search,
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
@@ -38,6 +39,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('PARTNER_TYPE'),
+      filterNameKey: 'PARTNER_TYPE',
       filterKey: PartnerFilterKeys.partner_types,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -49,6 +51,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('CSO_TYPE'),
+      filterNameKey: 'CSO_TYPE',
       filterKey: PartnerFilterKeys.cso_types,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -60,6 +63,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('HACT_RISK_RATING'),
+      filterNameKey: 'HACT_RISK_RATING',
       filterKey: PartnerFilterKeys.risk_ratings,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -71,6 +75,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('SEA_RISK_RATING'),
+      filterNameKey: 'SEA_RISK_RATING',
       filterKey: PartnerFilterKeys.sea_risk_ratings,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -82,6 +87,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('PSEA_ASSESSMENT_DATE_BEFORE'),
+      filterNameKey: 'PSEA_ASSESSMENT_DATE_BEFORE',
       filterKey: PartnerFilterKeys.psea_assessment_date_before,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -91,6 +97,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('PSEA_ASSESSMENT_DATE_AFTER'),
+      filterNameKey: 'PSEA_ASSESSMENT_DATE_AFTER',
       filterKey: PartnerFilterKeys.psea_assessment_date_after,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -99,6 +106,7 @@ export function getPartnerFilters() {
     },
     {
       filterName: getTranslation('SHOW_HIDDEN'),
+      filterNameKey: 'SHOW_HIDDEN',
       filterKey: PartnerFilterKeys.hidden,
       type: EtoolsFilterTypes.Toggle,
       selectedValue: false,

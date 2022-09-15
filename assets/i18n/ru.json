@@ -164,6 +164,7 @@
   "AMOUNT_TESTED": " Сумма проверки",
   "OUTSTANDING_FINDINGS": "Невыполненные рекомендации",
   "REPORT": "Отчет",
+  "REPORT_TYPE": "Тип отчета",
   "VIEW_REPORT": "Посмотреть отчет",
   "PROGRAMMATIC_VISITS_S_CASE": "Программный визит",
   "EDIT_HACT_ASSURANCE_PLAN": "Изменить План оценок и проверок",

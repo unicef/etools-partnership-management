@@ -286,6 +286,14 @@ export class AgreementsList extends connect(store)(
       this.initFiltersForDisplay(state.commonData!);
     }
 
+    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+      if (this.currentLanguage) {
+        // language was already set, this is language change
+        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+      }
+      this.currentLanguage = state.activeLanguage!.activeLanguage;
+    }
+
     if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;

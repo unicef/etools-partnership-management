@@ -115,7 +115,12 @@ export class InterventionsList extends connect(store)(
       </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+          .textFilters="${translate('GENERAL.FILTERS')}"
+          .textClearAll="${translate('GENERAL.CLEAR_ALL')}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
@@ -351,6 +356,14 @@ export class InterventionsList extends connect(store)(
       if (state.interventions.shouldReGetList) {
         getStore().dispatch(setShouldReGetList(false));
       }
+    }
+
+    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+      if (this.currentLanguage) {
+        // language was already set, this is language change
+        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+      }
+      this.currentLanguage = state.activeLanguage!.activeLanguage;
     }
   }
 

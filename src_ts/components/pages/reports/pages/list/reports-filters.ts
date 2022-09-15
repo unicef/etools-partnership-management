@@ -40,13 +40,15 @@ export function getReportFilters() {
   return [
     {
       filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
+      filterNameKey: 'GENERAL.SEARCH_RECORDS',
       filterKey: ReportsFilterKeys.pd_ref_title,
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
       selected: true
     },
     {
-      filterName: 'CP Output',
+      filterName: getTranslation('CP_OUTPUT'),
+       filterNameKey: 'CP_OUTPUT',
       filterKey: ReportsFilterKeys.cp_output,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
@@ -59,7 +61,8 @@ export function getReportFilters() {
       hideSearch: true
     },
     {
-      filterName: 'Partner',
+      filterName: getTranslation('PARTNER'),
+      filterNameKey: 'PARTNER',
       filterKey: ReportsFilterKeys.external_partner_id,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
@@ -72,7 +75,8 @@ export function getReportFilters() {
       hideSearch: true
     },
     {
-      filterName: 'Report Status',
+      filterName: getTranslation('REPORT_STATUS'),
+      filterNameKey: 'REPORT_STATUS',
       filterKey: ReportsFilterKeys.status,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -84,7 +88,8 @@ export function getReportFilters() {
       hideSearch: true
     },
     {
-      filterName: 'Year',
+      filterName: getTranslation('YEAR'),
+      filterNameKey: 'YEAR',
       filterKey: ReportsFilterKeys.year,
       type: EtoolsFilterTypes.Dropdown,
       selectionOptions: getYears(),
@@ -95,7 +100,8 @@ export function getReportFilters() {
       minWidth: '400px'
     },
     {
-      filterName: 'Report Type',
+      filterName: getTranslation('REPORT_TYPE'),
+      filterNameKey: 'REPORT_TYPE',
       filterKey: ReportsFilterKeys.report_type,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
@@ -108,7 +114,8 @@ export function getReportFilters() {
       hideSearch: false
     },
     {
-      filterName: 'Section',
+      filterName: getTranslation('SECTION'),
+      filterNameKey: 'SECTION',
       filterKey: ReportsFilterKeys.section,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
@@ -121,7 +128,8 @@ export function getReportFilters() {
       hideSearch: false
     },
     {
-      filterName: 'UNICEF focal points',
+      filterName: getTranslation('UNICEF_FOCAL_POINTS'),
+      filterNameKey: 'UNICEF_FOCAL_POINTS',
       filterKey: ReportsFilterKeys.unicef_focal_points,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
