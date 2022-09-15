@@ -48,7 +48,7 @@ export function getReportFilters() {
     },
     {
       filterName: getTranslation('CP_OUTPUT'),
-       filterNameKey: 'CP_OUTPUT',
+      filterNameKey: 'CP_OUTPUT',
       filterKey: ReportsFilterKeys.cp_output,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
