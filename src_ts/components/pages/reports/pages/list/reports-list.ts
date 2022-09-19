@@ -9,6 +9,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
@@ -44,7 +45,9 @@ import pmpEdpoints from '../../../../endpoints/endpoints';
  * @appliesMixin PaginationMixin
  */
 @customElement('reports-list')
-class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
+class ReportsList extends connect(store)(
+  ListsCommonMixin(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement))))
+) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -292,6 +295,14 @@ class ReportsList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLi
 
     if (!this.allFilters) {
       this.initFiltersForDisplay(state.commonData!);
+    }
+
+    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+      if (this.currentLanguage) {
+        // language was already set, this is language change
+        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+      }
+      this.currentLanguage = state.activeLanguage!.activeLanguage;
     }
 
     this.endStateChanged(state);

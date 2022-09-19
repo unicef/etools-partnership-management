@@ -31,6 +31,7 @@ export function getAgreementFilters() {
   return [
     {
       filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
+      filterNameKey: 'GENERAL.SEARCH_RECORDS',
       filterKey: AgreementsFilterKeys.search,
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
@@ -38,6 +39,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('TYPE'),
+      filterNameKey: 'TYPE',
       filterKey: AgreementsFilterKeys.type,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -50,6 +52,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('STATUS'),
+      filterNameKey: 'STATUS',
       filterKey: AgreementsFilterKeys.status,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -62,6 +65,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('CP_STRUCTURE'),
+      filterNameKey: 'CP_STRUCTURE',
       filterKey: AgreementsFilterKeys.cpStructures,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -74,6 +78,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('PARTNER'),
+      filterNameKey: 'PARTNER',
       filterKey: AgreementsFilterKeys.partners,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -87,6 +92,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('ENDS_BEFORE'),
+      filterNameKey: 'ENDS_BEFORE',
       filterKey: AgreementsFilterKeys.end,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -95,6 +101,7 @@ export function getAgreementFilters() {
 
     {
       filterName: getTranslation('STARTS_AFTER'),
+      filterNameKey: 'STARTS_AFTER',
       filterKey: AgreementsFilterKeys.start,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -102,6 +109,7 @@ export function getAgreementFilters() {
     },
     {
       filterName: getTranslation('SPECIAL_CONDITIONS_PCA'),
+      filterNameKey: 'SPECIAL_CONDITIONS_PCA',
       filterKey: AgreementsFilterKeys.special_conditions_pca,
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
