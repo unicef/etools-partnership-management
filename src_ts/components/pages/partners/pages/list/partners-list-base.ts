@@ -294,6 +294,14 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
+    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+      if (this.currentLanguage) {
+        // language was already set, this is language change
+        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+      }
+      this.currentLanguage = state.activeLanguage!.activeLanguage;
+    }
+
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
       this.listLoadingActive = true;
       return;

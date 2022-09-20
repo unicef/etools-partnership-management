@@ -48,6 +48,7 @@ export function getInterventionFilters() {
   return [
     {
       filterName: getTranslation('GENERAL.SEARCH_RECORDS'),
+      filterNameKey: 'GENERAL.SEARCH_RECORDS',
       filterKey: InterventionFilterKeys.search,
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
@@ -55,6 +56,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('CP_STRUCTURE'),
+      filterNameKey: 'CP_STRUCTURE',
       filterKey: InterventionFilterKeys.cpStructures,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -67,6 +69,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
+      filterNameKey: 'INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT',
       filterKey: InterventionFilterKeys.cp_outputs,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -78,6 +81,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.DONORS'),
+      filterNameKey: 'INTERVENTIONS_LIST.DONORS',
       filterKey: InterventionFilterKeys.donors,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -89,6 +93,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.PARTNERS'),
+      filterNameKey: 'INTERVENTIONS_LIST.PARTNERS',
       filterKey: InterventionFilterKeys.partners,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -101,6 +106,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.ENDS_BEFORE'),
+      filterNameKey: 'INTERVENTIONS_LIST.ENDS_BEFORE',
       filterKey: InterventionFilterKeys.end,
       type: EtoolsFilterTypes.Date, // datepicker-lite
       path: 'endDate',
@@ -109,6 +115,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.GRANTS'),
+      filterNameKey: 'INTERVENTIONS_LIST.GRANTS',
       filterKey: InterventionFilterKeys.grants,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -120,6 +127,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.OFFICES'),
+      filterNameKey: 'INTERVENTIONS_LIST.OFFICES',
       filterKey: InterventionFilterKeys.offices,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -132,6 +140,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.PD_TYPE'),
+      filterNameKey: 'INTERVENTIONS_LIST.PD_TYPE',
       filterKey: InterventionFilterKeys.type,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -144,6 +153,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.SECTIONS'),
+      filterNameKey: 'INTERVENTIONS_LIST.SECTIONS',
       filterKey: InterventionFilterKeys.section,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -156,6 +166,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.STARTS_AFTER'),
+      filterNameKey: 'INTERVENTIONS_LIST.STARTS_AFTER',
       filterKey: InterventionFilterKeys.start,
       type: EtoolsFilterTypes.Date, // datepicker-lite
       path: 'startDate',
@@ -164,6 +175,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.ENDS_AFTER'),
+      filterNameKey: 'INTERVENTIONS_LIST.ENDS_AFTER',
       filterKey: InterventionFilterKeys.endAfter,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -172,6 +184,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('GENERAL.STATUS'),
+      filterNameKey: 'GENERAL.STATUS',
       filterKey: InterventionFilterKeys.status,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -184,6 +197,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
+      filterNameKey: 'INTERVENTIONS_LIST.UNICEF_FOCAL_POINT',
       filterKey: InterventionFilterKeys.unicef_focal_points,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -195,6 +209,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.BUDGET_OWNER'),
+      filterNameKey: 'INTERVENTIONS_LIST.BUDGET_OWNER',
       filterKey: InterventionFilterKeys.budget_owner,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -206,6 +221,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
+      filterNameKey: 'INTERVENTIONS_LIST.CONTINGENCY_PD',
       filterKey: InterventionFilterKeys.contingency_pd,
       type: EtoolsFilterTypes.Toggle,
       selectedValue: false,
@@ -213,6 +229,7 @@ export function getInterventionFilters() {
     },
     {
       filterName: getTranslation('EDITABLE_BY'),
+      filterNameKey: 'EDITABLE_BY',
       filterKey: InterventionFilterKeys.editable_by,
       type: EtoolsFilterTypes.Dropdown,
       optionValue: 'value',

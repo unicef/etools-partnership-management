@@ -164,6 +164,8 @@
   "AMOUNT_TESTED": " Сумма проверки",
   "OUTSTANDING_FINDINGS": "Невыполненные рекомендации",
   "REPORT": "Отчет",
+  "REPORT_TYPE": "Тип отчета",
+  "REPORT_STATUS": "Статус отчета",
   "VIEW_REPORT": "Посмотреть отчет",
   "PROGRAMMATIC_VISITS_S_CASE": "Программный визит",
   "EDIT_HACT_ASSURANCE_PLAN": "Изменить План оценок и проверок",
@@ -267,5 +269,6 @@
   "IMPORT_ECN": "Import eCN",
   "IMPORT": "импорт",
   "ECN_NUMBER": "eCN Number",
-  "AGREEMENT": "Договор"
+  "AGREEMENT": "Договор",
+  "CP_OUTPUT": "Промежуточный результат СП"
 }
