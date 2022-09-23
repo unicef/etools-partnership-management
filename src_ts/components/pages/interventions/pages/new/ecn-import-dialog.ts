@@ -140,7 +140,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   allAgreements!: MinimalAgreement[];
 
   @property({type: Array})
-  filteredAgreements!: MinimalAgreement[] = [];
+  filteredAgreements: MinimalAgreement[] = [];
 
   @property({type: Array})
   allLocations!: LocationObject[];
