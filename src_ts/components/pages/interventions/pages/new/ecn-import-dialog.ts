@@ -14,6 +14,8 @@ import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
+import CONSTANTS from '../../../../../config/app-constants';
+import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 
 /**
  * @polymer
@@ -29,6 +31,9 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         #container {
           padding-top: 12px;
           padding-bottom: 12px;
+        }
+        etools-dropdown-multi {
+          --esmm-external-wrapper_-_max-width: initial;
         }
       </style>
       <etools-dialog
@@ -56,8 +61,22 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
           ></paper-input>
           <etools-dropdown
+            id="partnerDropdw"
+            label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
+            placeholder="&#8212;"
+            .options="${this.allPartners}"
+            option-value="id"
+            option-label="name"
+            error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
+            trigger-value-change-event
+            @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
+            required
+            auto-validate
+          >
+          </etools-dropdown>
+          <etools-dropdown
             id="agreement"
-            .options="${this.allAgreements}"
+            .options="${this.filteredAgreements}"
             label="${translate('AGREEMENT')}"
             option-value="id"
             option-label="agreement_number"
@@ -115,7 +134,13 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   @property() loadingInProcess = false;
 
   @property({type: Array})
+  allPartners: Partner[] = [];
+
+  @property({type: Array})
   allAgreements!: MinimalAgreement[];
+
+  @property({type: Array})
+  filteredAgreements!: MinimalAgreement[] = [];
 
   @property({type: Array})
   allLocations!: LocationObject[];
@@ -138,6 +163,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.allPartners = [...csoPartnersSelector(store.getState())];
     this.allAgreements = (store.getState() as RootState).agreements!.list;
     this.allLocations = (store.getState() as RootState).commonData!.locations;
     this.allSections = (store.getState() as RootState).commonData!.sections;
@@ -176,5 +202,25 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         this.loadingInProcess = false;
         parseRequestErrorsAndShowAsToastMsgs(err, this);
       });
+  }
+
+  partnerChanged({detail}: CustomEvent): void {
+    this.selectedItemChanged(detail, 'partner');
+    this.filterAgreements(detail.selectedItem ? detail.selectedItem.id : null);
+  }
+
+  filterAgreements(partnerId: number | null): void {
+    if (!partnerId) {
+      this.filteredAgreements = [];
+      return;
+    }
+
+    this.filteredAgreements = this.allAgreements.filter((agreement: MinimalAgreement) => {
+      return (
+        agreement.partner === partnerId &&
+        ['suspended', 'terminated'].indexOf(agreement.status!) === -1 &&
+        agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU
+      );
+    });
   }
 }
