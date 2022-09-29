@@ -194,14 +194,15 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
     })
       .then((intervention: any) => {
         this.loadingInProcess = false;
+        fireEvent(this, 'dialog-closed', {confirmed: true});
         history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
         setTimeout(() => {
           // Wait for route details to change,
           // otherwise  it re-GETs the list as a result of setShouldReGetList and then redirects to list because of
           // intervention-list/ updateCurrentParams
+          console.log(this);
           store.dispatch(setShouldReGetList(true));
-          fireEvent(this, 'dialog-closed', {confirmed: true});
         }, 3000);
       })
       .catch((err: any) => {
