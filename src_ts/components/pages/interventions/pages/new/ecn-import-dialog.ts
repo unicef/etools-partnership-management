@@ -3,6 +3,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
@@ -193,10 +194,15 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
     })
       .then((intervention: any) => {
         this.loadingInProcess = false;
-        store.dispatch(setShouldReGetList(true));
-        fireEvent(this, 'dialog-closed', {confirmed: true});
         history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
+        setTimeout(() => {
+          // Wait for route details to change,
+          // otherwise  it re-GETs the list as a result of setShouldReGetList and then redirects to list because of
+          // intervention-list/ updateCurrentParams
+          store.dispatch(setShouldReGetList(true));
+          fireEvent(this, 'dialog-closed', {confirmed: true});
+        });
       })
       .catch((err: any) => {
         this.loadingInProcess = false;
