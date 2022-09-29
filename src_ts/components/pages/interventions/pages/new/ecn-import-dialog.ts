@@ -202,7 +202,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
           // intervention-list/ updateCurrentParams
           store.dispatch(setShouldReGetList(true));
           fireEvent(this, 'dialog-closed', {confirmed: true});
-        });
+        }, 3000);
       })
       .catch((err: any) => {
         this.loadingInProcess = false;
