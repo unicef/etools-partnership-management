@@ -71,18 +71,20 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
     _elementReady() {
       if (!this.endpointName) {
         logWarn('Please specify an endpointName property', 'list-data-mixin');
+        return Promise.resolve(false);
       } else {
         if (!this.noGetRequest) {
           // List data is retrieved by <...-list-data> comp. from app-shell
           // exclude the other ones
           this.options.endpoint = this.getEndpoint(pmpEdpoints, this.endpointName);
-          this._requestListData();
+          return this._requestListData();
         }
       }
+      return Promise.resolve(false);
     }
 
     _requestListData() {
-      sendRequest(this.options)
+      return sendRequest(this.options)
         .then((resp: any) => {
           this._handleMyResponse(resp);
           this.listDataIsLoaded = true;

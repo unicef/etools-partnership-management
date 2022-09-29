@@ -36,6 +36,7 @@ import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-inpu
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
+import pmpEdpoints from '../../../../endpoints/endpoints';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -354,7 +355,8 @@ export class InterventionsList extends connect(store)(
       this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
-        this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!._elementReady();
+        pmpEdpoints.interventions.bypassCache = true;
+        this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!._elementReady().finally(() => pmpEdpoints.interventions.bypassCache = false;);
         getStore().dispatch(setShouldReGetList(false));
       }
     }
