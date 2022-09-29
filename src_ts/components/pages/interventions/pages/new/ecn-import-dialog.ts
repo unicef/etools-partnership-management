@@ -201,7 +201,6 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
           // Wait for route details to change,
           // otherwise  it re-GETs the list as a result of setShouldReGetList and then redirects to list because of
           // intervention-list/ updateCurrentParams
-          console.log(this);
           store.dispatch(setShouldReGetList(true));
         }, 3000);
       })
