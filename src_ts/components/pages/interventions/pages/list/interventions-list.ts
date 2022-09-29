@@ -354,6 +354,7 @@ export class InterventionsList extends connect(store)(
       this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
+        this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!._elementReady();
         getStore().dispatch(setShouldReGetList(false));
       }
     }
