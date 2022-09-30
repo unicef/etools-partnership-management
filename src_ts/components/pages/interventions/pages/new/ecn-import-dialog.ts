@@ -197,18 +197,24 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         fireEvent(this, 'dialog-closed', {confirmed: true});
         history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
-        setTimeout(() => {
-          // Wait for route details to change,
-          // otherwise  it re-GETs the list as a result of setShouldReGetList and then redirects to list because of
-          // intervention-list/ updateCurrentParams
-          console.log(this);
-          store.dispatch(setShouldReGetList(true));
-        }, 3000);
+        this.waitForRouteDetailsUpdate().then(() => store.dispatch(setShouldReGetList(true)));
       })
       .catch((err: any) => {
         this.loadingInProcess = false;
         parseRequestErrorsAndShowAsToastMsgs(err, this);
       });
+  }
+
+  // Avoid redirect to list
+  waitForRouteDetailsUpdate() {
+    return new Promise((resolve) => {
+      const interv = setInterval(() => {
+        if ((store.getState() as RootState).app?.routeDetails?.subRouteName === 'metadata') {
+          clearInterval(interv);
+          resolve(true);
+        }
+      }, 1000);
+    });
   }
 
   partnerChanged({detail}: CustomEvent): void {
