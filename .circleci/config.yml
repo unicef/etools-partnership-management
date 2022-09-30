@@ -89,4 +89,5 @@ workflows:
                 - master
                 - staging
                 - develop
-                - epd                
+                - epd
+                - fix-redirect
