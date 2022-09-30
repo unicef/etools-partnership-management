@@ -90,4 +90,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - fix-list-refresh
+                - fix-mark-as-resolved
