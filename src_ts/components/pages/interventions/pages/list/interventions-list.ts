@@ -355,12 +355,13 @@ export class InterventionsList extends connect(store)(
       this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
-        // @ts-ignore todo
         pmpEdpoints.interventions.bypassCache = true;
         this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!
           ._elementReady()
-          // @ts-ignore todo
-          .finally(() => (pmpEdpoints.interventions.bypassCache = false));
+          .finally(() => {
+            pmpEdpoints.interventions.bypassCache = false;
+            console.log(pmpEdpoints.interventions.bypassCache);
+          });
         getStore().dispatch(setShouldReGetList(false));
       }
     }
