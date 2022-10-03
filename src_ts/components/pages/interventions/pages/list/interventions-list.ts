@@ -358,10 +358,7 @@ export class InterventionsList extends connect(store)(
         pmpEdpoints.interventions.bypassCache = true;
         this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!
           ._elementReady()
-          .finally(() => {
-            pmpEdpoints.interventions.bypassCache = false;
-            console.log(pmpEdpoints.interventions.bypassCache);
-          });
+          .finally(() => (pmpEdpoints.interventions.bypassCache = false));
         getStore().dispatch(setShouldReGetList(false));
       }
     }
