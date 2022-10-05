@@ -90,4 +90,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - fix-redirect
