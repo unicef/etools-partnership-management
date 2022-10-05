@@ -3,6 +3,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
@@ -193,15 +194,27 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
     })
       .then((intervention: any) => {
         this.loadingInProcess = false;
-        store.dispatch(setShouldReGetList(true));
         fireEvent(this, 'dialog-closed', {confirmed: true});
         history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
+        this.waitForRouteDetailsUpdate().then(() => store.dispatch(setShouldReGetList(true)));
       })
       .catch((err: any) => {
         this.loadingInProcess = false;
         parseRequestErrorsAndShowAsToastMsgs(err, this);
       });
+  }
+
+  // Avoid redirect to list
+  waitForRouteDetailsUpdate() {
+    return new Promise((resolve) => {
+      const interv = setInterval(() => {
+        if ((store.getState() as RootState).app?.routeDetails?.subRouteName === 'metadata') {
+          clearInterval(interv);
+          resolve(true);
+        }
+      }, 1000);
+    });
   }
 
   partnerChanged({detail}: CustomEvent): void {
