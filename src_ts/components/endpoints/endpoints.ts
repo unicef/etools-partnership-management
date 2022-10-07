@@ -64,7 +64,8 @@ const pmpEdpoints = {
   interventions: {
     url: '/api/pmp/v3/interventions/?show_amendments=true',
     exp: 10 * 60 * 1000,
-    cacheTableName: 'interventions'
+    cacheTableName: 'interventions',
+    bypassCache: false
   },
   interventionDetails: {
     template: '/api/v2/interventions/<%=id%>/'

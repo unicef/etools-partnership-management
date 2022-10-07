@@ -6,6 +6,8 @@ import {ListFilterOption} from '../../../typings/filter.types';
 import get from 'lodash-es/get';
 import {LitElement, property} from 'lit-element';
 import {EtoolsDataTableRow} from '@unicef-polymer/etools-data-table/etools-data-table-row';
+import {get as getTranslation} from 'lit-translate';
+import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 
 function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ListsCommonClass extends baseClass {
@@ -44,6 +46,9 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     @property({type: Boolean})
     stampListData!: boolean;
+
+    @property({type: String})
+    currentLanguage!: string;
 
     connectedCallback() {
       super.connectedCallback();
@@ -253,6 +258,14 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     _convertToInt(data: []) {
       return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
+    }
+
+    translateFilters(filters: AnyObject[]) {
+      (filters || []).forEach(
+        (filter) =>
+          (filter.filterName = filter.filterNameKey ? getTranslation(filter.filterNameKey) : filter.filterName)
+      );
+      return filters;
     }
   }
   return ListsCommonClass;

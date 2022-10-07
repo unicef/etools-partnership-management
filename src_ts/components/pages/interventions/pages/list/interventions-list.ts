@@ -36,6 +36,7 @@ import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-inpu
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
+import pmpEdpoints from '../../../../endpoints/endpoints';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -115,7 +116,12 @@ export class InterventionsList extends connect(store)(
       </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.allFilters}" @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters
+          .filters="${this.allFilters}"
+          @filter-change="${this.filtersChange}"
+          .textFilters="${translate('GENERAL.FILTERS')}"
+          .textClearAll="${translate('GENERAL.CLEAR_ALL')}"
+        ></etools-filters>
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
@@ -349,8 +355,20 @@ export class InterventionsList extends connect(store)(
       this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
+        pmpEdpoints.interventions.bypassCache = true;
+        this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!
+          ._elementReady()
+          .finally(() => (pmpEdpoints.interventions.bypassCache = false));
         getStore().dispatch(setShouldReGetList(false));
       }
+    }
+
+    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+      if (this.currentLanguage) {
+        // language was already set, this is language change
+        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+      }
+      this.currentLanguage = state.activeLanguage!.activeLanguage;
     }
   }
 

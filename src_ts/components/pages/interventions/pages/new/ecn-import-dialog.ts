@@ -1,8 +1,9 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import {LitElement, html, customElement, property, query} from 'lit-element';
+import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
@@ -12,16 +13,17 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
-import {MinimalAgreement} from '@unicef-polymer/etools-types';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
+import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
+import CONSTANTS from '../../../../../config/app-constants';
+import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 
 /**
  * @polymer
  * @customElement
  */
 @customElement('ecn-import-dialog')
-export class EcnImportDialog extends LitElement {
+export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   render() {
     // language=HTML
     return html`
@@ -30,6 +32,9 @@ export class EcnImportDialog extends LitElement {
         #container {
           padding-top: 12px;
           padding-bottom: 12px;
+        }
+        etools-dropdown-multi {
+          --esmm-external-wrapper_-_max-width: initial;
         }
       </style>
       <etools-dialog
@@ -47,9 +52,8 @@ export class EcnImportDialog extends LitElement {
           <paper-input
             id="ecnNo"
             label="${translate('ECN_NUMBER')}"
-            .value="${this.ecnNumber}"
             @value-changed="${({detail}: CustomEvent) => {
-              this.ecnNumber = detail.value;
+              this.valueChanged(detail, 'number');
             }}"
             placeholder="&#8212;"
             autofocus
@@ -58,56 +62,101 @@ export class EcnImportDialog extends LitElement {
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
           ></paper-input>
           <etools-dropdown
-            id="agreement"
-            .options="${this.allAgreements}"
-            label="${translate('AGREEMENT')}"
+            id="partnerDropdw"
+            label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
+            placeholder="&#8212;"
+            .options="${this.allPartners}"
             option-value="id"
-            option-label="agreement_number"
+            option-label="name"
+            error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
             trigger-value-change-event
-            @etools-selected-item-changed="${(e: CustomEvent) => {
-              const id = e.detail.selectedItem?.id;
-              if (this.selectedAgreementId && this.selectedAgreementId == id) {
-                return;
-              }
-              this.selectedAgreementId = id;
-            }}"
+            @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
             required
             auto-validate
           >
           </etools-dropdown>
+          <etools-dropdown
+            id="agreement"
+            .options="${this.filteredAgreements}"
+            label="${translate('AGREEMENT')}"
+            option-value="id"
+            option-label="agreement_number"
+            trigger-value-change-event
+            @etools-selected-item-changed="${({detail}: CustomEvent) => this.selectedItemChanged(detail, 'agreement')}"
+            required
+            auto-validate
+          >
+          </etools-dropdown>
+          <etools-dropdown-multi
+            id="locationsDropdw"
+            label=${translate('LOCATIONS')}
+            placeholder="&#8212;"
+            .options="${this.allLocations}"
+            option-label="name"
+            option-value="id"
+            required
+            auto-validate
+            trigger-value-change-event
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.selectedItemsChanged(detail, 'locations')}"
+          >
+          </etools-dropdown-multi>
+          <etools-dropdown-multi
+            id="sectionsDropdw"
+            label=${translate('SECTIONS')}
+            placeholder="&#8212;"
+            .options="${this.allSections}"
+            option-label="name"
+            option-value="id"
+            required
+            auto-validate
+            trigger-value-change-event
+            @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'sections')}"
+          >
+          </etools-dropdown-multi>
+          <etools-dropdown-multi
+            id="officesDropdw"
+            label=${translate('OFFICES')}
+            placeholder="&#8212;"
+            .options="${this.allOffices}"
+            option-label="name"
+            option-value="id"
+            required
+            auto-validate
+            trigger-value-change-event
+            @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'offices')}"
+          >
+          </etools-dropdown-multi>
         </div>
       </etools-dialog>
     `;
   }
 
-  _ecnNumber!: string;
-
-  set ecnNumber(ecnNo: string) {
-    this._ecnNumber = ecnNo;
-    this.numberIsEmpty = !this.ecnNumber || !this.ecnNumber.trim();
-  }
-
-  @property({type: String})
-  get ecnNumber() {
-    return this._ecnNumber;
-  }
-
-  @property({type: Boolean})
-  numberIsEmpty = true;
-
   @property() loadingInProcess = false;
+
+  @property({type: Array})
+  allPartners: Partner[] = [];
 
   @property({type: Array})
   allAgreements!: MinimalAgreement[];
 
+  @property({type: Array})
+  filteredAgreements: MinimalAgreement[] = [];
+
+  @property({type: Array})
+  allLocations!: LocationObject[];
+
+  @property({type: Array})
+  allSections!: any[];
+
+  @property({type: Array})
+  allOffices!: any[];
+
   @property({type: String})
   selectedAgreementId!: string;
 
-  @query('#agreement')
-  agreementDropdown!: EtoolsDropdownEl;
-
-  @query('#ecnNo')
-  ecnNoEl!: PaperInputElement;
+  @property({type: Object})
+  data!: any;
 
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
@@ -115,12 +164,21 @@ export class EcnImportDialog extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.allPartners = [...csoPartnersSelector(store.getState())];
     this.allAgreements = (store.getState() as RootState).agreements!.list;
+    this.allLocations = (store.getState() as RootState).commonData!.locations;
+    this.allSections = (store.getState() as RootState).commonData!.sections;
+    this.allOffices = (store.getState() as RootState).commonData!.offices;
   }
 
   validate() {
-    let valid = this.ecnNoEl.validate();
-    valid = this.agreementDropdown.validate() && valid;
+    let valid = true;
+    const elements = this.shadowRoot?.querySelectorAll('[required]');
+    elements?.forEach((el: any) => {
+      if (!el.validate()) {
+        valid = false;
+      }
+    });
     return valid;
   }
 
@@ -132,18 +190,50 @@ export class EcnImportDialog extends LitElement {
     sendRequest({
       endpoint: pmpEdpoints.importECN,
       method: 'POST',
-      body: {number: this.ecnNumber.trim(), agreement: this.selectedAgreementId}
+      body: this.data
     })
-      .then((interventionId: number) => {
+      .then((intervention: any) => {
         this.loadingInProcess = false;
-        store.dispatch(setShouldReGetList(true));
         fireEvent(this, 'dialog-closed', {confirmed: true});
-        history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${interventionId}/metadata`);
+        history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
+        this.waitForRouteDetailsUpdate().then(() => store.dispatch(setShouldReGetList(true)));
       })
       .catch((err: any) => {
         this.loadingInProcess = false;
         parseRequestErrorsAndShowAsToastMsgs(err, this);
       });
+  }
+
+  // Avoid redirect to list
+  waitForRouteDetailsUpdate() {
+    return new Promise((resolve) => {
+      const interv = setInterval(() => {
+        if ((store.getState() as RootState).app?.routeDetails?.subRouteName === 'metadata') {
+          clearInterval(interv);
+          resolve(true);
+        }
+      }, 1000);
+    });
+  }
+
+  partnerChanged({detail}: CustomEvent): void {
+    this.selectedItemChanged(detail, 'partner');
+    this.filterAgreements(detail.selectedItem ? detail.selectedItem.id : null);
+  }
+
+  filterAgreements(partnerId: number | null): void {
+    if (!partnerId) {
+      this.filteredAgreements = [];
+      return;
+    }
+
+    this.filteredAgreements = this.allAgreements.filter((agreement: MinimalAgreement) => {
+      return (
+        agreement.partner === partnerId &&
+        ['suspended', 'terminated'].indexOf(agreement.status!) === -1 &&
+        agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU
+      );
+    });
   }
 }
