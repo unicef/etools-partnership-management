@@ -19,6 +19,7 @@ import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polyme
 import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
+import {EtoolsRouter} from '../../../../utils/routes';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -248,6 +249,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.selectedAgreement = null;
     this.selectedPartner = null;
     this.requestUpdate();
+    EtoolsRouter.updateAppLocation('interventions/list');
   }
 
   getDefaultNewIntervention() {
