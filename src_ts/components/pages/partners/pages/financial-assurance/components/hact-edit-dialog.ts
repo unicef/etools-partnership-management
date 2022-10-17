@@ -41,7 +41,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           padding-top: 10px;
           width: 100%;
           text-align: center;
-          white-space: nowrap;
+          flex: 1;
           color: var(--secondary-text-color);
           font-weight: 500;
         }
@@ -60,7 +60,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         }
 
         .avoid-scroll {
-          min-height: 120px;
+          overflow: hidden;
         }
 
         .space-around {
@@ -198,7 +198,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               </div>
             </div>
 
-            <div class="layout-veritcal col-4">
+            <div class="layout-vertical col-4">
               <div class="heading">${translate('REQUIRED_AUDITS')}</div>
               <etools-dropdown-multi
                 placeholder="&#8212;"
