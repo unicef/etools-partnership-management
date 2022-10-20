@@ -33,8 +33,10 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
           padding-top: 12px;
           padding-bottom: 12px;
         }
-        etools-dropdown-multi {
-          --esmm-external-wrapper_-_max-width: initial;
+        paper-input {
+          --paper-input-container: {
+            max-width: 650px;
+          }
         }
       </style>
       <etools-dialog
