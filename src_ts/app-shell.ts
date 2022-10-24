@@ -88,19 +88,21 @@ setPassiveTouchGestures(true);
 import {BASE_URL} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from './components/utils/fire-custom-event.js';
-import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
+import {isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use} from 'lit-translate';
+import {registerTranslateConfig, use, translate} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
-import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';
+import {installRouter} from 'pwa-helpers/router';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
+import { openDialog } from './components/utils/dialog';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -161,14 +163,6 @@ class AppShell extends connect(store)(
       <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
       <etools-toasts></etools-toasts>
-
-      <app-location
-        route="{{appLocRoute}}"
-        path="{{appLocPath}}"
-        query-params="{{appLocQueryParams}}"
-        url-space-regex="^[[rootPath]]"
-      >
-      </app-location>
 
       <app-route
         route="{{route}}"
@@ -281,8 +275,8 @@ class AppShell extends connect(store)(
   })
   module!: string;
 
-  @property({type: Object})
-  route!: GenericObject;
+  // @property({type: Object})
+  // route!: GenericObject;
 
   @property({type: Object})
   routeData!: {module: string};
@@ -313,20 +307,17 @@ class AppShell extends connect(store)(
   @property({type: String})
   _appModuleMainElUrlTmpl = './components/pages/##module##/##main-el-name##-module.js';
 
-  @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
-  appLocRoute!: {
-    path: string;
-    __queryParams: GenericObject;
-  };
+  // @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
+  // appLocRoute!: {
+  //   path: string;
+  //   __queryParams: GenericObject;
+  // };
 
   @property({type: Object})
   leavePageDialog!: EtoolsDialog;
 
-  @property({type: Object})
-  appLocQueryParams!: GenericObject;
-
-  @property({type: String})
-  appLocPath!: string;
+  // @property({type: String})
+  // appLocPath!: string;
 
   @property({type: String})
   selectedLanguage!: string;
@@ -335,7 +326,7 @@ class AppShell extends connect(store)(
   currentLanguageIsSet!: boolean;
 
   public static get observers() {
-    return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
+    return ['_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
@@ -361,8 +352,10 @@ class AppShell extends connect(store)(
   }
 
   public connectedCallback() {
-    this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
+    // this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
     super.connectedCallback();
+
+    installRouter((location) => store.dispatch(this.preliminaryReduxRouteDetailsUpdate(decodeURIComponent(location.pathname + location.search))));
 
     this.checkAppVersion();
     this.requestUserData();
@@ -387,13 +380,60 @@ class AppShell extends connect(store)(
       });
   }
 
-  updateReduxRouteDetails(appLocRoute: any) {
-    const routeDetails = EtoolsRouter.getRouteDetails(appLocRoute);
+  async preliminaryReduxRouteDetailsUpdate(pathAndQs: string) {
     // If the url is not complete(ex /pmp/interventions), redirect to /pmp/interventions/list
-    const redirectTo = getRedirectToListPath(appLocRoute.path);
+    const redirectTo = getRedirectToListPath(location.pathname);
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
+      return;
     }
+    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+      const confirmed = await this.openLeavePageDialog();
+      if (confirmed) {
+        store.dispatch({type: RESET_UNSAVED_UPLOADS});
+        store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
+      } else {
+        history.go(-1);
+        return;
+      }
+    }
+
+    const routeDetails = EtoolsRouter.getRouteDetails(pathAndQs);
+    const accessGranted = await this._canAccessPage(routeDetails?.routeName!);
+    if (accessGranted) {
+      await this.waitForTranslationsAndLanguageToLoad().then(() => {
+        if (!accessGranted) {
+          this._pageNotFound();
+        } else {
+          this.module = routeDetails?.routeName!;
+        }
+      });
+    }   
+
+    // Close a non-persistent drawer when the module & route are changed.
+    const appDrawer = this.$.drawer as AppDrawerElement;
+    if (!appDrawer.persistent) {
+      appDrawer.close();
+    }
+
+    this.actualReduxRouteDetailsUpdate(routeDetails!);
+  }
+
+ openLeavePageDialog() {
+   return openDialog({
+      dialog: 'are-you-sure',
+      dialogData: {
+        dialogData: {
+          content: translate('LEAVE_UPLOADS_UNSAVED'),
+          confirmBtnText: translate('LEAVE'),
+          cancelBtnText: translate('STAY')
+      }
+    }).then(({confirmed}) => {
+      return confirmed;
+    });
+  }
+
+  actualReduxRouteDetailsUpdate(routeDetails: RouteDetails) {    
     const currentRouteDetails = get(store.getState(), 'app.routeDetails');
     if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
       store.dispatch(resetCurrentItem());
@@ -461,44 +501,43 @@ class AppShell extends connect(store)(
    * When navigating using updateAppState the url is set first (appLocRouteChanged is triggered)
    * and then routeChanged
    */
-  public appLocRouteChanged(appLocRoute: any) {
-    this.updateReduxRouteDetails(appLocRoute);
-    if (this.route) {
-      if (appLocRoute.path === this.route.path) {
-        if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
-          return;
-        } else {
-          if (this.isInterventionReports(this.appLocRoute.path)) {
-            return;
-          }
-        }
-      }
-    }
+  // public appLocRouteChanged(appLocRoute: any) {
+  //   this.preliminaryReduxRouteDetailsUpdate(appLocRoute);
+  //   if (this.route) {
+  //     if (appLocRoute.path === this.route.path) {
+  //       if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+  //         return;
+  //       } else {
+  //         if (this.isInterventionReports(this.appLocRoute.path)) {
+  //           return;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
-      this._openLeavePageDialog();
-    } else {
-      this.route = JSON.parse(JSON.stringify(appLocRoute));
-    }
-  }
+  //   if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+  //     this._openLeavePageDialog();
+  //   } else {
+  //     this.route = JSON.parse(JSON.stringify(appLocRoute));
+  //   }
+  // }
 
-  public routeChanged() {
-    if (
-      this.appLocRoute.path === this.route.path &&
-      objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)
-    ) {
-      return;
-    }
+  // public routeChanged() {
+  //   if (
+  //     this.appLocRoute.path === this.route.path &&
+  //     objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)
+  //   ) {
+  //     return;
+  //   }
 
-    /* Setting this.appLocRoute = JSON.parse(JSON.stringify(this.route)),
-     * makes appLocRouteChanged be triggered twice,
-     * first with changes to the path , without the changes to the query string, which ruins everything
-     */
-    this.setProperties({
-      appLocQueryParams: this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
-      appLocPath: this.route.path
-    });
-  }
+  //   /* Setting this.appLocRoute = JSON.parse(JSON.stringify(this.route)),
+  //    * makes appLocRouteChanged be triggered twice,
+  //    * first with changes to the path , without the changes to the query string, which ruins everything
+  //    */
+  //   this.setProperties({
+  //     appLocPath: this.route.path
+  //   });
+  // }
 
   public isInterventionReports(path: string) {
     const pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
@@ -508,7 +547,6 @@ class AppShell extends connect(store)(
   private _initListeners() {
     this._pageNotFound = this._pageNotFound.bind(this);
     this._updateMainPath = this._updateMainPath.bind(this);
-    this._updateQueryParams = this._updateQueryParams.bind(this);
     this._onForbidden = this._onForbidden.bind(this);
     this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
     this._drawerChanged = this._drawerChanged.bind(this);
@@ -523,7 +561,6 @@ class AppShell extends connect(store)(
   private _removeListeners() {
     this.removeEventListener('404', this._pageNotFound);
     this.removeEventListener('update-main-path', this._updateMainPath as any);
-    this.removeEventListener('update-route-query-params', this._updateQueryParams as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
     this.removeEventListener('app-drawer-transitioned', this._drawerChanged);
@@ -579,22 +616,19 @@ class AppShell extends connect(store)(
   }
 
   private _updateMainPath(e: CustomEvent) {
-    if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
+    //if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
       // set route.path only if received path is different
       this._updatePath(e.detail.path);
-    }
+   // }
     e.stopImmediatePropagation();
   }
 
-  private _updateQueryParams(e: CustomEvent) {
-    this.set('appLocQueryParams', e.detail);
-  }
-
   private _updatePath(path: string) {
-    this.setProperties({
-      appLocQueryParams: {},
-      appLocPath: this.rootPath + path
-    });
+    history.pushState(window.history.state, '', `${this.rootPath}${path}`);
+    window.dispatchEvent(new CustomEvent('popstate'));
+    // this.setProperties({
+    //   appLocPath: this.rootPath + path
+    // });
   }
 
   private _pageNotFound() {
@@ -641,30 +675,30 @@ class AppShell extends connect(store)(
    * @param routePage
    */
   // @ts-ignore
-  private _routePageChanged(routePage: string) {
-    // If no routePage was found in the route data, routePage will be an empty string.
-    // Default to 'partners/list' in that case.
-    if (!routePage) {
-      this._updatePath('partners/list');
-      return;
-    }
+  // private _routePageChanged(routePage: string) {
+  //   // If no routePage was found in the route data, routePage will be an empty string.
+  //   // Default to 'partners/list' in that case.
+  //   if (!routePage) {
+  //     this._updatePath('partners/list');
+  //     return;
+  //   }
 
-    this._canAccessPage(routePage).then((accessGranted: boolean) => {
-      this.waitForTranslationsAndLanguageToLoad().then(() => {
-        if (!accessGranted) {
-          this._pageNotFound();
-        } else {
-          this.set('module', routePage);
-        }
-      });
-    });
+  //   this._canAccessPage(routePage).then((accessGranted: boolean) => {
+  //     this.waitForTranslationsAndLanguageToLoad().then(() => {
+  //       if (!accessGranted) {
+  //         this._pageNotFound();
+  //       } else {
+  //         this.set('module', routePage);
+  //       }
+  //     });
+  //   });
 
-    // Close a non-persistent drawer when the module & route are changed.
-    const appDrawer = this.$.drawer as AppDrawerElement;
-    if (!appDrawer.persistent) {
-      appDrawer.close();
-    }
-  }
+  //   // Close a non-persistent drawer when the module & route are changed.
+  //   const appDrawer = this.$.drawer as AppDrawerElement;
+  //   if (!appDrawer.persistent) {
+  //     appDrawer.close();
+  //   }
+  // }
 
   private _moduleChanged(module: any, _oldModule: any) {
     // Load module import on demand. Show 404 page if fails
@@ -708,7 +742,7 @@ class AppShell extends connect(store)(
       // moduleMainEl is null => make the import
       import(pageUrl)
         .then(() => {
-          this._successfulImportCallback(appModuleMainElId);
+         // this._successfulImportCallback(appModuleMainElId);
         })
         .catch((err: any) => {
           logError('Error importing component.', 'app-shell', err);
@@ -734,9 +768,9 @@ class AppShell extends connect(store)(
   private _successfulImportCallback(moduleId: string) {
     // moduleMainEl will be available only after import successfully completes
     // @ts-ignore
-    const moduleMainEl = this._getModuleMainElement(moduleId);
+    //const moduleMainEl = this._getModuleMainElement(moduleId);
     // make sure to redirect to list page if necessary
-    afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
+    // afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
   }
 
   // @ts-ignore
@@ -794,31 +828,31 @@ class AppShell extends connect(store)(
     this.leavePageDialog = createDynamicDialog(conf);
   }
 
-  private _openLeavePageDialog() {
-    this.leavePageDialog.opened = true;
-  }
+  // private _openLeavePageDialog() {
+  //   this.leavePageDialog.opened = true;
+  // }
 
-  // @ts-ignore
-  private _onLeavePageConfirmation(e: CustomEvent) {
-    if (e.detail.confirmed) {
-      // leave
-      store.dispatch({type: RESET_UNSAVED_UPLOADS});
-      store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
-      this.route = JSON.parse(JSON.stringify(this.appLocRoute));
-    } else {
-      // stay
-      // revert url
-      this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+  // // @ts-ignore
+  // private _onLeavePageConfirmation(e: CustomEvent) {
+  //   if (e.detail.confirmed) {
+  //     // leave
+  //     store.dispatch({type: RESET_UNSAVED_UPLOADS});
+  //     store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
+  //     this.route = JSON.parse(JSON.stringify(this.appLocRoute));
+  //   } else {
+  //     // stay
+  //     // revert url
+  //     this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
-      fireEvent(this, 'clear-loading-messages', {
-        bubbles: true,
-        composed: true
-      });
-      this.shadowRoot!.querySelector('app-menu')!
-        .shadowRoot!.querySelector('iron-selector')!
-        .select(this.routeData.module);
-    }
-  }
+  //     fireEvent(this, 'clear-loading-messages', {
+  //       bubbles: true,
+  //       composed: true
+  //     });
+  //     this.shadowRoot!.querySelector('app-menu')!
+  //       .shadowRoot!.querySelector('iron-selector')!
+  //       .select(this.routeData.module);
+  //   }
+  // }
 }
 
 window.customElements.define('app-shell', AppShell);
