@@ -201,39 +201,49 @@ class AppShell extends connect(store)(
 
           <!-- Main content -->
           <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
-            <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
-              <partners-module
-                id="partners"
-                class="main-page"
-                show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-                current-module="[[_lastActivePartnersModule]]"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
-              </partners-module>
-            </template>
+            <partners-module
+              id="partners"
+              class="main-page"
+              show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+              current-module="[[_lastActivePartnersModule]]"
+              route="{{subroute}}"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'partners|government-partners')]]"
+            >
+            </partners-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
-              <agreements-module id="agreements" class="main-page" permissions="[[permissions]]"> </agreements-module>
-            </template>
+            <agreements-module
+              id="agreements"
+              class="main-page"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'agreements')]]"
+            >
+            </agreements-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
-              <interventions-module id="interventions" class="main-page" user-permissions="[[permissions]]">
-              </interventions-module>
-            </template>
+            <interventions-module
+              id="interventions"
+              class="main-page"
+              user-permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'interventions')]]"
+            >
+            </interventions-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
-              <reports-module id="reports" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
-              </reports-module>
-            </template>
+            <reports-module
+              id="reports"
+              class="main-page"
+              route="{{subroute}}"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'reports')]]"
+            >
+            </reports-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
-              <not-found class="main-page"></not-found>
-            </template>
+            <not-found class="main-page" hidden$="[[_activeModuleIs(module, 'not-found')]]"></not-found>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
-              <settings-module id="settings" class="main-page"></settings-module>
-            </template>
+            <settings-module
+              id="settings"
+              class="main-page"
+              hidden$="[[!_activeModuleIs(module, 'settings')]]"
+            ></settings-module>
           </main>
 
           <page-footer></page-footer>
