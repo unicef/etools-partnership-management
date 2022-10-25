@@ -99,7 +99,6 @@ import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
-import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;

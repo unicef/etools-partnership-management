@@ -40,7 +40,6 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
-import set from 'lodash-es/set';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 
 /**
@@ -516,14 +515,14 @@ export class PartnersModule extends connect(store)(
     });
   }
 
-  govListActive(listActive: boolean, route: RouteDetails) {
+  govListActive(listActive: boolean, route?: RouteDetails) {
     if (!route) {
       return false;
     }
     return listActive && route.routeName === 'government-partners';
   }
 
-  partnersListActive(listActive: boolean, route: RouteDetails) {
+  partnersListActive(listActive: boolean, route?: RouteDetails) {
     if (!route) {
       return false;
     }
