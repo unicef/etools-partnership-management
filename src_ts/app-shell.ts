@@ -361,7 +361,7 @@ class AppShell extends connect(store)(
   }
 
   public connectedCallback() {
-    this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
+    // this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
     super.connectedCallback();
 
     this.checkAppVersion();

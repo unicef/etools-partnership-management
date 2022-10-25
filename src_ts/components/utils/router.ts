@@ -89,7 +89,7 @@ export class Router {
     let routeDetails: RouteDetails | null = null;
     const locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
 
-    const qs = appLocRoute.__queryParams;
+    const qs = location.search ? appLocRoute.__queryParams : '';
 
     for (let i = 0; i < this.routes.length; i++) {
       const match = locationPath.match(this.routes[i].regex);
