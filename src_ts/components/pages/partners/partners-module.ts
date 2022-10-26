@@ -274,8 +274,8 @@ export class PartnersModule extends connect(store)(
     if (!state.app?.routeDetails?.routeName) {
       return;
     }
-    this.reduxRouteDetails = state.app.routeDetails!;
-    if (['partners', 'government-partners'].includes(this.reduxRouteDetails?.routeName!)) {
+    if (['partners', 'government-partners'].includes(state.app?.routeDetails?.routeName!)) {
+      this.reduxRouteDetails = state.app.routeDetails!;
       this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
       this.tabsActive = !this.listActive;
