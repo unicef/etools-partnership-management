@@ -91,7 +91,7 @@ import {fireEvent} from './components/utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -100,6 +100,7 @@ import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import {LitElement} from 'lit-element';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -157,7 +158,7 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
+      <etools-piwik-analytics page="[[_getRootPathAndModule(module)]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
       <etools-toasts></etools-toasts>
 
@@ -264,7 +265,7 @@ class AppShell extends connect(store)(
   _drawerOpened = false;
 
   @property({type: String})
-  _page = '';
+  _page?: string | null;
 
   /**
    * `module` property represents the current displayed module of the PMP app.
@@ -331,6 +332,9 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   currentLanguageIsSet!: boolean;
 
+  @property({type: Object})
+  reduxRouteDetails?: RouteDetails;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
@@ -340,8 +344,10 @@ class AppShell extends connect(store)(
 
     this._initListeners();
     this._createLeavePageDialog();
-    if (this.$.appHeadLayout) {
-      window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+    if (this.shadowRoot?.querySelector('#appHeadLayout')) {
+      window.EtoolsEsmmFitIntoEl = this.shadowRoot
+        ?.querySelector('#appHeadLayout')!
+        .shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
     if (this.module !== 'not-found') {
@@ -372,6 +378,10 @@ class AppShell extends connect(store)(
     this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
   }
 
+  _getRootPathAndModule(module: string) {
+    return `${ROOT_PATH}${module}`;
+  }
+
   checkAppVersion() {
     fetch('version.json')
       .then((res) => res.json())
@@ -384,10 +394,11 @@ class AppShell extends connect(store)(
       });
   }
 
-  updateReduxRouteDetails(appLocRoute: any) {
-    const routeDetails = EtoolsRouter.getRouteDetails(appLocRoute);
+  updateReduxRouteDetails() {
+    const routeDetails = EtoolsRouter.getRouteDetails(location.pathname + location.search);
+    this.reduxRouteDetails = routeDetails!;
     // If the url is not complete(ex /pmp/interventions), redirect to /pmp/interventions/list
-    const redirectTo = getRedirectToListPath(appLocRoute.path);
+    const redirectTo = getRedirectToListPath(location.pathname);
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
     }
@@ -401,8 +412,6 @@ class AppShell extends connect(store)(
   }
 
   public stateChanged(state: RootState) {
-    // TODO: _page is gonna be user with pwa router, not used right now (future improvement)
-    // this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
     this.smallMenu = state.app!.smallMenu;
     this.uploadsStateChanged(state);
@@ -459,7 +468,7 @@ class AppShell extends connect(store)(
    * and then routeChanged
    */
   public appLocRouteChanged(appLocRoute: any) {
-    this.updateReduxRouteDetails(appLocRoute);
+    this.updateReduxRouteDetails();
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
         if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
@@ -533,7 +542,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
+    store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
   }
 
   private _showConfirmNewVersionDialog() {
@@ -588,10 +597,8 @@ class AppShell extends connect(store)(
   }
 
   private _updatePath(path: string) {
-    this.setProperties({
-      appLocQueryParams: {},
-      appLocPath: this.rootPath + path
-    });
+    history.pushState(window.history.state, '', `${ROOT_PATH}${path}`);
+    window.dispatchEvent(new CustomEvent('popstate'));
   }
 
   private _pageNotFound() {
@@ -604,7 +611,7 @@ class AppShell extends connect(store)(
   }
 
   private _openDataRefreshDialog() {
-    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
+    (this.shadowRoot?.querySelector('#dataRefreshDialog')! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {
@@ -657,7 +664,7 @@ class AppShell extends connect(store)(
     });
 
     // Close a non-persistent drawer when the module & route are changed.
-    const appDrawer = this.$.drawer as AppDrawerElement;
+    const appDrawer = this.shadowRoot?.querySelector('#drawer') as AppDrawerElement;
     if (!appDrawer.persistent) {
       appDrawer.close();
     }

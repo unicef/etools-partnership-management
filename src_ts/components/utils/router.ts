@@ -84,25 +84,42 @@ export class Router {
    * details about this route: name, sub-route name (if any), route params, query params, route path.
    * @param path
    */
-  getRouteDetails(appLocRoute?: any): RouteDetails | null {
-    const path = appLocRoute.path;
+  getRouteDetails(path?: any): RouteDetails | null {
     let routeDetails: RouteDetails | null = null;
-    const locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
+    let locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
 
-    const qs = location.search ? appLocRoute.__queryParams : '';
+    const qsStartIndex: number = locationPath.indexOf('?');
+    let qs = '';
+    if (qsStartIndex > -1) {
+      const loc = locationPath.split('?');
+      locationPath = loc[0];
+      qs = loc[1];
+    }
 
     for (let i = 0; i < this.routes.length; i++) {
       const match = locationPath.match(this.routes[i].regex);
       if (match) {
         const routeParams: RouteCallbackParams = {
           matchDetails: match.slice(0).map((matchVal: string) => decodeURIComponent(matchVal)),
-          queryParams: qs
+          queryParams: this.decodeQueryStrToObj(qs)
         };
         routeDetails = this.routes[i].handler.bind({}, routeParams)();
         break;
       }
     }
     return routeDetails;
+  }
+
+  decodeQueryStrToObj(paramsStr: string): RouteQueryParams {
+    const qsObj: RouteQueryParams = {} as RouteQueryParams;
+    if (paramsStr) {
+      const qs: string[] = paramsStr.split('&');
+      qs.forEach((qp: string) => {
+        const qParam = qp.split('=');
+        qsObj[qParam[0] as string] = qParam[1];
+      });
+    }
+    return qsObj;
   }
 
   prepareLocationPath(path: string): string {

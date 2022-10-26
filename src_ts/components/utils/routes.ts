@@ -22,10 +22,10 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^interventions/list$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^settings$'), (params: RouteCallbackParams): RouteDetails => {
     return {
-      routeName: 'interventions',
-      subRouteName: 'list',
+      routeName: 'settings',
+      subRouteName: '',
       path: params.matchDetails[0],
       queryParams: params.queryParams,
       params: null
