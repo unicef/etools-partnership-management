@@ -1,4 +1,4 @@
-﻿{
+{
   "GENERAL": {
     "ADD": "Ajouter",
     "ADD_UPDATE": "Ajouter/Mettre à jour",
@@ -56,17 +56,16 @@
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Ajouter un document de programme",
+    "PD_LIST": "PDs/SPDs قائمة",
+    "TABLE_TITLE": "PDs/SPDs",
     "SEARCH": "Chercher",
     "ADD_NEW_PD": "Ajouter un nouveau DP/DPS",
     "PD_BUDGET_EXPORT": "Exportation du budget du DP",
     "PD_RESULT_EXPORT": "Exportation du résultat du DP",
     "PD_LOCATIONS_EXPORT": "Exportation des localisations du DP",
-    "PD_LIST": "PDs/SPDs قائمة",
-    "TABLE_TITLE": "PDs/SPDs",
     "REFERENCE_NO": "N° de référence",
     "PARTNER_ORG_NAME": "Nom de l'organisation partenaire",
     "DOC_TYPE": "Type de document",
-    "STATUS": "الحالة",
     "TITLE": "Titre",
     "START_DATE": "Date de début",
     "END_DATE": "Date de fin",
@@ -84,7 +83,8 @@
     "OFFICES": "Bureaux",
     "SECTIONS": "Sections",
     "UNICEF_FOCAL_POINT": "Point focal UNICEF",
-    "BUDGET_OWNER": "Gestionnaire du budget UNICEF "
+    "BUDGET_OWNER": "Gestionnaire du budget UNICEF ",
+    "STATUS": "الحالة"
   },
   "VENDOR_NO": "N° de fournisseur.",
   "NAME_SHORT_FULL": "Nom (court/complet)",
@@ -180,6 +180,9 @@
   "ADD_OTHER_ASSESSMENT": "Ajouter une autre évaluation",
   "THERE_ARE_NO_ASSESSMENTS_ADDED": "Aucune évaluation n'a été ajoutée",
   "AGREEMENTS": "Accords",
+  "GOVERNMENT": "Gouvernement",
+  "REPORTS": "Rapports",
+  "PARTNERS": "Les partenaires",
   "ADD_NEW_AGREEMENT": "أAjouter un nouvel accord",
   "AGREEMENT_DETAILS": "Détails de l'accord",
   "PLEASE_FILL_IN_REQUIRED_DATA": "Veuillez remplir les données requises",
@@ -237,7 +240,7 @@
   "PLS_ENTER_PARTNER_AUTH_OFFICERS": "Veuillez saisir le(s) personne(s) autorisée(s) du partenaire",
   "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT": "Êtes-vous sûr de vouloir supprimer cet accord ؟",
   "HAS_AN_OLD_EXPIRED_CP_STRUCTURE": "a une structure PP ancienne/expirée !",
-  "AMENDMENTS": "اAmendements",
+  "AMENDMENTS": "Amendements",
   "USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING": "Utilisez le modèle d'amendement pour documenter les modifications et signer.",
   "DOWNLOAD_TEMPLATE": "Télécharger le modèle",
   "THERE_ARE_NO_AMENDMENTS_ADDED": "Aucun amendement n'a été ajouté",
@@ -268,5 +271,6 @@
   "IMPORT": "Import",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Accord",
-  "CP_OUTPUT": "Sortie CP"
+  "CP_OUTPUT": "Sortie CP",
+  "GOVERNMENT_PARTNERS": "Partenaires gouvernementaux"
 }

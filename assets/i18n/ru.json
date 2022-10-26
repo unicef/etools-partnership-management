@@ -270,5 +270,6 @@
   "IMPORT": "импорт",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Договор",
-  "CP_OUTPUT": "Промежуточный результат СП"
+  "CP_OUTPUT": "Промежуточный результат СП",
+  "GOVERNMENT_PARTNERS": "Правительственные партнеры"
 }

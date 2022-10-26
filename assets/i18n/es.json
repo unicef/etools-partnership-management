@@ -1,4 +1,4 @@
-﻿{
+{
   "GENERAL": {
     "ADD": "Añadir",
     "ADD_UPDATE": "Añadir/ Actualizar",
@@ -29,7 +29,6 @@
     "INITIAL_DETAILS": "Detalles Iniciales",
     "PARTNER_ORGANIZATION": "Organización Asociada",
     "PARTNER_REQUIRED": "Se requiere socio",
-    "AGREEMENT": "Acuerdo",
     "AGREEMENT_REQUIRED": "Acueardo obligatorio",
     "PARTNER_VENDOR_NUMBER": "Número Proveedor Socio",
     "AGREEMENT_AUTH_OFFICERS": "Functionarios Aut Acuerdo",
@@ -53,21 +52,21 @@
     "ON_SAVE_VALIDATION": "Por favor, rellene todos los campos obligatorios y corrija los errores de formato de los datos.",
     "START_DATE_ESTIMATED": "Fecha de inicio (estimada)",
     "END_DATE_ESTIMATED": "Fecha de finalización (estimada)",
-    "ACTIVATION_PROTOCOL": "Protocolo Activación"
+    "ACTIVATION_PROTOCOL": "Protocolo Activación",
+    "AGREEMENT": "Acuerdo"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Añadir Documento Programa",
+    "PD_LIST": "Lista de PD/SPD",
+    "TABLE_TITLE": "PDs/SPDs",
     "SEARCH": "Buscar",
     "ADD_NEW_PD": "Añadir Nuevo PD",
     "PD_BUDGET_EXPORT": "Exportación del presupuesto del PD",
     "PD_RESULT_EXPORT": "Exportación de resultados del PD",
     "PD_LOCATIONS_EXPORT": "Exportación de ubicaciones del PD",
-    "PD_LIST": "Lista de PD/SPD",
-    "TABLE_TITLE": "PDs/SPDs",
     "REFERENCE_NO": "Número de referencia",
     "PARTNER_ORG_NAME": "Nombre de la organización socia",
     "DOC_TYPE": "Tipo de documento",
-    "STATUS": "Estado",
     "TITLE": "Título",
     "START_DATE": "Fecha de inicio",
     "END_DATE": "Fecha de finalización",
@@ -85,7 +84,8 @@
     "OFFICES": "Oficinas",
     "SECTIONS": "Secciones",
     "UNICEF_FOCAL_POINT": "Punto focal de UNICEF",
-    "BUDGET_OWNER": "Propietario del presupuesto de UNICEF "
+    "BUDGET_OWNER": "Propietario del presupuesto de UNICEF ",
+    "STATUS": "Estado"
   },
   "VENDOR_NO": "Número de proveedor",
   "NAME_SHORT_FULL": "Nombre (corto/completo)",
@@ -166,6 +166,8 @@
   "AMOUNT_TESTED": "Monto Probado",
   "OUTSTANDING_FINDINGS": "Hallazgos Destacados",
   "REPORT": "Informe",
+  "REPORT_TYPE": "Tipo de informe",
+  "REPORT_STATUS": "Estado del informe",
   "VIEW_REPORT": "Ver Informe",
   "PROGRAMMATIC_VISITS_S_CASE": "Visitas programáticas",
   "EDIT_HACT_ASSURANCE_PLAN": "Editar plan de garantía del HACT",
@@ -179,6 +181,9 @@
   "ADD_OTHER_ASSESSMENT": "Añadir Otra Evaluación",
   "THERE_ARE_NO_ASSESSMENTS_ADDED": "No hay valoraciones añadidas.",
   "AGREEMENTS": "Acuerdos",
+  "GOVERNMENT": "Gobierno",
+  "REPORTS": "Informes",
+  "PARTNERS": "Socios",
   "ADD_NEW_AGREEMENT": "Añadir nuevo acuerdo",
   "AGREEMENT_DETAILS": "Detalles del acuerdo",
   "PLEASE_FILL_IN_REQUIRED_DATA": "Por favor, rellene los datos requeridos",
@@ -266,5 +271,7 @@
   "IMPORT_ECN": "Importar eCN",
   "IMPORT": "Importar",
   "ECN_NUMBER": "Número eCN",
-  "AGREEMENT": "Convenio"
+  "AGREEMENT": "Convenio",
+  "CP_OUTPUT": "Salida PC",
+  "GOVERNMENT_PARTNERS": "Socios gubernamentales"
 }

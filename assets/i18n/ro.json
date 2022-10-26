@@ -66,7 +66,6 @@
     "REFERENCE_NO": "Num. Referinta",
     "PARTNER_ORG_NAME": "Nume Org Partener",
     "DOC_TYPE": "Tip Doc",
-    "STATUS": "Status",
     "TITLE": "Titlu",
     "START_DATE": "Data Start",
     "END_DATE": "Data Finalizat",
@@ -84,7 +83,8 @@
     "OFFICES": "Birouri",
     "SECTIONS": "Sectiuni",
     "UNICEF_FOCAL_POINT": "Persoane de interes ale UNICEF",
-    "BUDGET_OWNER": "Responsabil UNICEF al Bugetului"
+    "BUDGET_OWNER": "Responsabil UNICEF al Bugetului",
+    "STATUS": "Status"
   },
   "VENDOR_NO": "Vendor No.",
   "NAME_SHORT_FULL": "Name (Short/Full)",
@@ -166,6 +166,7 @@
   "OUTSTANDING_FINDINGS": "Outstanding Findings",
   "REPORT": "Report",
   "REPORT_TYPE": "Tipul Raportului",
+  "REPORT_STATUS": "Starea raportului",
   "VIEW_REPORT": "View Report",
   "PROGRAMMATIC_VISITS_S_CASE": "Programmatic Visits",
   "EDIT_HACT_ASSURANCE_PLAN": "Edit HACT Assurance Plan",
@@ -270,5 +271,6 @@
   "IMPORT": "Importă",
   "ECN_NUMBER": "Număr eCN",
   "AGREEMENT": "Acord",
-  "CP_OUTPUT": "Realizari CP"
+  "CP_OUTPUT": "Realizari CP",
+  "GOVERNMENT_PARTNERS": "Parteneri guvernamentali"
 }

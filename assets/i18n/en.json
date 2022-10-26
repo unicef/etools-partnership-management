@@ -270,5 +270,6 @@
   "IMPORT": "Import",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Agreement",
-  "CP_OUTPUT": "CP Output"
+  "CP_OUTPUT": "CP Output",
+  "GOVERNMENT_PARTNERS":"Government Partners"
 }

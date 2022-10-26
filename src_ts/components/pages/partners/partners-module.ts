@@ -134,8 +134,8 @@ export class PartnersModule extends connect(store)(
       <page-content-header .withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
           ${this.listActive
-            ? html` <span ?hidden="${this.showOnlyGovernmentType}">Partners</span>
-                <span ?hidden="${!this.showOnlyGovernmentType}">Government Partners</span>`
+            ? html` <span ?hidden="${this.showOnlyGovernmentType}">${translate('PARTNERS')}</span>
+                <span ?hidden="${!this.showOnlyGovernmentType}">${translate('GOVERNMENT_PARTNERS')}</span>`
             : ''}
           ${this.tabsActive ? html`<span>${(this.partner || {}).name}</span>` : ''}
         </div>
