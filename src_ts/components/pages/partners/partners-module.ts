@@ -271,7 +271,7 @@ export class PartnersModule extends connect(store)(
   }
 
   stateChanged(state: RootState) {
-    if (!state.app?.routeDetails.routeName) {
+    if (!state.app?.routeDetails?.routeName) {
       return;
     }
     this.reduxRouteDetails = state.app.routeDetails!;
