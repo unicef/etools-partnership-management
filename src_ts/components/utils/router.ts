@@ -116,7 +116,7 @@ export class Router {
       const qs: string[] = paramsStr.split('&');
       qs.forEach((qp: string) => {
         const qParam = qp.split('=');
-        qsObj[qParam[0] as string] = qParam[1];
+        qsObj[qParam[0] as string] = decodeURIComponent(qParam[1]);
       });
     }
     return qsObj;
