@@ -22,6 +22,7 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {formatDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -50,8 +51,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         keep-dialog-open
         id="assessmentDialog"
         size="md"
-        ok-btn-text="Save"
-        dialog-title="Assessment"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
+        dialog-title="${translate('ASSESSMENT')}"
         opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._validateAndSaveAssessment}"
@@ -62,7 +63,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           <div class="col col-4">
             <etools-dropdown
               id="assessmentType"
-              label="Assessment Type"
+              label="${translate('ASSESSMENT_TYPE')}"
               placeholder="&#8212;"
               .options="${this.assessmentTypes}"
               .selected="${this.assessment.type}"
@@ -73,7 +74,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
                 this.assessment.type = detail.selectedItem ? detail.selectedItem.value : '';
               }}"
               trigger-value-change-event
-              error-message="Please select Assessment Type"
+              error-message="${translate('PLEASE_SELECT_ASSESSMENT_TYPE')}"
               hide-search
               required
               auto-validate
@@ -82,13 +83,13 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           <div class="col col-5 padd-left">
             <datepicker-lite
               id="dateSubmitted"
-              label="Date of Assessment"
+              label="${translate('DATE_OF_ASSESSMENT')}"
               .value="${this.assessment.completed_date}"
               @date-has-changed="${(e: CustomEvent) => {
                 this.assessment.completed_date = e.detail.date ? formatDate(e.detail.date, 'YYYY-MM-DD') : null;
               }}"
               auto-validate
-              max-date-error-msg="Date can not be in the future"
+              max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
               .maxDate="${this.getCurrentDate()}"
               required
               selected-date-display-format="D MMM YYYY"
@@ -101,7 +102,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         <div class="row-h">
           <etools-upload
             id="report"
-            label="Report"
+            label="${translate('REPORT')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
             .fileUrl="${this.assessment.report_attachment}"
             .uploadEndpoint="${this.uploadEndpoint}"
@@ -109,13 +110,13 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
             required
             ?readonly="${this._hasId(this.assessment.id)}"
             .showChange="${!this._hasId(this.assessment.id)}"
-            error-message="Please select the report file"
+            error-message="${translate('PLEASE_SELECT_THE_REPORT_FILE')}"
           >
           </etools-upload>
         </div>
         <div class="row-h">
           <paper-checkbox ?checked="${!this.assessment.active}" @checked-changed="${this._archivedChanged}"
-            >Archived</paper-checkbox
+            >${translate('ARCHIVED')}</paper-checkbox
           >
         </div>
       </etools-dialog>

@@ -23,6 +23,7 @@
     "CREATE": "خلق",
     "SEARCH": "يبحث",
     "SEARCH_RECORDS": "البحث عن السجلات",
+    "DELETE_CONFIRMATION": "تأكيد الحذف",
     "STATUS": "حالة"
   },
   "NEW_INTERVENTION": {
@@ -271,5 +272,64 @@
   "ECN_NUMBER": "رقم eCN",
   "AGREEMENT": "اتفاق",
   "CP_OUTPUT": "خرج CP",
-  "GOVERNMENT_PARTNERS": "شركاء الحكومة"
+  "GOVERNMENT_PARTNERS": "شركاء الحكومة",
+  "RESULTS_TO_SHOW": "{{from}} - {{to}} من {{count}} من النتائج المراد عرضها",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "نتيجة PD",
+    "PDBUDGET": "ميزانية PD",
+    "PDLOCATIONS": "مواقع PD"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "PD",
+    "SSFA": "SSFA",
+    "SHPD": "SHPD",
+    "SPD": "SPD",
+    "PROGRAMMEDOCUMENT": "وثيقة البرنامج",
+    "SMALLSCALEFUNDINGAGREEMENT": "اتفاقية التمويل الصغير الحجم",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "وثيقة البرنامج الإنساني المبسط"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "PCA",
+    "SSFA": "SSFA",
+    "MOU": "مذكرة تفاهم"
+  },
+  "STATUSES": {
+    "DRAFT": "مسودة",
+    "SIGNED": "وقعت",
+    "ACTIVE": "نشيط",
+    "SUSPENDED": "موقوف عن العمل",
+    "TERMINATED": "تم إنهاؤه",
+    "ENDED": "انتهى",
+    "CLOSED": "مغلق"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "غير متزامن",
+    "SYNCEDFROMVISION": "متزامن من VISION",
+    "BLOCKEDINVISION": "محظور في VISION",
+    "MARKEDFORDELETIONINVISION": "تم وضع علامة للحذف في VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "QPR",
+    "HR": "الموارد البشرية",
+    "SPECIAL": "خاص",
+    "SR": "ريال سعودى"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "هل أنت متأكد أنك تريد حذف الشريك {{partner}}؟",
+  "PARTNER_OVERVIEW": "نظرة عامة على الشريك",
+  "ASSURANCE_ACTIVITIES": "أنشطة الضمان",
+  "ASSESSMENTS_AND_ASSURANCE": "التقييمات والتأكيد",
+  "NO_ACTIVITIES": "لا توجد أنشطة.",
+  "NO_PROGRAMATIC_VISITS": "لا توجد زيارات برنامجية.",
+  "COUNT_AS_ONE": "عد كواحد",
+  "REMOVE_FROM_GROUP": "إزالة من المجموعة",
+  "REFERENCE": "المرجعي #",
+  "TRAVELER": "المسافر",
+  "TRAVEL_TYPE": "نوع السفر",
+  "LOCATIONS": "المواقع",
+  "MONITORING_ACTIVITIES": "أنشطة المراقبة",
+  "LOCATION_SITE": "الموقع (الموقع)",
+  "ASSESSMENT": "تقييم",
+  "PLEASE_SELECT_ASSESSMENT_TYPE": "الرجاء تحديد نوع التقييم",
+  "PLEASE_SELECT_THE_REPORT_FILE": "الرجاء تحديد ملف التقرير"
 }

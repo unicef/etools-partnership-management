@@ -17,6 +17,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -126,7 +127,7 @@ export class PartnerOverview extends PaginationMixin(
         }
       </style>
 
-      <etools-content-panel class="content-section" panel-title="Partner Overview">
+      <etools-content-panel class="content-section" panel-title="${translate('PARTNER_OVERVIEW')}">
         <div class="hact-heading">
           <div class="row-h">
             <div class="col col-5"><strong> ${translate('TOTAL_CASH_TRANSFERS')} </strong></div>
@@ -298,7 +299,7 @@ export class PartnerOverview extends PaginationMixin(
                         </etools-info-tooltip>
                       </div>
                       <div class="col center-align overflow-hidden">
-                        <span class="partnership-status">${partnership.status}</span>
+                        <span class="partnership-status">${translateValue(partnership.status, 'STATUSES')}</span>
                       </div>
                     </div>
                   `

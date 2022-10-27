@@ -23,6 +23,7 @@
     "CREATE": "Crear",
     "SEARCH": "Buscar",
     "SEARCH_RECORDS": "Buscar registros",
+    "DELETE_CONFIRMATION": "Borrar confirmación",
     "STATUS": "Estado"
   },
   "NEW_INTERVENTION": {
@@ -239,7 +240,7 @@
   "PLEASE_SELECT_AMENDMENT_TYPE": "Por favor, seleccione el tipo de enmienda",
   "AUTHORIZED_OFFICERS": "Funcionarios autorizados",
   "PLS_ENTER_PARTNER_AUTH_OFFICERS": "Por favor, introduzca el (los) funcionario(s) autorizado(s) por el socio",
-  "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT": "¿Está seguro de que desea eliminar este acuerdo?",
+  "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT": "Está seguro de que desea eliminar este acuerdo?",
   "HAS_AN_OLD_EXPIRED_CP_STRUCTURE": " tiene una estructura de CP antigua!",
   "AMENDMENTS": "Enmiendas",
   "USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING": "Utilice la plantilla de enmiendas para documentar los cambios y la firma.",
@@ -273,5 +274,64 @@
   "ECN_NUMBER": "Número eCN",
   "AGREEMENT": "Convenio",
   "CP_OUTPUT": "Salida PC",
-  "GOVERNMENT_PARTNERS": "Socios gubernamentales"
+  "GOVERNMENT_PARTNERS": "Socios gubernamentales",
+  "RESULTS_TO_SHOW": "{{from}}-{{to}} de {{count}} resultados para mostrar",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "Resultado de DP",
+    "PDBUDGET": "Presupuesto de DP",
+    "PDLOCATIONS": "Ubicaciones de DP"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "PD",
+    "SSFA": "SSFA",
+    "SHPD": "SHPD",
+    "SPD": "SPD",
+    "PROGRAMMEDOCUMENT": "Documento del programa",
+    "SMALLSCALEFUNDINGAGREEMENT": "Acuerdo de financiación a pequeña escala",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "Documento Simplificado del Programa Humanitario"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "PCA",
+    "SSFA": "SSFA",
+    "MOU": "MOU"
+  },
+  "STATUSES": {
+    "DRAFT": "Reclutar",
+    "SIGNED": "firmado",
+    "ACTIVE": "Activo",
+    "SUSPENDED": "Suspendido",
+    "TERMINATED": "Terminado",
+    "ENDED": "Terminado",
+    "CLOSED": "Cerrado"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "No sincronizado",
+    "SYNCEDFROMVISION": "Sincronizado desde VISION",
+    "BLOCKEDINVISION": "Bloqueado en VISION",
+    "MARKEDFORDELETIONINVISION": "Marcado para eliminación en VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "QPR",
+    "HR": "HORA",
+    "SPECIAL": "ESPECIAL",
+    "SR": "RS"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "Está seguro de que desea eliminar al socio {{partner}}?",
+  "PARTNER_OVERVIEW": "Resumen de socios",
+  "ASSURANCE_ACTIVITIES": "Actividades de aseguramiento",
+  "ASSESSMENTS_AND_ASSURANCE": "Evaluaciones y Aseguramiento",
+  "NO_ACTIVITIES": "No hay actividades.",
+  "NO_PROGRAMATIC_VISITS": "No hay visitas programáticas.",
+  "COUNT_AS_ONE": "cuenta como uno",
+  "REMOVE_FROM_GROUP": "Sacar del grupo",
+  "REFERENCE": "Referencia #",
+  "TRAVELER": "Viajero",
+  "TRAVEL_TYPE": "Tipo de viaje",
+  "LOCATIONS": "Ubicaciones",
+  "MONITORING_ACTIVITIES": "Actividades de seguimiento",
+  "LOCATION_SITE": "Ubicación (Sitio)",
+  "ASSESSMENT": "Evaluación",
+  "PLEASE_SELECT_ASSESSMENT_TYPE": "Seleccione el tipo de evaluación",
+  "PLEASE_SELECT_THE_REPORT_FILE": "Seleccione el archivo del informe"
 }

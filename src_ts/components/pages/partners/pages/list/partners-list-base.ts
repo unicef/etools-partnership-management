@@ -137,8 +137,11 @@ export class PartnersListBase extends CommonMixin(
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
-          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count ||
-          0} results to show"
+          label="${translate('RESULTS_TO_SHOW', {
+            from: this.paginator.visible_range[0],
+            to: this.paginator.visible_range[1],
+            count: this.paginator.count || 0
+          })}"
         >
           <etools-data-table-column class="flex-c" field="vendor_number" sortable>
             ${translate('VENDOR_NO')}

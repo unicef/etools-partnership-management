@@ -19,6 +19,7 @@ import {Partner} from '../../../../../../../models/partners.models';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../../endpoints/endpoints';
+import {translate} from 'lit-translate';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -46,23 +47,24 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
       <etools-content-panel
         id="monitoring-activities-panel"
         class="content-section"
-        panel-title="Monitoring Activities"
+        panel-title="${translate('MONITORING_ACTIVITIES')}"
       >
         ${this.showEditBtn(this.activities, this.isReadonly)
           ? html` <div slot="panel-btns">
-              <paper-icon-button icon="create" title="Edit" @click="${this.startEdit}"> </paper-icon-button>
+              <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
+              </paper-icon-button>
             </div>`
           : html``}
 
         <etools-loading ?active="${this.loading}"></etools-loading>
 
         ${!(this.activities || []).length
-          ? html`<div class="no-activities">There are no activities</div>`
+          ? html`<div class="no-activities">${translate('NO_ACTIVITIES')}</div>`
           : html` <div class="row panel-row-tall layout-horizontal">
-              <etools-data-table-column class="flex-2 cell">Reference #</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">Start Date</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">End Date</etools-data-table-column>
-              <etools-data-table-column class="flex-2 cell">Location (Site)</etools-data-table-column>
+              <etools-data-table-column class="flex-2 cell">${translate('REFERENCE')}</etools-data-table-column>
+              <etools-data-table-column class="flex-1 cell">${translate('START_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="flex-1 cell">${translate('END_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="flex-2 cell">${translate('LOCATION_SITE')}</etools-data-table-column>
             </div>`}
         ${(this.mappedGroups || []).map(
           (item: AnyObject) => html` <div
@@ -70,11 +72,11 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
             data-group-id="${item.id}"
           >
             <div class="braces">
-              <div class="description">Count as one</div>
+              <div class="description">${translate('COUNT_AS_ONE')}</div>
             </div>
             <div class="remove" data-is-remove>
               <div class="remove-button">
-                <div class="description">Remove from group</div>
+                <div class="description">${translate('REMOVE_FROM_GROUP')}</div>
               </div>
             </div>
             ${(item.activities || []).map(
@@ -107,8 +109,8 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
-          <paper-button @click="${this.cancelEdit}">Cancel</paper-button>
-          <paper-button raised class="save" @click="${this.saveGroups}">Save</paper-button>
+          <paper-button @click="${this.cancelEdit}">${translate('GENERAL.CANCEL')}</paper-button>
+          <paper-button raised class="save" @click="${this.saveGroups}">${translate('GENERAL.SAVE')}</paper-button>
         </div>
       </etools-content-panel>
     `;

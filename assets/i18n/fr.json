@@ -23,6 +23,7 @@
     "CREATE": "Créer",
     "SEARCH": "Chercher",
     "SEARCH_RECORDS": "Rechercher des enregistrements",
+    "DELETE_CONFIRMATION": "Supprimer la confirmation",
     "STATUS": "Statut "
   },
   "NEW_INTERVENTION": {
@@ -272,5 +273,64 @@
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Accord",
   "CP_OUTPUT": "Sortie CP",
-  "GOVERNMENT_PARTNERS": "Partenaires gouvernementaux"
+  "GOVERNMENT_PARTNERS": "Partenaires gouvernementaux",
+  "RESULTS_TO_SHOW": "{{from}}-{{to}} résultats sur {{count}} à afficher",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "Résultat DP",
+    "PDBUDGET": "Budget de DP",
+    "PDLOCATIONS": "Emplacements de PD"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "PD",
+    "SSFA": "SSFA",
+    "SHPD": "SHPD",
+    "SPD": "SPD",
+    "PROGRAMMEDOCUMENT": "Document de programme",
+    "SMALLSCALEFUNDINGAGREEMENT": "Accord de financement à petite échelle",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "Document de programme humanitaire simplifié"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "APC",
+    "SSFA": "SSFA",
+    "MOU": "PE"
+  },
+  "STATUSES": {
+    "DRAFT": "Brouillon",
+    "SIGNED": "Signé",
+    "ACTIVE": "Actif",
+    "SUSPENDED": "Suspendu",
+    "TERMINATED": "Résilié",
+    "ENDED": "Terminé",
+    "CLOSED": "Fermé"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "Non synchronisé",
+    "SYNCEDFROMVISION": "Synchronisé depuis VISION",
+    "BLOCKEDINVISION": "Bloqué dans VISION",
+    "MARKEDFORDELETIONINVISION": "Marqué pour suppression dans VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "RPQ",
+    "HR": "HEURE",
+    "SPECIAL": "SPÉCIAL",
+    "SR": "RS"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "Voulez-vous vraiment supprimer le partenaire {{partner}}?",
+  "PARTNER_OVERVIEW": "Présentation du partenaire",
+  "ASSURANCE_ACTIVITIES": "Activités de certification",
+  "ASSESSMENTS_AND_ASSURANCE": "Évaluations et assurance",
+  "NO_ACTIVITIES": "Il n'y a pas d'activités.",
+  "NO_PROGRAMATIC_VISITS": "Il n'y a pas de visites programmées.",
+  "COUNT_AS_ONE": "Compter pour un",
+  "REMOVE_FROM_GROUP": "Supprimer du groupe",
+  "REFERENCE": "Référence #",
+  "TRAVELER": "Voyageur",
+  "TRAVEL_TYPE": "Type de voyage",
+  "LOCATIONS": "Emplacements",
+  "MONITORING_ACTIVITIES": "Activités de surveillance",
+  "LOCATION_SITE": "Emplacement (Site)",
+  "ASSESSMENT": "Évaluation",
+  "PLEASE_SELECT_ASSESSMENT_TYPE": "Veuillez sélectionner le type d'évaluation",
+  "PLEASE_SELECT_THE_REPORT_FILE": "Veuillez sélectionner le fichier de rapport"
 }

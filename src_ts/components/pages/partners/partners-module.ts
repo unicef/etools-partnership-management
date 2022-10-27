@@ -35,7 +35,7 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
 import {EtoolsTab, RouteDetails, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../utils/dialog';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation, listenForLangChanged} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
@@ -259,23 +259,7 @@ export class PartnersModule extends connect(store)(
   }
 
   @property({type: Array})
-  partnerTabs: EtoolsTab[] = [
-    {
-      tab: 'overview',
-      tabLabel: getTranslation('OVERVIEW'),
-      hidden: false
-    },
-    {
-      tab: 'details',
-      tabLabel: getTranslation('PARTNER_DETAILS'),
-      hidden: false
-    },
-    {
-      tab: 'financial-assurance',
-      tabLabel: getTranslation('ASSURANCE'),
-      hidden: false
-    }
-  ];
+  partnerTabs: EtoolsTab[] = [];
 
   @property({type: String})
   moduleName = 'partners';
@@ -308,6 +292,7 @@ export class PartnersModule extends connect(store)(
     super.connectedCallback();
 
     this._initListeners();
+    this.setPartnerTabs();
 
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
@@ -318,6 +303,26 @@ export class PartnersModule extends connect(store)(
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
     this._showPartnersPageLoadingMessage();
+  }
+
+  setPartnerTabs() {
+    this.partnerTabs = [
+      {
+        tab: 'overview',
+        tabLabel: getTranslation('OVERVIEW'),
+        hidden: false
+      },
+      {
+        tab: 'details',
+        tabLabel: getTranslation('PARTNER_DETAILS'),
+        hidden: false
+      },
+      {
+        tab: 'financial-assurance',
+        tabLabel: getTranslation('ASSURANCE'),
+        hidden: false
+      }
+    ];
   }
 
   stateChanged(state: RootState) {
@@ -342,6 +347,10 @@ export class PartnersModule extends connect(store)(
     this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
     this.addEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
     this.addEventListener('update-partner', this._updatePartner as any);
+
+    listenForLangChanged(() => {
+      this.setPartnerTabs();
+    });
   }
 
   public _removeListeners() {

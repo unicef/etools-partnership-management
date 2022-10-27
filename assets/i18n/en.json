@@ -23,6 +23,7 @@
     "CREATE": "Create",
     "SEARCH": "Search",
     "SEARCH_RECORDS": "Search records",
+    "DELETE_CONFIRMATION": "Delete confirmation",
     "STATUS": "Status"
   },
   "NEW_INTERVENTION": {
@@ -271,5 +272,64 @@
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Agreement",
   "CP_OUTPUT": "CP Output",
-  "GOVERNMENT_PARTNERS":"Government Partners"
+  "GOVERNMENT_PARTNERS":"Government Partners",
+  "RESULTS_TO_SHOW": "{{from}}-{{to}} of {{count}} results to show",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "PD Result",
+    "PDBUDGET": "PD Budget",
+    "PDLOCATIONS": "PD Locations"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "PD",
+    "SSFA": "SSFA",
+    "SHPD": "SHPD",
+    "SPD": "SPD",
+    "PROGRAMMEDOCUMENT": "Programme Document",
+    "SMALLSCALEFUNDINGAGREEMENT": "Small Scale Funding Agreement",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "Simplified Humanitarian Programme Document"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "PCA",
+    "SSFA": "SSFA",
+    "MOU": "MOU"
+  },
+  "STATUSES": {
+    "DRAFT": "Draft",
+    "SIGNED": "Signed",
+    "ACTIVE": "Active",
+    "SUSPENDED": "Suspended",
+    "TERMINATED": "Terminated",
+    "ENDED": "Ended",
+    "CLOSED": "Closed"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "Not Synced",
+    "SYNCEDFROMVISION": "Synced from VISION",
+    "BLOCKEDINVISION": "Blocked in VISION",
+    "MARKEDFORDELETIONINVISION": "Marked For Deletion in VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "QPR",
+    "HR": "HR",
+    "SPECIAL": "SPECIAL", 
+    "SR": "SR"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "Are you sure you want to delete partner {{partner}}?",
+  "PARTNER_OVERVIEW":"Partner Overview",
+  "ASSURANCE_ACTIVITIES":"Assurance Activities",
+  "ASSESSMENTS_AND_ASSURANCE":"Assessments and Assurance",
+  "NO_ACTIVITIES": "There are no activities.",
+  "NO_PROGRAMATIC_VISITS": "There are no programatic visits.",
+  "COUNT_AS_ONE":"Count as one",
+  "REMOVE_FROM_GROUP":"Remove from group",
+  "REFERENCE":"Reference #",
+  "TRAVELER":"Traveler",
+  "TRAVEL_TYPE":"Travel Type",
+  "LOCATIONS":"Locations",
+  "MONITORING_ACTIVITIES":"Monitoring Activities",
+  "LOCATION_SITE":"Location (Site)",
+  "ASSESSMENT":"Assessment",
+  "PLEASE_SELECT_ASSESSMENT_TYPE":"Please select Assessment Type",
+  "PLEASE_SELECT_THE_REPORT_FILE":"Please select the report file"
 }

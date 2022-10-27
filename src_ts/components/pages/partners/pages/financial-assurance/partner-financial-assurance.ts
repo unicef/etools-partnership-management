@@ -202,7 +202,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
       </style>
 
-      <etools-content-panel panel-title="${this._getYear()} Overview" class="content-section">
+      <etools-content-panel panel-title="${this._getYear()} ${translate('OVERVIEW')}" class="content-section">
         <div class="row-h overview-header">
           <etools-data-table-column class="col col-1"> ${translate('HACT_RISK_RATING')} </etools-data-table-column>
           <etools-data-table-column class="col col-2">
@@ -296,9 +296,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         </div>
       </etools-content-panel>
 
-      <etools-content-panel panel-title="Assurance Activities" class="content-section">
+      <etools-content-panel panel-title="${translate('ASSURANCE_ACTIVITIES')}" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button icon="create" title="Edit" @click="${this._openHactEditDialog}"> </paper-icon-button>
+          <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
+          </paper-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
@@ -391,7 +392,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
       <etools-content-panel
         show-expand-btn
         class="content-section"
-        panel-title="Assessments  and Assurance (${this.allEngagements.length})"
+        panel-title="${translate('ASSESSMENTS_AND_ASSURANCE')} (${this.allEngagements.length})"
       >
         <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
           <etools-data-table-column class="col-3">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>

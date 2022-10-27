@@ -23,6 +23,7 @@
     "CREATE": "Создать",
     "SEARCH": "Поиск",
     "SEARCH_RECORDS": "Поиск",
+    "DELETE_CONFIRMATION": "Удалить подтверждение",
     "STATUS": "Статус"
   },
   "NEW_INTERVENTION": {
@@ -271,5 +272,64 @@
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Договор",
   "CP_OUTPUT": "Промежуточный результат СП",
-  "GOVERNMENT_PARTNERS": "Правительственные партнеры"
+  "GOVERNMENT_PARTNERS": "Правительственные партнеры",
+  "RESULTS_TO_SHOW": "{{from}}-{{to}} из {{count}} результатов для показа",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "Результат ПД",
+    "PDBUDGET": "Бюджет PD",
+    "PDLOCATIONS": "ПД места"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "ПД",
+    "SSFA": "УССФА",
+    "SHPD": "ШПД",
+    "SPD": "СПД",
+    "PROGRAMMEDOCUMENT": "Программный документ",
+    "SMALLSCALEFUNDINGAGREEMENT": "Соглашение о малом финансировании",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "Документ упрощенной гуманитарной программы"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "СПС",
+    "SSFA": "УССФА",
+    "MOU": "меморандум о взаимопонимании"
+  },
+  "STATUSES": {
+    "DRAFT": "Черновик",
+    "SIGNED": "Подписано",
+    "ACTIVE": "Активный",
+    "SUSPENDED": "Приостановленный",
+    "TERMINATED": "Прекращено",
+    "ENDED": "Завершено",
+    "CLOSED": "Закрыто"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "Не синхронизировано",
+    "SYNCEDFROMVISION": "Синхронизировано с VISION",
+    "BLOCKEDINVISION": "Заблокировано в VISION",
+    "MARKEDFORDELETIONINVISION": "Помечено для удаления в VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "КПР",
+    "HR": "HR",
+    "SPECIAL": "СПЕЦИАЛЬНЫЙ",
+    "SR": "СР"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "Вы уверены, что хотите удалить партнера {{partner}}?",
+  "PARTNER_OVERVIEW": "Обзор партнеров",
+  "ASSURANCE_ACTIVITIES": "Гарантия деятельности",
+  "ASSESSMENTS_AND_ASSURANCE": "Оценки и гарантии",
+  "NO_ACTIVITIES": "Нет мероприятий.",
+  "NO_PROGRAMATIC_VISITS": "Программных посещений нет.",
+  "COUNT_AS_ONE": "Считать как один",
+  "REMOVE_FROM_GROUP": "Удалить из группы",
+  "REFERENCE": "Ссылка #",
+  "TRAVELER": "Путешественница",
+  "TRAVEL_TYPE": "Тип путешествия",
+  "LOCATIONS": "Места",
+  "MONITORING_ACTIVITIES": "Мониторинг деятельности",
+  "LOCATION_SITE": "Местоположение (Сайт)",
+  "ASSESSMENT": "Оценка",
+  "PLEASE_SELECT_ASSESSMENT_TYPE": "Пожалуйста, выберите тип оценки",
+  "PLEASE_SELECT_THE_REPORT_FILE": "Выберите файл отчета"
 }
