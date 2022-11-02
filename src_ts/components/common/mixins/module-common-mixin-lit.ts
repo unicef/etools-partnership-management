@@ -106,7 +106,6 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
         }
       }
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: loadingSource
       });

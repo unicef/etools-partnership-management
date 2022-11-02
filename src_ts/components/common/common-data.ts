@@ -15,6 +15,9 @@ import {sendRequest} from '@unicef-polymer/etools-ajax';
 import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
 import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement} from 'lit-element';
+import {listenForLangChanged} from 'lit-translate';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 
 /**
  * @polymer
@@ -44,6 +47,12 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
       // get PMP static data
       this.getCommonData(this.commonDataEndpoints.pmp);
       this._handlePrpData();
+      listenForLangChanged(() => {
+        store.dispatch({
+          type: SET_ALL_STATIC_DATA,
+          staticData: this.translateCommonData(getStore().getState().commonData)
+        });
+      });
     }
 
     protected getCommonData(endpointsNames: string[]) {
@@ -66,7 +75,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
     }
 
     private formatResponse(response: any[]) {
-      const data: Partial<CommonDataState> = {};
+      let data: Partial<CommonDataState> = {};
       data.countryProgrammes = this.getValue(response[0]);
 
       const dropdownsPmpRespose = this.getValue(response[1]);
@@ -102,6 +111,29 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
       data.sites = this.getValue(response[6]);
       data.unicefUsersData = this.getValue(response[7]);
       data.countryData = this.getValue(response[8]);
+      data = this.translateCommonData(data);
+
+      return data;
+    }
+
+    translateCommonData(data: any) {
+      Object.keys(data)
+        .filter((x) => data[x] && data[x].length)
+        .forEach((x) => {
+          const key = x.replace(/ /g, '').toUpperCase();
+
+          (data as any)[x] = (data as any)[x].map((y: any) => {
+            const translation_key = y.translation_key || y.label || y.name || y;
+            return {
+              ...y,
+              translation_key,
+              ...((y.label && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
+              ...((y.name && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
+              ...((typeof y === 'string' && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {})
+            };
+          });
+        });
+
       return data;
     }
 

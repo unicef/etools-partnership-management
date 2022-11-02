@@ -100,7 +100,6 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
         }
       }
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: loadingSource
       });

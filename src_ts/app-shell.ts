@@ -97,7 +97,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use} from 'lit-translate';
+import {registerTranslateConfig, use, get as getTranslation} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import {LitElement} from 'lit-element';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
@@ -343,7 +343,6 @@ class AppShell extends connect(store)(
     super.ready();
 
     this._initListeners();
-    this._createLeavePageDialog();
     if (this.shadowRoot?.querySelector('#appHeadLayout')) {
       window.EtoolsEsmmFitIntoEl = this.shadowRoot
         ?.querySelector('#appHeadLayout')!
@@ -431,6 +430,7 @@ class AppShell extends connect(store)(
     this.waitForTranslationsToLoad().then(async () => {
       await use(this.selectedLanguage);
       this.currentLanguageIsSet = true;
+      this._createLeavePageDialog();
     });
   }
 
@@ -786,9 +786,9 @@ class AppShell extends connect(store)(
 
   private _createLeavePageDialog() {
     const msg = document.createElement('span');
-    msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
+    msg.innerText = getTranslation('LEAVE_UPLOAD_IN_PROGRESS');
     const conf: any = {
-      title: 'Are you sure you want to leave this page?',
+      title: getTranslation('LEAVE_PAGE'),
       size: 'md',
       okBtnText: 'Leave',
       cancelBtnText: 'Stay',

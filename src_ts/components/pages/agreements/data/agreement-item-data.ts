@@ -84,7 +84,6 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
   _agreementIdChanged(newId: number | null) {
     if (newId) {
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
       });

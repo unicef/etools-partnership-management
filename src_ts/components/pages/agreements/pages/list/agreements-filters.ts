@@ -114,8 +114,8 @@ export function getAgreementFilters() {
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
       selectionOptions: [
-        {value: 'true', label: 'Yes'},
-        {value: 'false', label: 'No'}
+        {value: 'true', label: getTranslation('GENERAL.YES')},
+        {value: 'false', label: getTranslation('GENERAL.NO')}
       ],
       optionValue: 'value',
       optionLabel: 'label',

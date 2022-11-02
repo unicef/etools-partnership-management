@@ -179,7 +179,7 @@ export class InterventionsModule extends connect(store)(
                   <div slot="dropdown-content">
                     <div
                       class="other-options"
-                      @click="${(e) => {
+                      @click="${(e: CustomEvent) => {
                         e.stopImmediatePropagation();
                         this.openEcnImportDialog();
                       }}"

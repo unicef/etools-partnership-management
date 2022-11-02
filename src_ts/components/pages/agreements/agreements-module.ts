@@ -538,7 +538,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
   _showAgreementsPageLoadingMessage() {
     fireEvent(this, 'global-loading', {
-      message: 'Loading...',
       active: true,
       loadingSource: 'ag-page'
     });

@@ -26,7 +26,6 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
       if (newId > 0) {
         if (showLoading) {
           fireEvent(this, 'global-loading', {
-            message: 'Loading...',
             active: true,
             loadingSource: this.staffLoadingMsgSource
           });

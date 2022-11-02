@@ -36,11 +36,11 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
-import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {buildUrlQueryString, cloneDeep, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
@@ -140,8 +140,11 @@ export class AgreementsList extends connect(store)(
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
-          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count ||
-          0} results to show"
+          label="${translate('RESULTS_TO_SHOW', {
+            from: this.paginator.visible_range[0],
+            to: this.paginator.visible_range[1],
+            count: this.paginator.count || 0
+          })}"
         >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
             ${translate('AGREEMENT_REFERENCE_NUMBER')}
@@ -185,10 +188,16 @@ export class AgreementsList extends connect(store)(
                 <span> ${this.getDisplayValue(agreement.partner_name, ',', false)} </span>
               </span>
               <span class="col-data col-2" data-col-header-label="${translate('TYPE')}">
-                ${this.getDisplayValue(agreement.agreement_type, ',', false)}
+                ${translateValue(
+                  this.getDisplayValue(agreement.agreement_type, ',', false) as string,
+                  'AGREEMENT_TYPES'
+                )}
               </span>
               <span class="col-data col-2 capitalize" data-col-header-label="${translate('STATUS')}">
-                ${this.getDisplayValue(agreement.status, ',', false)}
+                ${translateValue(
+                  this.getDisplayValue(agreement.status, ',', false) as string,
+                  'COMMON_DATA.AGREEMENTSTATUSES'
+                )}
               </span>
               <span class="col-data flex-c" data-col-header-label="${translate('START_DATE')}">
                 ${this._checkAndShowAgreementDate(agreement.start)}
@@ -292,6 +301,9 @@ export class AgreementsList extends connect(store)(
         this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
       }
       this.currentLanguage = state.activeLanguage!.activeLanguage;
+      if (this.allFilters) {
+        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      }
     }
 
     if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
@@ -413,6 +425,10 @@ export class AgreementsList extends connect(store)(
       AgreementsFilterKeys.status,
       commonData!.agreementStatuses
     );
+    AgreementsFiltersHelper.updateFilterSelectionOptions(allFilters, AgreementsFilterKeys.special_conditions_pca, [
+      {value: 'true', label: getTranslation('GENERAL.YES')},
+      {value: 'false', label: getTranslation('GENERAL.NO')}
+    ]);
   }
 
   filtersChange(e: CustomEvent) {

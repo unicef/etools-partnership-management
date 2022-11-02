@@ -36,7 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
-import {cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -202,7 +202,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
       </style>
 
-      <etools-content-panel panel-title="${this._getYear()} Overview" class="content-section">
+      <etools-content-panel panel-title="${this._getYear()} ${translate('OVERVIEW')}" class="content-section">
         <div class="row-h overview-header">
           <etools-data-table-column class="col col-1"> ${translate('HACT_RISK_RATING')} </etools-data-table-column>
           <etools-data-table-column class="col col-2">
@@ -236,11 +236,11 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             <div class="from-vision">${translate('FROM_VISION')}</div>
             <div class="col-3">
               <span class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${this.getRiskRatingValue(this.partner.rating)}
+                ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
               </span>
             </div>
             <div class="col col-5">
-              ${this.partner.type_of_assessment} <br />
+              ${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')} <br />
               ${this.getDateDisplayValue(this.partner.last_assessment_date)}
             </div>
             <div class="col col-4 center-align">$ ${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}</div>
@@ -266,7 +266,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           </div>
           <div class="col-1 col center-align">
             <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-              ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
+              ${translateValue(
+                this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1),
+                'COMMON_DATA.SEARISKRATINGS'
+              )}
             </span>
           </div>
           <div class="col col-1 center-align">${this.getDateDisplayValue(this.partner.psea_assessment_date)}</div>
@@ -296,9 +299,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         </div>
       </etools-content-panel>
 
-      <etools-content-panel panel-title="Assurance Activities" class="content-section">
+      <etools-content-panel panel-title="${translate('ASSURANCE_ACTIVITIES')}" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button icon="create" title="Edit" @click="${this._openHactEditDialog}"> </paper-icon-button>
+          <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
+          </paper-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
@@ -391,7 +395,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
       <etools-content-panel
         show-expand-btn
         class="content-section"
-        panel-title="Assessments  and Assurance (${this.allEngagements.length})"
+        panel-title="${translate('ASSESSMENTS_AND_ASSURANCE')} (${this.allEngagements.length})"
       >
         <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
           <etools-data-table-column class="col-3">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>

@@ -8,6 +8,7 @@ import {LitElement, property, PropertyValues} from 'lit-element';
 import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 declare const ShadyCSS: any;
 
 /**
@@ -266,13 +267,10 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
     }
 
     _getDefaultWarningMessage() {
-      return (
-        "You are changing the status from <strong>'" +
-        this.status +
-        "'</strong> to <strong>'" +
-        this.newStatus +
-        "'</strong>. Do you want to continue?"
-      );
+      return getTranslation('STATUS_IS_CHANGING', {
+        from: this.status,
+        to: this.newStatus
+      });
     }
 
     getComputedStyleValue(varName: string) {

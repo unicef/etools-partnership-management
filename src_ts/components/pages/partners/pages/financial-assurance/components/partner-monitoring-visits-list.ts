@@ -12,6 +12,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints';
 import {repeat} from 'lit-html/directives/repeat';
+import {translate} from 'lit-translate';
 declare const dayjs: any;
 
 /**
@@ -45,7 +46,7 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
       </style>
 
       <div class="monitoring-visits-container">
-        <etools-loading id="monitoring" loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
+        <etools-loading id="monitoring" .active="${this.showLoading}"></etools-loading>
 
         <div ?hidden="${this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}">
           <etools-data-table-header
@@ -53,12 +54,20 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
             label="Showing ${this._getVisitsCount(this.monitoringVisits.length, this.tpmActivities.length)} results"
             no-collapse
           >
-            <etools-data-table-column class="col-2" field="reference_number">Reference #</etools-data-table-column>
-            <etools-data-table-column class="col-2" field="primary_traveler">Traveler</etools-data-table-column>
-            <etools-data-table-column class="col-2" field="travel_type">Travel Type</etools-data-table-column>
-            <etools-data-table-column class="col-2" field="date">End Date</etools-data-table-column>
-            <etools-data-table-column class="col-2" field="locations">Locations</etools-data-table-column>
-            <etools-data-table-column class="col-2" field="status">Status</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="reference_number"
+              >${translate('REFERENCE')}</etools-data-table-column
+            >
+            <etools-data-table-column class="col-2" field="primary_traveler"
+              >${translate('TRAVELER')}</etools-data-table-column
+            >
+            <etools-data-table-column class="col-2" field="travel_type"
+              >${translate('TRAVEL_TYPE')}</etools-data-table-column
+            >
+            <etools-data-table-column class="col-2" field="date">${translate('END_DATE')}</etools-data-table-column>
+            <etools-data-table-column class="col-2" field="locations"
+              >${translate('LOCATIONS')}</etools-data-table-column
+            >
+            <etools-data-table-column class="col-2" field="status">${translate('STATUS')}</etools-data-table-column>
           </etools-data-table-header>
 
           ${repeat(
@@ -124,7 +133,7 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
           class="row-h"
           ?hidden="${!this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}"
         >
-          <p>There are no activities.</p>
+          <p>${this.showTpmVisits ? translate('NO_PROGRAMATIC_VISITS') : translate('NO_ACTIVITIES')}</p>
         </div>
       </div>
     `;

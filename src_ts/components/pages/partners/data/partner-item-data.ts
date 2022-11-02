@@ -52,7 +52,6 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
       fireEvent(this, 'partner-changed', {});
       // set the new endpoint
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
       });

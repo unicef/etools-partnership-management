@@ -83,7 +83,7 @@ export class StaffMembers extends LitElement {
             icon="add-box"
             ?disabled="${!this.editMode}"
             ?hidden="${!this.editMode}"
-            title="Add"
+            title="${translate('GENERAL.ADD')}"
             @click="${this._addPartnerContact}"
           >
           </paper-icon-button>

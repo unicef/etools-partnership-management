@@ -23,6 +23,7 @@
     "CREATE": "Создать",
     "SEARCH": "Поиск",
     "SEARCH_RECORDS": "Поиск",
+    "DELETE_CONFIRMATION": "Удалить подтверждение",
     "STATUS": "Статус"
   },
   "NEW_INTERVENTION": {
@@ -85,6 +86,7 @@
     "UNICEF_FOCAL_POINT": "Ответственные сотрудники ЮНИСЕФ",
     "BUDGET_OWNER": "Сотрудник ЮНИСЕФ ответственный за фонды"
   },
+  "PD_SPD": "ПД/СПД",
   "VENDOR_NO": "Регистрационный номер партнера.",
   "NAME_SHORT_FULL": "Наименование (короткое/полное)",
   "PARTNER_TYPE": "Тип партнерской организации",
@@ -250,6 +252,10 @@
   "ADD_DISAGGREGATION": "Добавить дезагрегацию",
   "TERMINATE": "Терминировать",
   "TERMINATE_AGREEMENT": "Терминировать договор",
+  "UNSUSPEND": "Разблокировать",
+  "SUSPEND": "Приостановить",
+  "DELETE": "Удалить",
+  "SAVE": "Сохранять",
   "NAME": "Наименование",
   "ACTIVE": "Активный",
   "TERMINATION_NOTICE_FILE_IS_REQUIRED": "Необходим файл Уведомления о прекращении",
@@ -270,5 +276,210 @@
   "IMPORT": "импорт",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Договор",
-  "CP_OUTPUT": "Промежуточный результат СП"
+  "CP_OUTPUT": "Промежуточный результат СП",
+  "GOVERNMENT_PARTNERS": "Правительственные партнеры",
+  "RESULTS_TO_SHOW": "{{from}}-{{to}} из {{count}} результатов для показа",
+  "PD_EXPORT_TYPES": {
+    "PDRESULT": "Результат ПД",
+    "PDBUDGET": "Бюджет PD",
+    "PDLOCATIONS": "ПД места"
+  },
+  "DEFAULT_LIST_SIZE": 10,
+  "DOCUMENT_TYPES": {
+    "PD": "ПД",
+    "SSFA": "УССФА",
+    "SHPD": "ШПД",
+    "SPD": "СПД",
+    "PROGRAMMEDOCUMENT": "Программный документ",
+    "SMALLSCALEFUNDINGAGREEMENT": "Соглашение о малом финансировании",
+    "SIMPLIFIEDHUMANITARIANPROGRAMMEDOCUMENT": "Документ упрощенной гуманитарной программы"
+  },
+  "AGREEMENT_TYPES": {
+    "PCA": "СПС",
+    "SSFA": "УССФА",
+    "MOU": "меморандум о взаимопонимании"
+  },
+  "STATUSES": {
+    "DRAFT": "Черновик",
+    "SIGNED": "Подписано",
+    "ACTIVE": "Активный",
+    "SUSPENDED": "Приостановленный",
+    "TERMINATED": "Прекращено",
+    "ENDED": "Завершено",
+    "CLOSED": "Закрыто"
+  },
+  "PARTNER_STATUSES": {
+    "NOTSYNCED": "Не синхронизировано",
+    "SYNCEDFROMVISION": "Синхронизировано с VISION",
+    "BLOCKEDINVISION": "Заблокировано в VISION",
+    "MARKEDFORDELETIONINVISION": "Помечено для удаления в VISION"
+  },
+  "REQUIREMENTS_REPORT_TYPE": {
+    "QPR": "КПР",
+    "HR": "HR",
+    "SPECIAL": "СПЕЦИАЛЬНЫЙ",
+    "SR": "СР"
+  },
+  "ARE_YOU_SURE_DELETE_PARTNER": "Вы уверены, что хотите удалить партнера {{partner}}?",
+  "PARTNER_OVERVIEW": "Обзор партнеров",
+  "ASSURANCE_ACTIVITIES": "Гарантия деятельности",
+  "ASSESSMENTS_AND_ASSURANCE": "Оценки и гарантии",
+  "NO_ACTIVITIES": "Нет мероприятий.",
+  "NO_PROGRAMATIC_VISITS": "Программных посещений нет.",
+  "COUNT_AS_ONE": "Считать как один",
+  "REMOVE_FROM_GROUP": "Удалить из группы",
+  "REFERENCE": "Ссылка #",
+  "TRAVELER": "Путешественница",
+  "TRAVEL_TYPE": "Тип путешествия",
+  "LOCATIONS": "Места",
+  "MONITORING_ACTIVITIES": "Мониторинг деятельности",
+  "LOCATION_SITE": "Местоположение (Сайт)",
+  "ASSESSMENT": "Оценка",
+  "PLEASE_SELECT_ASSESSMENT_TYPE": "Пожалуйста, выберите тип оценки",
+  "PLEASE_SELECT_THE_REPORT_FILE": "Выберите файл отчета",
+  "CSO": "ОГО",
+  "AUDIT_OPTIONS": {
+    "SPECIAL_AUDIT": "Специальный аудит",
+    "SCHEDULED_AUDIT": "Плановый аудит"
+  },
+  "ABOUT_TO_TERMINATE_AGREEMENT": "Вы собираетесь расторгнуть настоящее Соглашение. Вы хотите продолжить?",
+  "ABOUT_TO_SUSPEND_AGREEMENT": "Вы собираетесь приостановить действие настоящего Соглашения. Вы хотите продолжить?",
+  "ABOUT_TO_UNSUSPEND_AGREEMENT": "Вы собираетесь возобновить действие настоящего Соглашения. Вы хотите продолжить?",
+  "STATUS_IS_CHANGING": "Вы меняете статус с <strong>{{from}}</strong> на <strong>{{to}}</strong> . Вы хотите продолжить?",
+  "PCA_TEMPLATE_NOT_AVAILABLE": "Создание шаблона PCA недоступно для PCA с особыми условиями",
+  "SAVE_BEFORE_PCA": "Сохраните перед созданием шаблона PCA",
+  "LEAVE_UPLOAD_IN_PROGRESS": "Вы уверены, что хотите покинуть эту страницу? Все загруженные или несохраненные файлы будут потеряны!",
+  "LEAVE_PAGE": "Вы уверены, что хотите покинуть эту страницу?",
+  "COMMON_DATA": {
+    "FILETYPES": {
+      "FACE": "ЛИЦО",
+      "PROGRESS_REPORT": "Отчет о проделанной работе",
+      "FINAL_PARTNERSHIP_REVIEW": "Окончательный обзор партнерства",
+      "CORRESPONDENCE": "Переписка",
+      "SUPPLY/DISTRIBUTION_PLAN": "План снабжения/распределения",
+      "OTHER": "Другой"
+    },
+    "PROVIDEDBY": {
+      "UNICEF": "ЮНИСЕФ",
+      "PARTNER": "Партнер"
+    },
+    "DOCUMENTTYPES": {
+      "PROGRAMME_DOCUMENT": "Программный документ",
+      "SIMPLIFIED_PROGRAMME_DOCUMENT": "Упрощенный программный документ"
+    },
+    "INTERVENTIONSTATUSES": {
+      "DEVELOPMENT": "Разработка",
+      "REVIEW": "Обзор",
+      "SIGNATURE": "Подпись",
+      "SIGNED": "Подписано",
+      "ACTIVE": "Активный",
+      "CANCELLED": "Отменено",
+      "ENDED": "Завершено",
+      "CLOSED": "Закрыто",
+      "SUSPENDED": "Приостановленный",
+      "TERMINATED": "Прекращено",
+      "EXPIRED": "Истекший"
+    },
+    "AGREEMENTTYPES": {
+      "MEMORANDUM_OF_UNDERSTANDING": "Меморандум о взаимопонимании",
+      "PROGRAMME_COOPERATION_AGREEMENT": "Соглашение о сотрудничестве по программе",
+      "SMALL_SCALE_FUNDING_AGREEMENT": "Соглашение о малом финансировании"
+    },
+    "AGREEMENTSTATUSES": {
+      "DRAFT": "Черновик",
+      "SIGNED": "Подписано",
+      "ENDED": "Завершено",
+      "SUSPENDED": "Приостановленный",
+      "TERMINATED": "Прекращено"
+    },
+    "AGREEMENTAMENDMENTTYPES": {
+      "BANKING_INFORMATION": "Банковская информация",
+      "CHANGE_AUTHORIZED_OFFICER(S)": "Изменить уполномоченного(ых) сотрудника(ов)",
+      "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "Изменение юридического названия партнера-исполнителя",
+      "CHANGE_IN_CLAUSE": "Изменение в пункте"
+    },
+    "CSOTYPES": {
+      "ACADEMIC_INSTITUTION": "Академический институт",
+      "COMMUNITY_BASED_ORGANIZATION": "Общественная организация",
+      "COMMUNITY_BASED": "Сообщество",
+      "INTERNATIONAL": "Международный",
+      "NATIONAL": "Национальный"
+    },
+    "PARTNERTYPES": {
+      "BILATERAL_/_MULTILATERAL": "Двусторонний/многосторонний",
+      "CIVIL_SOCIETY_ORGANIZATION": "Организация гражданского общества",
+      "GOVERNMENT": "Правительство",
+      "UN_AGENCY": "Агентство ООН"
+    },
+    "SEARISKRATINGS": {
+      "HIGH": "Высокая",
+      "HIGH_RISK_ASSUMED": "Предполагаемый высокий риск",
+      "LOW": "Низкий",
+      "LOW_RISK_ASSUMED": "Предполагается низкий риск",
+      "MEDIUM": "Середина",
+      "NOT_ASSESSED": "Не оценено",
+      "NOT_REQUIRED": "Не требуется",
+      "SIGNIFICANT": "Значительный"
+    },
+    "ASSESSMENTTYPES": {
+      "MICRO_ASSESSMENT": "Микрооценка",
+      "OTHER": "Другой",
+      "SCHEDULED_AUDIT_REPORT": "Запланированный аудиторский отчет",
+      "SIMPLIFIED_CHECKLIST": "Упрощенный контрольный список",
+      "SPECIAL_AUDIT_REPORT": "Специальный аудиторский отчет",
+      "HIGH_RISK_ASSUMED": "Предполагаемый высокий риск",
+      "LOW_RISK_ASSUMED": "Предполагается низкий риск"
+    },
+    "INTERVENTIONAMENDMENTTYPES": {
+      "TYPE_1:_ADMINISTRATIVE_ERROR_(CORRECTION)": "Тип 1: Административная ошибка (исправление)",
+      "TYPE_2:_BUDGET_<=_20%": "Тип 2: Бюджет <= 20%",
+      "TYPE_3:_BUDGET_>_20%": "Тип 3: Бюджет > 20%",
+      "TYPE_4:_CHANGES_TO_PLANNED_RESULTS": "Тип 4: Изменения запланированных результатов",
+      "TYPE_5:_NO_COST_EXTENSION": "Тип 5: бесплатное расширение",
+      "TYPE_6:_OTHER": "Тип 6: Другое"
+    },
+    "PARTNERRISKRATINGS": {
+      "HIGH": "Высокая",
+      "LOW": "Низкий",
+      "MEDIUM": "Середина",
+      "NOT_REQUIRED": "Не требуется",
+      "SIGNIFICANT": "Значительный"
+    },
+    "GENDEREQUITYRATINGS": {
+      "NONE": "Никто",
+      "MARGINAL": "Маргинальный",
+      "SIGNIFICANT": "Значительный",
+      "PRINCIPAL": "Главный"
+    },
+    "RISKTYPES": {
+      "SOCIAL_&_ENVIRONMENTAL": "Социальные и экологические",
+      "FINANCIAL": "финансовый",
+      "OPERATIONAL": "Оперативный",
+      "ORGANIZATIONAL": "Организационный",
+      "POLITICAL": "политический",
+      "STRATEGIC": "Стратегический",
+      "SAFETY_&_SECURITY": "Безопасность и безопасность"
+    },
+    "CASHTRANSFERMODALITIES": {
+      "DIRECT_PAYMENT": "Прямая оплата",
+      "REIMBURSEMENT": "Возмещение",
+      "DIRECT_CASH_TRANSFER": "Прямой денежный перевод"
+    },
+    "SECTIONS": {
+      "CHILD_PROTECTION": "Защита детей",
+      "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Коммуникационная защита и гражданское участие",
+      "DRIVERS": "Драйверы",
+      "EDUCATION": "Образование",
+      "EMERGENCY/FIELD_COORDINATION": "Аварийная/полевая координация",
+      "HEALTH": "Здоровье",
+      "NUTRITION": "Питание",
+      "OPERATIONS": "Операции",
+      "POLIO": "Полиомиелит",
+      "PROGRAMME_COORDINATION": "Координация программы",
+      "SECURITY": "Безопасность",
+      "SPEAR": "КОПЬЕ",
+      "SPPME": "СППМЭ",
+      "WASH": "МЫТЬ"
+    }
+  }
 }

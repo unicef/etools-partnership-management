@@ -1,7 +1,6 @@
 import '../../../common/components/etools-status/etools-status.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
-import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -9,6 +8,7 @@ import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 
 /**
  * @customElement
@@ -68,14 +68,14 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   @property({type: Array})
   possibleActions: StatusAction[] = [
     {
-      label: 'Save',
+      label: getTranslation('GENERAL.SAVE'),
       hidden: true,
       primary: true,
       // save action is handled inside the parent
       event: 'save-partner'
     },
     {
-      label: 'Delete',
+      label: getTranslation('GENERAL.DELETE'),
       hidden: true,
       event: 'partner-delete'
     }
@@ -84,6 +84,28 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     setTimeout(this.setPossibleStatuses.bind(this), 0);
+    listenForLangChanged(() => {
+      this.setPossibleActions();
+      this.setPossibleStatuses();
+      this._computeAvailableActions(this.partner.hidden, this.editMode);
+    });
+  }
+
+  setPossibleActions() {
+    this.possibleActions = [
+      {
+        label: getTranslation('GENERAL.SAVE'),
+        hidden: true,
+        primary: true,
+        // save action is handled inside the parent
+        event: 'save-partner'
+      },
+      {
+        label: getTranslation('GENERAL.DELETE'),
+        hidden: true,
+        event: 'partner-delete'
+      }
+    ];
   }
 
   updated(changedProperties: PropertyValues) {
@@ -106,10 +128,10 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
     this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
     this.warningDialog = createDynamicDialog({
-      title: 'Delete Confirmation',
+      title: getTranslation('GENERAL.DELETE_CONFIRMATION'),
       size: 'md',
-      okBtnText: 'Yes',
-      cancelBtnText: 'No',
+      okBtnText: getTranslation('GENERAL.YES'),
+      cancelBtnText: getTranslation('GENERAL.NO'),
       closeCallback: this._dialogConfirmationCallback,
       content: this.deleteWarningDialogContent,
       id: 'delWarning'
@@ -126,7 +148,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   setPossibleStatuses() {
     this.possibleStatuses = [
       {
-        label: CONSTANTS.PARTNER_STATUSES.NotSynced,
+        label: getTranslation('PARTNER_STATUSES.NOTSYNCED'),
         icon: 'info',
         iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
@@ -134,7 +156,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         completed: false
       },
       {
-        label: CONSTANTS.PARTNER_STATUSES.SyncedFromVISION,
+        label: getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION'),
         icon: 'autorenew',
         iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
@@ -142,7 +164,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         completed: false
       },
       {
-        label: CONSTANTS.PARTNER_STATUSES.BlockedInVISION,
+        label: getTranslation('PARTNER_STATUSES.BLOCKEDINVISION'),
         icon: 'block',
         iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
@@ -150,7 +172,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         completed: false
       },
       {
-        label: CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION,
+        label: getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION'),
         icon: 'delete-forever',
         iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
@@ -188,7 +210,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
       return;
     }
-    const warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
+    const warningMessage = getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {
+      partner: this.partner.name
+    });
     this.deleteWarningDialogContent.innerHTML = warningMessage;
     this.warningDialog.opened = true;
   }
@@ -207,7 +231,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       return;
     }
     this._setAllActionsToHidden();
-    const availableOptions = ['Save', 'Delete'];
+    const availableOptions = ['GENERAL.SAVE', 'GENERAL.DELETE'].map((x) => getTranslation(x));
 
     for (const key in this.possibleActions) {
       if (this.possibleActions[key].label) {
@@ -227,16 +251,16 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     }
     switch (true) {
       case this._showNotSyncedStatus():
-        activeStatus = CONSTANTS.PARTNER_STATUSES.NotSynced;
+        activeStatus = getTranslation('PARTNER_STATUSES.NOTSYNCED');
         break;
       case this._showSyncedStatus():
-        activeStatus = CONSTANTS.PARTNER_STATUSES.SyncedFromVISION;
+        activeStatus = getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION');
         break;
       case this._showBlockedStatus():
-        activeStatus = CONSTANTS.PARTNER_STATUSES.BlockedInVISION;
+        activeStatus = getTranslation('PARTNER_STATUSES.BLOCKEDINVISION');
         break;
       case this._showMakedForDeletionStatus():
-        activeStatus = CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION;
+        activeStatus = getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION');
         break;
     }
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
