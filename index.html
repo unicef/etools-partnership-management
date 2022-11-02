@@ -103,9 +103,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       * {
         outline: none;
       }
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
+    <!-- need this for leaflet -->
+    <div class="leaflet-tile-pane hidden"></div>
     <div id="buildRevNo" style="display: none">revNo</div>
     <app-shell></app-shell>
     <noscript> Please enable JavaScript to view this website. </noscript>
@@ -113,7 +118,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
     <script src="node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="node_modules/esri-leaflet/dist/esri-leaflet.js"></script>
     <script src="node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js"></script>
+    <script src="assets/packages/esri-leaflet-webmap.js"></script>
     <script src="node_modules/dayjs/dayjs.min.js"></script>
     <script src="node_modules/dayjs/plugin/utc.js"></script>
     <script src="node_modules/dayjs/plugin/isBetween.js"></script>
