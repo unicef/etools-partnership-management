@@ -4,6 +4,7 @@ import {LitElement} from 'lit-element';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
 import {PolymerElement} from '@polymer/polymer';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -35,7 +36,10 @@ function CommonMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
 
     mapStatus(intervention: ListItemIntervention) {
       // to refactor this after draft status is revised
-      return intervention.status === 'draft' ? 'development' : intervention.status;
+      return getTranslatedValue(
+        intervention.status === 'draft' ? 'development' : intervention.status,
+        'COMMON_DATA.INTERVENTIONSTATUSES'
+      );
     }
 
     getDevelopementStatusDetails(data: ListItemIntervention) {

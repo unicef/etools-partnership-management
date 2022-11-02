@@ -13,6 +13,7 @@ import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 @customElement('hact-edit-dialog')
 export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
@@ -234,22 +235,22 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
   @property({type: Array})
   auditOptions = [
     {
-      label: 'Scheduled Audit',
+      label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
       value: 'Scheduled Audit'
     },
     {
-      label: 'Special Audit',
+      label: getTranslatedValue('Special Audit', 'AUDIT_OPTIONS'),
       value: 'Special Audit'
     }
   ];
   @property({type: Array})
   auditMap = [
     {
-      label: 'Special Audit',
+      label: getTranslatedValue('Special Audit', 'AUDIT_OPTIONS'),
       prop: 'special_audit'
     },
     {
-      label: 'Scheduled Audit',
+      label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
       prop: 'scheduled_audit'
     }
   ];

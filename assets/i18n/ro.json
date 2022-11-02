@@ -87,6 +87,7 @@
     "BUDGET_OWNER": "Responsabil UNICEF al Bugetului",
     "STATUS": "Status"
   },
+  "PD_SPD": "PD/SPD",
   "VENDOR_NO": "Vanzator nr.",
   "NAME_SHORT_FULL": "Nume (Scurt/Complet)",
   "PARTNER_TYPE": "Tip partener",
@@ -252,6 +253,10 @@
   "ADD_DISAGGREGATION": "Adăugați dezagregare",
   "TERMINATE": "Terminați",
   "TERMINATE_AGREEMENT": "Rezilierea Acordului",
+  "UNSUSPEND": "Nesuspendă",
+  "SUSPEND": "Suspenda",
+  "DELETE": "Șterge",
+  "SAVE": "Salvați",
   "NAME": "Nume",
   "ACTIVE": "Activ",
   "TERMINATION_NOTICE_FILE_IS_REQUIRED": "Este necesar dosarul de notificare de reziliere",
@@ -332,5 +337,150 @@
   "LOCATION_SITE": "Locație (Site)",
   "ASSESSMENT": "Evaluare",
   "PLEASE_SELECT_ASSESSMENT_TYPE": "Vă rugăm să selectați Tipul de evaluare",
-  "PLEASE_SELECT_THE_REPORT_FILE": "Vă rugăm să selectați fișierul de raport"
+  "PLEASE_SELECT_THE_REPORT_FILE": "Vă rugăm să selectați fișierul de raport",
+  "CSO": "CSO",
+  "AUDIT_OPTIONS": {
+    "SPECIAL_AUDIT": "Audit special",
+    "SCHEDULED_AUDIT": "Audit programat"
+  },
+  "ABOUT_TO_TERMINATE_AGREEMENT": "Sunteți pe cale să reziliați acest Acord. Doriți să continuați?",
+  "ABOUT_TO_SUSPEND_AGREEMENT": "Sunteți pe cale să suspendați acest Acord. Doriți să continuați?",
+  "ABOUT_TO_UNSUSPEND_AGREEMENT": "Sunteți pe cale să anulați suspendarea acestui acord. Doriți să continuați?",
+  "STATUS_IS_CHANGING": "Schimbați starea din <strong>„{{from}}”</strong> în <strong>„{{to}}”</strong> . Doriți să continuați?",
+  "PCA_TEMPLATE_NOT_AVAILABLE": "Generați șablonul PCA nu este disponibil pentru condiții speciale PCA",
+  "SAVE_BEFORE_PCA": "Salvați înainte de a genera șablonul PCA",
+  "LEAVE_UPLOAD_IN_PROGRESS": "Sigur vrei să părăsești această pagină? Toate fișierele încărcate în curs sau nesalvate se vor pierde!",
+  "LEAVE_PAGE": "Sigur vrei să părăsești această pagină?",
+  "COMMON_DATA": {
+    "FILETYPES": {
+      "FACE": "FAȚĂ",
+      "PROGRESS_REPORT": "Raport de progres",
+      "FINAL_PARTNERSHIP_REVIEW": "Revizuirea finală a parteneriatului",
+      "CORRESPONDENCE": "Corespondenţă",
+      "SUPPLY/DISTRIBUTION_PLAN": "Plan de aprovizionare/distributie",
+      "OTHER": "Alte"
+    },
+    "PROVIDEDBY": {
+      "UNICEF": "UNICEF",
+      "PARTNER": "Partener"
+    },
+    "DOCUMENTTYPES": {
+      "PROGRAMME_DOCUMENT": "Documentul programului",
+      "SIMPLIFIED_PROGRAMME_DOCUMENT": "Document de program simplificat"
+    },
+    "INTERVENTIONSTATUSES": {
+      "DEVELOPMENT": "Dezvoltare",
+      "REVIEW": "Revizuire",
+      "SIGNATURE": "Semnătură",
+      "SIGNED": "Semnat",
+      "ACTIVE": "Activ",
+      "CANCELLED": "Anulat",
+      "ENDED": "Încheiat",
+      "CLOSED": "Închis",
+      "SUSPENDED": "Suspendat",
+      "TERMINATED": "Terminat",
+      "EXPIRED": "Expirat"
+    },
+    "AGREEMENTTYPES": {
+      "MEMORANDUM_OF_UNDERSTANDING": "Memorandum de înțelegere",
+      "PROGRAMME_COOPERATION_AGREEMENT": "Acordul de Cooperare pentru Program",
+      "SMALL_SCALE_FUNDING_AGREEMENT": "Acord de finanțare la scară mică"
+    },
+    "AGREEMENTSTATUSES": {
+      "DRAFT": "Proiect",
+      "SIGNED": "Semnat",
+      "ENDED": "Încheiat",
+      "SUSPENDED": "Suspendat",
+      "TERMINATED": "Terminat"
+    },
+    "AGREEMENTAMENDMENTTYPES": {
+      "BANKING_INFORMATION": "Informații bancare",
+      "CHANGE_AUTHORIZED_OFFICER(S)": "Schimbați ofițerul(i) autorizat(i)",
+      "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "Modificarea numelui juridic al partenerului de implementare",
+      "CHANGE_IN_CLAUSE": "Modificarea clauzei"
+    },
+    "CSOTYPES": {
+      "ACADEMIC_INSTITUTION": "Institutie academica",
+      "COMMUNITY_BASED_ORGANIZATION": "Organizație bazată pe comunitate",
+      "COMMUNITY_BASED": "Bazat pe comunitate",
+      "INTERNATIONAL": "Internaţional",
+      "NATIONAL": "Naţional"
+    },
+    "PARTNERTYPES": {
+      "BILATERAL_/_MULTILATERAL": "Bilateral / Multilateral",
+      "CIVIL_SOCIETY_ORGANIZATION": "Organizația Societății Civile",
+      "GOVERNMENT": "Guvern",
+      "UN_AGENCY": "Agenția ONU"
+    },
+    "SEARISKRATINGS": {
+      "HIGH": "Înalt",
+      "HIGH_RISK_ASSUMED": "Risc ridicat asumat",
+      "LOW": "Scăzut",
+      "LOW_RISK_ASSUMED": "Risc scăzut asumat",
+      "MEDIUM": "Mediu",
+      "NOT_ASSESSED": "Neevaluat",
+      "NOT_REQUIRED": "Nu este necesar",
+      "SIGNIFICANT": "Semnificativ"
+    },
+    "ASSESSMENTTYPES": {
+      "MICRO_ASSESSMENT": "Microevaluare",
+      "OTHER": "Alte",
+      "SCHEDULED_AUDIT_REPORT": "Raport de audit programat",
+      "SIMPLIFIED_CHECKLIST": "Lista de verificare simplificată",
+      "SPECIAL_AUDIT_REPORT": "Raport de audit special",
+      "HIGH_RISK_ASSUMED": "Risc ridicat asumat",
+      "LOW_RISK_ASSUMED": "Risc scăzut asumat"
+    },
+    "INTERVENTIONAMENDMENTTYPES": {
+      "TYPE_1:_ADMINISTRATIVE_ERROR_(CORRECTION)": "Tip 1: eroare administrativă (corecție)",
+      "TYPE_2:_BUDGET_<=_20%": "Tip 2: Buget <= 20%",
+      "TYPE_3:_BUDGET_>_20%": "Tip 3: Buget > 20%",
+      "TYPE_4:_CHANGES_TO_PLANNED_RESULTS": "Tip 4: Modificări ale rezultatelor planificate",
+      "TYPE_5:_NO_COST_EXTENSION": "Tip 5: Fără prelungire a costurilor",
+      "TYPE_6:_OTHER": "Tip 6: Altele"
+    },
+    "PARTNERRISKRATINGS": {
+      "HIGH": "Înalt",
+      "LOW": "Scăzut",
+      "MEDIUM": "Mediu",
+      "NOT_REQUIRED": "Nu este necesar",
+      "SIGNIFICANT": "Semnificativ"
+    },
+    "GENDEREQUITYRATINGS": {
+      "NONE": "Nici unul",
+      "MARGINAL": "Marginal",
+      "SIGNIFICANT": "Semnificativ",
+      "PRINCIPAL": "Principal"
+    },
+    "RISKTYPES": {
+      "SOCIAL_&_ENVIRONMENTAL": "Social și de mediu",
+      "FINANCIAL": "Financiar",
+      "OPERATIONAL": "Operațional",
+      "ORGANIZATIONAL": "organizatoric",
+      "POLITICAL": "Politic",
+      "STRATEGIC": "Strategic",
+      "SAFETY_&_SECURITY": "Siguranță și securitate"
+    },
+    "CASHTRANSFERMODALITIES": {
+      "DIRECT_PAYMENT": "Plata directă",
+      "REIMBURSEMENT": "Rambursare",
+      "DIRECT_CASH_TRANSFER": "Transfer direct de numerar"
+    },
+    "SECTIONS": {
+      "CHILD_PROTECTION": "Protecția Copilului",
+      "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Advocacy în comunicare și implicare civică",
+      "DRIVERS": "Șoferii",
+      "EDUCATION": "Educaţie",
+      "EMERGENCY/FIELD_COORDINATION": "Coordonare de urgență/de teren",
+      "HEALTH": "Sănătate",
+      "NUTRITION": "Nutriție",
+      "OPERATIONS": "Operațiuni",
+      "POLIO": "Poliomielita",
+      "PROGRAMME_COORDINATION": "Coordonarea programului",
+      "SECURITY": "Securitate",
+      "SPEAR": "SULIŢĂ",
+      "SPPME": "SPPME",
+      "WASH": "SPALARE"
+    }
+  }
 }

@@ -86,6 +86,7 @@
     "UNICEF_FOCAL_POINT": "نقطة اتصال اليونيسف",
     "BUDGET_OWNER": "مالك ميزانية اليونيسف"
   },
+  "PD_SPD": "PD / SPD",
   "VENDOR_NO": "رقم البائع",
   "NAME_SHORT_FULL": "الاسم (قصير / كامل)",
   "PARTNER_TYPE": "نوع الشريك",
@@ -251,6 +252,10 @@
   "ADD_DISAGGREGATION": "أضف التفصيل",
   "TERMINATE": "إنهاء",
   "TERMINATE_AGREEMENT": "إنهاء الاتفاقية",
+  "UNSUSPEND": "غير معلق",
+  "SUSPEND": "تعليق",
+  "DELETE": "حذف",
+  "SAVE": "يحفظ",
   "NAME": "اسم",
   "ACTIVE": "نشيط",
   "TERMINATION_NOTICE_FILE_IS_REQUIRED": "ملف إشعار الإنهاء مطلوب",
@@ -331,5 +336,150 @@
   "LOCATION_SITE": "الموقع (الموقع)",
   "ASSESSMENT": "تقييم",
   "PLEASE_SELECT_ASSESSMENT_TYPE": "الرجاء تحديد نوع التقييم",
-  "PLEASE_SELECT_THE_REPORT_FILE": "الرجاء تحديد ملف التقرير"
+  "PLEASE_SELECT_THE_REPORT_FILE": "الرجاء تحديد ملف التقرير",
+  "CSO": "CSO",
+  "AUDIT_OPTIONS": {
+    "SPECIAL_AUDIT": "المراجعة الخاصة",
+    "SCHEDULED_AUDIT": "التدقيق المقرر"
+  },
+  "ABOUT_TO_TERMINATE_AGREEMENT": "أنت على وشك إنهاء هذه الاتفاقية. هل تريد الاستمرار؟",
+  "ABOUT_TO_SUSPEND_AGREEMENT": "أنت على وشك تعليق هذه الاتفاقية. هل تريد الاستمرار؟",
+  "ABOUT_TO_UNSUSPEND_AGREEMENT": "أنت على وشك إلغاء تعليق هذه الاتفاقية. هل تريد الاستمرار؟",
+  "STATUS_IS_CHANGING": "أنت تقوم بتغيير الحالة من <strong>&quot;{{from}}&quot;</strong> إلى <strong>&quot;{{to}}&quot;</strong> . هل تريد الاستمرار؟",
+  "PCA_TEMPLATE_NOT_AVAILABLE": "إنشاء قالب PCA غير متوفر للظروف الخاصة PCA",
+  "SAVE_BEFORE_PCA": "احفظ قبل إنشاء قالب PCA",
+  "LEAVE_UPLOAD_IN_PROGRESS": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ ستفقد جميع عمليات تحميل الملفات قيد التقدم أو غير المحفوظة!",
+  "LEAVE_PAGE": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟",
+  "COMMON_DATA": {
+    "FILETYPES": {
+      "FACE": "وجه",
+      "PROGRESS_REPORT": "تقرير التطور",
+      "FINAL_PARTNERSHIP_REVIEW": "مراجعة الشراكة النهائية",
+      "CORRESPONDENCE": "مراسلة",
+      "SUPPLY/DISTRIBUTION_PLAN": "خطة التوريد / التوزيع",
+      "OTHER": "آخر"
+    },
+    "PROVIDEDBY": {
+      "UNICEF": "اليونيسف",
+      "PARTNER": "شريك"
+    },
+    "DOCUMENTTYPES": {
+      "PROGRAMME_DOCUMENT": "وثيقة البرنامج",
+      "SIMPLIFIED_PROGRAMME_DOCUMENT": "وثيقة البرنامج المبسطة"
+    },
+    "INTERVENTIONSTATUSES": {
+      "DEVELOPMENT": "تطوير",
+      "REVIEW": "إعادة النظر",
+      "SIGNATURE": "التوقيع",
+      "SIGNED": "وقعت",
+      "ACTIVE": "نشيط",
+      "CANCELLED": "ألغيت",
+      "ENDED": "انتهى",
+      "CLOSED": "مغلق",
+      "SUSPENDED": "موقوف عن العمل",
+      "TERMINATED": "تم إنهاؤه",
+      "EXPIRED": "منتهي الصلاحية"
+    },
+    "AGREEMENTTYPES": {
+      "MEMORANDUM_OF_UNDERSTANDING": "مذكرة تفاهم",
+      "PROGRAMME_COOPERATION_AGREEMENT": "اتفاقية تعاون البرنامج",
+      "SMALL_SCALE_FUNDING_AGREEMENT": "اتفاقية التمويل الصغير الحجم"
+    },
+    "AGREEMENTSTATUSES": {
+      "DRAFT": "مسودة",
+      "SIGNED": "وقعت",
+      "ENDED": "انتهى",
+      "SUSPENDED": "موقوف عن العمل",
+      "TERMINATED": "تم إنهاؤه"
+    },
+    "AGREEMENTAMENDMENTTYPES": {
+      "BANKING_INFORMATION": "المعلومات المصرفية",
+      "CHANGE_AUTHORIZED_OFFICER(S)": "تغيير المسؤول (الموظفين) المعتمد",
+      "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "تغيير الاسم القانوني للشريك المنفذ",
+      "CHANGE_IN_CLAUSE": "تغيير في البند"
+    },
+    "CSOTYPES": {
+      "ACADEMIC_INSTITUTION": "المؤسسة الأكاديمية",
+      "COMMUNITY_BASED_ORGANIZATION": "منظمة مجتمعية",
+      "COMMUNITY_BASED": "قائم على المجتمع",
+      "INTERNATIONAL": "دولي",
+      "NATIONAL": "وطني"
+    },
+    "PARTNERTYPES": {
+      "BILATERAL_/_MULTILATERAL": "ثنائي / متعدد الأطراف",
+      "CIVIL_SOCIETY_ORGANIZATION": "منظمة المجتمع المدني",
+      "GOVERNMENT": "حكومة",
+      "UN_AGENCY": "وكالة الأمم المتحدة"
+    },
+    "SEARISKRATINGS": {
+      "HIGH": "عالٍ",
+      "HIGH_RISK_ASSUMED": "يفترض وجود مخاطر عالية",
+      "LOW": "قليل",
+      "LOW_RISK_ASSUMED": "يفترض مخاطر منخفضة",
+      "MEDIUM": "متوسط",
+      "NOT_ASSESSED": "لم يتم تقييمه",
+      "NOT_REQUIRED": "غير مطلوب",
+      "SIGNIFICANT": "هام"
+    },
+    "ASSESSMENTTYPES": {
+      "MICRO_ASSESSMENT": "التقييم الجزئي",
+      "OTHER": "آخر",
+      "SCHEDULED_AUDIT_REPORT": "تقرير التدقيق المجدول",
+      "SIMPLIFIED_CHECKLIST": "قائمة تدقيق مبسطة",
+      "SPECIAL_AUDIT_REPORT": "تقرير المراجعة الخاص",
+      "HIGH_RISK_ASSUMED": "يفترض وجود مخاطر عالية",
+      "LOW_RISK_ASSUMED": "يفترض مخاطر منخفضة"
+    },
+    "INTERVENTIONAMENDMENTTYPES": {
+      "TYPE_1:_ADMINISTRATIVE_ERROR_(CORRECTION)": "النوع 1: خطأ إداري (تصحيح)",
+      "TYPE_2:_BUDGET_<=_20%": "النوع 2: الميزانية <= 20٪",
+      "TYPE_3:_BUDGET_>_20%": "النوع 3: الميزانية> 20٪",
+      "TYPE_4:_CHANGES_TO_PLANNED_RESULTS": "النوع 4: التغييرات على النتائج المخطط لها",
+      "TYPE_5:_NO_COST_EXTENSION": "النوع 5: بدون تمديد للتكلفة",
+      "TYPE_6:_OTHER": "النوع 6: أخرى"
+    },
+    "PARTNERRISKRATINGS": {
+      "HIGH": "عالٍ",
+      "LOW": "قليل",
+      "MEDIUM": "متوسط",
+      "NOT_REQUIRED": "غير مطلوب",
+      "SIGNIFICANT": "هام"
+    },
+    "GENDEREQUITYRATINGS": {
+      "NONE": "لا أحد",
+      "MARGINAL": "هامش",
+      "SIGNIFICANT": "هام",
+      "PRINCIPAL": "المالك"
+    },
+    "RISKTYPES": {
+      "SOCIAL_&_ENVIRONMENTAL": "الاجتماعية والبيئية",
+      "FINANCIAL": "الأمور المالية",
+      "OPERATIONAL": "التشغيل",
+      "ORGANIZATIONAL": "التنظيمية",
+      "POLITICAL": "سياسي",
+      "STRATEGIC": "استراتيجية",
+      "SAFETY_&_SECURITY": "سلامة الامن"
+    },
+    "CASHTRANSFERMODALITIES": {
+      "DIRECT_PAYMENT": "دفع مباشر",
+      "REIMBURSEMENT": "السداد",
+      "DIRECT_CASH_TRANSFER": "التحويل النقدي المباشر"
+    },
+    "SECTIONS": {
+      "CHILD_PROTECTION": "حماية الطفل",
+      "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "الدعوة والتواصل والمشاركة المدنية",
+      "DRIVERS": "السائقين",
+      "EDUCATION": "تعليم",
+      "EMERGENCY/FIELD_COORDINATION": "الطوارئ / التنسيق الميداني",
+      "HEALTH": "صحة",
+      "NUTRITION": "تَغذِيَة",
+      "OPERATIONS": "عمليات",
+      "POLIO": "شلل الأطفال",
+      "PROGRAMME_COORDINATION": "تنسيق البرنامج",
+      "SECURITY": "حماية",
+      "SPEAR": "رمح",
+      "SPPME": "SPPME",
+      "WASH": "غسل"
+    }
+  }
 }

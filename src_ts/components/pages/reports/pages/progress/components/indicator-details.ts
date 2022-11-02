@@ -94,7 +94,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         }
       </style>
 
-      <etools-loading ?active="${this.loading}">Loading...</etools-loading>
+      <etools-loading ?active="${this.loading}"></etools-loading>
 
       <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
 

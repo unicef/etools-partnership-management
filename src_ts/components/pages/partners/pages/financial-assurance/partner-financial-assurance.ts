@@ -36,7 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
-import {cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -236,11 +236,11 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             <div class="from-vision">${translate('FROM_VISION')}</div>
             <div class="col-3">
               <span class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${this.getRiskRatingValue(this.partner.rating)}
+                ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
               </span>
             </div>
             <div class="col col-5">
-              ${this.partner.type_of_assessment} <br />
+              ${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')} <br />
               ${this.getDateDisplayValue(this.partner.last_assessment_date)}
             </div>
             <div class="col col-4 center-align">$ ${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}</div>
@@ -266,7 +266,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           </div>
           <div class="col-1 col center-align">
             <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-              ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
+              ${translateValue(
+                this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1),
+                'COMMON_DATA.SEARISKRATINGS'
+              )}
             </span>
           </div>
           <div class="col col-1 center-align">${this.getDateDisplayValue(this.partner.psea_assessment_date)}</div>

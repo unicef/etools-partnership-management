@@ -46,7 +46,7 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
       </style>
 
       <div class="monitoring-visits-container">
-        <etools-loading id="monitoring" loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
+        <etools-loading id="monitoring" .active="${this.showLoading}"></etools-loading>
 
         <div ?hidden="${this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}">
           <etools-data-table-header

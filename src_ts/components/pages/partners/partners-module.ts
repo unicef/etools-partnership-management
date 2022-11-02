@@ -578,7 +578,6 @@ export class PartnersModule extends connect(store)(
    */
   public _showPartnersPageLoadingMessage() {
     fireEvent(this, 'global-loading', {
-      message: 'Loading...',
       active: true,
       loadingSource: 'partners-page'
     });

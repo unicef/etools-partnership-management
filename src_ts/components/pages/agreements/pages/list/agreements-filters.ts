@@ -1,5 +1,5 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, translate} from 'lit-translate';
 import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
 import {EtoolsFilterTypes} from '@unicef-polymer/etools-filters/src/etools-filters';
 
@@ -114,8 +114,8 @@ export function getAgreementFilters() {
       type: EtoolsFilterTypes.Dropdown,
       singleSelection: true,
       selectionOptions: [
-        {value: 'true', label: 'Yes'},
-        {value: 'false', label: 'No'}
+        {value: 'true', label: getTranslation('GENERAL.YES')},
+        {value: 'false', label: getTranslation('GENERAL.NO')}
       ],
       optionValue: 'value',
       optionLabel: 'label',

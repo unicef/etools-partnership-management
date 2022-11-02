@@ -83,8 +83,8 @@ class AppMenu extends connect(store)(
 
           <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
             <iron-icon id="interventions-icon" icon="description"></iron-icon>
-            <paper-tooltip for="interventions-icon" position="right">PD/SPD</paper-tooltip>
-            <div class="name">PD/SPD</div>
+            <paper-tooltip for="interventions-icon" position="right">${translate('PD_SPD')}</paper-tooltip>
+            <div class="name">${translate('PD_SPD')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
@@ -126,8 +126,10 @@ class AppMenu extends connect(store)(
           target="_blank"
         >
           <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
-          <paper-tooltip for="power-bi-icon" position="right">Implementation Intelligence</paper-tooltip>
-          <div class="name">Implementation Intelligence</div>
+          <paper-tooltip for="power-bi-icon" position="right"
+            >${translate('IMPLEMENTATION_INTELLIGENCE')}</paper-tooltip
+          >
+          <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
         </a>
 
         <a
@@ -138,8 +140,8 @@ class AppMenu extends connect(store)(
           tracker="Knowledge base"
         >
           <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
-          <paper-tooltip for="knoledge-icon" position="right">Knowledge base</paper-tooltip>
-          <div class="name">Knowledge base</div>
+          <paper-tooltip for="knoledge-icon" position="right">${translate('KNOWLEDGE_BASE')}</paper-tooltip>
+          <div class="name">${translate('KNOWLEDGE_BASE')}</div>
         </a>
 
         <a
@@ -150,8 +152,8 @@ class AppMenu extends connect(store)(
           tracker="Discussion"
         >
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
-          <paper-tooltip for="discussion-icon" position="right">Discussion</paper-tooltip>
-          <div class="name">Discussion</div>
+          <paper-tooltip for="discussion-icon" position="right">${translate('DISCUSSION')}</paper-tooltip>
+          <div class="name">${translate('DISCUSSION')}</div>
         </a>
         <a
           class="nav-menu-item lighter-item last-one"
@@ -161,8 +163,8 @@ class AppMenu extends connect(store)(
           tracker="Information"
         >
           <iron-icon id="information-icon" icon="icons:info"></iron-icon>
-          <paper-tooltip for="information-icon" position="right">Information</paper-tooltip>
-          <div class="name">Information</div>
+          <paper-tooltip for="information-icon" position="right">${translate('INFORMATION')}</paper-tooltip>
+          <div class="name">${translate('INFORMATION')}</div>
         </a>
       </div>
     `;

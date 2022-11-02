@@ -7,7 +7,8 @@ import '../../../../common/components/etools-status/etools-status-common-mixin-l
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import '../../data/agreement-termination';
 import {openDialog} from '../../../../utils/dialog';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, listenForLangChanged} from 'lit-translate';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -48,42 +49,53 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
   possibleStatuses: any = [];
 
   @property({type: Array})
-  possibleActions: any = [
-    {
-      label: 'Save',
-      hidden: true,
-      primary: true,
-      event: 'save-agreement'
-      // save-agreement event is handeled by the parnent
-    },
-    {
-      label: 'Suspend',
-      hidden: true,
-      event: 'agreement-suspend-event'
-    },
-    {
-      label: 'Unsuspend',
-      hidden: true,
-      event: 'agreement-unsuspend-event'
-    },
-    {
-      label: 'Terminate',
-      hidden: true,
-      event: 'agreement-terminate-event'
-    },
-    {
-      label: 'Delete',
-      hidden: true,
-      event: 'agreement-delete-event'
-    }
-  ];
+  possibleActions: any = [];
 
   @property({type: String})
   deleteWarningMessage = getTranslation('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT');
 
   connectedCallback() {
     super.connectedCallback();
+    this.setPossibleActions();
     setTimeout(this.setPossibleStatuses.bind(this), 0);
+    listenForLangChanged(() => {
+      this.setPossibleStatuses();
+      this.setPossibleActions();
+      this._computeAvailableActions(this.status);
+      this._computeAvailableStatuses(this.status);
+    });
+  }
+
+  setPossibleActions() {
+    this.possibleActions = [
+      {
+        label: getTranslation('SAVE'),
+        hidden: true,
+        primary: true,
+        event: 'save-agreement'
+        // save-agreement event is handeled by the parnent
+      },
+      {
+        label: getTranslation('SUSPEND'),
+        hidden: true,
+        event: 'agreement-suspend-event'
+      },
+      {
+        label: getTranslation('UNSUSPEND'),
+        hidden: true,
+        event: 'agreement-unsuspend-event'
+      },
+      {
+        label: getTranslation('TERMINATE'),
+        hidden: true,
+        event: 'agreement-terminate-event'
+      },
+      {
+        label: getTranslation('DELETE'),
+        hidden: true,
+        event: 'agreement-delete-event'
+      }
+    ];
   }
 
   firstUpdated() {
@@ -117,31 +129,31 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
   setPossibleStatuses() {
     this.possibleStatuses = [
       {
-        label: CONSTANTS.STATUSES.Draft,
+        label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
         hidden: false,
         completed: false
       },
       {
-        label: CONSTANTS.STATUSES.Signed,
+        label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
         hidden: false,
         completed: false
       },
       {
-        label: CONSTANTS.STATUSES.Suspended,
+        label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED'),
         icon: 'av:pause-circle-filled',
         iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
         hidden: false,
         completed: false
       },
       {
-        label: CONSTANTS.STATUSES.Terminated,
+        label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.TERMINATED'),
         icon: 'report-problem',
         iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
         hidden: false,
         completed: false
       },
       {
-        label: CONSTANTS.STATUSES.Ended,
+        label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED'),
         hidden: false,
         completed: false
       }
@@ -158,20 +170,20 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
-        availableOptions.push('Save');
-        availableOptions.push('Delete');
+        availableOptions.push(getTranslation('SAVE'));
+        availableOptions.push(getTranslation('DELETE'));
         break;
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        availableOptions.push('Save');
+        availableOptions.push(getTranslation('SAVE'));
         if (this.agreementType !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          availableOptions.push('Suspend');
-          availableOptions.push('Terminate');
+          availableOptions.push(getTranslation('SUSPEND'));
+          availableOptions.push(getTranslation('TERMINATE'));
         }
         break;
 
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
         if (this.agreementType !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          availableOptions.push('Unsuspend');
+          availableOptions.push(getTranslation('UNSUSPEND'));
         }
         break;
 
@@ -182,7 +194,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
         break;
 
       default:
-        availableOptions.push('Save');
+        availableOptions.push(getTranslation('SAVE'));
         break;
     }
 
@@ -206,41 +218,57 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
-        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
-        activeStatus = CONSTANTS.STATUSES.Draft;
+        availableStatuses = [
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
+        ];
+        activeStatus = getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT');
         break;
 
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
-        activeStatus = CONSTANTS.STATUSES.Signed;
+        availableStatuses = [
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
+        ];
+        activeStatus = getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED');
         break;
 
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
         availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Suspended,
-          CONSTANTS.STATUSES.Ended
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
         ];
-        activeStatus = CONSTANTS.STATUSES.Suspended;
+        activeStatus = getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED');
         break;
 
       case CONSTANTS.STATUSES.Terminated.toLowerCase():
         availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Terminated,
-          CONSTANTS.STATUSES.Ended
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.TERMINATED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
         ];
-        activeStatus = CONSTANTS.STATUSES.Terminated;
+        activeStatus = getTranslation('COMMON_DATA.AGREEMENTSTATUSES.TERMINATED');
         break;
 
       case CONSTANTS.STATUSES.Ended.toLowerCase():
-        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
-        activeStatus = CONSTANTS.STATUSES.Ended;
+        availableStatuses = [
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
+        ];
+        activeStatus = getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED');
         break;
       default:
-        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
+        availableStatuses = [
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.DRAFT'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SIGNED'),
+          getTranslation('COMMON_DATA.AGREEMENTSTATUSES.ENDED')
+        ];
         activeStatus = '';
         break;
     }
@@ -296,16 +324,19 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
   _computeWarningMessage(newStatus: string) {
     switch (newStatus) {
       case CONSTANTS.STATUSES.Terminated.toLowerCase():
-        this.warningMessage = 'You are about to terminate this Agreement. Do you want to continue?';
+        this.warningMessage = getTranslation('ABOUT_TO_TERMINATE_AGREEMENT');
         break;
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
-        this.warningMessage = 'You are about to suspend this Agreement. Do you want to continue?';
+        this.warningMessage = getTranslation('ABOUT_TO_SUSPEND_AGREEMENT');
         break;
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        this.warningMessage = 'You are about to unsuspend this Agreement. Do you want to continue?';
+        this.warningMessage = getTranslation('ABOUT_TO_UNSUSPEND_AGREEMENT');
         break;
       default:
-        this.warningMessage = this._getDefaultWarningMessage();
+        this.warningMessage = getTranslation('STATUS_IS_CHANGING', {
+          from: getTranslatedValue(this.status, 'COMMON_DATA.AGREEMENTSTATUSES'),
+          to: getTranslatedValue(this.newStatus, 'COMMON_DATA.AGREEMENTSTATUSES')
+        });
         break;
     }
   }

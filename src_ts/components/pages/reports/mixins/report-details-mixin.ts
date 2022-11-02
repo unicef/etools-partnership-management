@@ -54,7 +54,6 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
       this.reportAttachments = [];
 
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: this._loadingMsgSource
       });
@@ -82,7 +81,6 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     _getReportAttachment(reportId: string) {
       fireEvent(this, 'global-loading', {
-        message: 'Loading...',
         active: true,
         loadingSource: this._loadingMsgSource
       });

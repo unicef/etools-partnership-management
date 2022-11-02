@@ -25,7 +25,6 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
     public getPartnerStaffMembers(newId: number) {
       if (newId > 0) {
         fireEvent(this, 'global-loading', {
-          message: 'Loading...',
           active: true,
           loadingSource: this.staffLoadingMsgSource
         });

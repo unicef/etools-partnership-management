@@ -35,7 +35,12 @@ import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/
 import {PartnersListData} from '../../data/partners-list-data';
 import {EtoolsRouter} from '../../../../utils/routes';
 import omit from 'lodash-es/omit';
-import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {
+  buildUrlQueryString,
+  cloneDeep,
+  getTranslatedValue,
+  translateValue
+} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';
@@ -202,14 +207,20 @@ export class PartnersListBase extends CommonMixin(
                 data-col-header-label="${translate('HACT_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
-                ${this.getDisplayValue(partner.rating, ',', false)}
+                ${translateValue(
+                  this.getDisplayValue(partner.rating, ',', false) as string,
+                  'COMMON_DATA.PARTNERRISKRATINGS'
+                )}
               </span>
               <span
                 class="col-data flex-c"
                 data-col-header-label="${translate('SEA_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
-                ${this.getDisplayValue(partner.sea_risk_rating_name, ',', false)}
+                ${translateValue(
+                  this.getDisplayValue(partner.sea_risk_rating_name, ',', false) as string,
+                  'COMMON_DATA.SEARISKRATINGS'
+                )}
               </span>
               <span class="col-data flex-c" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
                 ${this.getDateDisplayValue(partner.psea_assessment_date)}
@@ -303,6 +314,9 @@ export class PartnersListBase extends CommonMixin(
         this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
       }
       this.currentLanguage = state.activeLanguage!.activeLanguage;
+      if (this.allFilters) {
+        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      }
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
@@ -507,11 +521,11 @@ export class PartnersListBase extends CommonMixin(
 
   public _computeType(csoType: any, partnerType: any) {
     if (!csoType) {
-      return partnerType;
+      return getTranslatedValue(partnerType, 'COMMON_DATA.PARTNERTYPES');
     } else if (csoType === 'Community Based Organization') {
-      return 'CSO / Community Based';
+      return `${getTranslatedValue('CSO')} / ${getTranslatedValue('Community Based', 'COMMON_DATA.CSOTYPES')}`;
     } else {
-      return 'CSO / ' + csoType;
+      return `${getTranslatedValue('CSO')} / ${getTranslatedValue(csoType, 'COMMON_DATA.CSOTYPES')}`;
     }
   }
 }

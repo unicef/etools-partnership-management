@@ -17,7 +17,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
-import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -149,7 +149,7 @@ export class PartnerOverview extends PaginationMixin(
           <div class="row-h">
             <div class="col col-1">
               <div class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${this.getRiskRatingValue(this.partner.rating)}
+                ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
               </div>
             </div>
             <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 2)}</div>
@@ -177,7 +177,10 @@ export class PartnerOverview extends PaginationMixin(
             </div>
             <div class="col col-1 center-align">
               <div class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-                ${this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1)}
+                ${translateValue(
+                  this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1),
+                  'COMMON_DATA.SEARISKRATINGS'
+                )}
               </div>
             </div>
           </div>

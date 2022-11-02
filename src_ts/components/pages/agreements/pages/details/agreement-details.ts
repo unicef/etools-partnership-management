@@ -640,9 +640,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     }
 
     if (isSpecialConditionsPCA) {
-      this.generatePCAMessage = 'Generate PCA template not available for Special Conditions PCA';
+      this.generatePCAMessage = getTranslation('PCA_TEMPLATE_NOT_AVAILABLE');
     } else {
-      this.generatePCAMessage = 'Save before generating the PCA template';
+      this.generatePCAMessage = getTranslation('SAVE_BEFORE_PCA');
     }
   }
 

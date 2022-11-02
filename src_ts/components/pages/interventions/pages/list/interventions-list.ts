@@ -17,10 +17,10 @@ import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {buildUrlQueryString} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {buildUrlQueryString, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-filters/src/etools-filters';
-import {translate} from 'lit-translate';
+import {listenForLangChanged, translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
 import '../../data/interventions-list-data.js';
@@ -129,8 +129,11 @@ export class InterventionsList extends connect(store)(
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
-          label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count ||
-          0} results to show"
+          label="${translate('RESULTS_TO_SHOW', {
+            from: this.paginator.visible_range[0],
+            to: this.paginator.visible_range[1],
+            count: this.paginator.count || 0
+          })}"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
             ${translate('INTERVENTIONS_LIST.REFERENCE_NO')}
@@ -178,7 +181,7 @@ export class InterventionsList extends connect(store)(
                 <span>${this.getDisplayValue(intervention.partner_name)}</span>
               </span>
               <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
-                ${this.getDisplayValue(intervention.document_type)}
+                ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
               </span>
               <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
                 <div>${this.getStatusCellText(intervention)}</div>
@@ -226,15 +229,15 @@ export class InterventionsList extends connect(store)(
 
             <div slot="row-data-details" class="p-relative">
               <div class="row-details-content col-2">
-                <span class="rdc-title">Offices</span>
+                <span class="rdc-title">${translate('OFFICES')}</span>
                 <span>${this.getDisplayValue(intervention.offices_names)}</span>
               </div>
               <div class="row-details-content col-2">
-                <span class="rdc-title">Section</span>
+                <span class="rdc-title">${translate('SECTION')}</span>
                 <span>${this.getDisplayValue(intervention.section_names)}</span>
               </div>
               <div class="row-details-content col-2">
-                <span class="rdc-title">UNICEF Cash Contribution</span>
+                <span class="rdc-title">${translate('UNICEF_CASH_CONTRIBUTION')}</span>
                 <etools-info-tooltip
                   class="fr-nr-warn
                             ${this.getCurrencyMismatchClass(
@@ -268,7 +271,7 @@ export class InterventionsList extends connect(store)(
                 </etools-info-tooltip>
               </div>
               <div class="row-details-content col-2">
-                <span class="rdc-title">Total Budget</span>
+                <span class="rdc-title">${translate('TOTAL_BUDGET')}</span>
                 <span>
                   <span class="amount-currency">${intervention.budget_currency}</span>
                   <span>${displayCurrencyAmount(intervention.total_budget, '0.00')}</span>
@@ -369,6 +372,7 @@ export class InterventionsList extends connect(store)(
         this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
       }
       this.currentLanguage = state.activeLanguage!.activeLanguage;
+      this.populateDropdownFilterOptionsFromCommonData(state, this.allFilters);
     }
   }
 

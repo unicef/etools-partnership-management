@@ -307,9 +307,7 @@ export class ReportsModule extends connect(store)(
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
-    const loadingMsg = 'Loading...';
     fireEvent(this, 'global-loading', {
-      message: loadingMsg,
       active: true,
       loadingSource: 'reports-page'
     });

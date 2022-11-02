@@ -87,6 +87,7 @@
     "BUDGET_OWNER": "Gestionnaire du budget UNICEF ",
     "STATUS": "الحالة"
   },
+  "PD_SPD": "PD/SPD",
   "VENDOR_NO": "N° de fournisseur.",
   "NAME_SHORT_FULL": "Nom (court/complet)",
   "PARTNER_TYPE": "Type de partenaire",
@@ -252,6 +253,10 @@
   "ADD_DISAGGREGATION": "Ajouter une désagrégation",
   "TERMINATE": "Résilier",
   "TERMINATE_AGREEMENT": "Résilier le contrat",
+  "UNSUSPEND": "Annuler la suspension",
+  "SUSPEND": "Suspendre",
+  "DELETE": "Effacer",
+  "SAVE": "sauvegarder",
   "NAME": "nom",
   "ACTIVE": "Actif",
   "TERMINATION_NOTICE_FILE_IS_REQUIRED": "Le fichier d'avis de résiliation est requis",
@@ -332,5 +337,150 @@
   "LOCATION_SITE": "Emplacement (Site)",
   "ASSESSMENT": "Évaluation",
   "PLEASE_SELECT_ASSESSMENT_TYPE": "Veuillez sélectionner le type d'évaluation",
-  "PLEASE_SELECT_THE_REPORT_FILE": "Veuillez sélectionner le fichier de rapport"
+  "PLEASE_SELECT_THE_REPORT_FILE": "Veuillez sélectionner le fichier de rapport",
+  "CSO": "OSC",
+  "AUDIT_OPTIONS": {
+    "SPECIAL_AUDIT": "Audit spécial",
+    "SCHEDULED_AUDIT": "Audit planifié"
+  },
+  "ABOUT_TO_TERMINATE_AGREEMENT": "Vous êtes sur le point de résilier le présent Contrat. Voulez-vous continuer?",
+  "ABOUT_TO_SUSPEND_AGREEMENT": "Vous êtes sur le point de suspendre cet accord. Voulez-vous continuer?",
+  "ABOUT_TO_UNSUSPEND_AGREEMENT": "Vous êtes sur le point de lever la suspension de cet Accord. Voulez-vous continuer?",
+  "STATUS_IS_CHANGING": "Vous modifiez le statut de <strong>{{from}}</strong> à <strong>{{to}}</strong> . Voulez-vous continuer?",
+  "PCA_TEMPLATE_NOT_AVAILABLE": "Générer un modèle PCA non disponible pour les conditions spéciales PCA",
+  "SAVE_BEFORE_PCA": "Enregistrer avant de générer le modèle PCA",
+  "LEAVE_UPLOAD_IN_PROGRESS": "Voulez-vous vraiment quitter cette page ? Tous les téléchargements de fichiers en cours ou non enregistrés seront perdus !",
+  "LEAVE_PAGE": "Voulez-vous vraiment quitter cette page ?",
+  "COMMON_DATA": {
+    "FILETYPES": {
+      "FACE": "VISAGE",
+      "PROGRESS_REPORT": "Rapport d'étape",
+      "FINAL_PARTNERSHIP_REVIEW": "Examen final du partenariat",
+      "CORRESPONDENCE": "Correspondance",
+      "SUPPLY/DISTRIBUTION_PLAN": "Plan d'approvisionnement/distribution",
+      "OTHER": "Autre"
+    },
+    "PROVIDEDBY": {
+      "UNICEF": "UNICEF",
+      "PARTNER": "Partenaire"
+    },
+    "DOCUMENTTYPES": {
+      "PROGRAMME_DOCUMENT": "Document de programme",
+      "SIMPLIFIED_PROGRAMME_DOCUMENT": "Document de programme simplifié"
+    },
+    "INTERVENTIONSTATUSES": {
+      "DEVELOPMENT": "Développement",
+      "REVIEW": "Examen",
+      "SIGNATURE": "Signature",
+      "SIGNED": "Signé",
+      "ACTIVE": "Actif",
+      "CANCELLED": "Annulé",
+      "ENDED": "Terminé",
+      "CLOSED": "Fermé",
+      "SUSPENDED": "Suspendu",
+      "TERMINATED": "Résilié",
+      "EXPIRED": "Expiré"
+    },
+    "AGREEMENTTYPES": {
+      "MEMORANDUM_OF_UNDERSTANDING": "Protocole d'entente",
+      "PROGRAMME_COOPERATION_AGREEMENT": "Accord de coopération de programme",
+      "SMALL_SCALE_FUNDING_AGREEMENT": "Accord de financement à petite échelle"
+    },
+    "AGREEMENTSTATUSES": {
+      "DRAFT": "Brouillon",
+      "SIGNED": "Signé",
+      "ENDED": "Terminé",
+      "SUSPENDED": "Suspendu",
+      "TERMINATED": "Résilié"
+    },
+    "AGREEMENTAMENDMENTTYPES": {
+      "BANKING_INFORMATION": "Information bancaire",
+      "CHANGE_AUTHORIZED_OFFICER(S)": "Changer le(s) agent(s) autorisé(s)",
+      "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "Changement de nom légal du partenaire de mise en œuvre",
+      "CHANGE_IN_CLAUSE": "Modification de clause"
+    },
+    "CSOTYPES": {
+      "ACADEMIC_INSTITUTION": "Institution académique",
+      "COMMUNITY_BASED_ORGANIZATION": "Organisation communautaire",
+      "COMMUNITY_BASED": "Basé sur la communauté",
+      "INTERNATIONAL": "International",
+      "NATIONAL": "National"
+    },
+    "PARTNERTYPES": {
+      "BILATERAL_/_MULTILATERAL": "Bilatéral / Multilatéral",
+      "CIVIL_SOCIETY_ORGANIZATION": "Organisation de la société civile",
+      "GOVERNMENT": "Gouvernement",
+      "UN_AGENCY": "Agence des Nations Unies"
+    },
+    "SEARISKRATINGS": {
+      "HIGH": "Haute",
+      "HIGH_RISK_ASSUMED": "Risque élevé présumé",
+      "LOW": "Bas",
+      "LOW_RISK_ASSUMED": "Faible risque supposé",
+      "MEDIUM": "Moyen",
+      "NOT_ASSESSED": "Pas évalué",
+      "NOT_REQUIRED": "Non requis",
+      "SIGNIFICANT": "Important"
+    },
+    "ASSESSMENTTYPES": {
+      "MICRO_ASSESSMENT": "Micro-évaluation",
+      "OTHER": "Autre",
+      "SCHEDULED_AUDIT_REPORT": "Rapport d'audit programmé",
+      "SIMPLIFIED_CHECKLIST": "Liste de contrôle simplifiée",
+      "SPECIAL_AUDIT_REPORT": "Rapport d'audit spécial",
+      "HIGH_RISK_ASSUMED": "Risque élevé présumé",
+      "LOW_RISK_ASSUMED": "Faible risque présumé"
+    },
+    "INTERVENTIONAMENDMENTTYPES": {
+      "TYPE_1:_ADMINISTRATIVE_ERROR_(CORRECTION)": "Type 1 : erreur administrative (correction)",
+      "TYPE_2:_BUDGET_<=_20%": "Type 2 : Budget <= 20 %",
+      "TYPE_3:_BUDGET_>_20%": "Type 3 : budget > 20 %",
+      "TYPE_4:_CHANGES_TO_PLANNED_RESULTS": "Type 4 : Modifications des résultats prévus",
+      "TYPE_5:_NO_COST_EXTENSION": "Type 5 : Prolongation sans frais",
+      "TYPE_6:_OTHER": "Type 6 : Autre"
+    },
+    "PARTNERRISKRATINGS": {
+      "HIGH": "Haute",
+      "LOW": "Bas",
+      "MEDIUM": "Moyen",
+      "NOT_REQUIRED": "Non requis",
+      "SIGNIFICANT": "Important"
+    },
+    "GENDEREQUITYRATINGS": {
+      "NONE": "Aucun",
+      "MARGINAL": "Marginal",
+      "SIGNIFICANT": "Important",
+      "PRINCIPAL": "Directeur"
+    },
+    "RISKTYPES": {
+      "SOCIAL_&_ENVIRONMENTAL": "Social & Environnemental",
+      "FINANCIAL": "Financier",
+      "OPERATIONAL": "Opérationnel",
+      "ORGANIZATIONAL": "Organisationnel",
+      "POLITICAL": "Politique",
+      "STRATEGIC": "Stratégique",
+      "SAFETY_&_SECURITY": "Sécurité sûreté"
+    },
+    "CASHTRANSFERMODALITIES": {
+      "DIRECT_PAYMENT": "Paiement direct",
+      "REIMBURSEMENT": "Remboursement",
+      "DIRECT_CASH_TRANSFER": "Transfert direct d'espèces"
+    },
+    "SECTIONS": {
+      "CHILD_PROTECTION": "Protection de l'enfance",
+      "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Communication Plaidoyer & Engagement Civique",
+      "DRIVERS": "Conducteurs",
+      "EDUCATION": "Éducation",
+      "EMERGENCY/FIELD_COORDINATION": "Coordination d'urgence/sur le terrain",
+      "HEALTH": "Santé",
+      "NUTRITION": "La nutrition",
+      "OPERATIONS": "Opérations",
+      "POLIO": "Polio",
+      "PROGRAMME_COORDINATION": "Coordination du programme",
+      "SECURITY": "Sécurité",
+      "SPEAR": "LANCE",
+      "SPPME": "SPPME",
+      "WASH": "LAVAGE"
+    }
+  }
 }

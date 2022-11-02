@@ -37,6 +37,7 @@ import {translate} from 'lit-translate';
 import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 declare const dayjs: any;
 
@@ -180,7 +181,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             <!-- HACT Risk rating -->
             <etools-form-element-wrapper2 label="${translate('HACT_RISK_RATING')}" no-placeholder>
               <span class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${this.getRiskRatingValue(this.partner.rating)}
+                ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
               </span>
             </etools-form-element-wrapper2>
           </div>
@@ -188,7 +189,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             <!-- Type of assessment -->
             <etools-form-element-wrapper2
               label="${translate('TYPE_OF_ASSESSMENT')}"
-              .value="${this.partner.type_of_assessment}"
+              .value="${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')}"
             >
             </etools-form-element-wrapper2>
           </div>
@@ -208,7 +209,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             <!-- PSEA risk rating -->
             <etools-form-element-wrapper2 label="${translate('SEA_RISK_RATING')}" no-placeholder>
               <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-                ${this.getRiskRatingValue(this.partner.sea_risk_rating_name)}
+                ${translateValue(
+                  this.getRiskRatingValue(this.partner.sea_risk_rating_name),
+                  'COMMON_DATA.SEARISKRATINGS'
+                )}
               </span>
             </etools-form-element-wrapper2>
           </div>
@@ -438,7 +442,11 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   public _getPartnerType(partnerType: any, csoType: any) {
-    return csoType !== null ? partnerType + '/' + csoType : partnerType;
+    return csoType !== null
+      ? getTranslatedValue(partnerType, 'COMMON_DATA.PARTNERTYPES') +
+          '/' +
+          getTranslatedValue(csoType, 'COMMON_DATA.CSOTYPES')
+      : getTranslatedValue(partnerType, 'COMMON_DATA.PARTNERTYPES');
   }
 
   /**
