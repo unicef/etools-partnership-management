@@ -91,7 +91,7 @@ import {fireEvent} from './components/utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -99,8 +99,8 @@ import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use, get as getTranslation} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
-import debounce from 'lodash-es/debounce';
 import {LitElement} from 'lit-element';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -158,7 +158,7 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
+      <etools-piwik-analytics page="[[_getRootPathAndModule(module)]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
       <etools-toasts></etools-toasts>
 
@@ -201,39 +201,47 @@ class AppShell extends connect(store)(
 
           <!-- Main content -->
           <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
-            <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
-              <partners-module
-                id="partners"
-                class="main-page"
-                show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-                current-module="[[_lastActivePartnersModule]]"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
-              </partners-module>
-            </template>
+            <partners-module
+              id="partners"
+              class="main-page"
+              show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+              current-module="[[_lastActivePartnersModule]]"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'partners|government-partners')]]"
+            >
+            </partners-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
-              <agreements-module id="agreements" class="main-page" permissions="[[permissions]]"> </agreements-module>
-            </template>
+            <agreements-module
+              id="agreements"
+              class="main-page"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'agreements')]]"
+            >
+            </agreements-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
-              <interventions-module id="interventions" class="main-page" user-permissions="[[permissions]]">
-              </interventions-module>
-            </template>
+            <interventions-module
+              id="interventions"
+              class="main-page"
+              user-permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'interventions')]]"
+            >
+            </interventions-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
-              <reports-module id="reports" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
-              </reports-module>
-            </template>
+            <reports-module
+              id="reports"
+              class="main-page"
+              permissions="[[permissions]]"
+              hidden$="[[!_activeModuleIs(module, 'reports')]]"
+            >
+            </reports-module>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
-              <not-found class="main-page"></not-found>
-            </template>
+            <not-found class="main-page" hidden$="[[!_activeModuleIs(module, 'not-found')]]"></not-found>
 
-            <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
-              <settings-module id="settings" class="main-page"></settings-module>
-            </template>
+            <settings-module
+              id="settings"
+              class="main-page"
+              hidden$="[[!_activeModuleIs(module, 'settings')]]"
+            ></settings-module>
           </main>
 
           <page-footer></page-footer>
@@ -257,7 +265,7 @@ class AppShell extends connect(store)(
   _drawerOpened = false;
 
   @property({type: String})
-  _page = '';
+  _page?: string | null;
 
   /**
    * `module` property represents the current displayed module of the PMP app.
@@ -324,6 +332,9 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   currentLanguageIsSet!: boolean;
 
+  @property({type: Object})
+  reduxRouteDetails?: RouteDetails;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
@@ -332,8 +343,10 @@ class AppShell extends connect(store)(
     super.ready();
 
     this._initListeners();
-    if (this.$.appHeadLayout) {
-      window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+    if (this.shadowRoot?.querySelector('#appHeadLayout')) {
+      window.EtoolsEsmmFitIntoEl = this.shadowRoot
+        ?.querySelector('#appHeadLayout')!
+        .shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
     if (this.module !== 'not-found') {
@@ -350,7 +363,7 @@ class AppShell extends connect(store)(
   }
 
   public connectedCallback() {
-    this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
+    // this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
     super.connectedCallback();
 
     this.checkAppVersion();
@@ -362,6 +375,10 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
+  }
+
+  _getRootPathAndModule(module: string) {
+    return `${ROOT_PATH}${module}`;
   }
 
   checkAppVersion() {
@@ -376,10 +393,11 @@ class AppShell extends connect(store)(
       });
   }
 
-  updateReduxRouteDetails(appLocRoute: any) {
-    const routeDetails = EtoolsRouter.getRouteDetails(appLocRoute);
+  updateReduxRouteDetails() {
+    const routeDetails = EtoolsRouter.getRouteDetails(location.pathname.replace(/\/$/, '') + location.search);
+    this.reduxRouteDetails = routeDetails!;
     // If the url is not complete(ex /pmp/interventions), redirect to /pmp/interventions/list
-    const redirectTo = getRedirectToListPath(appLocRoute.path);
+    const redirectTo = getRedirectToListPath(location.pathname);
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
     }
@@ -393,8 +411,6 @@ class AppShell extends connect(store)(
   }
 
   public stateChanged(state: RootState) {
-    // TODO: _page is gonna be user with pwa router, not used right now (future improvement)
-    // this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
     this.smallMenu = state.app!.smallMenu;
     this.uploadsStateChanged(state);
@@ -452,7 +468,7 @@ class AppShell extends connect(store)(
    * and then routeChanged
    */
   public appLocRouteChanged(appLocRoute: any) {
-    this.updateReduxRouteDetails(appLocRoute);
+    this.updateReduxRouteDetails();
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
         if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
@@ -526,7 +542,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
+    store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
   }
 
   private _showConfirmNewVersionDialog() {
@@ -581,10 +597,8 @@ class AppShell extends connect(store)(
   }
 
   private _updatePath(path: string) {
-    this.setProperties({
-      appLocQueryParams: {},
-      appLocPath: this.rootPath + path
-    });
+    history.pushState(window.history.state, '', `${ROOT_PATH}${path}`);
+    window.dispatchEvent(new CustomEvent('popstate'));
   }
 
   private _pageNotFound() {
@@ -597,7 +611,7 @@ class AppShell extends connect(store)(
   }
 
   private _openDataRefreshDialog() {
-    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
+    (this.shadowRoot?.querySelector('#dataRefreshDialog')! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {
@@ -650,7 +664,7 @@ class AppShell extends connect(store)(
     });
 
     // Close a non-persistent drawer when the module & route are changed.
-    const appDrawer = this.$.drawer as AppDrawerElement;
+    const appDrawer = this.shadowRoot?.querySelector('#drawer') as AppDrawerElement;
     if (!appDrawer.persistent) {
       appDrawer.close();
     }

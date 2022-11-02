@@ -221,9 +221,9 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       });
     }
 
-    isActiveModule(moduleName?: string) {
+    isActiveModule(moduleName?: string, routePrefix?: string) {
       const mName = !moduleName ? this.moduleName : moduleName;
-      return this.rootPath + mName === this.route.prefix;
+      return this.rootPath + mName === routePrefix ? routePrefix : this.route.prefix;
     }
   }
   return ModuleRoutingClass;

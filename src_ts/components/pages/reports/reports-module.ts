@@ -1,6 +1,5 @@
 import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
 import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
-import '@polymer/app-route/app-route.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -16,7 +15,7 @@ import './components/report-status';
 import './components/report-rating-dialog';
 import './components/report-reject-dialog';
 
-import {GenericObject, User} from '@unicef-polymer/etools-types';
+import {GenericObject, RouteDetails, User} from '@unicef-polymer/etools-types';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
@@ -35,10 +34,10 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';
-import set from 'lodash-es/set';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 declare const dayjs: any;
 
 /**
@@ -90,55 +89,6 @@ export class ReportsModule extends connect(store)(
           ${elevation2}
         }
       </style>
-
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        pattern="/list"
-        .queryParams="${this.listPageQueryParams}"
-        @query-params-changed="${({detail}: CustomEvent) => {
-          setTimeout(() => {
-            this.listPageQueryParams = detail.value;
-          }, 100);
-        }}"
-        .active="${this.listActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.listActive = detail.value;
-        }}"
-      ></app-route>
-
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        @data-changed="${({detail}: CustomEvent) => {
-          this.routeData = detail.value;
-        }}"
-        pattern="/:id/:tab"
-        .active="${this.tabsActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.tabsActive = detail.value;
-        }}"
-      ></app-route>
 
       <page-content-header ?withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
@@ -230,7 +180,7 @@ export class ReportsModule extends connect(store)(
           ? html` <etools-tabs
               slot="tabs"
               .tabs="${this.reportTabs}"
-              .activeTab="${(this.routeData || {}).tab}"
+              .activeTab="${this.reduxRouteDetails?.subRouteName}"
               @iron-select="${this._handleTabSelectAction}"
             ></etools-tabs>`
           : ''}
@@ -292,8 +242,24 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   moduleName = 'reports';
 
+  @property({type: Object})
+  reduxRouteDetails?: RouteDetails;
+
+  @property({type: String})
+  _page = '';
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
+    if (!state.app?.routeDetails?.routeName) {
+      return;
+    }
+
+    if (state.app.routeDetails.routeName == 'reports') {
+      this.reduxRouteDetails = state.app.routeDetails!;
+      this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
+      this.tabsActive = !this.listActive;
+      this._page = this.reduxRouteDetails.subRouteName!;
+    }
   }
 
   connectedCallback() {
@@ -319,20 +285,16 @@ export class ReportsModule extends connect(store)(
   }
 
   updated(changedProperties: PropertyValues) {
-    if (
-      changedProperties.has('listActive') ||
-      changedProperties.has('tabsActive') ||
-      changedProperties.has('routeData')
-    ) {
-      this._pageChanged(this.listActive, this.tabsActive, this.routeData);
+    if (changedProperties.has('listActive') || changedProperties.has('tabsActive') || changedProperties.has('_page')) {
+      this._pageChanged(this.listActive, this.tabsActive);
     }
     if (
-      changedProperties.has('routeData') ||
+      changedProperties.has('_page') ||
       changedProperties.has('tabsActive') ||
       changedProperties.has('prpCountries') ||
       changedProperties.has('currentUser')
     ) {
-      this._loadReport((this.routeData || {}).id, this.tabsActive, this.prpCountries, this.currentUser);
+      this._loadReport(this.reduxRouteDetails?.params?.itemId, this.tabsActive, this.prpCountries, this.currentUser);
     }
   }
 
@@ -347,9 +309,9 @@ export class ReportsModule extends connect(store)(
     return false;
   }
 
-  _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any) {
+  _pageChanged(listActive: boolean, tabsActive: boolean) {
     // Using isActiveModule will prevent wrong page import
-    if (!this.isActiveModule() || (!listActive && !tabsActive) || typeof routeData === 'undefined') {
+    if ((!listActive && !tabsActive) || !this.reduxRouteDetails || this.reduxRouteDetails.routeName !== 'reports') {
       return;
     }
 
@@ -362,7 +324,7 @@ export class ReportsModule extends connect(store)(
       errMsgPrefixTmpl: '[report(s) ##page##]',
       loadingMsgSource: 'reports-page'
     };
-    const page: string = listActive ? 'list' : routeData.tab;
+    const page: string = listActive ? 'list' : this.reduxRouteDetails.subRouteName!;
     this.setActivePage(page, fileImportDetails);
   }
 
@@ -373,18 +335,20 @@ export class ReportsModule extends connect(store)(
       return;
     }
     const newPath = `reports/${this.report!.id}/${newTabName}`;
-    fireEvent(this, 'update-main-path', {path: newPath});
+    history.pushState(window.history.state, '', `${ROOT_PATH}${newPath}`);
+    window.dispatchEvent(new CustomEvent('popstate'));
   }
 
-  _loadReport(reportId: string, tabsActive: boolean, prpCountries: any, currentUser: User) {
+  _loadReport(reportId: string | number | undefined, tabsActive: boolean, prpCountries: any, currentUser: User) {
     // Using isActiveModule will prevent report request with the wrong id (PD id)
-    if (!this.isActiveModule() || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
+    if (this.reduxRouteDetails?.routeName !== 'reports' || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
 
     if (!tabsActive || !reportId) {
       return;
     }
+    // @ts-ignore
     const id = parseInt(reportId, 10);
     if (this.report && this.report.id === id) {
       return;
