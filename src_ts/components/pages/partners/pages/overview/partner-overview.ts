@@ -17,7 +17,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer

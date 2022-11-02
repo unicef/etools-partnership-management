@@ -20,7 +20,7 @@ import {EtoolsRouter} from '../../../../utils/routes';
 import {buildUrlQueryString, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-filters/src/etools-filters';
-import {listenForLangChanged, translate} from 'lit-translate';
+import {translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
 import '../../data/interventions-list-data.js';

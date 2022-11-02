@@ -36,7 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
-import {cloneDeep, getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
