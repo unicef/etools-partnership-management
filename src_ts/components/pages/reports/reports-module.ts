@@ -296,7 +296,7 @@ export class ReportsModule extends connect(store)(
       changedProperties.has('prpCountries') ||
       changedProperties.has('currentUser')
     ) {
-      this._loadReport(this.reduxRouteDetails?.params.itemId, this.tabsActive, this.prpCountries, this.currentUser);
+      this._loadReport(this.reduxRouteDetails?.params?.itemId, this.tabsActive, this.prpCountries, this.currentUser);
     }
   }
 
@@ -343,7 +343,7 @@ export class ReportsModule extends connect(store)(
 
   _loadReport(reportId: string | number | undefined, tabsActive: boolean, prpCountries: any, currentUser: User) {
     // Using isActiveModule will prevent report request with the wrong id (PD id)
-    if (!this.isActiveModule() || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
+    if (this.reduxRouteDetails?.routeName !== 'reports' || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
 

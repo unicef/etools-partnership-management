@@ -395,7 +395,7 @@ class AppShell extends connect(store)(
   }
 
   updateReduxRouteDetails() {
-    const routeDetails = EtoolsRouter.getRouteDetails(location.pathname + location.search);
+    const routeDetails = EtoolsRouter.getRouteDetails(location.pathname.replace(/\/$/, '') + location.search);
     this.reduxRouteDetails = routeDetails!;
     // If the url is not complete(ex /pmp/interventions), redirect to /pmp/interventions/list
     const redirectTo = getRedirectToListPath(location.pathname);
