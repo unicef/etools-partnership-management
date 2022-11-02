@@ -40,7 +40,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
-import set from 'lodash-es/set';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 
 /**
  * @polymer
@@ -82,55 +82,6 @@ export class PartnersModule extends connect(store)(
         }
       </style>
 
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        pattern="/list"
-        .queryParams="${this.listPageQueryParams}"
-        @query-params-changed="${({detail}: CustomEvent) => {
-          setTimeout(() => {
-            this.listPageQueryParams = detail.value;
-          }, 100);
-        }}"
-        .active="${this.listActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.listActive = detail.value;
-        }}"
-      ></app-route>
-
-      <app-route
-        .route="${this.route}"
-        @route-changed="${({detail}: CustomEvent) => {
-          // Sometimes only __queryParams get changed
-          // In this case  detail will contain detail.path = 'route._queryParams'
-          // and value will contain only the value for this.route._queryParams and not the entire route object
-          if (detail.path) {
-            set(this, detail.path, detail.value);
-            this.route = {...this.route};
-          } else {
-            this.route = detail.value;
-          }
-        }}"
-        @data-changed="${({detail}: CustomEvent) => {
-          this.routeData = detail.value;
-        }}"
-        pattern="/:id/:tab"
-        .active="${this.tabsActive}"
-        @active-changed="${({detail}: CustomEvent) => {
-          this.tabsActive = detail.value;
-        }}"
-      ></app-route>
-
       <page-content-header .withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
           ${this.listActive
@@ -165,7 +116,7 @@ export class PartnersModule extends connect(store)(
           ? html` <etools-tabs
               slot="tabs"
               .tabs="${this.partnerTabs}"
-              .activeTab="${(this.routeData || {}).tab}"
+              .activeTab="${this.reduxRouteDetails?.subRouteName}"
               @iron-select="${this._handleTabSelectAction}"
             ></etools-tabs>`
           : ''}
@@ -183,9 +134,9 @@ export class PartnersModule extends connect(store)(
               id="list"
               name="list"
               ?hidden="${!(
-                this._pageEquals(this.activePage, 'list') && this.partnersListActive(this.listActive, this.route)
+                this._pageEquals(this.activePage, 'list') &&
+                this.partnersListActive(this.listActive, this.reduxRouteDetails)
               )}"
-              .currentModule="${this.currentModule}"
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;
               }}
@@ -195,9 +146,8 @@ export class PartnersModule extends connect(store)(
               id="g-list"
               name="g-list"
               ?hidden="${!(
-                this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.route)
+                this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.reduxRouteDetails)
               )}"
-              .currentModule="${this.currentModule}"
               @csvDownloadUrl-changed=${(e: any) => {
                 this.csvDownloadUrl = e.detail;
               }}
@@ -278,7 +228,7 @@ export class PartnersModule extends connect(store)(
   ];
 
   @property({type: String})
-  moduleName = 'partners';
+  currentModule = '';
 
   @property({type: String})
   csvDownloadUrl = '';
@@ -295,14 +245,14 @@ export class PartnersModule extends connect(store)(
   @property({type: Boolean})
   showOnlyGovernmentType = false;
 
-  @property({type: String})
-  currentModule = '';
-
   @property({type: Object})
   originalPartnerData!: Partner;
 
   @property({type: Object})
   reduxRouteDetails?: RouteDetails;
+
+  @property({type: String})
+  _page = '';
 
   public connectedCallback() {
     super.connectedCallback();
@@ -321,7 +271,17 @@ export class PartnersModule extends connect(store)(
   }
 
   stateChanged(state: RootState) {
-    this.reduxRouteDetails = state.app?.routeDetails;
+    if (!state.app?.routeDetails?.routeName) {
+      return;
+    }
+    if (['partners', 'government-partners'].includes(state.app?.routeDetails?.routeName!)) {
+      this.reduxRouteDetails = state.app.routeDetails!;
+      this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
+      this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
+      this.tabsActive = !this.listActive;
+      this._page = this.reduxRouteDetails.subRouteName!;
+      this.currentModule = this.reduxRouteDetails.routeName;
+    }
   }
 
   public disconnectedCallback() {
@@ -357,17 +317,9 @@ export class PartnersModule extends connect(store)(
     if (changedProperties.has('partner')) {
       this._partnerChanged(this.partner);
     }
-    if (changedProperties.has('routeData')) {
-      this._observeRouteDataId(this.routeData.id);
-    }
 
-    if (
-      changedProperties.has('listActive') ||
-      changedProperties.has('tabsActive') ||
-      changedProperties.has('routeData') ||
-      changedProperties.has('currentModule')
-    ) {
-      this._pageChanged(this.listActive, this.tabsActive, this.routeData, this.currentModule);
+    if (changedProperties.has('listActive') || changedProperties.has('tabsActive') || changedProperties.has('_page')) {
+      this._pageChanged(this.listActive, this.reduxRouteDetails!);
     }
   }
 
@@ -387,17 +339,15 @@ export class PartnersModule extends connect(store)(
     this._savePartner({id: this.partner.id, basis_for_risk_rating: e.detail});
   }
 
-  public _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any, _currentModule: string) {
-    // Using isActiveModule will prevent wrong page import
-    if (!this.isActiveModule(this.currentModule) || (!listActive && !tabsActive)) {
+  public _pageChanged(listActive: boolean, routeDetails: RouteDetails) {
+    if (!routeDetails || !['partners', 'government-partners'].includes(routeDetails?.routeName!)) {
       return;
     }
-
     this.scrollToTopOnCondition(!listActive);
-    const page: string = listActive ? 'list' : routeData.tab;
+    const page: string = listActive ? 'list' : routeDetails.subRouteName!;
     const fileImportDetails = {
       filenamePrefix: listActive
-        ? this.route.prefix.indexOf('government-partners') > -1
+        ? routeDetails.subRouteName!.indexOf('government-partners') > -1
           ? 'government'
           : 'partner'
         : 'partner',
@@ -449,17 +399,6 @@ export class PartnersModule extends connect(store)(
     fireEvent(this, 'update-main-path', {
       path: 'partners/list'
     });
-  }
-
-  public _observeRouteDataId(id: any) {
-    // Using isActiveModule will prevent wrong partner details request
-    // (with an id from other app module, like reports)
-    if (!this.isActiveModule(this.currentModule) || typeof id === 'undefined') {
-      return;
-    }
-    if (this.route && this.route.prefix.indexOf('partners') > -1) {
-      this.selectedPartnerId = id;
-    }
   }
 
   public _partnerSaveError(event: CustomEvent) {
@@ -556,8 +495,9 @@ export class PartnersModule extends connect(store)(
     if (!this.partner || newTabName == this.activePage) {
       return;
     }
-    const newPath = `partners/${this.partner!.id}/${newTabName}`;
-    fireEvent(this, 'update-main-path', {path: newPath});
+    const newPath = `${this.currentModule}/${this.partner!.id}/${newTabName}`;
+    history.pushState(window.history.state, '', `${ROOT_PATH}${newPath}`);
+    window.dispatchEvent(new CustomEvent('popstate'));
   }
 
   public _handlePartnerSelectionLoadingMsg() {
@@ -575,11 +515,17 @@ export class PartnersModule extends connect(store)(
     });
   }
 
-  govListActive(listActive: boolean, route: any) {
-    return listActive && route.prefix.indexOf('government-partners') > -1;
+  govListActive(listActive: boolean, route?: RouteDetails) {
+    if (!route) {
+      return false;
+    }
+    return listActive && route.routeName === 'government-partners';
   }
 
-  partnersListActive(listActive: boolean, route: any) {
-    return listActive && route.prefix.indexOf('/partners') > -1;
+  partnersListActive(listActive: boolean, route?: RouteDetails) {
+    if (!route) {
+      return false;
+    }
+    return listActive && route.routeName === 'partners';
   }
 }
