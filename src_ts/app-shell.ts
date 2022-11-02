@@ -205,7 +205,6 @@ class AppShell extends connect(store)(
               class="main-page"
               show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
               current-module="[[_lastActivePartnersModule]]"
-              route="{{subroute}}"
               permissions="[[permissions]]"
               hidden$="[[!_activeModuleIs(module, 'partners|government-partners')]]"
             >
@@ -230,7 +229,6 @@ class AppShell extends connect(store)(
             <reports-module
               id="reports"
               class="main-page"
-              route="{{subroute}}"
               permissions="[[permissions]]"
               hidden$="[[!_activeModuleIs(module, 'reports')]]"
             >
