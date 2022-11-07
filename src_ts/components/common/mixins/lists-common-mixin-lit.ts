@@ -191,7 +191,7 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
       return queryParams.join('&');
     }
 
-    _buildExportQueryString(params: GenericObject) {
+    _buildListRetrivalQueryString(params: GenericObject, forExport = true) {
       const qsParams = [];
       for (const pKey in params) {
         if (params[pKey]) {
@@ -204,12 +204,14 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
           }
         }
       }
-      qsParams.push('format=csv');
+      if (forExport) {
+        qsParams.push('format=csv');
+      }
       return qsParams.join('&');
     }
 
     _buildCsvExportUrl(params: GenericObject, endpointUrl: string) {
-      return endpointUrl + (endpointUrl.indexOf('?') > -1 ? '&' : '?') + this._buildExportQueryString(params);
+      return endpointUrl + (endpointUrl.indexOf('?') > -1 ? '&' : '?') + this._buildListRetrivalQueryString(params);
     }
 
     _canFilterData() {

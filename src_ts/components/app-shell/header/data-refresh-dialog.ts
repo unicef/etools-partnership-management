@@ -204,8 +204,10 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
           endpointNames.push('agreements');
         }
         if (this.interventionsSelected) {
-          window.EtoolsPmpApp.DexieDb.interventions.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+          if (window.EtoolsPmpApp.DexieDb.interventions) {
+            window.EtoolsPmpApp.DexieDb.interventions.clear();
+            window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+          }
           endpointNames.push('interventions');
         }
       }
@@ -225,9 +227,14 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
 
   reloadData(endpointNames: string[]) {
     const promisses = endpointNames.map((endpointName: string) => {
-      return sendRequest({endpoint: this.getEndpoint(pmpEdpoints, endpointName)}).then((response) => {
-        this.afterDataLoaded(endpointName, response);
-      });
+      if (endpointName == 'interventions') {
+        // 'PDs no longer stored in Dexie'
+        location.reload();
+      } else {
+        return sendRequest({endpoint: this.getEndpoint(pmpEdpoints, endpointName)}).then((response) => {
+          this.afterDataLoaded(endpointName, response);
+        });
+      }
     });
     return Promise.allSettled(promisses);
   }
