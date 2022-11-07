@@ -16,6 +16,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {setPartners} from '../../../redux/actions/partners';
 import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
 import {setAgreements} from '../../../redux/actions/agreements';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -58,14 +59,14 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
         id="refreshDialog"
         size="sm"
         no-padding
-        ok-btn-text="Refresh data"
-        cancel-btn-text="Cancel"
-        dialog-title="Refresh data"
+        ok-btn-text="${translate('REFRESH_DATA')}"
+        cancel-btn-text="${translate('GENERAL.CANCEL')}"
+        dialog-title="${translate('REFRESH_DATA')}"
         .disableConfirmBtn="${!this.anySelected}"
         @close="${this._handleDialogClosed}"
       >
         <div id="content-box">
-          <div class="title-indent">Select the data you want to refresh:</div>
+          <div class="title-indent">${translate('SELECT_DATA_TO_REFRESH')}</div>
           <div class="row-h row-indent">
             <div class="col col-6">
               <paper-checkbox
@@ -74,7 +75,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
                   this.partnersSelected = e.detail.value;
                   this._singleSectionChanged();
                 }}"
-                >Partners/Government</paper-checkbox
+                >${translate('PARTNERS_GOVERNMENT')}</paper-checkbox
               >
             </div>
             <div class="col col-6">
@@ -84,7 +85,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
                   this.interventionsSelected = e.detail.value;
                   this._singleSectionChanged();
                 }}"
-                >PD/SPD</paper-checkbox
+                >${translate('PD_SPD')}</paper-checkbox
               >
             </div>
           </div>
@@ -96,7 +97,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
                   this.agreementsSelected = e.detail.value;
                   this._singleSectionChanged();
                 }}"
-                >Agreements</paper-checkbox
+                >${translate('AGREEMENTS')}</paper-checkbox
               >
             </div>
             <div class="col col-6">
@@ -106,7 +107,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
                   this.allSelected = e.detail.value;
                   this._allSelectedChanged();
                 }}"
-                >All</paper-checkbox
+                >${translate('ALL')}</paper-checkbox
               >
             </div>
           </div>
@@ -167,7 +168,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
     store.dispatch({type: RESET_UNSAVED_UPLOADS});
 
     fireEvent(this, 'global-loading', {
-      message: 'Refreshing data...',
+      message: getTranslation('REFRESHING_DATA'),
       active: true
     });
 
@@ -251,7 +252,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
   _handleSuccess(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
-      text: 'Data successfully refreshed',
+      text: getTranslation('DATA_SUCCESSFULLY_REFRESHED'),
       showCloseBtn: true
     });
   }
@@ -259,7 +260,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
   _handleFailure(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
-      text: 'There was an error while refreshing the data',
+      text: getTranslation('ERROR_REFRESH_DATA'),
       showCloseBtn: true
     });
   }

@@ -117,7 +117,7 @@ class AppMenu extends connect(store)(
         </iron-selector>
 
         <div class="nav-menu-item section-title">
-          <span>eTools Community Channels</span>
+          <span>${translate('ETOOLS_COMMUNITY_CHANNELS')}</span>
         </div>
 
         <a

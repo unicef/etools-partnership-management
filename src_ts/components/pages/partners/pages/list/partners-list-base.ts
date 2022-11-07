@@ -300,8 +300,8 @@ export class PartnersListBase extends CommonMixin(
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
-        this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
-        stateRouteDetails.subRouteName === 'list'
+        this.localName.indexOf(stateRouteDetails?.routeName.split('-')[0] as any) > -1 &&
+        stateRouteDetails?.subRouteName === 'list'
       )
     ) {
       // this.routeDetails = null;

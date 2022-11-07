@@ -24,7 +24,8 @@
     "SEARCH": "Buscar",
     "SEARCH_RECORDS": "Buscar registros",
     "DELETE_CONFIRMATION": "Borrar confirmación",
-    "STATUS": "Estado"
+    "STATUS": "Estado",
+    "REFRESH": "Actualizar"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Detalles Iniciales",
@@ -53,8 +54,7 @@
     "ON_SAVE_VALIDATION": "Por favor, rellene todos los campos obligatorios y corrija los errores de formato de los datos.",
     "START_DATE_ESTIMATED": "Fecha de inicio (estimada)",
     "END_DATE_ESTIMATED": "Fecha de finalización (estimada)",
-    "ACTIVATION_PROTOCOL": "Protocolo Activación",
-    "AGREEMENT": "Acuerdo"
+    "ACTIVATION_PROTOCOL": "Protocolo Activación"
   },
   "INTERVENTIONS_LIST": {
     "ADD_PROGRAMME_DOCUMENT": "Añadir Documento Programa",
@@ -85,8 +85,7 @@
     "OFFICES": "Oficinas",
     "SECTIONS": "Secciones",
     "UNICEF_FOCAL_POINT": "Punto focal de UNICEF",
-    "BUDGET_OWNER": "Propietario del presupuesto de UNICEF ",
-    "STATUS": "Estado"
+    "BUDGET_OWNER": "Propietario del presupuesto de UNICEF "
   },
   "PD_SPD": "PD/SPD",
   "VENDOR_NO": "Número de proveedor",
@@ -352,6 +351,17 @@
   "SAVE_BEFORE_PCA": "Guardar antes de generar la plantilla PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "¿Seguro que quieres salir de esta página? ¡Se perderán todas las cargas de archivos en curso o no guardadas!",
   "LEAVE_PAGE": "¿Seguro que quieres salir de esta página?",
+  "PROFILE_AND_SIGNOUT": "Perfil y cerrar sesión",
+  "REFRESH_DATA": "Actualizar datos",
+  "SELECT_DATA_TO_REFRESH": "Seleccione los datos que desea actualizar:",
+  "ALL": "Todos",
+  "PARTNERS_GOVERNMENT": "Socios/Gobierno",
+  "DATA_SUCCESSFULLY_REFRESHED": "Datos actualizados correctamente",
+  "ERROR_REFRESH_DATA": "Hubo un error al actualizar los datos",
+  "REFRESHING_DATA": "Actualizando datos...",
+  "IMPLEMENTATION_INTELLIGENCE": "Inteligencia de implementación",
+  "ETOOLS_COMMUNITY_CHANNELS": "Canales de la comunidad de eTools",
+  "PD_SPDS": "PD/SPD",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "CARA",

@@ -24,7 +24,8 @@
     "SEARCH": "Поиск",
     "SEARCH_RECORDS": "Поиск",
     "DELETE_CONFIRMATION": "Удалить подтверждение",
-    "STATUS": "Статус"
+    "STATUS": "Статус",
+    "REFRESH": "Обновить"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Введите основную информация",
@@ -272,7 +273,7 @@
   "DOWNLOAD_REPORT": "Скачать отчет",
   "ADD_ACTION_POINTS": "Добавить пункт к выполнению",
   "EDITABLE_BY": "Изменено следующими лицами",
-  "IMPORT_ECN": "Import eCN",
+  "IMPORT_ECN": "импорт электронной сети",
   "IMPORT": "импорт",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Договор",
@@ -350,6 +351,17 @@
   "SAVE_BEFORE_PCA": "Сохраните перед созданием шаблона PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "Вы уверены, что хотите покинуть эту страницу? Все загруженные или несохраненные файлы будут потеряны!",
   "LEAVE_PAGE": "Вы уверены, что хотите покинуть эту страницу?",
+  "PROFILE_AND_SIGNOUT": "Профиль и выход",
+  "REFRESH_DATA": "Обновить данные",
+  "SELECT_DATA_TO_REFRESH": "Выберите данные, которые вы хотите обновить:",
+  "ALL": "Все",
+  "PARTNERS_GOVERNMENT": "Партнеры/Правительство",
+  "DATA_SUCCESSFULLY_REFRESHED": "Данные успешно обновлены",
+  "ERROR_REFRESH_DATA": "Произошла ошибка при обновлении данных",
+  "REFRESHING_DATA": "Обновление данных...",
+  "IMPLEMENTATION_INTELLIGENCE": "Интеллектуальная реализация",
+  "ETOOLS_COMMUNITY_CHANNELS": "Каналы сообщества eTools",
+  "PD_SPDS": "ПД/СПД",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ЛИЦО",

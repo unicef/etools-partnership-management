@@ -24,7 +24,8 @@
     "SEARCH": "Chercher",
     "SEARCH_RECORDS": "Rechercher des enregistrements",
     "DELETE_CONFIRMATION": "Supprimer la confirmation",
-    "STATUS": "Statut "
+    "STATUS": "Statut ",
+    "REFRESH": "Rafraîchir"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Entrez les détails initiaux",
@@ -84,8 +85,7 @@
     "OFFICES": "Bureaux",
     "SECTIONS": "Sections",
     "UNICEF_FOCAL_POINT": "Point focal UNICEF",
-    "BUDGET_OWNER": "Gestionnaire du budget UNICEF ",
-    "STATUS": "الحالة"
+    "BUDGET_OWNER": "Gestionnaire du budget UNICEF "
   },
   "PD_SPD": "PD/SPD",
   "VENDOR_NO": "N° de fournisseur.",
@@ -351,6 +351,17 @@
   "SAVE_BEFORE_PCA": "Enregistrer avant de générer le modèle PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "Voulez-vous vraiment quitter cette page ? Tous les téléchargements de fichiers en cours ou non enregistrés seront perdus !",
   "LEAVE_PAGE": "Voulez-vous vraiment quitter cette page ?",
+  "PROFILE_AND_SIGNOUT": "Profil et déconnexion",
+  "REFRESH_DATA": "Actualiser les données",
+  "SELECT_DATA_TO_REFRESH": "Sélectionnez les données que vous souhaitez actualiser :",
+  "ALL": "Tout",
+  "PARTNERS_GOVERNMENT": "Partenaires/Gouvernement",
+  "DATA_SUCCESSFULLY_REFRESHED": "Données actualisées avec succès",
+  "ERROR_REFRESH_DATA": "Une erreur s'est produite lors de l'actualisation des données",
+  "REFRESHING_DATA": "Actualisation des données...",
+  "IMPLEMENTATION_INTELLIGENCE": "Renseignements sur la mise en œuvre",
+  "ETOOLS_COMMUNITY_CHANNELS": "Canaux communautaires eTools",
+  "PD_SPDS": "PD/SPD",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "VISAGE",

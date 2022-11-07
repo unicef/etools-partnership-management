@@ -24,7 +24,8 @@
     "SEARCH": "Search",
     "SEARCH_RECORDS": "Search records",
     "DELETE_CONFIRMATION": "Delete confirmation",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "REFRESH": "Refresh"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Enter initial details",
@@ -350,6 +351,17 @@
   "SAVE_BEFORE_PCA":"Save before generating the PCA template",
   "LEAVE_UPLOAD_IN_PROGRESS":"Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!",
   "LEAVE_PAGE":"Are you sure you want to leave this page?",
+  "PROFILE_AND_SIGNOUT":"Profile and Sign out",
+  "REFRESH_DATA":"Refresh data",
+  "SELECT_DATA_TO_REFRESH":"Select the data you want to refresh:",
+  "ALL":"All",
+  "PARTNERS_GOVERNMENT":"Partners/Government",
+  "DATA_SUCCESSFULLY_REFRESHED":"Data successfully refreshed",
+  "ERROR_REFRESH_DATA":"There was an error while refreshing the data",
+  "REFRESHING_DATA":"Refreshing data...",
+  "IMPLEMENTATION_INTELLIGENCE":"Implementation intelligence",
+  "ETOOLS_COMMUNITY_CHANNELS":"eTools Community Channels",
+  "PD_SPDS":"PD/SPDs",
   "COMMON_DATA": {
     "FILETYPES": {
         "FACE": "FACE",

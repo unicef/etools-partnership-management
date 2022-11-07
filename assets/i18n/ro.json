@@ -24,7 +24,8 @@
     "SEARCH": "Cauta",
     "SEARCH_RECORDS": "Cauta inregistrari",
     "DELETE_CONFIRMATION": "Ștergeți confirmarea",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "REFRESH": "Reîmprospăta"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Introduceti detaliile initiale",
@@ -84,8 +85,7 @@
     "OFFICES": "Birouri",
     "SECTIONS": "Sectiuni",
     "UNICEF_FOCAL_POINT": "Persoane de interes ale UNICEF",
-    "BUDGET_OWNER": "Responsabil UNICEF al Bugetului",
-    "STATUS": "Status"
+    "BUDGET_OWNER": "Responsabil UNICEF al Bugetului"
   },
   "PD_SPD": "PD/SPD",
   "VENDOR_NO": "Vanzator nr.",
@@ -351,6 +351,17 @@
   "SAVE_BEFORE_PCA": "Salvați înainte de a genera șablonul PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "Sigur vrei să părăsești această pagină? Toate fișierele încărcate în curs sau nesalvate se vor pierde!",
   "LEAVE_PAGE": "Sigur vrei să părăsești această pagină?",
+  "PROFILE_AND_SIGNOUT": "Profil și deconectați-vă",
+  "REFRESH_DATA": "Actualizează datele",
+  "SELECT_DATA_TO_REFRESH": "Selectați datele pe care doriți să le reîmprospătați:",
+  "ALL": "Toate",
+  "PARTNERS_GOVERNMENT": "Parteneri/Guvern",
+  "DATA_SUCCESSFULLY_REFRESHED": "Datele au fost reîmprospătate",
+  "ERROR_REFRESH_DATA": "A apărut o eroare la reîmprospătarea datelor",
+  "REFRESHING_DATA": "Se actualizează datele...",
+  "IMPLEMENTATION_INTELLIGENCE": "Inteligența de implementare",
+  "ETOOLS_COMMUNITY_CHANNELS": "Canale comunitare eTools",
+  "PD_SPDS": "PD/SPD-uri",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",

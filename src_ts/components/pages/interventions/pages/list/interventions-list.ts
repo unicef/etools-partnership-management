@@ -17,7 +17,11 @@ import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {buildUrlQueryString, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {
+  buildUrlQueryString,
+  getTranslatedValue,
+  translateValue
+} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-filters/src/etools-filters';
 import {translate} from 'lit-translate';
@@ -234,7 +238,11 @@ export class InterventionsList extends connect(store)(
               </div>
               <div class="row-details-content col-2">
                 <span class="rdc-title">${translate('SECTION')}</span>
-                <span>${this.getDisplayValue(intervention.section_names)}</span>
+                <span
+                  >${this.getDisplayValue(
+                    intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
+                  )}</span
+                >
               </div>
               <div class="row-details-content col-2">
                 <span class="rdc-title">${translate('UNICEF_CASH_CONTRIBUTION')}</span>

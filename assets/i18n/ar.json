@@ -24,7 +24,8 @@
     "SEARCH": "يبحث",
     "SEARCH_RECORDS": "البحث عن السجلات",
     "DELETE_CONFIRMATION": "تأكيد الحذف",
-    "STATUS": "حالة"
+    "STATUS": "حالة",
+    "REFRESH": "ينعش"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "أدخل التفاصيل الأولية",
@@ -350,6 +351,17 @@
   "SAVE_BEFORE_PCA": "احفظ قبل إنشاء قالب PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ ستفقد جميع عمليات تحميل الملفات قيد التقدم أو غير المحفوظة!",
   "LEAVE_PAGE": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟",
+  "PROFILE_AND_SIGNOUT": "الملف الشخصي وتسجيل الخروج",
+  "REFRESH_DATA": "تحديث البيانات",
+  "SELECT_DATA_TO_REFRESH": "حدد البيانات التي تريد تحديثها:",
+  "ALL": "الجميع",
+  "PARTNERS_GOVERNMENT": "الشركاء / الحكومة",
+  "DATA_SUCCESSFULLY_REFRESHED": "تم تحديث البيانات بنجاح",
+  "ERROR_REFRESH_DATA": "حدث خطأ أثناء تحديث البيانات",
+  "REFRESHING_DATA": "جاري تحديث البيانات ...",
+  "IMPLEMENTATION_INTELLIGENCE": "استخبارات التنفيذ",
+  "ETOOLS_COMMUNITY_CHANNELS": "قنوات المجتمع eTools",
+  "PD_SPDS": "PD / SPDs",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "وجه",

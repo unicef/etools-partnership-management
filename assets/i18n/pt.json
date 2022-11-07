@@ -24,7 +24,8 @@
     "SEARCH": "Procurar",
     "SEARCH_RECORDS": "Procurar registros",
     "DELETE_CONFIRMATION": "Excluir confirmação",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "REFRESH": "Atualizar"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Insira os dados iniciais",
@@ -272,7 +273,7 @@
   "DOWNLOAD_REPORT": "Baixar relatório",
   "ADD_ACTION_POINTS": "Adicionar ponto de ação",
   "EDITABLE_BY": "Editado por",
-  "IMPORT_ECN": "Import eCN",
+  "IMPORT_ECN": "importação eCN",
   "IMPORT": "Importar",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Acordo",
@@ -350,6 +351,17 @@
   "SAVE_BEFORE_PCA": "Salve antes de gerar o modelo de PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "Tem certeza de que deseja sair desta página? Todos os uploads de arquivos em andamento ou não salvos serão perdidos!",
   "LEAVE_PAGE": "Tem certeza de que deseja sair desta página?",
+  "PROFILE_AND_SIGNOUT": "Perfil e Sair",
+  "REFRESH_DATA": "Atualizar dados",
+  "SELECT_DATA_TO_REFRESH": "Selecione os dados que deseja atualizar:",
+  "ALL": "Tudo",
+  "PARTNERS_GOVERNMENT": "Parceiros/Governo",
+  "DATA_SUCCESSFULLY_REFRESHED": "Dados atualizados com sucesso",
+  "ERROR_REFRESH_DATA": "Ocorreu um erro ao atualizar os dados",
+  "REFRESHING_DATA": "Atualizando dados...",
+  "IMPLEMENTATION_INTELLIGENCE": "Inteligência de implementação",
+  "ETOOLS_COMMUNITY_CHANNELS": "Canais da comunidade eTools",
+  "PD_SPDS": "PD/SPDs",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ENFRENTAR",

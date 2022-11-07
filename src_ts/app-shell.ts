@@ -401,7 +401,7 @@ class AppShell extends connect(store)(
     if (redirectTo) {
       EtoolsRouter.replaceAppLocation(redirectTo);
     }
-    const currentRouteDetails = get(store.getState(), 'app.routeDetails');
+    const currentRouteDetails = get(store.getState(), 'app.routeDetails') as any;
     if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
       store.dispatch(resetCurrentItem());
     }
