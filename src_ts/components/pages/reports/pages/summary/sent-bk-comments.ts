@@ -3,6 +3,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '../../../../common/components/etools-form-element-wrapper';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AnyObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /*
  * @customElement
@@ -21,7 +22,13 @@ export class SentBkComments extends LitElement {
         }
       </style>
 
-      <etools-dialog opened @close="${this._onClose}" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
+      <etools-dialog
+        opened
+        @close="${this._onClose}"
+        dialog-title="${translate('SENT_BACK_COMMENTS')}"
+        size="md"
+        hide-confirm-btn
+      >
         <etools-form-element-wrapper2
           .label="${this._getHeading(this.report.review_date, this.report.reviewed_by_name)}"
           .value="${this.report.sent_back_feedback}"

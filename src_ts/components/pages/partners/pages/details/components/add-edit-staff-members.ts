@@ -56,7 +56,6 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
         opened
-        spinner-text="Saving..."
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._savePartnerContact}"
       >

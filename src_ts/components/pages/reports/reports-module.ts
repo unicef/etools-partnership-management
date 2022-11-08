@@ -34,7 +34,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '../../utils/dialog';
-import {translate} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
@@ -133,10 +133,10 @@ export class ReportsModule extends connect(store)(
               </paper-button>
               <paper-listbox slot="dropdown-content">
                 <paper-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
-                  >Export Indicators - PDF</paper-item
+                  >${translate('EXPORT_INDICATORS_PDF')}</paper-item
                 >
                 <paper-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
-                  >Export Indicators - XLS</paper-item
+                  >${translate('EXPORT_INDICATORS_XLS')}</paper-item
                 >
               </paper-listbox>
             </paper-menu-button>
@@ -169,8 +169,8 @@ export class ReportsModule extends connect(store)(
               <paper-listbox slot="dropdown-content">
                 <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
                 <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
-                <paper-item @click="${this._downloadXls}">Download XLS</paper-item>
-                <paper-item @click="${this._downloadPdf}">Download PDF</paper-item>
+                <paper-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</paper-item>
+                <paper-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</paper-item>
               </paper-listbox>
             </paper-menu-button>
           </div>
@@ -223,12 +223,12 @@ export class ReportsModule extends connect(store)(
   reportTabs: GenericObject[] = [
     {
       tab: 'progress',
-      tabLabel: 'Results Reported',
+      tabLabel: getTranslation('RESULTS_REPORTED'),
       hidden: false
     },
     {
       tab: 'summary',
-      tabLabel: 'Other Info',
+      tabLabel: getTranslation('OTHER_INFO'),
       hidden: false
     }
   ];

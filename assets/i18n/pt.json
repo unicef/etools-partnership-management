@@ -24,7 +24,8 @@
     "SEARCH": "Procurar",
     "SEARCH_RECORDS": "Procurar registros",
     "DELETE_CONFIRMATION": "Excluir confirmação",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "REFRESH": "Atualizar"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Insira os dados iniciais",
@@ -272,7 +273,7 @@
   "DOWNLOAD_REPORT": "Baixar relatório",
   "ADD_ACTION_POINTS": "Adicionar ponto de ação",
   "EDITABLE_BY": "Editado por",
-  "IMPORT_ECN": "Import eCN",
+  "IMPORT_ECN": "importação eCN",
   "IMPORT": "Importar",
   "ECN_NUMBER": "eCN Number",
   "AGREEMENT": "Acordo",
@@ -350,6 +351,64 @@
   "SAVE_BEFORE_PCA": "Salve antes de gerar o modelo de PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "Tem certeza de que deseja sair desta página? Todos os uploads de arquivos em andamento ou não salvos serão perdidos!",
   "LEAVE_PAGE": "Tem certeza de que deseja sair desta página?",
+  "PROFILE_AND_SIGNOUT": "Perfil e Sair",
+  "REFRESH_DATA": "Atualizar dados",
+  "SELECT_DATA_TO_REFRESH": "Selecione os dados que deseja atualizar:",
+  "ALL": "Tudo",
+  "PARTNERS_GOVERNMENT": "Parceiros/Governo",
+  "DATA_SUCCESSFULLY_REFRESHED": "Dados atualizados com sucesso",
+  "ERROR_REFRESH_DATA": "Ocorreu um erro ao atualizar os dados",
+  "REFRESHING_DATA": "Atualizando dados...",
+  "IMPLEMENTATION_INTELLIGENCE": "Inteligência de implementação",
+  "KNOWLEDGE_BASE": "Base de conhecimento",
+  "ETOOLS_COMMUNITY_CHANNELS": "Canais da comunidade eTools",
+  "PD_SPDS": "PD/SPDs",
+  "EXPORT_INDICATORS_PDF": "Indicadores de exportação - PDF",
+  "EXPORT_INDICATORS_XLS": "Indicadores de exportação - XLS",
+  "DOWNLOAD_XLS": "Baixar XLS",
+  "DOWNLOAD_PDF": "baixar PDF",
+  "RESULTS_REPORTED": "Resultados relatados",
+  "OTHER_INFO": "Outras informações",
+  "NO_REPORTS_YET": "Ainda não há relatórios.",
+  "NO_DISAGGREGATIONS": "Não há desagregações definidas.",
+  "ENGAGEMENT_TYPES": {
+    "AUDIT": "Auditoria",
+    "MICRO_ASSESSMENT": "Microavaliação",
+    "SPOT_CHECK": "Verificação pontual",
+    "SPECIAL_AUDIT": "Auditoria Especial"
+  },
+  "FINAL": "final",
+  "ITEM_TYPE": {
+    "PD": "PD",
+    "SPD": "SPD",
+    "SSFA": "SSFA",
+    "PROGRAMME_DOCUMENT": "Documento do Programa",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT": "Documento do Programa Simplificado"
+  },
+  "NO_REPORT_DATA": "Não há dados de relatório para exibir.",
+  "CALCULATION_ACROSS": "cálculo entre os períodos de relatório",
+  "CALCULATION_METHOD": "método de cálculo entre locais",
+  "SENT_BACK_COMMENTS": "Comentários enviados de volta",
+  "SUBMITTED_BY": " Enviado por",
+  "SUBMISSION_DATE": "Data de submissão",
+  "DATE_OF_STATUS": " Data de Status",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribuição não financeira durante o período do relatório",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribuição financeira durante o período do relatório",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD": "Desafios/gargalos no período do relatório (mais recente)",
+  "PROPOSED_WAY_FORWARD": "Caminho proposto a seguir (mais recente)",
+  "NA": "N / D",
+  "SENT_BACK_BY": "Enviado de volta por",
+  "ACCEPTED_BY": "Aceito por",
+  "NARRATIVE": "Narrativa",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT": "Saída PD/SPD/resultado esperado",
+  "NARRATIVE_ASSESSMENT": "Avaliação Narrativa",
+  "TOTAL_CUMULATIVE_PROGRESS": "Progresso cumulativo total",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD": "Realização no período do relatório",
+  "TARGET": "Alvo",
+  "TARGET_LOWCASE": "alvo",
+  "LOCATION_PROGRESS_AGAINST": "Progresso da localização contra",
+  "PREVIOUS_LOCATION_PROGRESS": "Progresso do local anterior",
+  "LOCATION_PROGRESS": "Progresso do local",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ENFRENTAR",
@@ -480,6 +539,18 @@
       "SPEAR": "LANÇA",
       "SPPME": "SPPME",
       "WASH": "LAVAGEM"
+    },
+    "REPORTSTATUSES": {
+      "ACCEPTED": "Aceitaram",
+      "DUE": "Vencimento",
+      "SENT_BACK": "Enviado de volta",
+      "SUBMITTED": "Submetido",
+      "OVERDUE": "Atrasado"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS": "Relatórios humanitários",
+      "QUARTERLY_PROGRESS_REPORTS": "Relatórios de progresso trimestrais",
+      "SPECIAL_REPORTS": "Relatórios Especiais"
     }
   }
 }

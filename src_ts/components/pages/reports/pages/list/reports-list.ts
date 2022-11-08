@@ -35,6 +35,7 @@ import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
 
 /**
  * @polymer
@@ -134,14 +135,17 @@ class ReportsList extends connect(store)(
         <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
         ${!(this.reports || []).length
           ? html` <div class="row-h">
-              <p>There are no reports yet.</p>
+              <p>${translate('NO_REPORTS_YET')}</p>
             </div>`
           : html`
               <etools-data-table-header
                 id="listHeader"
                 .lowResolutionLayout="${this.lowResolutionLayout}"
-                label="${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator
-                  .count || 0} results to show"
+                label="${translate('RESULTS_TO_SHOW', {
+                  from: this.paginator.visible_range[0],
+                  to: this.paginator.visible_range[1],
+                  count: this.paginator.count || 0
+                })}"
               >
                 <etools-data-table-column class="col-2">${translate('REPORT_NUM')}</etools-data-table-column>
                 <etools-data-table-column class="flex-c">${translate('PARTNER')}</etools-data-table-column>
@@ -168,7 +172,7 @@ class ReportsList extends connect(store)(
                           ${this._getReportTitle(report)}
                         </a>
                         <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
-                        ${report.is_final ? html`<span class="final-badge">final</span>` : ``}
+                        ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
                       </span>
                       <paper-tooltip for="tooltip-trigger-${report.id}" position="right">
                         ${report.programme_document.title}
@@ -187,7 +191,7 @@ class ReportsList extends connect(store)(
                       <report-status .status="${report.status}"></report-status>
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('DUE_DATE')}">
-                      ${this._displayOrDefault(report.due_date)}
+                      ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
                       ${this.getDisplayValue(report.reporting_period, ',', false)}
@@ -208,7 +212,7 @@ class ReportsList extends connect(store)(
 
                   <div slot="row-data-details">
                     <div class="row-details-content">
-                      <span class="rdc-title flex-c">UNICEF Focal Points</span>
+                      <span class="rdc-title flex-c">${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}</span>
                       <span>${this.getDisplayValue(report.unicef_focal_points, ', ', false)}</span>
                     </div>
                   </div>

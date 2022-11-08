@@ -36,7 +36,6 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         spinner-text="Sending rating..."
         ?disable-confirm-btn="${!this.comment.length}"
         ok-btn-text="Send Back to Partner"
-        cancel-btn-text="Cancel"
         dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
         ?show-spinner="${this.showSpinner}"
         @confirm-btn-clicked="${this.saveStatus}"

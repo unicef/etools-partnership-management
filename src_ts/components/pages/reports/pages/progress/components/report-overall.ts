@@ -3,6 +3,7 @@ import '../../../../../common/components/etools-form-element-wrapper';
 import '../../../components/report-status.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -17,7 +18,10 @@ export class ReportOverall extends LitElement {
     return html`
       <div class="row-h">
         <div class="col col-5">
-          <etools-form-element-wrapper2 label="PD/SPD output/expected result" .value="${this.lowerResultTitle}">
+          <etools-form-element-wrapper2
+            label="${translate('PD_SPD_OUTPUT_EXPECTED_RESULT')}"
+            .value="${this.lowerResultTitle}"
+          >
           </etools-form-element-wrapper2>
         </div>
         <div class="col col-2">
@@ -27,7 +31,7 @@ export class ReportOverall extends LitElement {
         </div>
         <div class="col col-5">
           <etools-form-element-wrapper2
-            label="Narrative Assessment"
+            label="${translate('NARRATIVE_ASSESSMENT')}"
             .value="${this.latestIndicator.narrative_assessment}"
           >
           </etools-form-element-wrapper2>

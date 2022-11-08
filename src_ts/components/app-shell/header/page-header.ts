@@ -7,18 +7,17 @@ import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
-import '@unicef-polymer/etools-app-selector/etools-app-selector';
+import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from '@polymer/decorators';
-import {use} from 'lit-translate';
+import {translate, use} from 'lit-translate';
 import {setActiveLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement, query} from 'lit-element';
-import {PolymerElement} from '@polymer/polymer';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../endpoints/endpoints';
@@ -219,7 +218,7 @@ class PageHeader extends connect(store)(
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector id="app-selector"></etools-app-selector>
+            <etools-app-selector id="app-selector" .language="${this.selectedLanguage}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
             <div class="envWarning" ?hidden="${!this.environment}">
               <span class='envLong'> - </span>${this.environment}
@@ -252,16 +251,17 @@ class PageHeader extends connect(store)(
           </div>
 
           <etools-profile-dropdown
-              title="Profile and Sign out"
+              title="${translate('PROFILE_AND_SIGNOUT')}"
               .sections="${this.allSections}"
               .offices="${this.allOffices}"
               .users="${this.allUsers}"
               .profile="${this.profile}"
+              .language="${this.selectedLanguage}"
               @save-profile="${this._saveProfile}"
               @sign-out="${this._signOut}"></etools-profile-dropdown>
 
           <paper-icon-button
-            title="Refresh"
+            title="${translate('GENERAL.REFRESH')}"
             id="refresh"
             icon="refresh"
             tracker="hard refresh"
@@ -504,7 +504,7 @@ class PageHeader extends connect(store)(
     if (profile) {
       const appSelector = this.shadowRoot!.querySelector('#app-selector');
       if (appSelector) {
-        (appSelector as PolymerElement).set('user', profile);
+        (appSelector as any).user = profile;
       }
     }
   }

@@ -77,11 +77,10 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         id="editPartnersDialog"
         size="lg"
         dialog-title="${translate('EDIT_HACT_ASSURANCE_PLAN')}"
-        ok-btn-text="Save"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
         opened
         @close="${this._onClose}"
-        spinner-text="Saving..."
         @confirm-btn-clicked="${this._saveChanges}"
       >
         <div class="layout-vertical">

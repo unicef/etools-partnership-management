@@ -5,6 +5,7 @@ import DisaggregationsMixin from '../mixins/disaggregations';
 import UtilsMixin from '../../../../../../../common/mixins/utils-mixin';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -23,7 +24,7 @@ export class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(LitEleme
 
         ${(this.columns || []).map((column: any) => html` <th>${this._capitalizeFirstLetter(column.value)}</th> `)}
 
-        <th>Total</th>
+        <th>${translate('GENERAL.TOTAL')}</th>
       </tr>
 
       ${(this.rowsForDisplay || []).map(

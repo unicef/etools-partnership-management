@@ -71,7 +71,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
             this.q = detail.value;
             this.requestUpdate();
           }}"
-          placeholder="Search"
+          placeholder="${translate('GENERAL.SEARCH')}"
         >
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
@@ -127,7 +127,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           </etools-data-table-footer>
         </div>
         <div class="row-padding" ?hidden="${!this._emptyList(this.filteredDisaggregations)}">
-          <p>The are no disaggregations defined.</p>
+          <p>${translate('NO_DISAGGREGATIONS')}</p>
         </div>
       </etools-content-panel>
     `;

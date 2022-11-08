@@ -24,7 +24,8 @@
     "SEARCH": "يبحث",
     "SEARCH_RECORDS": "البحث عن السجلات",
     "DELETE_CONFIRMATION": "تأكيد الحذف",
-    "STATUS": "حالة"
+    "STATUS": "حالة",
+    "REFRESH": "ينعش"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "أدخل التفاصيل الأولية",
@@ -350,6 +351,64 @@
   "SAVE_BEFORE_PCA": "احفظ قبل إنشاء قالب PCA",
   "LEAVE_UPLOAD_IN_PROGRESS": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ ستفقد جميع عمليات تحميل الملفات قيد التقدم أو غير المحفوظة!",
   "LEAVE_PAGE": "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟",
+  "PROFILE_AND_SIGNOUT": "الملف الشخصي وتسجيل الخروج",
+  "REFRESH_DATA": "تحديث البيانات",
+  "SELECT_DATA_TO_REFRESH": "حدد البيانات التي تريد تحديثها:",
+  "ALL": "الجميع",
+  "PARTNERS_GOVERNMENT": "الشركاء / الحكومة",
+  "DATA_SUCCESSFULLY_REFRESHED": "تم تحديث البيانات بنجاح",
+  "ERROR_REFRESH_DATA": "حدث خطأ أثناء تحديث البيانات",
+  "REFRESHING_DATA": "جاري تحديث البيانات ...",
+  "IMPLEMENTATION_INTELLIGENCE": "استخبارات التنفيذ",
+  "KNOWLEDGE_BASE": "قاعدة المعرفة",
+  "ETOOLS_COMMUNITY_CHANNELS": "قنوات المجتمع eTools",
+  "PD_SPDS": "PD / SPDs",
+  "EXPORT_INDICATORS_PDF": "مؤشرات التصدير - PDF",
+  "EXPORT_INDICATORS_XLS": "مؤشرات التصدير - XLS",
+  "DOWNLOAD_XLS": "تنزيل XLS",
+  "DOWNLOAD_PDF": "تحميل PDF",
+  "RESULTS_REPORTED": "تم الإبلاغ عن النتائج",
+  "OTHER_INFO": "معلومات اخرى",
+  "NO_REPORTS_YET": "لا توجد تقارير حتى الان.",
+  "NO_DISAGGREGATIONS": "لا توجد تصنيفات محددة.",
+  "ENGAGEMENT_TYPES": {
+    "AUDIT": "مراجعة",
+    "MICRO_ASSESSMENT": "التقييم الجزئي",
+    "SPOT_CHECK": "تفتيش من وقت لاخر",
+    "SPECIAL_AUDIT": "المراجعة الخاصة"
+  },
+  "FINAL": "نهائي",
+  "ITEM_TYPE": {
+    "PD": "PD",
+    "SPD": "SPD",
+    "SSFA": "SSFA",
+    "PROGRAMME_DOCUMENT": "وثيقة البرنامج",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT": "وثيقة البرنامج المبسطة"
+  },
+  "NO_REPORT_DATA": "لا توجد بيانات تقرير لعرضها.",
+  "CALCULATION_ACROSS": "الحساب عبر فترات التقارير",
+  "CALCULATION_METHOD": "طريقة الحساب عبر المواقع",
+  "SENT_BACK_COMMENTS": "التعليقات المرسلة للخلف",
+  "SUBMITTED_BY": " مقدم من",
+  "SUBMISSION_DATE": "تاريخ التقديم",
+  "DATE_OF_STATUS": " تاريخ الحالة",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "المساهمة غير المالية خلال فترة التقرير",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "المساهمة المالية خلال فترة التقرير",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD": "التحديات / الاختناقات في فترة التقرير (الأحدث)",
+  "PROPOSED_WAY_FORWARD": "الطريق المقترح إلى الأمام (الأحدث)",
+  "NA": "غير متاح",
+  "SENT_BACK_BY": "أعاد من قبل",
+  "ACCEPTED_BY": "قبلت من طرف",
+  "NARRATIVE": "رواية",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT": "ناتج PD / SPD / النتيجة المتوقعة",
+  "NARRATIVE_ASSESSMENT": "التقييم السردي",
+  "TOTAL_CUMULATIVE_PROGRESS": "إجمالي التقدم التراكمي",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD": "الإنجاز في الفترة المشمولة بالتقرير",
+  "TARGET": "استهداف",
+  "TARGET_LOWCASE": "استهداف",
+  "LOCATION_PROGRESS_AGAINST": "تقدم الموقع ضد",
+  "PREVIOUS_LOCATION_PROGRESS": "تقدم الموقع السابق",
+  "LOCATION_PROGRESS": "تقدم الموقع",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "وجه",
@@ -480,6 +539,18 @@
       "SPEAR": "رمح",
       "SPPME": "SPPME",
       "WASH": "غسل"
+    },
+    "REPORTSTATUSES": {
+      "ACCEPTED": "وافقت",
+      "DUE": "بسبب",
+      "SENT_BACK": "اعيد ارساله",
+      "SUBMITTED": "مُقَدَّم",
+      "OVERDUE": "متأخر"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS": "التقارير الإنسانية",
+      "QUARTERLY_PROGRESS_REPORTS": "تقارير التقدم ربع السنوية",
+      "SPECIAL_REPORTS": "تقارير خاصة"
     }
   }
 }

@@ -23,6 +23,7 @@ import {LitElement, property} from 'lit-element';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -311,7 +312,7 @@ class InterventionItemData extends connect(store)(
         });
       }
       fireEvent(this, 'global-loading', {
-        message: 'Saving...',
+        message: getTranslation('GENERAL.SAVING_DATA'),
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
       });
@@ -323,7 +324,7 @@ class InterventionItemData extends connect(store)(
       }).then((resp: boolean) => {
         setTimeout(() => {
           fireEvent(this, 'global-loading', {
-            message: 'Saving...',
+            message: getTranslation('GENERAL.SAVING_DATA'),
             active: false,
             loadingSource: this.ajaxLoadingMsgSource
           });

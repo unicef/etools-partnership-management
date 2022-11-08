@@ -20,8 +20,8 @@
   },
   "plugins": ["@typescript-eslint", "lit", "prettier", "lit-a11y"],
   "rules": {
-    "lit-a11y/anchor-is-valid": "warn",
-    "lit-a11y/click-events-have-key-events": "warn",
+    "lit-a11y/anchor-is-valid": "off",
+    "lit-a11y/click-events-have-key-events": "off",
     "lit-a11y/no-autofocus": "warn",
     "lit-a11y/aria-attrs": "warn",
     "prettier/prettier": "error",

@@ -4,6 +4,7 @@ import UtilsMixin from '../../../../../../../common/mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -20,7 +21,7 @@ export class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(LitEle
       <tr class="horizontal layout headerRow">
         <th></th>
         ${(this.columns || []).map((column: any) => html`<th>${this._capitalizeFirstLetter(column.value)}</th> `)}
-        <th>Total</th>
+        <th>${translate('GENERAL.TOTAL')}</th>
       </tr>
 
       <!-- Data rows: outer and middle. -->

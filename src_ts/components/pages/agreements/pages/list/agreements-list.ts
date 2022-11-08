@@ -208,11 +208,11 @@ export class AgreementsList extends connect(store)(
             </div>
             <div slot="row-data-details">
               <div class="row-details-content col-2">
-                <span class="rdc-title">Signed By Partner Date</span>
+                <span class="rdc-title">${translate('SIGNED_BY_PARTNER_DATE')}</span>
                 <span>${this._checkAndShowAgreementDate(agreement.signed_by_partner_date)}</span>
               </div>
               <div class="row-details-content col-2">
-                <span class="rdc-title">Signed By UNICEF Date</span>
+                <span class="rdc-title">${translate('SIGNED_BY_UNICEF_DATE')}</span>
                 <span>${this._checkAndShowAgreementDate(agreement.signed_by_unicef_date)}</span>
               </div>
             </div>
@@ -282,8 +282,8 @@ export class AgreementsList extends connect(store)(
     const stateRouteDetails = get(state, 'app.routeDetails');
     if (
       !(
-        this.localName.indexOf(stateRouteDetails.routeName.split('-')[0]) > -1 &&
-        stateRouteDetails.subRouteName === 'list'
+        this.localName.indexOf(stateRouteDetails?.routeName.split('-')[0] as any) > -1 &&
+        stateRouteDetails?.subRouteName === 'list'
       )
     ) {
       return;

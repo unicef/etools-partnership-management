@@ -128,11 +128,9 @@ export class InterventionsModule extends connect(store)(
       <div ?hidden="${this.showNewPMP(this.activePage)}">
         <page-content-header ?with-tabs-visible="${this.tabsActive}">
           <div slot="page-title">
-            <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> PD/SPDs </span>
+            <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> ${translate('PD_SPDS')} </span>
             <span ?hidden="${!this._pageEquals(this.activePage, 'new')}">
-              <span class="no-capitalization"
-                >${this._getTranslation('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')}</span
-              >
+              <span class="no-capitalization">${translate('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')}</span>
             </span>
           </div>
 
@@ -141,17 +139,17 @@ export class InterventionsModule extends connect(store)(
               <paper-menu-button id="pdExportMenuBtn" close-on-activate>
                 <paper-button slot="dropdown-trigger" class="focus-as-link">
                   <iron-icon icon="file-download"></iron-icon>
-                  ${this._getTranslation('EXPORT')}
+                  ${translate('EXPORT')}
                 </paper-button>
                 <paper-listbox slot="dropdown-content">
                   <paper-item @tap="${this._exportPdBudget}" tracker="Export PD Budget"
-                    >${this._getTranslation('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</paper-item
+                    >${translate('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</paper-item
                   >
                   <paper-item @tap="${this._exportPdResult}" tracker="Export PD Result"
-                    >${this._getTranslation('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</paper-item
+                    >${translate('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</paper-item
                   >
                   <paper-item @tap="${this._exportPdLocations}" tracker="Export PD Locations"
-                    >${this._getTranslation('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</paper-item
+                    >${translate('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</paper-item
                   >
                 </paper-listbox>
               </paper-menu-button>
@@ -166,7 +164,7 @@ export class InterventionsModule extends connect(store)(
                 @click="${this._goToNewInterventionPage}"
               >
                 <iron-icon icon="add"></iron-icon>
-                ${this._getTranslation('INTERVENTIONS_LIST.ADD_NEW_PD')}
+                ${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}
                 <paper-menu-button id="importEcn" horizontal-align="right">
                   <paper-icon-button
                     slot="dropdown-trigger"

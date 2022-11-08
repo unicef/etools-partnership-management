@@ -124,13 +124,15 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
 
           (data as any)[x] = (data as any)[x].map((y: any) => {
             const translation_key = y.translation_key || y.label || y.name || y;
-            return {
-              ...y,
-              translation_key,
-              ...((y.label && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
-              ...((y.name && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
-              ...((typeof y === 'string' && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {})
-            };
+
+            return (
+              (typeof y === 'string' && getTranslatedValue(translation_key, `COMMON_DATA.${key}`)) || {
+                ...y,
+                translation_key,
+                ...((y.label && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
+                ...((y.name && {name: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {})
+              }
+            );
           });
         });
 
