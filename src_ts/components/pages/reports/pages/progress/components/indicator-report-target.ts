@@ -1,6 +1,7 @@
 import {html, LitElement, property, customElement} from 'lit-element';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -66,19 +67,19 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
       </style>
 
       <div class="target-row">
-        <span>Target:</span>
+        <span>${translate('TARGET')}:</span>
         <span title="${this._getTargetValue(this.displayType, this.target)}">
           ${this._getTargetValue(this.displayType, this.target)}
         </span>
       </div>
       <div class="target-row">
-        <span>Total cumulative progress:</span>
+        <span>${translate('TOTAL_CUMULATIVE_PROGRESS')}:</span>
         <span title="${this._getCumulativeProgress(this.displayType, this.cumulativeProgress)}">
           ${this._getCumulativeProgress(this.displayType, this.cumulativeProgress)}
         </span>
       </div>
       <div class="target-row">
-        <span>Achievement in reporting period:</span>
+        <span>${translate('ACHIEVEMENT_IN_REPORTING_PERIOD')}:</span>
         <span title="${this._getAchievement(this.displayType, this.achievement)}"
           >${this._getAchievement(this.displayType, this.achievement)}</span
         >

@@ -1,6 +1,7 @@
 import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/image-icons.js';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -126,42 +127,60 @@ export class ReportStatus extends LitElement {
   }
 
   _computeLabel(status: string, final: boolean, reportType: string) {
+    let label;
     switch (status) {
       case '1':
-        return 'Nothing due';
+        label = 'Nothing due';
+        break;
       case '2':
       case 'Ove':
-        return 'Overdue';
+        label = 'Overdue';
+        break;
       case '3':
       case 'Due':
-        return 'Due';
+        label = 'Due';
+        break;
       case 'Sub':
-        return 'Submitted';
+        label = 'Submitted';
+        break;
       case 'Rej':
-        return 'Rejected';
+        label = 'Rejected';
+        break;
       case 'Met':
-        return final ? 'Met results as planned' : 'Met';
+        label = final ? 'Met results as planned' : 'Met';
+        break;
       case 'OnT':
-        return 'On Track';
+        label = 'On Track';
+        break;
       case 'NoP':
-        return 'No Progress';
+        label = 'No Progress';
+        break;
       case 'Con':
-        return final ? 'Constrained (partially met result)' : 'Constrained';
+        label = final ? 'Constrained (partially met result)' : 'Constrained';
+        break;
       case 'Ong':
-        return 'Ongoing';
+        label = 'Ongoing';
+        break;
       case 'Pla':
-        return 'Planned';
+        label = 'Planned';
+        break;
       case 'Com':
-        return 'Completed';
+        label = 'Completed';
+        break;
       case 'NoS':
-        return 'No Status';
+        label = 'No Status';
+        break;
       case 'Sen':
-        return 'Sent Back';
+        label = 'Sent Back';
+        break;
       case 'Acc':
-        return reportType !== 'HR' ? 'Accepted' : 'Received';
+        label = reportType !== 'HR' ? 'Accepted' : 'Received';
+        break;
       default:
-        return 'No Status';
+        label = 'No Status';
     }
+
+    return getTranslatedValue(label, 'PROGRESS_REPORT_STATUS');
   }
 
   _computeIcon(type: string) {

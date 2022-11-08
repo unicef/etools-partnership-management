@@ -7,6 +7,7 @@ import '../../../../../common/components/etools-form-element-wrapper';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 @customElement('sr-details')
 export class SrDetails extends LitElement {
@@ -34,7 +35,7 @@ export class SrDetails extends LitElement {
 
       <div class="paper-material elevation" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper2 label="Narrative" .value="${this.report?.narrative}">
+          <etools-form-element-wrapper2 label="${translate('NARRATIVE')}" .value="${this.report?.narrative}">
           </etools-form-element-wrapper2>
         </div>
         <div class="row-padding">

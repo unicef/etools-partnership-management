@@ -10,6 +10,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -247,7 +248,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
         }
 
         fireEvent(this, 'global-loading', {
-          message: 'Saving...',
+          message: getTranslation('GENERAL.SAVING_DATA'),
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });

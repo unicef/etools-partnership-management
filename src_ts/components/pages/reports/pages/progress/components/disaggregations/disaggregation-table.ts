@@ -8,6 +8,7 @@ import './table-content/zero-disaggregations';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -49,7 +50,7 @@ export class DisaggregationTable extends UtilsMixin(LitElement) {
              this.labels
                ? html`
                    <dl class="data-key">
-                     <dt>Label -</dt>
+                     <dt>${translate('LABEL')} -</dt>
                      ${this._equals(this.data.display_type, 'number')
                        ? html`<dd>[ ${this._withDefault(this.labels.label)} ]</dd>`
                        : html` <dd>

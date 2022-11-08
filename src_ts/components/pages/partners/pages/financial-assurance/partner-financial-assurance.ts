@@ -565,7 +565,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   }
 
   public _displayType(type: any) {
-    return this.TYPES[type];
+    return translateValue(this.TYPES[type], 'ENGAGEMENT_TYPES');
   }
 
   public _getEngagementsRequestOptions(partnerId: any) {

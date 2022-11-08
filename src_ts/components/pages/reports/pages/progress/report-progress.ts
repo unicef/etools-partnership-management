@@ -19,6 +19,7 @@ import {isEmptyObject} from '../../../../utils/utils';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -107,13 +108,13 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
               ?hidden="${!this._noReportDataToShow(this.report.programme_document?.cp_outputs)}"
             >
               <div class="row-h">
-                <p>There is no report data to display.</p>
+                <p>${translate('NO_REPORT_DATA')}</p>
               </div>
             </div>
 
             ${this.report.programme_document?.cp_outputs.map(
               (result: any, resultIndex: number) => html`
-                <etools-content-panel class="content-section" panel-title="CP Output: ${result.title}">
+                <etools-content-panel class="content-section" panel-title="${translate('CP_OUTPUT')}: ${result.title}">
                   <!-- RAM indicators display -->
                   <etools-ram-indicators-common
                     class="row-h"
@@ -151,12 +152,12 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                     </h3>
                                     <div class="layout-horizontal calculation-formula">
                                       <span>
-                                        calculation method across locations:
+                                        ${translate('CALCULATION_METHOD')}:
                                         <strong>${this._calculationAcrossLocations(indicatorReport)}</strong>
                                       </span>
                                       <span class="calculation-formula-delimiter">|</span>
                                       <span>
-                                        calculation across reporting periods:
+                                        ${translate('CALCULATION_ACROSS')}:
                                         <strong>${this._calculationFormulaAcrossPeriods(indicatorReport)}</strong>
                                       </span>
                                     </div>

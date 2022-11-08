@@ -5,7 +5,7 @@ import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate, translateConfig} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
 import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -166,6 +166,7 @@ export function template(this: InterventionNew): TemplateResult {
               slot="label-suffix"
               position="top"
               offset="48"
+              .language="${translateConfig.lang}"
               .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
             ></info-icon-tooltip>
           </etools-dropdown-multi>
@@ -231,6 +232,7 @@ export function template(this: InterventionNew): TemplateResult {
               slot="label-suffix"
               position="top"
               offset="48"
+              .language="${translateConfig.lang}"
               .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
           </etools-dropdown>

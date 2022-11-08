@@ -3,6 +3,7 @@ import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -21,7 +22,7 @@ export class OneDisaggregation extends DisaggregationsMixin(LitElement) {
 
       <tr class="horizontal layout headerRow">
         <th></th>
-        <th>Total</th>
+        <th>${translate('GENERAL.TOTAL')}</th>
       </tr>
 
       ${(this.rows || []).map(

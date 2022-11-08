@@ -21,6 +21,7 @@ import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {openDialog} from '../../../../../utils/dialog';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils.js';
 
 /**
  * @customElement
@@ -130,7 +131,9 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                 ?hidden="${!this._isVisible(item.active, this.showArchived)}"
               >
                 <div slot="row-data" class="layout-horizontal p-relative">
-                  <span class="col-data col-3"> ${item.type || ''} </span>
+                  <span class="col-data col-3">
+                    ${translateValue(item.type || '', 'COMMON_DATA.ASSESSMENTTYPES')}
+                  </span>
                   <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date || '')} </span>
                   <span class="col-data col-5">
                     <iron-icon icon="attachment" class="attachment"></iron-icon>

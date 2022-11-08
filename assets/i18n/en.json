@@ -360,8 +360,56 @@
   "ERROR_REFRESH_DATA":"There was an error while refreshing the data",
   "REFRESHING_DATA":"Refreshing data...",
   "IMPLEMENTATION_INTELLIGENCE":"Implementation intelligence",
+  "KNOWLEDGE_BASE":"Knowledge base",
   "ETOOLS_COMMUNITY_CHANNELS":"eTools Community Channels",
   "PD_SPDS":"PD/SPDs",
+  "EXPORT_INDICATORS_PDF":"Export Indicators - PDF",
+  "EXPORT_INDICATORS_XLS":"Export Indicators - XLS",
+  "DOWNLOAD_XLS":"Download XLS",
+  "DOWNLOAD_PDF":"Download PDF",
+  "RESULTS_REPORTED":"Results Reported",
+  "OTHER_INFO":"Other Info",
+  "NO_REPORTS_YET":"There are no reports yet.",
+  "NO_DISAGGREGATIONS":"The are no disaggregations defined.",
+  "ENGAGEMENT_TYPES":{
+    "AUDIT": "Audit",
+    "MICRO_ASSESSMENT": "Micro Assessment",
+    "SPOT_CHECK": "Spot Check",
+    "SPECIAL_AUDIT": "Special Audit"
+  },
+  "FINAL":"final",
+  "ITEM_TYPE": {
+    "PD": "PD",
+    "SPD": "SPD",
+    "SSFA": "SSFA",
+    "PROGRAMME_DOCUMENT":"Programme Document",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT":"Simplified Programme Document"
+  },
+  "NO_REPORT_DATA":"There is no report data to display.",
+  "CALCULATION_ACROSS":"calculation across reporting periods",
+  "CALCULATION_METHOD":"calculation method across locations",
+  "SENT_BACK_COMMENTS":"Sent Back Comments",
+  "SUBMITTED_BY":" Submitted By",
+  "SUBMISSION_DATE":"Submission Date",
+  "DATE_OF_STATUS":" Date of Status",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD":"Non-financial contribution during reporting period",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD":"Financial contribution during reporting period",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD":"Challenges/Bottlenecks in the Reporting Period (latest)",
+  "PROPOSED_WAY_FORWARD":"Proposed Way Forward (latest)",
+  "NA":"N/A",
+  "SENT_BACK_BY":"Sent back by",
+  "ACCEPTED_BY":"Accepted by",
+  "NARRATIVE":"Narrative",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT":"PD/SPD output/expected result",
+  "NARRATIVE_ASSESSMENT":"Narrative Assessment",
+  "TOTAL_CUMULATIVE_PROGRESS":"Total cumulative progress",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD":"Achievement in reporting period",
+  "TARGET":"Target",
+  "TARGET_LOWCASE":"target",
+  "LOCATION_PROGRESS_AGAINST":"Location progress against",
+  "PREVIOUS_LOCATION_PROGRESS":"Previous location progress",
+  "LOCATION_PROGRESS":"Location progress",
+  "LABEL":"Label",
   "COMMON_DATA": {
     "FILETYPES": {
         "FACE": "FACE",
@@ -492,6 +540,18 @@
         "SPEAR": "SPEAR",
         "SPPME": "SPPME",
         "WASH": "WASH"
+    },
+    "REPORTSTATUSES":{
+      "ACCEPTED":"Accepted",
+      "DUE":"Due",
+      "SENT_BACK":"Sent Back",
+      "SUBMITTED":"Submitted",
+      "OVERDUE":"Overdue"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS":"Humanitarian Reports",
+      "QUARTERLY_PROGRESS_REPORTS":"Quarterly Progress Reports",
+      "SPECIAL_REPORTS":"Special Reports"
     }
   }
 }

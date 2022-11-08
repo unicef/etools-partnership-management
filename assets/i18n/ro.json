@@ -360,8 +360,55 @@
   "ERROR_REFRESH_DATA": "A apărut o eroare la reîmprospătarea datelor",
   "REFRESHING_DATA": "Se actualizează datele...",
   "IMPLEMENTATION_INTELLIGENCE": "Inteligența de implementare",
+  "KNOWLEDGE_BASE": "Bază de cunoștințe",
   "ETOOLS_COMMUNITY_CHANNELS": "Canale comunitare eTools",
   "PD_SPDS": "PD/SPD-uri",
+  "EXPORT_INDICATORS_PDF": "Indicatori de export - PDF",
+  "EXPORT_INDICATORS_XLS": "Indicatori de export - XLS",
+  "DOWNLOAD_XLS": "Descărcați XLS",
+  "DOWNLOAD_PDF": "Descărcați PDF",
+  "RESULTS_REPORTED": "Rezultate raportate",
+  "OTHER_INFO": "Alte informații",
+  "NO_REPORTS_YET": "Nu există încă rapoarte.",
+  "NO_DISAGGREGATIONS": "Nu sunt definite dezagregari.",
+  "ENGAGEMENT_TYPES": {
+    "AUDIT": "Audit",
+    "MICRO_ASSESSMENT": "Microevaluare",
+    "SPOT_CHECK": "Verificare la fața locului",
+    "SPECIAL_AUDIT": "Audit special"
+  },
+  "FINAL": "final",
+  "ITEM_TYPE": {
+    "PD": "PD",
+    "SPD": "SPD",
+    "SSFA": "SSFA",
+    "PROGRAMME_DOCUMENT": "Documentul programului",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT": "Document de program simplificat"
+  },
+  "NO_REPORT_DATA": "Nu există date de raport de afișat.",
+  "CALCULATION_ACROSS": "calcul pe perioade de raportare",
+  "CALCULATION_METHOD": "metoda de calcul între locații",
+  "SENT_BACK_COMMENTS": "Comentarii trimise înapoi",
+  "SUBMITTED_BY": " Trimis de",
+  "SUBMISSION_DATE": "Data depunerii",
+  "DATE_OF_STATUS": " Data statutului",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribuție nefinanciară în perioada de raportare",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribuție financiară în perioada de raportare",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD": "Provocări/ blocaje în perioada de raportare (cel mai recent)",
+  "PROPOSED_WAY_FORWARD": "Calea de urmat propusă (cel mai recent)",
+  "NA": "N / A",
+  "SENT_BACK_BY": "Trimis înapoi de",
+  "ACCEPTED_BY": "Acceptat de",
+  "NARRATIVE": "Narativ",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT": "Ieșire PD/SPD/rezultat așteptat",
+  "NARRATIVE_ASSESSMENT": "Evaluare narativă",
+  "TOTAL_CUMULATIVE_PROGRESS": "Progres total cumulat",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD": "Realizare în perioada de raportare",
+  "TARGET": "Ţintă",
+  "TARGET_LOWCASE": "ţintă",
+  "LOCATION_PROGRESS_AGAINST": "Progresul locației împotriva",
+  "PREVIOUS_LOCATION_PROGRESS": "Progresul anterior al locației",
+  "LOCATION_PROGRESS": "Progresul locației",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",
@@ -492,6 +539,18 @@
       "SPEAR": "SULIŢĂ",
       "SPPME": "SPPME",
       "WASH": "SPALARE"
+    },
+    "REPORTSTATUSES": {
+      "ACCEPTED": "Admis",
+      "DUE": "Datorită",
+      "SENT_BACK": "Trimis înapoi",
+      "SUBMITTED": "Trimis",
+      "OVERDUE": "Depasit"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS": "Rapoarte umanitare",
+      "QUARTERLY_PROGRESS_REPORTS": "Rapoarte trimestriale de progres",
+      "SPECIAL_REPORTS": "Rapoarte speciale"
     }
   }
 }

@@ -9,6 +9,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -53,7 +54,7 @@ function ProfileOperationsMixin<T extends Constructor<LitElement>>(baseClass: T)
       }
 
       fireEvent(this, 'global-loading', {
-        message: 'Saving...',
+        message: getTranslation('GENERAL.SAVING_DATA'),
         active: true,
         loadingSource: this.profileSaveLoadingMsgSource
       });

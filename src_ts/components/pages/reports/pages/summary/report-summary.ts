@@ -17,6 +17,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 import cloneDeep from 'lodash-es/cloneDeep';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -73,21 +74,21 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         <div class="row-h b-border">
           <div class="col col-5">
             <etools-form-element-wrapper2
-              label="Submitted By"
+              label="${translate('SUBMITTED_BY')}"
               .value="${this.getDisplayValue(this.report.submitted_by)}"
             >
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-2">
             <etools-form-element-wrapper2
-              label="Submission Date"
+              label="${translate('SUBMISSION_DATE')}"
               .value="${this._displayOrDefault(this.report.submission_date)}"
             >
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-3 report-status" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
             <etools-form-element-wrapper2
-              label="Report Status"
+              label="${translate('REPORT_STATUS')}"
               class="w-auto"
               .value="${this.getReportStatus(this.report.status, this.report.reviewed_by_name)}"
             >
@@ -100,7 +101,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
           </div>
           <div class="col col-2" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
             <etools-form-element-wrapper2
-              label="Date of Status"
+              label="${translate('DATE_OF_STATUS')}"
               .value="${this._displayOrDefault(this.report.review_date)}"
             >
             </etools-form-element-wrapper2>
@@ -110,7 +111,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         <div class="row-h">
           <div class="col col-12">
             <etools-form-element-wrapper2
-              label="Non-financial contribution during reporting period"
+              label="${translate('NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.partner_contribution_to_date)}"
             >
             </etools-form-element-wrapper2>
@@ -119,7 +120,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         <div class="row-h">
           <div class="col col-12">
             <etools-form-element-wrapper2
-              label="Financial contribution during reporting period"
+              label="${translate('FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getFinancialContributionText(this.report)}"
             >
             </etools-form-element-wrapper2>
@@ -128,7 +129,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         <div class="row-h">
           <div class="col col-12">
             <etools-form-element-wrapper2
-              label="Challenges/Bottlenecks in the Reporting Period (latest)"
+              label="${translate('CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.challenges_in_the_reporting_period)}"
             >
             </etools-form-element-wrapper2>
@@ -137,7 +138,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         <div class="row-h">
           <div class="col col-12">
             <etools-form-element-wrapper2
-              label="Proposed Way Forward (latest)"
+              label="${translate('PROPOSED_WAY_FORWARD')}"
               .value="${this.getDisplayValue(this.report.proposed_way_forward)}"
             >
             </etools-form-element-wrapper2>
@@ -201,16 +202,16 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     let stat = '';
     switch (status) {
       case 'Acc':
-        stat = 'Accepted by ';
+        stat = `${getTranslation('SENT_BACK_BY')} `;
         break;
       case 'Sen':
-        stat = 'Sent back by ';
+        stat = `${getTranslation('ACCEPTED_BY')} `;
         break;
       default:
         stat = '';
     }
 
-    return stat + (username ? username : 'N/A');
+    return stat + (username ? username : getTranslation('NA'));
   }
 
   statusIs(currentStatus: string, status: string) {

@@ -360,8 +360,55 @@
   "ERROR_REFRESH_DATA": "Une erreur s'est produite lors de l'actualisation des données",
   "REFRESHING_DATA": "Actualisation des données...",
   "IMPLEMENTATION_INTELLIGENCE": "Renseignements sur la mise en œuvre",
+  "KNOWLEDGE_BASE": "Base de connaissances",
   "ETOOLS_COMMUNITY_CHANNELS": "Canaux communautaires eTools",
   "PD_SPDS": "PD/SPD",
+  "EXPORT_INDICATORS_PDF": "Indicateurs d'exportation - PDF",
+  "EXPORT_INDICATORS_XLS": "Indicateurs d'exportation - XLS",
+  "DOWNLOAD_XLS": "Télécharger XLS",
+  "DOWNLOAD_PDF": "Télécharger le PDF",
+  "RESULTS_REPORTED": "Résultats rapportés",
+  "OTHER_INFO": "Autre info",
+  "NO_REPORTS_YET": "Il n'y a pas encore de rapports.",
+  "NO_DISAGGREGATIONS": "Aucune désagrégation n'est définie.",
+  "ENGAGEMENT_TYPES": {
+    "AUDIT": "Audit",
+    "MICRO_ASSESSMENT": "Micro-évaluation",
+    "SPOT_CHECK": "Vérification ponctuelle",
+    "SPECIAL_AUDIT": "Audit spécial"
+  },
+  "FINAL": "final",
+  "ITEM_TYPE": {
+    "PD": "PD",
+    "SPD": "SPD",
+    "SSFA": "SSFA",
+    "PROGRAMME_DOCUMENT": "Document de programme",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT": "Document de programme simplifié"
+  },
+  "NO_REPORT_DATA": "Il n'y a pas de données de rapport à afficher.",
+  "CALCULATION_ACROSS": "calcul sur les périodes de déclaration",
+  "CALCULATION_METHOD": "méthode de calcul à travers les emplacements",
+  "SENT_BACK_COMMENTS": "Commentaires renvoyés",
+  "SUBMITTED_BY": " Proposé par",
+  "SUBMISSION_DATE": "Date de soumission",
+  "DATE_OF_STATUS": " Date du statut",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribution non financière pendant la période de référence",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribution financière pendant la période de référence",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD": "Défis/goulots d'étranglement dans la période de rapport (dernière)",
+  "PROPOSED_WAY_FORWARD": "Voie à suivre proposée (dernière)",
+  "NA": "N / A",
+  "SENT_BACK_BY": "Renvoyé par",
+  "ACCEPTED_BY": "Accepté par",
+  "NARRATIVE": "Récit",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT": "Sortie PD/SPD/résultat attendu",
+  "NARRATIVE_ASSESSMENT": "Évaluation narrative",
+  "TOTAL_CUMULATIVE_PROGRESS": "Progression totale cumulée",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD": "Réalisation au cours de la période de référence",
+  "TARGET": "Cible",
+  "TARGET_LOWCASE": "cible",
+  "LOCATION_PROGRESS_AGAINST": "Progression de la localisation contre",
+  "PREVIOUS_LOCATION_PROGRESS": "Progression de la position précédente",
+  "LOCATION_PROGRESS": "Progression de la localisation",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "VISAGE",
@@ -492,6 +539,18 @@
       "SPEAR": "LANCE",
       "SPPME": "SPPME",
       "WASH": "LAVAGE"
+    },
+    "REPORTSTATUSES": {
+      "ACCEPTED": "Accepté",
+      "DUE": "Exigible",
+      "SENT_BACK": "Renvoyé",
+      "SUBMITTED": "Soumis",
+      "OVERDUE": "En retard"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS": "Rapports humanitaires",
+      "QUARTERLY_PROGRESS_REPORTS": "Rapports d'avancement trimestriels",
+      "SPECIAL_REPORTS": "Rapports spéciaux"
     }
   }
 }

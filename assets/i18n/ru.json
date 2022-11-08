@@ -360,8 +360,55 @@
   "ERROR_REFRESH_DATA": "Произошла ошибка при обновлении данных",
   "REFRESHING_DATA": "Обновление данных...",
   "IMPLEMENTATION_INTELLIGENCE": "Интеллектуальная реализация",
+  "KNOWLEDGE_BASE": "База знаний",
   "ETOOLS_COMMUNITY_CHANNELS": "Каналы сообщества eTools",
   "PD_SPDS": "ПД/СПД",
+  "EXPORT_INDICATORS_PDF": "Экспорт индикаторов - PDF",
+  "EXPORT_INDICATORS_XLS": "Индикаторы экспорта - XLS",
+  "DOWNLOAD_XLS": "Скачать XLS",
+  "DOWNLOAD_PDF": "Скачать PDF",
+  "RESULTS_REPORTED": "Сообщенные результаты",
+  "OTHER_INFO": "Другая информация",
+  "NO_REPORTS_YET": "Отчетов пока нет.",
+  "NO_DISAGGREGATIONS": "Дезагрегации не определены.",
+  "ENGAGEMENT_TYPES": {
+    "AUDIT": "Аудит",
+    "MICRO_ASSESSMENT": "Микрооценка",
+    "SPOT_CHECK": "Выборочная проверка",
+    "SPECIAL_AUDIT": "Специальный аудит"
+  },
+  "FINAL": "окончательный",
+  "ITEM_TYPE": {
+    "PD": "ПД",
+    "SPD": "СПД",
+    "SSFA": "УССФА",
+    "PROGRAMME_DOCUMENT": "Программный документ",
+    "SIMPLIFIED_PROGRAMME_DOCUMENT": "Упрощенный программный документ"
+  },
+  "NO_REPORT_DATA": "Нет данных отчета для отображения.",
+  "CALCULATION_ACROSS": "расчет по отчетным периодам",
+  "CALCULATION_METHOD": "метод расчета по локациям",
+  "SENT_BACK_COMMENTS": "Отправленные комментарии",
+  "SUBMITTED_BY": " Представленный",
+  "SUBMISSION_DATE": "Дата подачи",
+  "DATE_OF_STATUS": " Дата статуса",
+  "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Нефинансовый вклад за отчетный период",
+  "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Финансовый вклад за отчетный период",
+  "CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD": "Проблемы/узкие места в отчетном периоде (последние)",
+  "PROPOSED_WAY_FORWARD": "Предлагаемый путь вперед (последний)",
+  "NA": "Н/Д",
+  "SENT_BACK_BY": "Отправлено",
+  "ACCEPTED_BY": "Принят",
+  "NARRATIVE": "Повествование",
+  "PD_SPD_OUTPUT_EXPECTED_RESULT": "Выход PD/SPD/ожидаемый результат",
+  "NARRATIVE_ASSESSMENT": "Нарративная оценка",
+  "TOTAL_CUMULATIVE_PROGRESS": "Общий совокупный прогресс",
+  "ACHIEVEMENT_IN_REPORTING_PERIOD": "Достижение за отчетный период",
+  "TARGET": "Цель",
+  "TARGET_LOWCASE": "цель",
+  "LOCATION_PROGRESS_AGAINST": "Прогресс локации против",
+  "PREVIOUS_LOCATION_PROGRESS": "Предыдущий прогресс местоположения",
+  "LOCATION_PROGRESS": "Прогресс местоположения",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ЛИЦО",
@@ -492,6 +539,18 @@
       "SPEAR": "КОПЬЕ",
       "SPPME": "СППМЭ",
       "WASH": "МЫТЬ"
+    },
+    "REPORTSTATUSES": {
+      "ACCEPTED": "Принято",
+      "DUE": "В связи",
+      "SENT_BACK": "Отправили обратно",
+      "SUBMITTED": "Поданный",
+      "OVERDUE": "Просрочено"
+    },
+    "REPORTTYPES": {
+      "HUMANITARIAN_REPORTS": "Гуманитарные отчеты",
+      "QUARTERLY_PROGRESS_REPORTS": "Ежеквартальные отчеты о проделанной работе",
+      "SPECIAL_REPORTS": "Специальные отчеты"
     }
   }
 }

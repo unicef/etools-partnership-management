@@ -15,6 +15,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -125,16 +126,19 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
                       <dl>
                         ${this._equals(location.display_type, 'number')
                           ? html`
-                              <dt>Location progress against ${location.reporting_entity.title} target:</dt>
+                              <dt>
+                                ${translate('LOCATION_PROGRESS_AGAINST')} ${location.reporting_entity.title}
+                                ${translate('TARGET_LOWCASE')}:
+                              </dt>
                               <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
-                              <dt>Previous location progress:</dt>
+                              <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
                               <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
                             `
-                          : html` <dt>Location progress:</dt>
+                          : html` <dt>${translate('LOCATION_PROGRESS')}:</dt>
                               <dd>
                                 ${this._formatIndicatorValue(location.display_type, location.location_progress.c, true)}
                               </dd>
-                              <dt>Previous location progress:</dt>
+                              <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
                               <dd>
                                 ${this._formatIndicatorValue(
                                   location.display_type,

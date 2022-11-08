@@ -19,7 +19,7 @@ export class NewPartnerDialog extends LitElement {
       <etools-dialog
         id="newPartnerDialog"
         size="md"
-        ok-btn-text="Save"
+        ok-btn-text="${translate('GENERAL.SAVE')}"
         ?disable-confirm-btn="${this.vendorNumberIsEmpty}"
         dialog-title="${translate('IMPORT_SYNC_PARTNER')}"
         keep-dialog-open

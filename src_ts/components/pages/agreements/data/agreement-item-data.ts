@@ -11,7 +11,7 @@ import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import pmpEdpoints from '../../../endpoints/endpoints';
-
+import {get as getTranslation} from 'lit-translate';
 /**
  * @polymer
  * @customElement
@@ -255,7 +255,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         }
 
         fireEvent(this, 'global-loading', {
-          message: 'Saving...',
+          message: getTranslation('GENERAL.SAVING_DATA'),
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
