@@ -362,6 +362,8 @@
   "IMPLEMENTATION_INTELLIGENCE": "استخبارات التنفيذ",
   "KNOWLEDGE_BASE": "قاعدة المعرفة",
   "ETOOLS_COMMUNITY_CHANNELS": "قنوات المجتمع eTools",
+  "DISCUSSION": "مناقشة",
+  "INFORMATION": "معلومة",
   "PD_SPDS": "PD / SPDs",
   "EXPORT_INDICATORS_PDF": "مؤشرات التصدير - PDF",
   "EXPORT_INDICATORS_XLS": "مؤشرات التصدير - XLS",
@@ -409,6 +411,7 @@
   "LOCATION_PROGRESS_AGAINST": "تقدم الموقع ضد",
   "PREVIOUS_LOCATION_PROGRESS": "تقدم الموقع السابق",
   "LOCATION_PROGRESS": "تقدم الموقع",
+  "LABEL": "مُلصَق",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "وجه",

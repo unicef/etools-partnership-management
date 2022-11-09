@@ -362,6 +362,8 @@
   "IMPLEMENTATION_INTELLIGENCE": "Renseignements sur la mise en œuvre",
   "KNOWLEDGE_BASE": "Base de connaissances",
   "ETOOLS_COMMUNITY_CHANNELS": "Canaux communautaires eTools",
+  "DISCUSSION": "Discussion",
+  "INFORMATION": "Informations",
   "PD_SPDS": "PD/SPD",
   "EXPORT_INDICATORS_PDF": "Indicateurs d'exportation - PDF",
   "EXPORT_INDICATORS_XLS": "Indicateurs d'exportation - XLS",
@@ -409,6 +411,7 @@
   "LOCATION_PROGRESS_AGAINST": "Progression de la localisation contre",
   "PREVIOUS_LOCATION_PROGRESS": "Progression de la position précédente",
   "LOCATION_PROGRESS": "Progression de la localisation",
+  "LABEL": "Étiquette",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "VISAGE",

@@ -362,6 +362,8 @@
   "IMPLEMENTATION_INTELLIGENCE": "Inteligencia de implementación",
   "KNOWLEDGE_BASE": "Base de conocimientos",
   "ETOOLS_COMMUNITY_CHANNELS": "Canales de la comunidad de eTools",
+  "DISCUSSION": "Discusión",
+  "INFORMATION": "Información",
   "PD_SPDS": "PD/SPD",
   "EXPORT_INDICATORS_PDF": "Exportar Indicadores - PDF",
   "EXPORT_INDICATORS_XLS": "Indicadores de exportación - XLS",
@@ -409,6 +411,7 @@
   "LOCATION_PROGRESS_AGAINST": "Progreso de ubicación contra",
   "PREVIOUS_LOCATION_PROGRESS": "Progreso de la ubicación anterior",
   "LOCATION_PROGRESS": "Progreso de ubicación",
+  "LABEL": "Etiqueta",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "CARA",
