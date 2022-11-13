@@ -6,7 +6,6 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -36,7 +35,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
   }
   render() {
     return html`
-      ${sharedStyles} ${RequiredFieldsStyles}
+      ${sharedStyles}
       <style>
         :host {
           display: block;

@@ -11,7 +11,6 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
-import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -43,7 +42,7 @@ export class AddDisaggregationDialog extends connect(store)(
   render() {
     // language=HTML
     return html`
-      ${sharedStyles} ${RequiredFieldsStyles} ${actionIconBtnsStyles}
+      ${sharedStyles} ${actionIconBtnsStyles}
       <style>
         paper-input {
           width: 100%;
