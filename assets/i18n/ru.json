@@ -362,6 +362,8 @@
   "IMPLEMENTATION_INTELLIGENCE": "Интеллектуальная реализация",
   "KNOWLEDGE_BASE": "База знаний",
   "ETOOLS_COMMUNITY_CHANNELS": "Каналы сообщества eTools",
+  "DISCUSSION": "Обсуждение",
+  "INFORMATION": "Информация",
   "PD_SPDS": "ПД/СПД",
   "EXPORT_INDICATORS_PDF": "Экспорт индикаторов - PDF",
   "EXPORT_INDICATORS_XLS": "Индикаторы экспорта - XLS",
@@ -409,6 +411,7 @@
   "LOCATION_PROGRESS_AGAINST": "Прогресс локации против",
   "PREVIOUS_LOCATION_PROGRESS": "Предыдущий прогресс местоположения",
   "LOCATION_PROGRESS": "Прогресс местоположения",
+  "LABEL": "Этикетка",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ЛИЦО",

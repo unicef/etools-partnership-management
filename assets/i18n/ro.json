@@ -362,6 +362,8 @@
   "IMPLEMENTATION_INTELLIGENCE": "Inteligența de implementare",
   "KNOWLEDGE_BASE": "Bază de cunoștințe",
   "ETOOLS_COMMUNITY_CHANNELS": "Canale comunitare eTools",
+  "DISCUSSION": "Discuţie",
+  "INFORMATION": "informație",
   "PD_SPDS": "PD/SPD-uri",
   "EXPORT_INDICATORS_PDF": "Indicatori de export - PDF",
   "EXPORT_INDICATORS_XLS": "Indicatori de export - XLS",
@@ -409,6 +411,7 @@
   "LOCATION_PROGRESS_AGAINST": "Progresul locației împotriva",
   "PREVIOUS_LOCATION_PROGRESS": "Progresul anterior al locației",
   "LOCATION_PROGRESS": "Progresul locației",
+  "LABEL": "Eticheta",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",
