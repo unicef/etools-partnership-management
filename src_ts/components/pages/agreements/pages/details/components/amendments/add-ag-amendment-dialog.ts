@@ -50,7 +50,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
             <!-- Signed Date -->
             <datepicker-lite
               id="signedDate"
-              label="Signed Date"
+              label="${translate('SIGNED_DATE')}"
               .value="${this.amendment.signed_date}"
               required-error-msg="${translate('PLEASE_SELECT_SIGNED_DATE')}"
               max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
