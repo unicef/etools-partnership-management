@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "تقدم الموقع السابق",
   "LOCATION_PROGRESS": "تقدم الموقع",
   "LABEL": "مُلصَق",
+  "OVERALL_STATUS": "الوضع العام",
+  "FOMRULA_CHOICES": {
+    "SUM": "مجموع",
+    "MAX": "الأعلى",
+    "AVG": "متوسط",
+    "PERCENTAGE": "نسبة مئوية",
+    "RATIO": "نسبة",
+    "LATEST": "آخر"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "وجه",

@@ -18,6 +18,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {openDialog} from '../../../../utils/dialog';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -63,7 +64,6 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         }
         .att {
           margin-bottom: 24px;
-          margin-left: 16px;
         }
         div[elevation] {
           padding: 15px 20px;
@@ -148,7 +148,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
           ${(this.reportAttachments || []).map(
             (item: any, index: number) => html`
               <div class="att">
-                <iron-label for="file_${index}"> ${item.type} </iron-label>
+                <iron-label for="file_${index}"> ${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')} </iron-label>
                 <a class="primary" id="file_${index}" href="${item.path}" target="_blank"> ${item.file_name} </a>
               </div>
             `

@@ -8,6 +8,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import pmpEdpoints from '../../endpoints/endpoints';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -44,7 +45,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
       <etools-loading ?active="${this.loading}"></etools-loading>
 
       <iron-label>
-        <span id="label">RAM Indicators</span>
+        <span id="label">${translate('RAM_INDICATORS')}</span>
         <div id="ram-indicators" iron-label-target>
           ${this._noRamIndicators(this.ramIndicators.length)
             ? html`<span id="no-ram-indicators">&#8212;</span>`

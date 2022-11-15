@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Progresso do local anterior",
   "LOCATION_PROGRESS": "Progresso do local",
   "LABEL": "Etiqueta",
+  "OVERALL_STATUS": "Estado geral",
+  "FOMRULA_CHOICES": {
+    "SUM": "Soma",
+    "MAX": "Máx.",
+    "AVG": "Média",
+    "PERCENTAGE": "Percentagem",
+    "RATIO": "Razão",
+    "LATEST": "Mais recentes"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ENFRENTAR",

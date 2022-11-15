@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Progression de la position précédente",
   "LOCATION_PROGRESS": "Progression de la localisation",
   "LABEL": "Étiquette",
+  "OVERALL_STATUS": "État général",
+  "FOMRULA_CHOICES": {
+    "SUM": "Somme",
+    "MAX": "Max",
+    "AVG": "Moyen",
+    "PERCENTAGE": "Pourcentage",
+    "RATIO": "Rapport",
+    "LATEST": "Dernier"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "VISAGE",

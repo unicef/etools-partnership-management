@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Progresul anterior al locației",
   "LOCATION_PROGRESS": "Progresul locației",
   "LABEL": "Eticheta",
+  "OVERALL_STATUS": "Stare generală",
+  "FOMRULA_CHOICES": {
+    "SUM": "Sumă",
+    "MAX": "Max",
+    "AVG": "In medie",
+    "PERCENTAGE": "Procent",
+    "RATIO": "Raport",
+    "LATEST": "Cele mai recente"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",

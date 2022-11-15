@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Предыдущий прогресс местоположения",
   "LOCATION_PROGRESS": "Прогресс местоположения",
   "LABEL": "Этикетка",
+  "OVERALL_STATUS": "Общий статус",
+  "FOMRULA_CHOICES": {
+    "SUM": "Сумма",
+    "MAX": "Максимум",
+    "AVG": "Средний",
+    "PERCENTAGE": "Процент",
+    "RATIO": "Соотношение",
+    "LATEST": "Последний"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ЛИЦО",

@@ -20,6 +20,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -284,12 +285,18 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _calculationFormulaAcrossPeriods(indicator: any) {
-    return indicator.reportable.blueprint.display_type === 'ratio'
-      ? 'latest'
-      : indicator.reportable.blueprint.calculation_formula_across_periods;
+    return translateValue(
+      indicator.reportable.blueprint.display_type === 'ratio'
+        ? 'latest'
+        : indicator.reportable.blueprint.calculation_formula_across_periods,
+      'FOMRULA_CHOICES'
+    );
   }
 
   _calculationAcrossLocations(indicatorReport: any) {
-    return this.getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations);
+    return translateValue(
+      this.getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations) as string,
+      'FOMRULA_CHOICES'
+    );
   }
 }

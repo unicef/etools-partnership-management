@@ -414,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS":"Previous location progress",
   "LOCATION_PROGRESS":"Location progress",
   "LABEL":"Label",
+  "OVERALL_STATUS":"Overall Status",
+  "FOMRULA_CHOICES": {
+    "SUM":"Sum",
+    "MAX":"Max",
+    "AVG":"Average",
+    "PERCENTAGE":"Percentage",
+    "RATIO":"Ratio",
+    "LATEST":"Latest"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
         "FACE": "FACE",
