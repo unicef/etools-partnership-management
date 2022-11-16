@@ -7,7 +7,6 @@ import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
@@ -31,7 +30,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
   render() {
     // language=HTML
     return html`
-      ${sharedStyles} ${RequiredFieldsStyles}
+      ${sharedStyles}
       <style>
         paper-input {
           width: 100%;

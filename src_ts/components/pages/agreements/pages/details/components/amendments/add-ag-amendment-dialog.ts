@@ -9,7 +9,6 @@ import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {RequiredFieldsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/required-fields-styles';
 
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
@@ -29,7 +28,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   }
   render() {
     return html`
-      ${sharedStyles} ${RequiredFieldsStyles}
+      ${sharedStyles}
 
       <etools-dialog
         no-padding
