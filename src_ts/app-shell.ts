@@ -468,15 +468,6 @@ class AppShell extends connect(store)(
    * and then routeChanged
    */
   public appLocRouteChanged(appLocRoute: any) {
-    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
-      // if paths are different then user try to navigate away => show the confirmation dialog
-      // else user confirmed in the dialog to stay so just return
-      if (appLocRoute.path !== this.route.path) {
-        this._openLeavePageDialog();
-      }
-      return;
-    }
-
     this.updateReduxRouteDetails();
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
@@ -490,7 +481,11 @@ class AppShell extends connect(store)(
       }
     }
 
-    this.route = JSON.parse(JSON.stringify(appLocRoute));
+    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+      this._openLeavePageDialog();
+    } else {
+      this.route = JSON.parse(JSON.stringify(appLocRoute));
+    }
   }
 
   public routeChanged() {
@@ -813,9 +808,7 @@ class AppShell extends connect(store)(
       // leave
       store.dispatch({type: RESET_UNSAVED_UPLOADS});
       store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
-      setTimeout(() => {
-        this.appLocRouteChanged(this.appLocRoute);
-      }, 200);
+      this.route = JSON.parse(JSON.stringify(this.appLocRoute));
     } else {
       // stay
       // revert url
