@@ -25,7 +25,7 @@ export class ReportOverall extends LitElement {
           </etools-form-element-wrapper2>
         </div>
         <div class="col col-2">
-          <etools-form-element-wrapper2 label="Overall Status" no-placeholder>
+          <etools-form-element-wrapper2 label="${translate('OVERALL_STATUS')}" no-placeholder>
             <report-status .status="${this.latestIndicator.overall_status}" slot="prefix"></report-status>
           </etools-form-element-wrapper2>
         </div>

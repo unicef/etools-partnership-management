@@ -96,7 +96,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             icon="add-box"
             ?hidden="${!this.editMode}"
             ?disabled="${!this.editMode}"
-            title="${translate('ADD')}"
+            title="${translate('GENERAL.ADD')}"
             @click="${this._openAddAgAmendmentDialog}"
           >
           </paper-icon-button>

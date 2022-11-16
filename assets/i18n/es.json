@@ -280,6 +280,8 @@
   "CP_OUTPUT": "Salida PC",
   "GOVERNMENT_PARTNERS": "Socios gubernamentales",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} de {{count}} resultados para mostrar",
+  "OFFICES": "Oficinas",
+  "TOTAL_BUDGET": "Presupuesto total",
   "PD_EXPORT_TYPES": {
     "PDRESULT": "Resultado de DP",
     "PDBUDGET": "Presupuesto de DP",
@@ -412,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Progreso de la ubicación anterior",
   "LOCATION_PROGRESS": "Progreso de ubicación",
   "LABEL": "Etiqueta",
+  "OVERALL_STATUS": "Estado general",
+  "FOMRULA_CHOICES": {
+    "SUM": "Suma",
+    "MAX": "máx.",
+    "AVG": "Promedio",
+    "PERCENTAGE": "Porcentaje",
+    "RATIO": "Relación",
+    "LATEST": "Más reciente"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "CARA",
@@ -528,19 +539,27 @@
       "DIRECT_CASH_TRANSFER": "Transferencia Directa de Efectivo"
     },
     "SECTIONS": {
-      "CHILD_PROTECTION": "Protección infantil",
       "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Promoción de la comunicación y compromiso cívico",
-      "DRIVERS": "Conductores",
-      "EDUCATION": "Educación",
       "EMERGENCY/FIELD_COORDINATION": "Coordinación de Emergencia/Campo",
       "HEALTH": "Salud",
-      "NUTRITION": "Nutrición",
-      "OPERATIONS": "Operaciones",
       "POLIO": "Polio",
       "PROGRAMME_COORDINATION": "Coordinación de programas",
       "SECURITY": "Seguridad",
       "SPEAR": "LANZA",
       "SPPME": "SPPME",
+      "CHILD_HEALTH": "Salud de los niños",
+      "CHILD_PROTECTION": "Protección infantil",
+      "CHILD_SURVIVAL_AND_DEVELOPMENT": "Supervivencia y desarrollo infantil",
+      "COMMUNICATION,_ADVOCACY_AND_PARTNERSHIP": "Comunicación, promoción y asociación",
+      "DEPUTY_REPRESENTATIVE'S_OFFICE": "Oficina del Representante Adjunto",
+      "DRIVERS": "Conductores",
+      "EARLY_CHILDHOOD_AND_DEVELOPMENT": "Primera Infancia y Desarrollo",
+      "EDUCATION": "Educación",
+      "NUTRITION": "Nutrición",
+      "OPERATIONS": "Operaciones",
+      "PLANNING,_MONITORING_AND_EVALUATION": "Planificación, Seguimiento y Evaluación",
+      "REPRESENTATIVE'S_OFFICE": "oficina del representante",
+      "SOCIAL_POLICY_AND_RESEARCH": "Política Social e Investigación",
       "WASH": "LAVAR"
     },
     "REPORTSTATUSES": {

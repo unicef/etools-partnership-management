@@ -2,6 +2,7 @@ import {html, LitElement, property, customElement, PropertyValues} from 'lit-ele
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import '../disaggregation-table-row';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -42,7 +43,7 @@ export class ZeroDisaggregations extends LitElement {
       return;
     }
     return {
-      title: 'total',
+      title: getTranslation('GENERAL.TOTAL'),
       total: {
         key: '()',
         data: data.disaggregation['()']

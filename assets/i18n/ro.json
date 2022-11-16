@@ -280,6 +280,8 @@
   "CP_OUTPUT": "Realizari CP",
   "GOVERNMENT_PARTNERS": "Parteneri guvernamentali",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} din {{count}} rezultate de afișat",
+  "OFFICES": "Birouri",
+  "TOTAL_BUDGET": "Buget total",
   "PD_EXPORT_TYPES": {
     "PDRESULT": "Rezultat PD",
     "PDBUDGET": "Bugetul PD",
@@ -412,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS": "Progresul anterior al locației",
   "LOCATION_PROGRESS": "Progresul locației",
   "LABEL": "Eticheta",
+  "OVERALL_STATUS": "Stare generală",
+  "FOMRULA_CHOICES": {
+    "SUM": "Sumă",
+    "MAX": "Max",
+    "AVG": "In medie",
+    "PERCENTAGE": "Procent",
+    "RATIO": "Raport",
+    "LATEST": "Cele mai recente"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",
@@ -528,19 +539,27 @@
       "DIRECT_CASH_TRANSFER": "Transfer direct de numerar"
     },
     "SECTIONS": {
-      "CHILD_PROTECTION": "Protecția Copilului",
       "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Advocacy în comunicare și implicare civică",
-      "DRIVERS": "Șoferii",
-      "EDUCATION": "Educaţie",
       "EMERGENCY/FIELD_COORDINATION": "Coordonare de urgență/de teren",
       "HEALTH": "Sănătate",
-      "NUTRITION": "Nutriție",
-      "OPERATIONS": "Operațiuni",
       "POLIO": "Poliomielita",
       "PROGRAMME_COORDINATION": "Coordonarea programului",
       "SECURITY": "Securitate",
       "SPEAR": "SULIŢĂ",
       "SPPME": "SPPME",
+      "CHILD_HEALTH": "Sănătatea Copilului",
+      "CHILD_PROTECTION": "Protecția Copilului",
+      "CHILD_SURVIVAL_AND_DEVELOPMENT": "Supraviețuirea și dezvoltarea copilului",
+      "COMMUNICATION,_ADVOCACY_AND_PARTNERSHIP": "Comunicare, advocacy și parteneriat",
+      "DEPUTY_REPRESENTATIVE'S_OFFICE": "Biroul Reprezentantului Adjunct",
+      "DRIVERS": "Șoferii",
+      "EARLY_CHILDHOOD_AND_DEVELOPMENT": "Copilăria timpurie și dezvoltarea",
+      "EDUCATION": "Educaţie",
+      "NUTRITION": "Nutriție",
+      "OPERATIONS": "Operațiuni",
+      "PLANNING,_MONITORING_AND_EVALUATION": "Planificare, Monitorizare și Evaluare",
+      "REPRESENTATIVE'S_OFFICE": "Biroul Reprezentanței",
+      "SOCIAL_POLICY_AND_RESEARCH": "Politică socială și cercetare",
       "WASH": "SPALARE"
     },
     "REPORTSTATUSES": {

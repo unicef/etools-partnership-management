@@ -307,6 +307,9 @@ class ReportsList extends connect(store)(
         this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
       }
       this.currentLanguage = state.activeLanguage!.activeLanguage;
+      if (this.allFilters) {
+        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      }
     }
 
     this.endStateChanged(state);

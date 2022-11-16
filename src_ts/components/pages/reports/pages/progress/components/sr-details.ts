@@ -8,6 +8,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 @customElement('sr-details')
 export class SrDetails extends LitElement {
@@ -42,7 +43,7 @@ export class SrDetails extends LitElement {
           ${(this.reportAttachments || []).map(
             (item: AnyObject, index: number) => html`
               <div class="att">
-                <iron-label for="file_${index}">${item.type}</iron-label>
+                <iron-label for="file_${index}">${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')}</iron-label>
                 <a class="primary" id="file_${index}" href="${item.path}" target="_blank">${item.file_name}</a>
               </div>
             `

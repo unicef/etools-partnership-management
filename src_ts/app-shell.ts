@@ -795,8 +795,8 @@ class AppShell extends connect(store)(
     const conf: any = {
       title: getTranslation('LEAVE_PAGE'),
       size: 'md',
-      okBtnText: 'Leave',
-      cancelBtnText: 'Stay',
+      okBtnText: getTranslation('LEAVE'),
+      cancelBtnText: getTranslation('STAY'),
       closeCallback: this._onLeavePageConfirmation.bind(this),
       content: msg
     };

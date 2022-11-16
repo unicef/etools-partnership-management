@@ -280,6 +280,8 @@
   "CP_OUTPUT": "CP Output",
   "GOVERNMENT_PARTNERS":"Government Partners",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} of {{count}} results to show",
+  "OFFICES":"Offices",
+  "TOTAL_BUDGET":"Total Budget",
   "PD_EXPORT_TYPES": {
     "PDRESULT": "PD Result",
     "PDBUDGET": "PD Budget",
@@ -412,6 +414,15 @@
   "PREVIOUS_LOCATION_PROGRESS":"Previous location progress",
   "LOCATION_PROGRESS":"Location progress",
   "LABEL":"Label",
+  "OVERALL_STATUS":"Overall Status",
+  "FOMRULA_CHOICES": {
+    "SUM":"Sum",
+    "MAX":"Max",
+    "AVG":"Average",
+    "PERCENTAGE":"Percentage",
+    "RATIO":"Ratio",
+    "LATEST":"Latest"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
         "FACE": "FACE",
@@ -528,20 +539,28 @@
         "DIRECT_CASH_TRANSFER": "Direct Cash Transfer"
     },
     "SECTIONS": {
-        "CHILD_PROTECTION": "Child Protection",
         "COMMUNICATION_ADVOCACY_&_CIVIC_ENGAGEMENT": "Communication Advocacy & Civic Engagement",
-        "DRIVERS": "Drivers",
-        "EDUCATION": "Education",
         "EMERGENCY/FIELD_COORDINATION": "Emergency/Field Coordination",
         "HEALTH": "Health",
-        "NUTRITION": "Nutrition",
-        "OPERATIONS": "Operations",
         "POLIO": "Polio",
         "PROGRAMME_COORDINATION": "Programme Coordination",
         "SECURITY": "Security",
         "SPEAR": "SPEAR",
         "SPPME": "SPPME",
-        "WASH": "WASH"
+        "CHILD_HEALTH":"Child Health",
+        "CHILD_PROTECTION":"Child Protection",
+        "CHILD_SURVIVAL_AND_DEVELOPMENT":"Child Survival and Development",
+        "COMMUNICATION,_ADVOCACY_AND_PARTNERSHIP":"Communication, Advocacy and Partnership",
+        "DEPUTY_REPRESENTATIVE'S_OFFICE":"Deputy Representative's Office",
+        "DRIVERS":"Drivers",
+        "EARLY_CHILDHOOD_AND_DEVELOPMENT":"Early Childhood and Development",
+        "EDUCATION":"Education",
+        "NUTRITION":"Nutrition",
+        "OPERATIONS":"Operations",
+        "PLANNING,_MONITORING_AND_EVALUATION":"Planning, Monitoring and Evaluation",
+        "REPRESENTATIVE'S_OFFICE":"Representative's Office",
+        "SOCIAL_POLICY_AND_RESEARCH":"Social Policy and Research",
+        "WASH":"WASH"
     },
     "REPORTSTATUSES":{
       "ACCEPTED":"Accepted",
