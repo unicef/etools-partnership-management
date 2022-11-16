@@ -36,7 +36,7 @@ import {openDialog} from '../../../../utils/dialog';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
-import {cloneDeep, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep, getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 /**
  * @polymer
@@ -601,7 +601,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     this.basisOptions = [
       ...this.basisOptions,
       ...this.partner.assessments.map((a: PartnerAssessment) => ({
-        label: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`,
+        label: `${getTranslatedValue(a.type!, 'ENGAGEMENT_TYPES')} - ${this.getDateDisplayValue(a.completed_date!)}`,
         value: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`
       }))
     ];
@@ -611,7 +611,9 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     this.basisOptions = [
       ...this.basisOptions,
       ...engagements.map((e: any) => ({
-        label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`,
+        label: `${getTranslatedValue(this.TYPES[e.engagement_type], 'ENGAGEMENT_TYPES')} - ${this.getDateDisplayValue(
+          e.status_date
+        )}`,
         value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`
       }))
     ];
