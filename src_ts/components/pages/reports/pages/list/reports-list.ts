@@ -305,11 +305,12 @@ class ReportsList extends connect(store)(
       if (this.currentLanguage) {
         // language was already set, this is language change
         this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
+        if (this.allFilters) {
+          this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+        }
       }
+
       this.currentLanguage = state.activeLanguage!.activeLanguage;
-      if (this.allFilters) {
-        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
-      }
     }
 
     this.endStateChanged(state);
@@ -344,7 +345,7 @@ class ReportsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded && state.user?.data);
+    return Boolean(state.commonData?.commonDataIsLoaded && state.user?.data && state.partners?.listIsLoaded);
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
