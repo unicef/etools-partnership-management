@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "export NODE_OPTIONS=--max_old_space_size=4096 && npm run tsToJs && polymer build",
+    "buildNullCoalescingOp": "gulp",
     "tsToJs": "tsc --skipLibCheck || true",
     "tsEslint": "npx eslint 'src_ts/**' --fix",
     "start": "tsc --watch --preserveWatchOutput & polymer serve -H 0.0.0.0 -p 8080",
@@ -90,11 +91,14 @@
     "dexie": "^3.2.2",
     "esri-leaflet": "^3.0.8",
     "focus-visible": "^5.2.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "leaflet": "^1.9.2",
     "leaflet.markercluster": "^1.5.3",
     "lit-element": "^2.5.1",
     "lit-translate": "^1.2.1",
     "lodash-es": "^4.17.21",
+    "polymer-build": "^3.1.4",
     "pwa-helpers": "^0.9.1",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
@@ -103,6 +107,7 @@
     "web-animations-js": "^2.3.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@open-wc/dev-server-hmr": "^0.1.3",
