@@ -19,11 +19,12 @@ function waitFor(stream) {
 // Create a build pipeline to pipe both streams together to the 'build/' dir
 const customBuild = () => {
   // merge the source and dependencies streams to we can analyze the project
-  const allFiles = mergeStream(project.sources(), project.dependencies()).pipe(project.analyzer);
+  const allFiles = mergeStream(project.sources(), project.dependencies());
+  const analyzer = allFiles.pipe(project.analyzer); // error dest.on is not a function
 
   // fork the stream in case downstream transformers mutate the files
   // this fork will generate the bundle files for the project
-  const bundledPhase = fork(allFiles)
+  const bundledPhase = fork(analyzer)
     .pipe(project.bundler())
     .pipe(
       babel({
