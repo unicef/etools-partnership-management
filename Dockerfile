@@ -9,6 +9,7 @@ RUN apk add git
 
 RUN npm install -g --unsafe-perm polymer-cli
 RUN npm install -g typescript
+RUN npm install -g @babel/cli
 
 
 WORKDIR /tmp
@@ -21,7 +22,7 @@ ADD . /code/
 WORKDIR /code
 
 RUN cp -a /tmp/node_modules /code/node_modules
-
+RUN npm run removeNullCoalescingOp
 RUN npm run build
 
 
@@ -36,3 +37,4 @@ COPY --from=builder /code/express.js /code/express.js
 COPY --from=builder /code/build /code/build
 EXPOSE 8080
 CMD ["node", "express.js"]
+
