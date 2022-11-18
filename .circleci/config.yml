@@ -81,8 +81,8 @@ workflows:
     jobs:
       - lint
       - build_and_deploy:
-          requires:
-            - lint
+          # requires:
+          #   - lint
           filters:
             branches:
               only:
