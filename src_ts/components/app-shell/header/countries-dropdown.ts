@@ -86,7 +86,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(Endpoin
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this._countrySelected}"
-        shown-options-limit="250"
+        .shownOptionsLimit="${250}"
         hide-search
         auto-width
       ></etools-dropdown>
