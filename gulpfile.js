@@ -20,17 +20,19 @@ function waitFor(stream) {
 const customBuild = () => {
   // merge the source and dependencies streams to we can analyze the project
   const allFiles = mergeStream(project.sources(), project.dependencies());
-  const analyzer = allFiles.pipe(project.analyzer); // error dest.on is not a function
+  // .pipe(project.analyzer) error dest.on is not a function
 
   // fork the stream in case downstream transformers mutate the files
   // this fork will generate the bundle files for the project
-  const bundledPhase = fork(analyzer)
-    .pipe(project.bundler())
+  const bundledPhase = fork(allFiles)
     .pipe(
       babel({
+        ignore: ['*.json'],
         plugins: ['@babel/plugin-proposal-nullish-coalescing-operator']
       })
     )
+    .on('error', console.error.bind(console))
+    .pipe(project.bundler())
     // write to the bundled folder
     // TODO(justinfagnani): allow filtering of files before writing
     .pipe(gulp.dest('build/esm-bundled'));
