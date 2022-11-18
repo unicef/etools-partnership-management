@@ -29,7 +29,8 @@ jobs:
           command: npm run lint
       - run:
           name: Remove opt.chaining and null coalescing op.
-          command: npm run removeNullCoalescingOp
+          command: npm install -g @babel/core @babel/cli
+            npm run removeNullCoalescingOp
       - run:
           name: Polymer3 Build
           command: npm run build
