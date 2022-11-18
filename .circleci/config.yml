@@ -28,6 +28,9 @@ jobs:
           name: EsLint
           command: npm run lint
       - run:
+          name: Remove opt.chaining and null coalescing op.
+          command: npm run removeNullCoalescingOp
+      - run:
           name: Polymer3 Build
           command: npm run build
           no_output_timeout: 25m
@@ -81,8 +84,8 @@ workflows:
     jobs:
       - lint
       - build_and_deploy:
-          # requires:
-          #   - lint
+          requires:
+            - lint
           filters:
             branches:
               only:
