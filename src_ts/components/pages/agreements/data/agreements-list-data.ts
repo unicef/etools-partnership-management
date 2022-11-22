@@ -36,7 +36,7 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
     store.dispatch(setAgreements(res));
   }
 
-  query(
+  async query(
     field: string,
     order: string,
     searchString: string,
@@ -65,13 +65,22 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
         active: true
       });
     }
+    // WARN: Fix for .orderBy excluding items with null values in 'field' property
+    if (field) {
+      await window.EtoolsPmpApp.DexieDb.agreements
+        .filter(function (i: any) {
+          return i[field] == null;
+        })
+        .modify({[field]: ''});
+    }
+
     const agreementsDexieTable = window.EtoolsPmpApp.DexieDb.agreements;
     window.EtoolsPmpApp.DexieDb.transaction('r', agreementsDexieTable, function () {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = agreementsDexieTable;
       if (field) {
-        // note: null values don't appear in result set of sort
+        // BUG: null values don't appear in result set of sort
         queryResult = queryResult.orderBy(field);
       }
       if (order === 'desc') {

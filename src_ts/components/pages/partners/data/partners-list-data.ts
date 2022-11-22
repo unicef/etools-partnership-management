@@ -40,7 +40,7 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
     }
   }
 
-  public query(
+  public async query(
     field: string,
     order: string,
     searchString: string,
@@ -68,6 +68,15 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
       fireEvent(self, 'list-loading', {
         active: true
       });
+    }
+
+    // WARN: Fix for .orderBy excluding items with null values in 'field' property
+    if (field) {
+      await window.EtoolsPmpApp.DexieDb.partners
+        .filter(function (i: any) {
+          return i[field] == null;
+        })
+        .modify({[field]: ''});
     }
 
     const partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;

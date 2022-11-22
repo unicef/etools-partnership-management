@@ -81,14 +81,6 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
       this.currentQuery.abort();
     }
 
-    // WARN: Fix for .orderBy excluding pds with null values in 'field' property
-    if (field) {
-      await window.EtoolsPmpApp.DexieDb.interventions
-        .filter(function (i: any) {
-          return i[field] == null;
-        })
-        .modify({[field]: ''});
-    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
@@ -97,6 +89,15 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
         active: true
       });
     }
+    // WARN: Fix for .orderBy excluding items with null values in 'field' property
+    if (field) {
+      await window.EtoolsPmpApp.DexieDb.interventions
+        .filter(function (i: any) {
+          return i[field] == null;
+        })
+        .modify({[field]: ''});
+    }
+
     this.waitForListDataRequestToFinish().then(() => {
       const interventionsDexieTable = window.EtoolsPmpApp.DexieDb.interventions;
       window.EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function () {
