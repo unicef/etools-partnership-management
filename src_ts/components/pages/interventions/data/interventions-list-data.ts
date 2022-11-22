@@ -51,7 +51,7 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
     }
   }
 
-  query(
+  async query(
     field: string,
     order: string,
     searchString: string,
@@ -81,6 +81,14 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
       this.currentQuery.abort();
     }
 
+    // WARN: Fix for .orderBy excluding pds with null values in 'field' property
+    if (field) {
+      await window.EtoolsPmpApp.DexieDb.interventions
+        .filter(function (i: any) {
+          return i[field] == null;
+        })
+        .modify({[field]: ''});
+    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
@@ -96,7 +104,7 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
 
         let queryResult = interventionsDexieTable;
         if (field) {
-          // note: null values don't appear in result set of sort
+          // BUG: null values don't appear in result set of sort
           queryResult = queryResult.orderBy(field);
         }
         if (order === 'desc') {
