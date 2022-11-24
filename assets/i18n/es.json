@@ -423,6 +423,20 @@
     "RATIO": "Relación",
     "LATEST": "Más reciente"
   },
+  "RELEASE_CASH_IN_TIME": "Durante el curso de la implementación del programa, ¿Liberó UNICEF efectivo de manera oportuna?",
+  "RELEASE_SUPPLIES_IN_TIME": "Durante el curso de la implementación del programa, ¿Liberó UNICEF los suministros del programa de manera oportuna?",
+  "FEEDBACK_FACE_FORM_IN_TIME": "Durante el curso de la implementación del programa, ¿proporcionó UNICEF retroalimentación oportuna sobre los formularios FACE y los informes narrativos de progreso?",
+  "RESPOND_REQUESTS_IN_TIME": "Durante el curso de la implementación del programa, ¿respondió el personal de UNICEF a las consultas y solicitudes de asistencia técnica de manera oportuna?",
+  "IMPLEMENTED_AS_PLANNED": "¿Se implementaron las actividades conjuntas de monitoreo y aseguramiento según lo planeado en el Documento del Programa?",
+  "ACTION_TO_ADDRESS": "¿Su organización y UNICEF tomaron medidas para abordar los hallazgos identificados en las actividades de monitoreo y aseguramiento?",
+  "OVERALL_SATISFACTION": "En general, ¿cuál fue el grado de satisfacción de su organización con su asociación con UNICEF en este documento de programa?",
+  "OVERALL_SATISFACTION_RATINGS": {
+    "VERY_UNSATISFIED": "muy insatisfecho",
+    "UNSATISFIED": "Insatisfecho",
+    "NEUTRAL": "Neutral",
+    "SATISFIED": "Satisfecho",
+    "VERY_SATISFIED": "Muy Satisfecho"
+  },
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "CARA",
