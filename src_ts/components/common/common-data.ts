@@ -3,28 +3,26 @@ import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
 
-import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {PolymerElement} from '@polymer/polymer';
-import EnvironmentFlagsPolymerMixin from '../common/environment-flags/environment-flags-mixin';
-import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
 import pmpEdpoints from '../endpoints/endpoints';
-import {LitElement} from 'lit-element';
+import {LitElement, property} from 'lit-element';
 import {listenForLangChanged} from 'lit-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import EnvironmentFlagsMixinLit from './environment-flags/environment-flags-mixin-lit';
+import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(baseClass: T) {
-  class CommonDataClass extends EnvironmentFlagsPolymerMixin(EndpointsMixin(baseClass)) {
+function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
+  class CommonDataClass extends EnvironmentFlagsMixinLit(EndpointsLitMixin(baseClass)) {
     @property({type: Object})
     commonDataEndpoints = {
       pmp: [
@@ -155,7 +153,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
     }
 
     protected _makeRequest(endpointName: string, successHandler: any, errorHandler: any) {
-      this.fireRequest(endpointName, {})
+      this.fireRequest(pmpEdpoints, endpointName, {})
         .then((resp: any) => {
           successHandler.bind(this, resp)();
         })

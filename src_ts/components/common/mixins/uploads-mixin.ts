@@ -1,14 +1,13 @@
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {store, RootState} from '../../../redux/store';
 import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../../redux/actions/upload-status';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {LitElement, property} from 'lit-element';
 /**
  * @polymer
  * @mixinFunction
  */
-function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function UploadsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class UploadsClass extends baseClass {
     @property({type: String})
     uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;

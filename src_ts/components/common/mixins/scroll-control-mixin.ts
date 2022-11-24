@@ -15,11 +15,13 @@ function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     public connectedCallback() {
       super.connectedCallback();
       if (!window.EtoolsPmpApp.ContentContainer) {
-        window.EtoolsPmpApp.ContentContainer = this._getContentContainer();
+        setTimeout(() => {
+          window.EtoolsPmpApp.ContentContainer = this._getContentContainer();
 
-        // we still have to set contentContainer property
-        // (undefined at this level, until next elem that uses this mixin is attached)
-        this.contentContainer = window.EtoolsPmpApp.ContentContainer;
+          // we still have to set contentContainer property
+          // (undefined at this level, until next elem that uses this mixin is attached)
+          this.contentContainer = window.EtoolsPmpApp.ContentContainer;
+        });
       }
     }
 
