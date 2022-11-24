@@ -15,7 +15,7 @@ export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 export const UPDATE_SMALLMENU_STATE = 'UPDATE_SMALLMENU_STATE';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {BASE_URL} from '../../config/config';
-import {DEFAULT_ROUTE, EtoolsRouter, updateAppLocation} from '../../components/utils/routes';
+import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../components/utils/routes';
 import {getRedirectToListPath} from '../../components/utils/subpage-redirect';
 import {isJsonStrMatch} from '../../components/utils/utils';
 
@@ -95,7 +95,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
   }
 };
 
-const loadPageComponents = (routeDetails: RouteDetails) => (dispatch: any, getState: any) => {
+const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _getState: any) => {
   if (
     ['partners', 'interventions', 'agreements', 'government-partners', 'reports', 'settings'].includes(
       routeDetails.routeName
@@ -104,11 +104,11 @@ const loadPageComponents = (routeDetails: RouteDetails) => (dispatch: any, getSt
     if ('government-partners' == routeDetails.routeName) {
       import(`../../components/pages/partners/partners-module.js`)
         .then(() => importSubRoutes('partners', routeDetails.subRouteName))
-        .catch(); // TODO
+        .catch(() => updateAppLocation(ROUTE_404));
     } else {
       import(`../../components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`)
         .then(() => importSubRoutes(routeDetails.routeName, routeDetails.subRouteName))
-        .catch(); // TODO
+        .catch(() => updateAppLocation(ROUTE_404));
     }
   }
 };
