@@ -72,9 +72,9 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
   if (['list'].includes(subRouteName)) {
     import(`../../components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`);
   }
-  if (['new'].includes(subRouteName)) {
-    import(`../../components/pages/interventions/pages/new/intervention-new.js`);
-  }
+  // if (['new'].includes(subRouteName)) {
+  //   import(`../../components/pages/interventions/pages/new/intervention-new.js`);
+  // }
   if (['details', 'financial-assurance', 'overview', 'progress', 'summary'].includes(subRouteName)) {
     import(
       `../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
