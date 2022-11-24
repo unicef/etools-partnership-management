@@ -354,18 +354,6 @@ export class PartnersModule extends connect(store)(
       return;
     }
     this.scrollToTopOnCondition(!listActive);
-    // const page: string = listActive ? 'list' : routeDetails.subRouteName!;
-    // const fileImportDetails = {
-    //   filenamePrefix: listActive
-    //     ? routeDetails.subRouteName!.indexOf('government-partners') > -1
-    //       ? 'government'
-    //       : 'partner'
-    //     : 'partner',
-    //   importErrMsg: 'Partners page import error occurred',
-    //   errMsgPrefixTmpl: '[partner(s) ##page##]',
-    //   loadingMsgSource: 'partners-page'
-    // };
-    // this.setActivePage(page, fileImportDetails);
   }
 
   public _hasEditPermissions(permissions: UserPermissions) {

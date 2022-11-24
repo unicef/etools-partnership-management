@@ -368,15 +368,6 @@ export class InterventionsModule extends connect(store)(
     if (['list', 'new'].includes(page)) {
       this.reportsPrevParams = {};
     }
-    // const fileImportDetails = {
-    //   filenamePrefix: 'intervention',
-    //   baseUrl: '../app-elements/interventions/',
-    //   importErrMsg: 'Interventions page import error occurred',
-    //   errMsgPrefixTmpl: '[intervention(s) ##page##]',
-    //   loadingMsgSource: 'interv-page'
-    // };
-
-    // this.setActivePage(page, fileImportDetails, undefined, null, undefined);
   }
 
   onAmendmentDeleted(e: CustomEvent) {

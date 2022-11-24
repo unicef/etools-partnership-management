@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
 import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
@@ -22,10 +21,8 @@ import {store, RootState} from './redux/store';
 // These are the actions needed by this element.
 import {
   handleUrlChange,
-  resetCurrentItem,
   // navigate,
-  updateDrawerState,
-  updateStoreRouteDetails
+  updateDrawerState
 } from './redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
@@ -89,18 +86,14 @@ setPassiveTouchGestures(true);
 import {BASE_URL} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from './components/utils/fire-custom-event.js';
-import {objectsAreTheSame, isJsonStrMatch} from './components/utils/utils.js';
+import {isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use, get as getTranslation, translate} from 'lit-translate';
-import {getRedirectToListPath} from './components/utils/subpage-redirect';
-import {LitElement} from 'lit-element';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';

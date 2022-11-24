@@ -317,16 +317,6 @@ export class ReportsModule extends connect(store)(
     }
 
     this.scrollToTopOnCondition(!listActive);
-
-    // const fileImportDetails = {
-    //   filenamePrefix: 'report',
-    //   baseUrl: '../app-elements/reports/',
-    //   importErrMsg: 'Reports page import error occurred',
-    //   errMsgPrefixTmpl: '[report(s) ##page##]',
-    //   loadingMsgSource: 'reports-page'
-    // };
-    // const page: string = listActive ? 'list' : this.reduxRouteDetails.subRouteName!;
-    // this.setActivePage(page, fileImportDetails);
   }
 
   _handleTabSelectAction(e: CustomEvent) {
