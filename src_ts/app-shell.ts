@@ -98,11 +98,12 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, get as getTranslation} from 'lit-translate';
+import {registerTranslateConfig, use, get as getTranslation, translate} from 'lit-translate';
 import {getRedirectToListPath} from './components/utils/subpage-redirect';
 import {LitElement} from 'lit-element';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
+import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -320,7 +321,7 @@ class AppShell extends connect(store)(
   reduxRouteDetails?: RouteDetails;
 
   public static get observers() {
-    return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
+    return ['_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
@@ -347,12 +348,11 @@ class AppShell extends connect(store)(
   }
 
   public connectedCallback() {
-    // this.updateReduxRouteDetails = debounce(this.updateReduxRouteDetails.bind(this), 20);
     super.connectedCallback();
 
     this.checkAppVersion();
     installRouter((location) =>
-      store.dispatch(handleUrlChange(decodeURIComponent(location.pathname + location.search)))
+      this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
     this.requestUserData();
     // trigger common data load requests
@@ -362,6 +362,56 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
+  }
+
+  public stateChanged(state: RootState) {
+    this._drawerOpened = state.app!.drawerOpened;
+    this.smallMenu = state.app!.smallMenu;
+    this.uploadsStateChanged(state);
+
+    // @ts-ignore EndpointsMixin
+    this.envStateChanged(state);
+    if (
+      state.activeLanguage!.activeLanguage &&
+      !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
+    ) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+
+    this.waitForTranslationsAndLanguageToLoad().then(() =>
+      this.waitForEnvFlagsToLoad().then(() => {
+        if (this.canAccessPage(state.app?.routeDetails.routeName!)) {
+          this.module = state.app?.routeDetails.routeName!;
+          this.reduxRouteDetails = state.app?.routeDetails;
+        } else {
+          this._pageNotFound();
+        }
+      })
+    );
+  }
+
+  async preliminaryUrlChangeHandling(path: string) {
+    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+      // when user tries to navigate away => show the confirmation dialog
+      const currentRouteDetails = EtoolsRouter.getRouteDetails(path);
+      if (
+        this.reduxRouteDetails?.routeName != currentRouteDetails?.routeName ||
+        this.reduxRouteDetails?.subRouteName != currentRouteDetails?.subRouteName ||
+        this.reduxRouteDetails?.subSubRouteName != currentRouteDetails?.subSubRouteName
+      ) {
+        if (await this.stayingOnPage()) {
+          return;
+        }
+      }
+    }
+
+    store.dispatch(handleUrlChange(path));
+  }
+
+  // @ts-ignore // TODO - verify if still needed
+  private _showOnlyGovernmentPartners(module: string) {
+    return module === 'government-partners';
   }
 
   _getRootPathAndModule(module: string) {
@@ -380,45 +430,19 @@ class AppShell extends connect(store)(
       });
   }
 
-  updateReduxRouteDetails() {
-    const routeDetails = EtoolsRouter.getRouteDetails(location.pathname.replace(/\/$/, '') + location.search);
-    this.reduxRouteDetails = routeDetails!;
-    // If the url is not complete(ex /pmp/interventions), redirect to /pmp/interventions/list
-    const redirectTo = getRedirectToListPath(location.pathname);
-    if (redirectTo) {
-      EtoolsRouter.replaceAppLocation(redirectTo);
+  private canAccessPage(module: string) {
+    const isPrpModule = this._prpModules.indexOf(module) > -1;
+    if (isPrpModule) {
+      return this.shouldShowPrpReports();
+    } else {
+      return true;
     }
-    const currentRouteDetails = get(store.getState(), 'app.routeDetails') as any;
-    if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
-      store.dispatch(resetCurrentItem());
-    }
-    if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
-      store.dispatch(updateStoreRouteDetails(routeDetails));
-    }
-  }
-
-  public stateChanged(state: RootState) {
-    this._drawerOpened = state.app!.drawerOpened;
-    this.smallMenu = state.app!.smallMenu;
-    this.uploadsStateChanged(state);
-
-    // @ts-ignore EndpointsMixin
-    this.envStateChanged(state);
-    if (
-      state.activeLanguage!.activeLanguage &&
-      !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
-    ) {
-      this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      this.loadLocalization();
-    }
-    this.module = state.app?.routeDetails.routeName!;
   }
 
   async loadLocalization() {
     this.waitForTranslationsToLoad().then(async () => {
       await use(this.selectedLanguage);
       this.currentLanguageIsSet = true;
-      this._createLeavePageDialog();
     });
   }
 
@@ -526,10 +550,10 @@ class AppShell extends connect(store)(
   }
 
   private _updateMainPath(e: CustomEvent) {
-    if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
-      // set route.path only if received path is different
-      this._updatePath(e.detail.path);
-    }
+    // if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
+    // set route.path only if received path is different
+    this._updatePath(e.detail.path);
+    // }
     e.stopImmediatePropagation();
   }
 
@@ -551,207 +575,37 @@ class AppShell extends connect(store)(
     (this.shadowRoot?.querySelector('#dataRefreshDialog')! as unknown as DataRefreshDialog).open();
   }
 
-  private _canAccessPage(module: string) {
-    // TODO: (future task) use defer method from utils mixin
-    // (NOTE: not all utils behavior functionality is needed)
-
-    const defer: any = {};
-    defer.promise = new Promise(function (resolve, reject) {
-      defer.resolve = resolve;
-      defer.reject = reject;
-    });
-
-    const isPrpModule = this._prpModules.indexOf(module) > -1;
-
-    if (!isPrpModule) {
-      defer.resolve(true);
-    } else {
-      // only prp modules can have access restricted
-      // @ts-ignore
-      this.waitForEnvFlagsToLoad().then(() => {
-        // @ts-ignore
-        defer.resolve(this.shouldShowPrpReports());
-      });
-    }
-
-    return defer.promise;
-  }
-
-  /**
-   * Set active module using route module param
-   * @param routePage
-   */
-  // @ts-ignore
-  private _routePageChanged(routePage: string) {
-    // If no routePage was found in the route data, routePage will be an empty string.
-    // Default to 'partners/list' in that case.
-    if (!routePage) {
-      this._updatePath('partners/list');
-      return;
-    }
-
-    this._canAccessPage(routePage).then((accessGranted: boolean) => {
-      this.waitForTranslationsAndLanguageToLoad().then(() => {
-        if (!accessGranted) {
-          this._pageNotFound();
-        } else {
-          this.set('module', routePage);
-        }
-      });
-    });
-
-    // Close a non-persistent drawer when the module & route are changed.
-    const appDrawer = this.shadowRoot?.querySelector('#drawer') as AppDrawerElement;
-    if (!appDrawer.persistent) {
-      appDrawer.close();
-    }
-  }
-
-  // private _moduleChanged(module: any, _oldModule: any) {
-  //   // Load module import on demand. Show 404 page if fails
-  //   this._importAppModuleMainEl(module);
-  //   // clear loading messages queue
-  //   fireEvent(this, 'clear-loading-messages', {
-  //     bubbles: true,
-  //     composed: true
-  //   });
-  // }
-
-  // @ts-ignore
-  // private _getModuleMainElUrl(elementName: string) {
-  //   let url = this._appModuleMainElUrlTmpl.replace('##module##', elementName);
-  //   if (elementName === 'not-found') {
-  //     url = url.replace('-module.', '.');
-  //   }
-  //   return url.replace('##main-el-name##', elementName);
-  // }
-
-  /**
-   * Import app module main element.
-   * This element will have it's own routing based on app-shell subroute
-   * @param module
-   * @private
-   */
-  // private _importAppModuleMainEl(module: string) {
-  //   if (!module) {
-  //     return;
-  //   }
-  //   // resolve element import url
-  //   const appModuleMainElId = this._getAppModuleMainElId(module);
-  //   const pageUrl = this._getModuleMainElUrl(appModuleMainElId);
-
-  //   // import main module element if needed
-  //   const moduleMainEl = this._getModuleMainElement(appModuleMainElId);
-  //   const isPolymerElement = moduleMainEl instanceof PolymerElement || moduleMainEl instanceof LitElement;
-  //   if (!isPolymerElement) {
-  //     // moduleMainEl is null => make the import
-  //     import(pageUrl)
-  //       .then(() => {
-  //         this._successfulImportCallback(appModuleMainElId);
-  //       })
-  //       .catch((err: any) => {
-  //         logError('Error importing component.', 'app-shell', err);
-  //         this._pageNotFound();
-  //       });
-  //   }
-  // }
-
-  // @ts-ignore
-  private _getAppModuleMainElId(module: string) {
-    return module === 'government-partners' ? 'partners' : module;
-  }
-
-  private _getModuleMainElement(moduleId: string) {
-    return this.shadowRoot!.querySelector('#' + moduleId);
-  }
-
-  /**
-   * Module main element import success callback
-   * @param currentLoadingPage
-   */
-  // @ts-ignore
-  private _successfulImportCallback(moduleId: string) {
-    // moduleMainEl will be available only after import successfully completes
-    // @ts-ignore
-    const moduleMainEl = this._getModuleMainElement(moduleId);
-    // make sure to redirect to list page if necessary
-    afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
-  }
-
   // @ts-ignore
   private _activeModuleIs(activeModule: string, expectedModule: string) {
     const pagesToMatch = expectedModule.split('|');
     return pagesToMatch.indexOf(activeModule) > -1;
   }
 
-  // @ts-ignore
-  private _redirectToProperListPage() {
-    if (this.route.path.indexOf('not-found') > -1) {
-      return;
-    }
-    if (this.route.path === this.rootPath || this.route.path === '/') {
-      // setting the default path when user enters the app
-      // redirect from /pmp/ to /pmp/partners/list
-      this.set('route.path', this.rootPath + 'partners/list');
-      return;
-    }
-    // redirect from /pmp/<module> to /pmp/<module>/list
-    let currentPath = this.route.path;
-    if (currentPath.indexOf('settings') > -1) {
-      return;
-    }
-    if (currentPath[currentPath.length - 1] === '/') {
-      currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
-    }
-    if (currentPath === this.rootPath + this.routeData.module) {
-      this.set('route.path', this.rootPath + this.routeData.module + '/list');
-    }
-  }
+  async stayingOnPage(): Promise<boolean> {
+    const confirmed = await openDialog({
+      dialog: 'are-you-sure',
+      dialogData: {
+        content: getTranslation('LEAVE_UPLOAD_IN_PROGRESS'),
+        confirmBtnText: translate('LEAVE'),
+        cancelBtnText: translate('STAY')
+      }
+    }).then(({confirmed}) => {
+      return confirmed;
+    });
 
-  // @ts-ignore
-  private _showOnlyGovernmentPartners(module: string) {
-    return module === 'government-partners';
-  }
-
-  private _createLeavePageDialog() {
-    const msg = document.createElement('span');
-    msg.innerText = getTranslation('LEAVE_UPLOAD_IN_PROGRESS');
-    const conf: any = {
-      title: getTranslation('LEAVE_PAGE'),
-      size: 'md',
-      okBtnText: getTranslation('LEAVE'),
-      cancelBtnText: getTranslation('STAY'),
-      closeCallback: this._onLeavePageConfirmation.bind(this),
-      content: msg
-    };
-    this.leavePageDialog = createDynamicDialog(conf);
-  }
-
-  private _openLeavePageDialog() {
-    this.leavePageDialog.opened = true;
-  }
-
-  // @ts-ignore
-  private _onLeavePageConfirmation(e: CustomEvent) {
-    if (e.detail.confirmed) {
-      // leave
+    if (confirmed) {
       store.dispatch({type: RESET_UNSAVED_UPLOADS});
       store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
-      setTimeout(() => {
-        this.appLocRouteChanged(this.appLocRoute);
-      }, 200);
+      return false;
     } else {
-      // stay
-      // revert url
-      this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+      history.go(-1);
 
       fireEvent(this, 'clear-loading-messages', {
         bubbles: true,
         composed: true
       });
-      this.shadowRoot!.querySelector('app-menu')!
-        .shadowRoot!.querySelector('iron-selector')!
-        .select(this.routeData.module);
+      this.shadowRoot!.querySelector('app-menu')!.shadowRoot!.querySelector('iron-selector')!.select(this.module);
+      return true;
     }
   }
 }
