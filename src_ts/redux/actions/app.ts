@@ -7,7 +7,7 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
-
+/* eslint-disable max-len*/
 import {Action, ActionCreator} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 import {RouteDetails} from '../../components/utils/router';
@@ -70,14 +70,16 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     return;
   }
   if (['list'].includes(subRouteName)) {
-    import(`../../components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`);
+    import(
+      `${window.location.origin}/pmp/components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`
+    );
   }
-  // if (['new'].includes(subRouteName)) {
-  //   import(`../../components/pages/interventions/pages/new/intervention-new.js`);
-  // }
+  if (['new'].includes(subRouteName)) {
+    import(`${window.location.origin}/pmp/components/pages/interventions/pages/new/intervention-new.js`);
+  }
   if (['details', 'financial-assurance', 'overview', 'progress', 'summary'].includes(subRouteName)) {
     import(
-      `../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+      `${window.location.origin}/pmp/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,
         routeName.length - 1
       )}-${subRouteName}.js`
@@ -89,8 +91,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     )
   ) {
     import(
-      // eslint-disable-next-line
-      `../../components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
+      `${window.location.origin}/pmp/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
     );
   }
 };
@@ -102,11 +103,13 @@ const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _get
     )
   ) {
     if ('government-partners' == routeDetails.routeName) {
-      import(`../../components/pages/partners/partners-module.js`)
+      import(`${window.location.origin}/pmp/components/pages/partners/partners-module.js`)
         .then(() => importSubRoutes('partners', routeDetails.subRouteName))
         .catch(() => updateAppLocation(ROUTE_404));
     } else {
-      import(`../../components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`)
+      import(
+        `${window.location.origin}/pmp/components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`
+      )
         .then(() => importSubRoutes(routeDetails.routeName, routeDetails.subRouteName))
         .catch(() => updateAppLocation(ROUTE_404));
     }
