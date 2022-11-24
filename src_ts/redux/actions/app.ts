@@ -71,15 +71,15 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
   }
   if (['list'].includes(subRouteName)) {
     import(
-      `${window.location.origin}/pmp/components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`
+      `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`
     );
   }
   if (['new'].includes(subRouteName)) {
-    import(`${window.location.origin}/pmp/components/pages/interventions/pages/new/intervention-new.js`);
+    import(`${window.location.origin}/pmp/src/components/pages/interventions/pages/new/intervention-new.js`);
   }
   if (['details', 'financial-assurance', 'overview', 'progress', 'summary'].includes(subRouteName)) {
     import(
-      `${window.location.origin}/pmp/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+      `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,
         routeName.length - 1
       )}-${subRouteName}.js`
@@ -91,7 +91,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     )
   ) {
     import(
-      `${window.location.origin}/pmp/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
+      `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
     );
   }
 };
@@ -103,16 +103,19 @@ const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _get
     )
   ) {
     if ('government-partners' == routeDetails.routeName) {
-      import(`${window.location.origin}/pmp/components/pages/partners/partners-module.js`)
+      import(`${window.location.origin}/pmp/src/components/pages/partners/partners-module.js`)
         .then(() => importSubRoutes('partners', routeDetails.subRouteName))
         .catch(() => updateAppLocation(ROUTE_404));
     } else {
       import(
-        `${window.location.origin}/pmp/components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`
+        `${window.location.origin}/pmp/src/components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`
       )
         .then(() => importSubRoutes(routeDetails.routeName, routeDetails.subRouteName))
         .catch(() => updateAppLocation(ROUTE_404));
     }
+  }
+  if (routeDetails.routeName == 'not-found') {
+    import(`${window.location.origin}/pmp/src/components/pages/not-found/not-found.js`);
   }
 };
 

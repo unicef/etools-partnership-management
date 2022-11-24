@@ -121,9 +121,9 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       };
     }
   )
-  .addRoute(new RegExp(`^page-not-found$`), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp(`^not-found$`), (params: RouteCallbackParams): RouteDetails => {
     return {
-      routeName: 'page-not-found',
+      routeName: 'not-found',
       subRouteName: null,
       path: params.matchDetails[0],
       queryParams: null,
