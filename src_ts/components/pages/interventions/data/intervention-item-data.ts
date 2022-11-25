@@ -24,6 +24,7 @@ import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mi
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
+import {setShouldReGetList} from '../pages/intervention-tab-pages/common/actions/interventions';
 
 /**
  * @polymer
@@ -92,7 +93,7 @@ class InterventionItemData extends connect(store)(
     return sendRequest(options)
       .then(function (resp: any) {
         self._handleResponse(resp, ajaxMethod);
-        // store.dispatch(updateCurrentIntervention(resp));
+        store.dispatch(setShouldReGetList(true));
         return true;
       })
       .catch(function (error: any) {
