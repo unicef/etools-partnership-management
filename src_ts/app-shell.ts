@@ -346,7 +346,7 @@ class AppShell extends connect(store)(
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
-    this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
+    this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
   }
 
   public stateChanged(state: RootState) {
