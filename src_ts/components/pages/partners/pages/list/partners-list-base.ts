@@ -308,6 +308,11 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
+    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
+      this.listLoadingActive = true;
+      return;
+    }
+
     if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
       if (this.currentLanguage) {
         // language was already set, this is language change
@@ -317,11 +322,6 @@ export class PartnersListBase extends CommonMixin(
       if (this.allFilters) {
         this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
       }
-    }
-
-    if (!this.dataRequiredByFiltersHasBeenLoaded(state) || !state.partners?.listIsLoaded) {
-      this.listLoadingActive = true;
-      return;
     }
 
     if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {

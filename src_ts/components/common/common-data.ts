@@ -8,7 +8,6 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
-import {SET_ALL_STATIC_DATA} from '../../redux/actions/common-data.js';
 import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement, property} from 'lit-element';
 import {listenForLangChanged} from 'lit-translate';
@@ -47,7 +46,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       this._handlePrpData();
       listenForLangChanged(() => {
         store.dispatch({
-          type: SET_ALL_STATIC_DATA,
+          type: commonDataActions.SET_ALL_STATIC_DATA,
           staticData: this.translateCommonData(getStore().getState().commonData)
         });
       });
@@ -60,8 +59,11 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       });
       Promise.allSettled(promisses).then((response: any[]) => {
         store.dispatch({
-          type: SET_ALL_STATIC_DATA,
+          type: commonDataActions.SET_ALL_STATIC_DATA,
           staticData: this.formatResponse(response)
+        });
+        store.dispatch({
+          type: commonDataActions.SET_COMMON_DATA_IS_LOADED
         });
       });
     }
