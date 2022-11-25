@@ -176,7 +176,7 @@ class AppShell extends connect(store)(
           <!-- App main menu(left sidebar) -->
           <app-menu
             .rootPath="${this.rootPath}"
-            selected-option="${this.module}"
+            .selectedOption="${this.module}"
             ?small-menu="${this.smallMenu}"
           ></app-menu>
         </app-drawer>
