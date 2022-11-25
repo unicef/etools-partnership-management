@@ -36,7 +36,8 @@ import {
   UPDATE_RISK_TYPES,
   UPDATE_CASH_TRANSFER_MODALITIES,
   UPDATE_PROVIDED_BY,
-  SET_ALL_STATIC_DATA
+  SET_ALL_STATIC_DATA,
+  SET_COMMON_DATA_IS_LOADED
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
@@ -121,7 +122,11 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     case SET_ALL_STATIC_DATA:
       return {
         ...state,
-        ...action.staticData,
+        ...action.staticData
+      };
+    case SET_COMMON_DATA_IS_LOADED:
+      return {
+        ...state,
         commonDataIsLoaded: true
       };
     case UPDATE_COUNTRY_PROGRAMMES:
