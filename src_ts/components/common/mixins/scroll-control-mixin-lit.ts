@@ -1,4 +1,3 @@
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {LitElement, property} from 'lit-element';
 import {Constructor} from '@unicef-polymer/etools-types';
 

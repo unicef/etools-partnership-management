@@ -326,10 +326,10 @@ export class InterventionsModule extends connect(store)(
     });
     this._initInterventionsModuleListeners();
     // deactivate main page loading msg triggered in app-shell
-    // fireEvent(this, 'global-loading', {
-    //   active: false,
-    //   loadingSource: 'main-page'
-    // });
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
   }
 
   disconnectedCallback() {
