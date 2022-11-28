@@ -87,7 +87,6 @@ import {fireEvent} from './components/utils/fire-custom-event.js';
 import {isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
-import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use, get as getTranslation, translate} from 'lit-translate';
