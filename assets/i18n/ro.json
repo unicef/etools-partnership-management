@@ -189,6 +189,7 @@
   "AGREEMENT_DETAILS": "Detalii acord",
   "PLEASE_FILL_IN_REQUIRED_DATA": "Vă rugăm să completați datele necesare",
   "AGREEMENT_REFERENCE_NUMBER": "Numărul de referință al acordului",
+  "AGREEMENT_TERMS_ACKNOWLEDGE_BY": "Termenii acordului recunoscuți de",
   "PARTNER_FULL_NAME": "Numele complet al partenerului",
   "TYPE": "Tip",
   "STATUS": "stare",
@@ -423,6 +424,9 @@
     "RATIO": "Raport",
     "LATEST": "Cele mai recente"
   },
+  "PCA_TERMS_AND_CONDITIONS": "<p>Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat ulterior... Va fi furnizat mai târziu. ... Va fi furnizat mai târziu</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... fi furnizat ulterior</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat ulterior... Va fi furnizat mai târziu. ... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. prezentat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu...</p>",
+  "PCA_REQUIRE_ACKNOWLEDGE": "Trebuie să acceptați termenii și condițiile",
+  "PCA_REQUIRE_TEMPLATE": "Trebuie să selectați șablonul PCA",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",

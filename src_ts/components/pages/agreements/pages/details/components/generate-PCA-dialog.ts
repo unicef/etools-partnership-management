@@ -1,12 +1,13 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
+import '@polymer/paper-checkbox/paper-checkbox.js';
+import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 
 /**
  * @polymer
@@ -14,6 +15,9 @@ import {translate, get as getTranslation} from 'lit-translate';
  */
 @customElement('generate-pca-dialog')
 export class GeneratePcaDialog extends LitElement {
+  static get styles() {
+    return [gridLayoutStylesLit];
+  }
   render() {
     return html`
       ${sharedStyles}
@@ -21,6 +25,13 @@ export class GeneratePcaDialog extends LitElement {
         paper-dropdown-menu,
         paper-listbox {
           width: 250px;
+        }
+
+        .terms_wrapper {
+          overflow-y: auto;
+          overflow-x: hidden;
+          max-height: 40vh;
+          margin-bottom: 25px;
         }
       </style>
       <etools-dialog
@@ -33,26 +44,62 @@ export class GeneratePcaDialog extends LitElement {
         @confirm-btn-clicked="${this._onConfirm}"
         opened
       >
-        <paper-dropdown-menu label="${translate('CHOOSE_TEMPLATE')}">
-          <paper-listbox
-            slot="dropdown-content"
-            attr-for-selected="item-value"
-            .selected="${this.selectedTemplate}"
-            @selected-changed="${(e: CustomEvent) => {
-              this.selectedTemplate = e.detail.value;
-            }}"
-          >
-            ${this.templateOptions.map(
-              (item: any) => html` <paper-item item-value="${item.value}">${item.label}</paper-item>`
-            )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+        <div>
+          <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
+          <div class="layout-horizontal flex-c">
+            <div class="col col-6">
+              <paper-checkbox
+                @checked-changed=${({detail}: CustomEvent) => {
+                  this.acknowledgedTC = detail.value;
+                }}
+                required
+                ?invalid="${this.errors.acknowledgedTC}"
+                @focus="${() => this.resetFieldError('acknowledgedTC')}"
+                @click="${() => this.resetFieldError('acknowledgedTC')}"
+              >
+                I acknowledge the terms & conditions
+              </paper-checkbox>
+            </div>
+          </div>
+          <div class="layout-horizontal row-padding-v  flex-c">
+            <div class="col col-6">
+              <etools-dropdown
+                class="validate-input required"
+                .selected="${this.selectedTemplate}"
+                label="${translate('CHOOSE_TEMPLATE')}"
+                placeholder="${translate('CHOOSE_TEMPLATE')}"
+                .options="${this.templateOptions}"
+                option-label="label"
+                option-value="value"
+                update-selected
+                required
+                ?invalid="${this.errors.selectedTemplate}"
+                @focus="${() => this.resetFieldError('selectedTemplate')}"
+                @click="${() => this.resetFieldError('selectedTemplate')}"
+                hide-search
+                allow-outside-scroll
+                dynamic-align
+                trigger-value-change-event
+                @etools-selected-item-changed="${({detail}: CustomEvent) =>
+                  (this.selectedTemplate = detail.selectedItem?.value)}"
+              >
+              </etools-dropdown>
+            </div>
+          </div>
+          <br />
+        </div>
       </etools-dialog>
     `;
   }
 
   @property({type: String})
   agreementId: string | null = null;
+
+  @property({type: Boolean})
+  acknowledgedTC = false;
+
+  @property({type: Object})
+  errors: any = {};
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [
@@ -73,12 +120,34 @@ export class GeneratePcaDialog extends LitElement {
     this.agreementId = agreementId;
   }
 
+  validate() {
+    this.errors = {};
+    if (!this.acknowledgedTC) {
+      this.errors.acknowledgedTC = true;
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_ACKNOWLEDGE'), showCloseBtn: true});
+    }
+
+    if (!this.selectedTemplate) {
+      this.errors.selectedTemplate = true;
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_TEMPLATE'), showCloseBtn: true});
+    }
+
+    this.requestUpdate();
+    return Object.keys(this.errors).length === 0;
+  }
+
   _onConfirm() {
+    if (!this.validate()) {
+      return;
+    }
+
     window.open(
       '/api/v2/agreements/' +
         this.agreementId +
         '/generate_doc/?lang=' +
-        encodeURIComponent(this.selectedTemplate as string),
+        encodeURIComponent(this.selectedTemplate as string) +
+        '&terms_acknowledged=' +
+        encodeURIComponent(this.acknowledgedTC),
       '_blank'
     );
     this.selectedTemplate = null;
@@ -87,6 +156,14 @@ export class GeneratePcaDialog extends LitElement {
 
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
+  }
+
+  resetFieldError(field: string) {
+    if (!this.errors[field]) {
+      return;
+    }
+    delete this.errors[field];
+    this.requestUpdate();
   }
 }
 

@@ -416,6 +416,19 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         </div>
 
         <div class="row-h flex-c">
+          <div class="col col-3">
+            <paper-input
+              label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
+              .value="${this.getAckowledgedBy()}"
+              .title="${this.getAckowledgedBy()}"
+              ?hidden="${!this.agreement.id}"
+              placeholder="&#8212;"
+              readonly
+            >
+            </paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <paper-toggle-button
             ?checked="${this.agreement.special_conditions_pca}"
             @checked-changed="${this.onSpecialConditionsPCAChanged}"
@@ -980,5 +993,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   getSelectedAuthOfficeIDs(authOff: any) {
     return (authOff || []).map((item: any) => item.id);
+  }
+
+  getAckowledgedBy() {
+    return this.agreement.terms_acknowledged_by
+      ? `${this.agreement.terms_acknowledged_by.first_name} ${this.agreement.terms_acknowledged_by.last_name}`
+      : null;
   }
 }
