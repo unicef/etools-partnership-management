@@ -38,7 +38,9 @@ function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
 
     public scrollToTop() {
       // @ts-ignore
-      this.contentContainer.scrollTop = 0;
+      if (this.contentContainer) {
+        this.contentContainer.scrollTop = 0;
+      }
     }
 
     public waitForAppShellRender() {

@@ -72,6 +72,7 @@ import './components/pages/agreements/data/agreements-list-data.js';
 import './components/app-shell/app-theme.js';
 import './components/styles/app-mixins.js';
 import UtilsMixin from './components/common/mixins/utils-mixin.js';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
@@ -319,8 +320,6 @@ class AppShell extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
 
-    this.checkAppVersion();
-
     this._initListeners();
     if (this.shadowRoot?.querySelector('#appHeadLayout')) {
       window.EtoolsEsmmFitIntoEl = this.shadowRoot
@@ -350,6 +349,12 @@ class AppShell extends connect(store)(
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
+  }
+
+  firstUpdated() {
+    this.waitForTranslationsAndLanguageToLoad().then(() => {
+      this.checkAppVersion();
+    });
   }
 
   public stateChanged(state: RootState) {
@@ -503,20 +508,18 @@ class AppShell extends connect(store)(
     store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
   }
 
-  private _showConfirmNewVersionDialog() {
-    const msg = document.createElement('span');
-    msg.innerText = 'A new version of the app is available. Refresh page?';
-    const conf: any = {
-      size: 'md',
-      closeCallback: this._onConfirmNewVersion.bind(this),
-      content: msg
-    };
-    const confirmNewVersionDialog = createDynamicDialog(conf);
-    confirmNewVersionDialog.opened = true;
-  }
+  private async _showConfirmNewVersionDialog() {
+    const confirmed = await openDialog({
+      dialog: 'are-you-sure',
+      dialogData: {
+        content: translate('A_NEW_VERSION_OF_THE_APP_IS_AV'),
+        confirmBtnText: translate('YES')
+      }
+    }).then(({confirmed}) => {
+      return confirmed;
+    });
 
-  private _onConfirmNewVersion(e: CustomEvent) {
-    if (e.detail.confirmed) {
+    if (confirmed) {
       if (navigator.serviceWorker) {
         caches.keys().then((cacheNames) => {
           cacheNames.forEach((cacheName) => {
