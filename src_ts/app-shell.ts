@@ -169,7 +169,7 @@ class AppShell extends connect(store)(
           id="drawer"
           slot="drawer"
           transition-duration="350"
-          ?opened="${this.drawerOpened}"
+          ?opened="${this._drawerOpened}"
           ?swipe-open="${this.narrow}"
           ?small-menu="${this.smallMenu}"
         >
@@ -313,6 +313,9 @@ class AppShell extends connect(store)(
   @property({type: Object})
   reduxRouteDetails?: RouteDetails;
 
+  @property({type: Boolean})
+  private translationFilesAreLoaded = false;
+
   public connectedCallback() {
     super.connectedCallback();
 
@@ -364,7 +367,8 @@ class AppShell extends connect(store)(
       this.loadLocalization();
     }
 
-    this.waitForTranslationsAndLanguageToLoad().then(() =>
+    this.waitForTranslationsAndLanguageToLoad().then(() => {
+      this.translationFilesAreLoaded = true;
       this.waitForEnvFlagsToLoad().then(() => {
         if (this.canAccessPage(state.app?.routeDetails.routeName!)) {
           this.module = state.app?.routeDetails.routeName!;
@@ -372,8 +376,12 @@ class AppShell extends connect(store)(
         } else {
           this._pageNotFound();
         }
-      })
-    );
+      });
+    });
+  }
+
+  protected shouldUpdate(changedProperties: Map<PropertyKey, unknown>): boolean {
+    return this.translationFilesAreLoaded && super.shouldUpdate(changedProperties);
   }
 
   async preliminaryUrlChangeHandling(path: string) {
