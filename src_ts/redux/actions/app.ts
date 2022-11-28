@@ -77,7 +77,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
   if (['new'].includes(subRouteName)) {
     import(`${window.location.origin}/pmp/src/components/pages/interventions/pages/new/intervention-new.js`);
   }
-  if (['details', 'financial-assurance', 'overview', 'progress', 'summary'].includes(subRouteName)) {
+  if (['details', 'financial-assurance', 'overview', 'summary'].includes(subRouteName)) {
     import(
       `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,
@@ -85,10 +85,22 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
       )}-${subRouteName}.js`
     );
   }
+  if (['progress'].includes(subRouteName)) {
+    if (routeName == 'reports') {
+      import(
+        `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+          0,
+          routeName.length - 1
+        )}-${subRouteName}.js`
+      );
+    } else {
+      import(
+        `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
+      );
+    }
+  }
   if (
-    ['metadata', 'strategy', 'workplan', 'review', 'timing', 'attachments', 'progress', 'workplan-editor'].includes(
-      subRouteName
-    )
+    ['metadata', 'strategy', 'workplan', 'review', 'timing', 'attachments', 'workplan-editor'].includes(subRouteName)
   ) {
     import(
       `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
