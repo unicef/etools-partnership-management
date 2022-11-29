@@ -17,6 +17,7 @@ import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -62,6 +63,16 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             auto-validate
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
+          ></paper-input>
+          <paper-input
+            id="unppNumber"
+            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
+            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            placeholder="CEF/___/____/___"
+            error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')}"
+            @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
+            @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'number')}"
+            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
           <etools-dropdown
             id="partnerDropdw"
@@ -181,7 +192,14 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         valid = false;
       }
     });
-    return valid;
+    return valid && this.validateCFEI();
+  }
+
+  validateCFEI(e?: CustomEvent) {
+    const elem = e
+      ? (e.currentTarget as PaperInputElement)
+      : this.shadowRoot?.querySelector<PaperInputElement>('#unppNumber')!;
+    return elem.validate();
   }
 
   save() {
