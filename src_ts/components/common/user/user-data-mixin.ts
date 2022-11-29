@@ -1,6 +1,5 @@
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject, languageIsAvailableInApp} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -10,15 +9,16 @@ import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef
 import {setActiveLanguage} from '../../../redux/actions/active-language';
 import {property} from 'lit-element';
 import pmpEdpoints from '../../endpoints/endpoints';
+import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsPageRefreshMixin
+ * @appliesMixin EtoolsPageRefreshMixinLit
  * @appliesMixin EndpointsMixin
  */
 function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
-  class UserDataClass extends EtoolsPageRefreshMixin(baseClass) {
+  class UserDataClass extends EtoolsPageRefreshMixinLit(baseClass) {
     @property({type: Object})
     user!: User;
 
