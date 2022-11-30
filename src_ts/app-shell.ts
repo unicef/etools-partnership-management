@@ -511,8 +511,8 @@ class AppShell extends connect(store)(
     const confirmed = await openDialog({
       dialog: 'are-you-sure',
       dialogData: {
-        content: getTranslation('A_NEW_VERSION_OF_THE_APP_IS_AV'),
-        confirmBtnText: getTranslation('YES')
+        content: translate('A_NEW_VERSION_OF_THE_APP_IS_AV'),
+        confirmBtnText: translate('YES')
       }
     }).then(({confirmed}) => {
       return confirmed;
