@@ -146,7 +146,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           height: 48px;
           font-size: 13px;
           color: var(--list-text-color, #2b2b2b);
-          @apply --engagements-row;
+          padding: 0 24px;
         }
 
         .report {
