@@ -419,7 +419,7 @@ class AppShell extends connect(store)(
     fetch('version.json')
       .then((res) => res.json())
       .then((version) => {
-        if (version.revision != document.getElementById('buildRevNo')!.innerText) {
+        if ('1234' != document.getElementById('buildRevNo')!.innerText) {
           console.log('version.json', version.revision);
           console.log('buildRevNo ', document.getElementById('buildRevNo')!.innerText);
           this._showConfirmNewVersionDialog();
