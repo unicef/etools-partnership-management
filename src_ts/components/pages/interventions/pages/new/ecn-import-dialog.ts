@@ -70,8 +70,9 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')}"
+            required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
-            @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'number')}"
+            @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
             @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
           <etools-dropdown
@@ -192,7 +193,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         valid = false;
       }
     });
-    return valid && this.validateCFEI();
+    return valid;
   }
 
   validateCFEI(e?: CustomEvent) {
