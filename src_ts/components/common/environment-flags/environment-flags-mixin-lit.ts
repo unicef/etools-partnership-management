@@ -25,7 +25,7 @@ function EnvironmentFlagsMixinLit<T extends Constructor<LitElement>>(baseClass: 
       return typeof this.environmentFlags !== 'undefined' && this.environmentFlags !== null;
     }
 
-    public showPrpReports() {
+    public shouldShowPrpReports() {
       return this.environmentFlags && !this.environmentFlags.prp_mode_off;
     }
 
