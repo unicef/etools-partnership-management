@@ -3,17 +3,17 @@ import '@polymer/iron-media-query/iron-media-query';
 import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
-import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {translate, translateConfig} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
 import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import {sharedStyles} from '../../../../styles/shared-styles-lit';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
-    ${SharedStyles}
+    ${sharedStyles}
     <style>
       paper-button {
         --paper-button: {

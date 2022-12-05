@@ -1,4 +1,3 @@
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {LitElement, property} from 'lit-element';
 import {Constructor} from '@unicef-polymer/etools-types';
 
@@ -14,11 +13,12 @@ function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
     public connectedCallback() {
       super.connectedCallback();
       if (!window.EtoolsPmpApp.ContentContainer) {
-        window.EtoolsPmpApp.ContentContainer = this._getContentContainer();
-
-        // we still have to set contentContainer property
-        // (undefined at this level, until next elem that uses this mixin is attached)
-        this.contentContainer = window.EtoolsPmpApp.ContentContainer;
+        this.waitForAppShellRender().then(() => {
+          window.EtoolsPmpApp.ContentContainer = this._getContentContainer();
+          // we still have to set contentContainer property
+          // (undefined at this level, until next elem that uses this mixin is attached)
+          this.contentContainer = window.EtoolsPmpApp.ContentContainer;
+        });
       }
     }
 
@@ -37,12 +37,33 @@ function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
     }
 
     public scrollToTop() {
-      if (!this.contentContainer) {
-        logWarn('Can not scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
-        return;
-      }
       // @ts-ignore
-      this.contentContainer.scrollTop = 0;
+      if (this.contentContainer) {
+        this.contentContainer.scrollTop = 0;
+      }
+    }
+
+    public waitForAppShellRender() {
+      return new Promise((resolve) => {
+        const check = setInterval(() => {
+          if (this.tryGetContentContainer()) {
+            clearInterval(check);
+            resolve(true);
+          }
+        }, 50);
+      });
+    }
+
+    private tryGetContentContainer() {
+      try {
+        // @ts-ignore
+        return document
+          .querySelector('app-shell')
+          .shadowRoot.querySelector('#appHeadLayout')
+          .shadowRoot.querySelector('#contentContainer');
+      } catch (error) {
+        return null;
+      }
     }
 
     public scrollToTopOnCondition(condition: boolean) {

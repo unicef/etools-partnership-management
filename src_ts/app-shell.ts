@@ -8,8 +8,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
@@ -59,7 +57,6 @@ import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
 import '@unicef-polymer/etools-toasts';
-import ScrollControlMixin from './components/common/mixins/scroll-control-mixin.js';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
 import './components/app-shell/menu/app-menu.js';
@@ -75,6 +72,7 @@ import './components/pages/agreements/data/agreements-list-data.js';
 import './components/app-shell/app-theme.js';
 import './components/styles/app-mixins.js';
 import UtilsMixin from './components/common/mixins/utils-mixin.js';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
@@ -88,15 +86,15 @@ import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from './components/utils/fire-custom-event.js';
 import {isJsonStrMatch} from './components/utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
-import {property} from '@polymer/decorators';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
-import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from './components/utils/routes.js';
 import {registerTranslateConfig, use, get as getTranslation, translate} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
+import {html, LitElement, property} from 'lit-element';
+import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -128,7 +126,6 @@ setRootPath(BASE_URL);
 /**
  * @customElement
  * @polymer
- * @appliesMixin GestureEventListeners
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
@@ -141,12 +138,10 @@ setRootPath(BASE_URL);
 class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
-    GestureEventListeners(
-      AppMenuMixin(ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement))))))
-    )
+    AppMenuMixin(ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement))))))
   )
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -154,22 +149,36 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics page="[[_getRootPathAndModule(module)]]" user="[[user]]" toast="[[currentToastMessage]]">
+      <etools-piwik-analytics
+        .page="${this._getRootPathAndModule(this.module)}"
+        .user="${this.user}"
+        .toast="${this.currentToastMessage}"
+      >
       </etools-piwik-analytics>
       <etools-toasts></etools-toasts>
 
-      <app-drawer-layout id="layout" responsive-width="850px" fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
+      <app-drawer-layout
+        id="layout"
+        responsive-width="850px"
+        fullbleed
+        ?narrow="${this.narrow}"
+        ?small-menu="${this.smallMenu}"
+      >
         <!-- Drawer content -->
         <app-drawer
           id="drawer"
           slot="drawer"
           transition-duration="350"
-          opened="[[_drawerOpened]]"
-          swipe-open="[[narrow]]"
-          small-menu$="[[smallMenu]]"
+          ?opened="${this._drawerOpened}"
+          ?swipe-open="${this.narrow}"
+          ?small-menu="${this.smallMenu}"
         >
           <!-- App main menu(left sidebar) -->
-          <app-menu root-path="[[rootPath]]" selected-option="[[module]]" small-menu$="[[smallMenu]]"></app-menu>
+          <app-menu
+            .rootPath="${this.rootPath}"
+            .selectedOption="${this.module}"
+            ?small-menu="${this.smallMenu}"
+          ></app-menu>
         </app-drawer>
 
         <!-- Main content -->
@@ -179,61 +188,53 @@ class AppShell extends connect(store)(
           </app-header>
 
           <!-- Main content -->
-          <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
+          <main role="main" id="page-container">
             <partners-module
               id="partners"
               class="main-page"
-              show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-              current-module="[[_lastActivePartnersModule]]"
-              permissions="[[permissions]]"
-              hidden$="[[!_activeModuleIs(module, 'partners|government-partners')]]"
+              .permissions="${this.permissions}"
+              ?hidden="${!this._activeModuleIs(this.module, 'partners|government-partners')}"
             >
             </partners-module>
 
             <agreements-module
               id="agreements"
               class="main-page"
-              permissions="[[permissions]]"
-              hidden$="[[!_activeModuleIs(module, 'agreements')]]"
+              .permissions="${this.permissions}"
+              ?hidden="${!this._activeModuleIs(this.module, 'agreements')}"
             >
             </agreements-module>
 
             <interventions-module
               id="interventions"
               class="main-page"
-              user-permissions="[[permissions]]"
-              hidden$="[[!_activeModuleIs(module, 'interventions')]]"
+              .userPermissions="${this.permissions}"
+              ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
             >
             </interventions-module>
 
             <reports-module
               id="reports"
               class="main-page"
-              permissions="[[permissions]]"
-              hidden$="[[!_activeModuleIs(module, 'reports')]]"
+              .permissions="${this.permissions}"
+              ?hidden="${!this._activeModuleIs(this.module, 'reports')}"
             >
             </reports-module>
 
-            <not-found class="main-page" hidden$="[[!_activeModuleIs(module, 'not-found')]]"></not-found>
+            <not-found class="main-page" ?hidden="${!this._activeModuleIs(this.module, 'not-found')}"></not-found>
 
             <settings-module
               id="settings"
               class="main-page"
-              hidden$="[[!_activeModuleIs(module, 'settings')]]"
+              ?hidden="${!this._activeModuleIs(this.module, 'settings')}"
             ></settings-module>
           </main>
 
           <page-footer></page-footer>
-
-          <div id="floating-footer" hidden>
-            <strong> AMENDMENT MODE </strong>
-            | All fields in the details tab are now open for editing. Please save before clicking "I am done".
-            <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
-          </div>
         </app-header-layout>
       </app-drawer-layout>
 
-      <data-refresh-dialog id="dataRefreshDialog" page="[[module]]"></data-refresh-dialog>
+      <data-refresh-dialog id="dataRefreshDialog" .page="${this.module}"></data-refresh-dialog>
 
       <partners-list-data></partners-list-data>
       <agreements-list-data></agreements-list-data>
@@ -251,11 +252,16 @@ class AppShell extends connect(store)(
    * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
    * Main modules will have other pages and routing (prefixed by app-shell route).
    */
-  @property({
-    type: String,
-    reflectToAttribute: true
-  })
-  module!: string;
+  private _module!: string;
+  @property({type: String})
+  get module() {
+    return this._module;
+  }
+
+  set module(val: string) {
+    this._module = val;
+    this._scrollToTopOnPageChange(this._module);
+  }
 
   @property({type: Object})
   route!: GenericObject;
@@ -271,7 +277,7 @@ class AppShell extends connect(store)(
   @property({type: String})
   rootPath!: string;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean})
   narrow!: boolean;
 
   @property({type: Object})
@@ -288,12 +294,6 @@ class AppShell extends connect(store)(
 
   @property({type: String})
   _appModuleMainElUrlTmpl = './components/pages/##module##/##main-el-name##-module.js';
-
-  @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
-  appLocRoute!: {
-    path: string;
-    __queryParams: GenericObject;
-  };
 
   @property({type: Object})
   leavePageDialog!: EtoolsDialog;
@@ -313,12 +313,11 @@ class AppShell extends connect(store)(
   @property({type: Object})
   reduxRouteDetails?: RouteDetails;
 
-  public static get observers() {
-    return ['_scrollToTopOnPageChange(module)'];
-  }
+  @property({type: Boolean})
+  private translationFilesAreLoaded = false;
 
-  ready() {
-    super.ready();
+  public connectedCallback() {
+    super.connectedCallback();
 
     this._initListeners();
     if (this.shadowRoot?.querySelector('#appHeadLayout')) {
@@ -338,12 +337,6 @@ class AppShell extends connect(store)(
         loadingSource: 'main-page'
       });
     }
-  }
-
-  public connectedCallback() {
-    super.connectedCallback();
-
-    this.checkAppVersion();
     installRouter((location) =>
       this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
@@ -354,7 +347,13 @@ class AppShell extends connect(store)(
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
     // @ts-ignore
-    this.addEventListener('toast', ({detail}: CustomEvent) => this.set('currentToastMessage', detail.text));
+    this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
+  }
+
+  firstUpdated() {
+    this.waitForTranslationsAndLanguageToLoad().then(() => {
+      this.checkAppVersion();
+    });
   }
 
   public stateChanged(state: RootState) {
@@ -372,7 +371,8 @@ class AppShell extends connect(store)(
       this.loadLocalization();
     }
 
-    this.waitForTranslationsAndLanguageToLoad().then(() =>
+    this.waitForTranslationsAndLanguageToLoad().then(() => {
+      this.translationFilesAreLoaded = true;
       this.waitForEnvFlagsToLoad().then(() => {
         if (this.canAccessPage(state.app?.routeDetails.routeName!)) {
           this.module = state.app?.routeDetails.routeName!;
@@ -380,8 +380,12 @@ class AppShell extends connect(store)(
         } else {
           this._pageNotFound();
         }
-      })
-    );
+      });
+    });
+  }
+
+  protected shouldUpdate(changedProperties: Map<PropertyKey, unknown>): boolean {
+    return this.translationFilesAreLoaded && super.shouldUpdate(changedProperties);
   }
 
   async preliminaryUrlChangeHandling(path: string) {
@@ -503,20 +507,18 @@ class AppShell extends connect(store)(
     store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
   }
 
-  private _showConfirmNewVersionDialog() {
-    const msg = document.createElement('span');
-    msg.innerText = 'A new version of the app is available. Refresh page?';
-    const conf: any = {
-      size: 'md',
-      closeCallback: this._onConfirmNewVersion.bind(this),
-      content: msg
-    };
-    const confirmNewVersionDialog = createDynamicDialog(conf);
-    confirmNewVersionDialog.opened = true;
-  }
+  private async _showConfirmNewVersionDialog() {
+    const confirmed = await openDialog({
+      dialog: 'are-you-sure',
+      dialogData: {
+        content: translate('A_NEW_VERSION_OF_THE_APP_IS_AV'),
+        confirmBtnText: translate('YES')
+      }
+    }).then(({confirmed}) => {
+      return confirmed;
+    });
 
-  private _onConfirmNewVersion(e: CustomEvent) {
-    if (e.detail.confirmed) {
+    if (confirmed) {
       if (navigator.serviceWorker) {
         caches.keys().then((cacheNames) => {
           cacheNames.forEach((cacheName) => {
