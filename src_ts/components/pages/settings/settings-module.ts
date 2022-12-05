@@ -5,7 +5,6 @@ import './components/disaggregation-list.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {fireEvent} from '../../utils/fire-custom-event';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
-import '@material/web/textfield/filled-text-field.js';
 
 /**
  * @polymer
@@ -28,9 +27,6 @@ export class SettingsModule extends CommonMixinLit(LitElement) {
         <div id="pageContent">
           <disaggregation-list></disaggregation-list>
         </div>
-      </div>
-      <div style="padding:25px">
-        <md-filled-text-field label="Label text"></md-filled-text-field>
       </div>
     `;
   }

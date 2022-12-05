@@ -27,10 +27,10 @@ jobs:
       - run:
           name: EsLint
           command: npm run lint
-      - run:
-          name: Remove opt.chaining and null coalescing op.
-          command: npm install -g @babel/core @babel/cli
-            npm run removeNullCoalescingOp
+      # - run:
+      #     name: Remove opt.chaining and null coalescing op.
+      #     command: npm install -g @babel/core @babel/cli
+      #       npm run transpileNullCoalescingOp-OptionalChaining
       - run:
           name: Polymer3 Build
           command: npm run build
@@ -94,4 +94,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - material-web-build

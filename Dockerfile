@@ -9,7 +9,7 @@ RUN apk add git
 
 RUN npm install -g --unsafe-perm polymer-cli
 RUN npm install -g typescript
-RUN npm install -g @babel/core @babel/cli
+# RUN npm install -g @babel/core @babel/cli
 
 
 WORKDIR /tmp
@@ -22,7 +22,7 @@ ADD . /code/
 WORKDIR /code
 
 RUN cp -a /tmp/node_modules /code/node_modules
-RUN npm run removeNullCoalescingOp
+# RUN npm run transpileNullCoalescingOp-OptionalChaining
 RUN npm run build
 
 
