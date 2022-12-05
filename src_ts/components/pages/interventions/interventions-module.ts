@@ -272,6 +272,7 @@ export class InterventionsModule extends connect(store)(
       if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
         this.prevRouteDetails = routeDetials;
         this.tabsActive = !['list', 'new'].includes(routeDetials!.subRouteName!);
+        this.activePage = routeDetials!.subRouteName!;
         this.pageChanged(routeDetials!.subRouteName!);
       }
     }
@@ -367,15 +368,6 @@ export class InterventionsModule extends connect(store)(
     if (['list', 'new'].includes(page)) {
       this.reportsPrevParams = {};
     }
-    const fileImportDetails = {
-      filenamePrefix: 'intervention',
-      baseUrl: '../app-elements/interventions/',
-      importErrMsg: 'Interventions page import error occurred',
-      errMsgPrefixTmpl: '[intervention(s) ##page##]',
-      loadingMsgSource: 'interv-page'
-    };
-
-    this.setActivePage(page, fileImportDetails, undefined, null, undefined);
   }
 
   onAmendmentDeleted(e: CustomEvent) {

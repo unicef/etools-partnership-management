@@ -147,7 +147,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement | LitElement>>(bas
 
     protected _handlePrpData() {
       this.waitForEnvFlagsToLoad().then(() => {
-        if (this.showPrpReports()) {
+        if (this.shouldShowPrpReports()) {
           this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
           if (this.prpServerIsOn()) {
             this._getStaticData(this.commonDataEndpoints.prp);
