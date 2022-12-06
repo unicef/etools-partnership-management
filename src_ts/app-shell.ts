@@ -259,8 +259,10 @@ class AppShell extends connect(store)(
   }
 
   set module(val: string) {
-    this._module = val;
-    this._scrollToTopOnPageChange(this._module);
+    if (val !== this._module) {
+      this._module = val;
+      this._scrollToTopOnModuleChange(this._module);
+    }
   }
 
   @property({type: Object})
@@ -531,7 +533,7 @@ class AppShell extends connect(store)(
   }
 
   // @ts-ignore
-  private _scrollToTopOnPageChange(module: string) {
+  private _scrollToTopOnModuleChange(module: string) {
     // TODO: polymer2 - check if this observer is correct. Do we really need it?
     // Tested- seems to work the same without it..
     if (!module) {
