@@ -413,7 +413,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               <div class="col-2">${this.getDateDisplayValue(item.status_date)}</div>
               <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
               <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
-              <a class="report col-2" target="_blank" href="${item.object_url}">
+              <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
                 <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
                 ${translate('VIEW_REPORT')}
               </a>
@@ -549,6 +549,13 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeListeners();
+  }
+
+  linkFixUp(url: string) {
+    if (!url.includes('https://')) {
+      return 'https://' + url;
+    }
+    return url;
   }
 
   public _init(engagements: any) {
