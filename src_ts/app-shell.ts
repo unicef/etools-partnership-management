@@ -93,7 +93,7 @@ import {registerTranslateConfig, use, get as getTranslation, translate} from 'li
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
@@ -352,7 +352,8 @@ class AppShell extends connect(store)(
     this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
   }
 
-  firstUpdated() {
+  firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties);
     this.waitForTranslationsAndLanguageToLoad().then(() => {
       this.checkAppVersion();
     });
@@ -421,7 +422,7 @@ class AppShell extends connect(store)(
     fetch('version.json')
       .then((res) => res.json())
       .then((version) => {
-        if (version.revision != document.getElementById('buildRevNo')!.innerText) {
+        if ('1' != document.getElementById('buildRevNo')!.innerText) {
           console.log('version.json', version.revision);
           console.log('buildRevNo ', document.getElementById('buildRevNo')!.innerText);
           this._showConfirmNewVersionDialog();
@@ -513,8 +514,8 @@ class AppShell extends connect(store)(
     const confirmed = await openDialog({
       dialog: 'are-you-sure',
       dialogData: {
-        content: getTranslation('A_NEW_VERSION_OF_THE_APP_IS_AV'),
-        confirmBtnText: getTranslation('YES')
+        content: translate('A_NEW_VERSION_OF_THE_APP_IS_AV'),
+        confirmBtnText: translate('YES')
       }
     }).then(({confirmed}) => {
       return confirmed;
