@@ -1,39 +1,36 @@
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
-import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject, languageIsAvailableInApp} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
 import {setActiveLanguage} from '../../../redux/actions/active-language';
+import {property} from 'lit-element';
+import pmpEdpoints from '../../endpoints/endpoints';
+import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsPageRefreshMixin
+ * @appliesMixin EtoolsPageRefreshMixinLit
  * @appliesMixin EndpointsMixin
  */
 function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
-  class UserDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
-    @property({type: String})
-    endpointName = 'myProfile';
-
-    @property({type: Object, readOnly: true, notify: true})
+  class UserDataClass extends EtoolsPageRefreshMixinLit(baseClass) {
+    @property({type: Object})
     user!: User;
 
-    @property({type: Object, readOnly: true})
+    @property({type: Object})
     userGroups!: UserGroup[];
 
-    @property({type: Object, readOnly: true, notify: true})
+    @property({type: Object})
     permissions!: UserPermissions;
 
     public requestUserData() {
       sendRequest({
-        endpoint: this.getEndpoint(this.endpointName)
+        endpoint: pmpEdpoints.myProfile
       })
         .then((res: any) => {
           if (this.redirectToEPDIfNeccessary(res)) {
@@ -136,20 +133,20 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
 
     protected _resetUserAndPermissions() {
       // @ts-ignore
-      this._setUser(undefined);
+      this.user = undefined;
       // @ts-ignore
-      this._setPermissions(undefined);
+      this.permissions = undefined;
     }
 
     protected _setUserData(data: any) {
       const _user = data;
       const _permissions = {};
       // @ts-ignore
-      this._setUser(_user);
+      this.user = _user;
       const permissionsList = getAllPermissions();
       if (!isEmptyObject(data)) {
         // @ts-ignore
-        this._setUserGroups(_user.groups);
+        this.userGroups = _user.groups;
         permissionsList.defaultPermissions.forEach(function (perm: any) {
           // @ts-ignore
           _permissions[perm] = true;
@@ -185,7 +182,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         // });
       }
       // @ts-ignore
-      this._setPermissions(_permissions);
+      this.permissions = _permissions;
     }
   }
   return UserDataClass;

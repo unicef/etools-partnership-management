@@ -279,15 +279,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     }
 
     this.scrollToTopOnCondition(!listActive);
-
-    const fileImportDetails = {
-      filenamePrefix: 'agreement',
-      importErrMsg: 'Agreements page import error occurred',
-      errMsgPrefixTmpl: '[agreement(s) ##page##]',
-      loadingMsgSource: 'ag-page'
-    };
-    const page: string = listActive ? 'list' : 'details';
-    this.setActivePage(page, fileImportDetails);
   }
 
   // compute agreement details page title including partner name and agreement number

@@ -3,6 +3,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {html, LitElement} from 'lit-element';
 import {BASE_URL} from '../../../config/config';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -51,6 +52,11 @@ class NotFound extends LitElement {
         <a href="${BASE_URL}partners/list">Head back home.</a>
       </div>
     `;
+  }
+  connectedCallback(): void {
+    super.connectedCallback();
+    // Disable loading message for tab load, triggered by parent element on stamp or by tap event on tabs
+    fireEvent(this, 'clear-loading-messages');
   }
 }
 

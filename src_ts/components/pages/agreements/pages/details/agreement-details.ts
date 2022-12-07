@@ -382,7 +382,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.editMode,
               this.allowAoEditForSSFA
             )}"
-            .value="${this._getReadonlyAuthorizedOfficers(this.agreement.authorized_officers, this.staffMembers)}"
+            .value="${this.getNames(this.agreement.authorized_officers)}"
           >
           </etools-form-element-wrapper2>
         </div>
@@ -415,6 +415,19 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </paper-button>
         </div>
 
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <paper-input
+              label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
+              .value="${this.getAckowledgedBy()}"
+              .title="${this.getAckowledgedBy()}"
+              ?hidden="${!this.agreement.id}"
+              placeholder="&#8212;"
+              readonly
+            >
+            </paper-input>
+          </div>
+        </div>
         <div class="row-h flex-c">
           <paper-toggle-button
             ?checked="${this.agreement.special_conditions_pca}"
@@ -777,22 +790,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     return '';
   }
 
-  _getReadonlyAuthorizedOfficers(agreementAuthOfficers: any[], staffMembers: MinimalStaffMember[]) {
-    let ao: (MinimalStaffMember | PartnerStaffMember)[] = [];
-    if ((agreementAuthOfficers || []).length) {
-      const selectedIds = agreementAuthOfficers.map((item) => parseInt(item.id, 10));
-      ao = this._getAvailableAuthOfficers(staffMembers, agreementAuthOfficers).filter(
-        (a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1
-      );
-    } else {
-      ao = agreementAuthOfficers || [];
-    }
-    if (!ao || !ao.length) {
+  getNames(users: PartnerStaffMember[]) {
+    if (!users || !users.length) {
       return '';
     }
-    const names = ao.map(
-      (officer: MinimalStaffMember | PartnerStaffMember) => officer.first_name + ' ' + officer.last_name
-    );
+    const names = users.map((officer) => officer.first_name + ' ' + officer.last_name);
     return names.join(' | ');
   }
 
@@ -902,6 +904,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     if (!e.detail || e.detail.selectedItems == undefined) {
       return;
     }
+    if (!this._allowAuthorizedOfficersEditing(this.agreement.status, this.editMode, this.allowAoEditForSSFA)) {
+      return;
+    }
     if (!isJsonStrMatch(this.agreement.authorized_officers, e.detail.selectedItems)) {
       this.agreement.authorized_officers = e.detail.selectedItems;
       this.requestUpdate();
@@ -980,5 +985,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   getSelectedAuthOfficeIDs(authOff: any) {
     return (authOff || []).map((item: any) => item.id);
+  }
+
+  getAckowledgedBy() {
+    return this.agreement.terms_acknowledged_by
+      ? `${this.agreement.terms_acknowledged_by.first_name} ${this.agreement.terms_acknowledged_by.last_name}`
+      : null;
   }
 }
