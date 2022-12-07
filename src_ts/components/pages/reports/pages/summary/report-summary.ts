@@ -166,7 +166,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.release_cash_in_time_comment)}"
+                    .value="${this.report.final_review?.release_cash_in_time_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -185,7 +185,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.release_supplies_in_time_comment)}"
+                    .value="${this.report.final_review?.release_supplies_in_time_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -204,7 +204,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.feedback_face_form_in_time_comment)}"
+                    .value="${this.report.final_review?.feedback_face_form_in_time_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -223,7 +223,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.respond_requests_in_time_comment)}"
+                    .value="${this.report.final_review?.respond_requests_in_time_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -242,7 +242,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.implemented_as_planned_comment)}"
+                    .value="${this.report.final_review?.implemented_as_planned_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -261,7 +261,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.action_to_address_comment)}"
+                    .value="${this.report.final_review?.action_to_address_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -280,7 +280,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
                   <etools-form-element-wrapper2
                     .alwaysFloatLabel="${false}"
                     .noLabelFloat="${true}"
-                    .value="${this.getRatingValue(this.report.final_review?.overall_satisfaction_comment)}"
+                    .value="${this.report.final_review?.overall_satisfaction_comment}"
                   >
                   </etools-form-element-wrapper2>
                 </div>
@@ -364,8 +364,11 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     return currentStatus === status;
   }
 
-  getYesNoValue(value: string) {
-    return getTranslatedValue(this.getDisplayValue(value) as string, 'GENERAL');
+  getYesNoValue(value: any) {
+    return getTranslatedValue(
+      this.getDisplayValue(value === true ? 'yes' : value === false ? 'no' : value) as string,
+      'GENERAL'
+    );
   }
 
   getRatingValue(value: string) {
