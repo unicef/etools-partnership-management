@@ -448,7 +448,10 @@
       "FINAL_PARTNERSHIP_REVIEW": "Окончательный обзор партнерства",
       "CORRESPONDENCE": "Переписка",
       "SUPPLY/DISTRIBUTION_PLAN": "План снабжения/распределения",
-      "OTHER": "Другой"
+      "OTHER": "Другой",
+      "SPECIAL_CONDITIONS_FOR_CONSTRUCTION_WORKS": "Специальные условия для строительных работ",
+      "ACTIVITIES_INVOLVING_CHILDREN_AND_YOUNG_PEOPLE": "Мероприятия с участием детей и молодежи",
+      "DATA_PROCESSING_AGREEMENT": "Соглашение об обработке данных"
     },
     "PROVIDEDBY": {
       "UNICEF": "ЮНИСЕФ",
