@@ -46,6 +46,7 @@ const CONSTANTS = {
 
 export const appLanguages: GenericObject[] = [
   {value: 'en', display_name: 'English'},
+  {value: 'ro', display_name: 'Romanian'},
   {value: 'fr', display_name: 'French'},
   {value: 'es', display_name: 'Spanish'},
   {value: 'ar', display_name: 'Arabic'},
