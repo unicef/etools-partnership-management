@@ -448,10 +448,7 @@
         "FINAL_PARTNERSHIP_REVIEW": "Final Partnership Review",
         "CORRESPONDENCE": "Correspondence",
         "SUPPLY/DISTRIBUTION_PLAN": "Supply/Distribution Plan",
-        "OTHER": "Other",
-        "SPECIAL_CONDITIONS_FOR_CONSTRUCTION_WORKS":"Special Conditions for Construction Works",
-        "ACTIVITIES_INVOLVING_CHILDREN_AND_YOUNG_PEOPLE":"Activities involving children and young people",
-        "DATA_PROCESSING_AGREEMENT":"Data Processing Agreement"
+        "OTHER": "Other"
     },
     "PROVIDEDBY": {
         "UNICEF": "UNICEF",
