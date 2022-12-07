@@ -448,7 +448,10 @@
       "FINAL_PARTNERSHIP_REVIEW": "مراجعة الشراكة النهائية",
       "CORRESPONDENCE": "مراسلة",
       "SUPPLY/DISTRIBUTION_PLAN": "خطة التوريد / التوزيع",
-      "OTHER": "آخر"
+      "OTHER": "آخر",
+      "SPECIAL_CONDITIONS_FOR_CONSTRUCTION_WORKS": "الشروط الخاصة بأعمال البناء",
+      "ACTIVITIES_INVOLVING_CHILDREN_AND_YOUNG_PEOPLE": "الأنشطة التي يشارك فيها الأطفال والشباب",
+      "DATA_PROCESSING_AGREEMENT": "اتفاقية معالجة البيانات"
     },
     "PROVIDEDBY": {
       "UNICEF": "اليونيسف",
