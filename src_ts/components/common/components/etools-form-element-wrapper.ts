@@ -60,7 +60,7 @@ class EtoolsFormElementWrapper extends LitElement {
       </style>
       <paper-input-container
         ?always-float-label="${this.alwaysFloatLabel}"
-        noLabelFloat="${this.noLabelFloat}"
+        ?no-label-float="${this.noLabelFloat}"
         ?required="${this.required}"
       >
         <label ?hidden="${!this.label}" slot="label">${this.label}</label>

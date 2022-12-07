@@ -69,6 +69,12 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
           padding: 15px 20px;
           background-color: var(--primary-background-color);
         }
+        .pt-0 {
+          padding-top: 0 !important;
+        }
+        .pb-0 {
+          padding-bottom: 0 !important;
+        }
       </style>
       <div class="content-section paper-material elevation remove-padding" elevation="1">
         <div class="row-h b-border">
@@ -144,6 +150,142 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
             </etools-form-element-wrapper2>
           </div>
         </div>
+
+        ${this.isFinalReport(this.report)
+          ? html`<div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('RELEASE_CASH_IN_TIME')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.release_cash_in_time_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.release_cash_in_time_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('RELEASE_SUPPLIES_IN_TIME')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.release_supplies_in_time_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.release_supplies_in_time_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('FEEDBACK_FACE_FORM_IN_TIME')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.feedback_face_form_in_time_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.feedback_face_form_in_time_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('RESPOND_REQUESTS_IN_TIME')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.respond_requests_in_time_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.respond_requests_in_time_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('IMPLEMENTED_AS_PLANNED')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.implemented_as_planned_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.implemented_as_planned_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('ACTION_TO_ADDRESS')}"
+                    .value="${this.getYesNoValue(this.report.final_review?.action_to_address_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.action_to_address_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pb-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    label="${translate('OVERALL_SATISFACTION')}"
+                    .value="${this.getRatingValue(this.report.final_review?.overall_satisfaction_choice)}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>
+              <div class="row-h pt-0">
+                <div class="col col-12">
+                  <etools-form-element-wrapper2
+                    .alwaysFloatLabel="${false}"
+                    .noLabelFloat="${true}"
+                    .value="${this.report.final_review?.overall_satisfaction_comment}"
+                  >
+                  </etools-form-element-wrapper2>
+                </div>
+              </div>`
+          : ''}
         <div class="row-padding" ?hidden="${this.isPrpSRReport(this.report.report_type)}">
           ${(this.reportAttachments || []).map(
             (item: any, index: number) => html`
@@ -185,6 +327,10 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     return repType === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
   }
 
+  isFinalReport(report: GenericObject) {
+    return report.is_final && !this.isPrpSRReport(report.report_type);
+  }
+
   getFinancialContributionText(report: GenericObject) {
     return `${this.displayCurrencyAmount(report.financial_contribution_to_date, '0.00')} ${this.getDisplayValue(
       report.financial_contribution_currency
@@ -216,6 +362,17 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
 
   statusIs(currentStatus: string, status: string) {
     return currentStatus === status;
+  }
+
+  getYesNoValue(value: any) {
+    return getTranslatedValue(
+      this.getDisplayValue(value === true ? 'yes' : value === false ? 'no' : value) as string,
+      'GENERAL'
+    );
+  }
+
+  getRatingValue(value: string) {
+    return getTranslatedValue(this.getDisplayValue(value) as string, 'OVERALL_SATISFACTION_RATINGS');
   }
 
   _seeSentBackComments() {

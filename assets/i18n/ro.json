@@ -424,6 +424,20 @@
     "RATIO": "Raport",
     "LATEST": "Cele mai recente"
   },
+  "RELEASE_CASH_IN_TIME": "Pe parcursul implementării programului, UNICEF a eliberat numerar în timp util?",
+  "RELEASE_SUPPLIES_IN_TIME": "Pe parcursul implementării programului, UNICEF a eliberat în timp util proviziile programului?",
+  "FEEDBACK_FACE_FORM_IN_TIME": "Pe parcursul implementării programului, UNICEF a oferit feedback în timp util cu privire la formularele FACE și rapoartele de progres narative?",
+  "RESPOND_REQUESTS_IN_TIME": "Pe parcursul implementării programului, personalul UNICEF a răspuns la întrebările și solicitările de asistență tehnică în timp util?",
+  "IMPLEMENTED_AS_PLANNED": "Au fost implementate activități comune de monitorizare și asigurare conform planificării documentului de program?",
+  "ACTION_TO_ADDRESS": "Au luat organizația dumneavoastră și UNICEF măsuri pentru a aborda constatările identificate în activitățile de monitorizare și asigurare?",
+  "OVERALL_SATISFACTION": "În general, cât de mulțumită a fost organizația dumneavoastră de parteneriatul cu UNICEF cu privire la acest document de program?",
+  "OVERALL_SATISFACTION_RATINGS": {
+    "VERY_UNSATISFIED": "Foarte nesatisfăcut",
+    "UNSATISFIED": "Nesatisfăcut",
+    "NEUTRAL": "Neutru",
+    "SATISFIED": "Satisfăcut",
+    "VERY_SATISFIED": "Foarte satisfăcut"
+  },
   "PCA_TERMS_AND_CONDITIONS": "<p>Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat ulterior... Va fi furnizat mai târziu. ... Va fi furnizat mai târziu</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... fi furnizat ulterior</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat ulterior... Va fi furnizat mai târziu. ... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. prezentat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu. mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu Va fi furnizat mai târziu... Va fi furnizat mai târziu</p><p> Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu... Va fi furnizat mai târziu. Va fi furnizat mai târziu...</p>",
   "PCA_REQUIRE_ACKNOWLEDGE": "Trebuie să acceptați termenii și condițiile",
   "PCA_REQUIRE_TEMPLATE": "Trebuie să selectați șablonul PCA",
