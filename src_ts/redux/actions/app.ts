@@ -18,6 +18,7 @@ import {BASE_URL} from '../../config/config';
 import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../components/utils/routes';
 import {getRedirectToListPath} from '../../components/utils/subpage-redirect';
 import {isJsonStrMatch} from '../../components/utils/utils';
+import {enableCommentMode} from '../../components/pages/interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
@@ -161,5 +162,6 @@ export const handleUrlChange = (path: string) => (dispatch: any, getState: any) 
   }
   if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
     dispatch(updateStoreRouteDetails(routeDetails));
+    dispatch(enableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
   }
 };
