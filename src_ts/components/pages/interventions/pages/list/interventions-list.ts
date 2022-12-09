@@ -366,10 +366,11 @@ export class InterventionsList extends connect(store)(
       this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
-        pmpEdpoints.interventions.bypassCache = true;
-        this.shadowRoot!.querySelector<InterventionsListData>('#interventions')!
-          ._elementReady()
-          .finally(() => (pmpEdpoints.interventions.bypassCache = false));
+        const interventionsListElement = this.shadowRoot!.querySelector<InterventionsListData>('#interventions');
+        if (interventionsListElement) {
+          pmpEdpoints.interventions.bypassCache = true;
+          interventionsListElement._elementReady().finally(() => (pmpEdpoints.interventions.bypassCache = false));
+        }
         getStore().dispatch(setShouldReGetList(false));
       }
     }
