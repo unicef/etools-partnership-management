@@ -2,6 +2,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
+import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -18,7 +19,7 @@ import pmpEdpoints from '../../endpoints/endpoints.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement))) {
+class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement)))) {
   render() {
     // main template
     // language=HTML
@@ -124,9 +125,10 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(Endpoin
     if (!state) {
       return;
     }
+    this.uploadsStateChanged(state);
   }
 
-  protected _countrySelected(e: any) {
+  protected async _countrySelected(e: any) {
     if (!e.detail.selectedItem) {
       return;
     }
@@ -134,8 +136,18 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixinLit(Endpoin
     const selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
 
     if (selectedCountryId !== this.currentCountry.id) {
-      // send post request to change_coutry endpoint
-      this._triggerCountryChangeRequest(selectedCountryId);
+      if (this.existsUploadsUnsavedOrInProgress()) {
+        const prevCountryId = this.currentCountry.id;
+        this.currentCountry = {...this.currentCountry, id: selectedCountryId};
+        const confirmed = await this.confirmLeaveUploadInProgress();
+        if (!confirmed) {
+          // reset country dropdown to the previous value
+          this.currentCountry = {...this.currentCountry, id: prevCountryId};
+          return;
+        }
+        // send post request to change_country endpoint
+        this._triggerCountryChangeRequest(selectedCountryId);
+      }
     }
   }
 
