@@ -76,7 +76,6 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
-import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from './redux/actions/upload-status.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -89,7 +88,7 @@ import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, get as getTranslation, translate} from 'lit-translate';
+import {registerTranslateConfig, use, translate} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
@@ -392,7 +391,7 @@ class AppShell extends connect(store)(
   }
 
   async preliminaryUrlChangeHandling(path: string) {
-    if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+    if (this.existsUploadsUnsavedOrInProgress()) {
       // when user tries to navigate away => show the confirmation dialog
       const currentRouteDetails = EtoolsRouter.getRouteDetails(path);
       if (
@@ -580,24 +579,11 @@ class AppShell extends connect(store)(
   }
 
   async stayingOnPage(): Promise<boolean> {
-    const confirmed = await openDialog({
-      dialog: 'are-you-sure',
-      dialogData: {
-        content: getTranslation('LEAVE_UPLOAD_IN_PROGRESS'),
-        confirmBtnText: translate('LEAVE'),
-        cancelBtnText: translate('STAY')
-      }
-    }).then(({confirmed}) => {
-      return confirmed;
-    });
-
+    const confirmed = await this.confirmLeaveUploadInProgress();
     if (confirmed) {
-      store.dispatch({type: RESET_UNSAVED_UPLOADS});
-      store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
       return false;
     } else {
       history.go(-1);
-
       fireEvent(this, 'clear-loading-messages', {
         bubbles: true,
         composed: true
