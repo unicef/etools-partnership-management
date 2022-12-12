@@ -218,7 +218,9 @@ class PageHeader extends connect(store)(
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector id="app-selector" .language="${this.selectedLanguage}"></etools-app-selector>
+            <etools-app-selector id="app-selector" .user="${this.profile}" .language="${
+      this.selectedLanguage
+    }"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
             <div class="envWarning" ?hidden="${!this.environment}">
               <span class='envLong'> - </span>${this.environment}
