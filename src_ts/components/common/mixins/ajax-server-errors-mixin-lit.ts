@@ -59,7 +59,7 @@ function AjaxServerErrorsMixin<T extends Constructor<LitElement>>(baseClass: T) 
 
       if (this.useToastEvent) {
         const toastMsg = this.serverErrors.length ? this.serverErrors.join('\n') : globalMessage;
-        fireEvent(this, 'toast', {text: toastMsg, showCloseBtn: true});
+        fireEvent(this, 'toast', {text: toastMsg});
       } else {
         if (this.serverErrors.length === 0) {
           this._fireAjaxErrorEvent(globalMessage);

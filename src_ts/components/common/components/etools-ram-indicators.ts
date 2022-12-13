@@ -110,8 +110,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
       .catch((error: any) => {
         if (error.status === 404) {
           fireEvent(this, 'toast', {
-            text: 'PMP is not synced with PRP',
-            showCloseBtn: true
+            text: 'PMP is not synced with PRP'
           });
         } else {
           parseRequestErrorsAndShowAsToastMsgs(error, this);
