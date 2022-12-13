@@ -145,9 +145,9 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
           this.currentCountry = {...this.currentCountry, id: prevCountryId};
           return;
         }
-        // send post request to change_country endpoint
-        this._triggerCountryChangeRequest(selectedCountryId);
       }
+      // send post request to change_country endpoint
+      this._triggerCountryChangeRequest(selectedCountryId);
     }
   }
 
