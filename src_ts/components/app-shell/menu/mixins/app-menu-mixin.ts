@@ -1,14 +1,16 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {Constructor} from '../../../../typings/globals.types';
+import {Constructor} from '@unicef-polymer/etools-types';
+import {store} from '../../../../redux/store';
+import {updateSmallMenu} from '../../../../redux/actions/app';
+import {LitElement, property} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
 
 /**
  * App menu functionality mixin
  * @polymer
  * @mixinFunction
  */
-export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class AppMenuClass extends baseClass {
     @property({type: Boolean})
     smallMenu = false;
@@ -41,7 +43,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
     }
 
     private _initMenuSize(): void {
-      this.set('smallMenu', this._isSmallMenuActive());
+      this.smallMenu = this._isSmallMenuActive();
     }
 
     private _isSmallMenuActive(): boolean {
@@ -57,7 +59,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
 
     private _toggleSmallMenu(e: Event): void {
       e.stopImmediatePropagation();
-      this.set('smallMenu', !this.smallMenu);
+      this.smallMenu = !this.smallMenu;
       this._smallMenuValueChanged(this.smallMenu);
     }
 
@@ -70,25 +72,26 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
     private _smallMenuValueChanged(newVal: boolean) {
       const localStorageVal: number = newVal ? 1 : 0;
       localStorage.setItem('etoolsAppSmallMenuIsActive', String(localStorageVal));
+      store.dispatch(updateSmallMenu(newVal));
     }
 
     private _updateDrawerStyles(): void {
-      const drawerLayout = this.$.layout as PolymerElement;
+      const drawerLayout = this.shadowRoot?.querySelector('#layout') as PolymerElement;
       if (drawerLayout) {
         drawerLayout.updateStyles();
       }
-      const drawer = this.$.drawer as PolymerElement;
+      const drawer = this.shadowRoot?.querySelector('#drawer') as PolymerElement;
       if (drawer) {
         drawer.updateStyles();
       }
     }
 
     private _notifyLayoutResize(): void {
-      const layout = this.$.layout as PolymerElement & {notifyResize(): void};
+      const layout = this.shadowRoot?.querySelector('#layout') as PolymerElement & {notifyResize(): void};
       if (layout) {
         layout.notifyResize();
       }
-      const headerLayout = this.$.appHeadLayout as PolymerElement & {
+      const headerLayout = this.shadowRoot?.querySelector('#appHeadLayout') as PolymerElement & {
         notifyResize(): void;
       };
       if (headerLayout) {
@@ -98,7 +101,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
 
     private _toggleDrawer(): void {
       // @ts-ignore
-      this.$.drawer.toggle();
+      this.shadowRoot?.querySelector('#drawer').toggle();
     }
   }
   return AppMenuClass;

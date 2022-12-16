@@ -1,5 +1,4 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const partnerStatusStyles = html` <style>
@@ -7,8 +6,9 @@ export const partnerStatusStyles = html` <style>
   .blocked,
   .marked-for-deletion,
   .not-synced {
-    @apply --layout-vertical;
-    @apply --layout-center-justified;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 24px;
     height: 24px;
     -webkit-border-radius: 50%;
@@ -34,7 +34,7 @@ export const partnerStatusStyles = html` <style>
     --iron-icon-height: 16px;
     --iron-icon-width: 16px;
     color: var(--light-primary-text-color);
-    @apply --layout-self-center;
+    align-self: center;
   }
 
   .marked-for-deletion iron-icon {
@@ -61,8 +61,9 @@ export const partnerStatusStyles = html` <style>
   }
 
   .sm-status-wrapper {
-    @apply --layout-vertical;
-    @apply --layout-center-justified;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .sm-status-wrapper .marked-for-deletion iron-icon:after {

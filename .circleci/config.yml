@@ -4,32 +4,43 @@ jobs:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:12.18.3
+      - image: node:12.22.7
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install node_modules
+          name: 'Pull Submodule'
+          command: |
+            git submodule init
+            git submodule update --checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install node modules
           command: npm ci
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
       - run:
+          name: TsLint
+          command: npm run tsToJs
+      - run:
+          name: EsLint
+          command: npm run lint
+      # - run:
+      #     name: Remove opt.chaining and null coalescing op.
+      #     command: npm install -g @babel/core @babel/cli
+      #       npm run transpileNullCoalescingOp-OptionalChaining
+      - run:
           name: Polymer3 Build
           command: npm run build
-          no_output_timeout: 15m
-      - run:
-          name: Run Tests
-          command: |
-            echo "skipping tests for now: xvfb-run polymer test --skip-selenium-install"
+          no_output_timeout: 25m
 
   build_and_deploy:
     working_directory: ~/code
     # The primary container is an instance of the first list image listed. Your build commands run in this container.
     docker:
-      - image: node:12.18.3
+      - image: node:12.22.7
     steps:
       - checkout
       - setup_remote_docker
@@ -38,8 +49,9 @@ jobs:
           command: |
             REVNO=${CIRCLE_SHA1}
             BUILDDATE=$(date -u +%F_%T)
-            sed -i "0,/revNo/s//$REVNO/" package.json
-            sed -i "0,/bDate/s//$BUILDDATE/" package.json
+            sed -i "0,/revNo/s//$REVNO/" index.html
+            sed -i "0,/revNo/s//$REVNO/" version.json
+            sed -i "0,/bDate/s//$BUILDDATE/" version.json
       - run:
           name: Install Docker client
           command: |
@@ -50,7 +62,13 @@ jobs:
             mv /tmp/docker/* /usr/bin
           # build and push Docker image
       - run:
+          name: 'Pull Submodule'
+          command: |
+            git submodule init
+            git submodule update --checkout
+      - run:
           name: Building the image
+          no_output_timeout: 25m
           command: |
             TAG=${CIRCLE_BRANCH}
             docker build -t unicef/etools-pmp:$TAG .
@@ -63,13 +81,17 @@ jobs:
 
 workflows:
   version: 2
-  build_and_lint:
+  build_and_test:
     jobs:
       - lint
       - build_and_deploy:
+          requires:
+            - lint
           filters:
             branches:
               only:
                 - master
                 - staging
                 - develop
+                - epd
+                - fix-comment-mode

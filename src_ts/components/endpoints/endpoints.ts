@@ -11,12 +11,12 @@ const pmpEdpoints = {
     url: '/api/v3/users/profile/'
   },
   agreements: {
-    template: '/api/v2/agreements/',
+    template: '/api/pmp/v3/agreements/',
     exp: 30 * 60 * 1000, // 30min
     cacheTableName: 'agreements'
   },
   agreementDetails: {
-    template: '/api/v2/agreements/<%=id%>/'
+    template: '/api/pmp/v3/agreements/<%=id%>/'
   },
   agreementDelete: {
     template: '/api/v2/agreements/delete/<%=id%>/'
@@ -39,7 +39,7 @@ const pmpEdpoints = {
     cachingKey: 'countries'
   },
   partners: {
-    url: '/api/v2/partners/',
+    url: '/api/pmp/v3/partners/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cacheTableName: 'partners'
   },
@@ -62,9 +62,10 @@ const pmpEdpoints = {
     template: '/api/v2/partners/<%=id%>/staff-members/'
   },
   interventions: {
-    url: '/api/v2/interventions/',
+    url: '/api/pmp/v3/interventions/?show_amendments=true',
     exp: 10 * 60 * 1000,
-    cacheTableName: 'interventions'
+    cacheTableName: 'interventions',
+    bypassCache: false
   },
   interventionDetails: {
     template: '/api/v2/interventions/<%=id%>/'
@@ -79,7 +80,7 @@ const pmpEdpoints = {
     template: '/api/v2/interventions/attachments/<%=attId%>/'
   },
   dropdownsPmp: {
-    url: '/api/v2/dropdowns/pmp',
+    url: '/api/pmp/v3/dropdowns/dynamic/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cachingKey: 'dropdownsPmp'
   },
@@ -94,7 +95,7 @@ const pmpEdpoints = {
     cachingKey: 'locations'
   },
   offices: {
-    url: '/api/offices',
+    url: '/api/offices/v3/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cachingKey: 'offices'
   },
@@ -105,9 +106,14 @@ const pmpEdpoints = {
     url: '/api/v2/reports/countryprogramme/'
   },
   sections: {
-    url: '/api/v2/reports/sections/',
+    url: '/api/sections/v3/',
     exp: 6 * 60 * 60 * 1000,
     cachingKey: 'sections'
+  },
+  sites: {
+    url: '/api/v1/field-monitoring/settings/sites/?page_size=all',
+    exp: 6 * 60 * 60 * 1000,
+    cachingKey: 'sites'
   },
   ramIndicators: {
     template: '/api/v2/reports/results/<%=id%>/indicators/'
@@ -285,6 +291,9 @@ const pmpEdpoints = {
   },
   interventionPVLinkDelete: {
     template: '/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/'
+  },
+  importECN: {
+    url: '/api/ecn/v1/interventions/import/ecn/'
   }
 };
 
