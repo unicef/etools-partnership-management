@@ -35,9 +35,7 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
-    if (res && res.length) {
-      store.dispatch(setPartners(res));
-    }
+    store.dispatch(setPartners(res));
   }
 
   public async query(
