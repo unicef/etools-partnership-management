@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 interface MonitoringActivity {
   id: number;
   reference_number: string;
@@ -73,14 +74,18 @@ type Site = {
 };
 
 interface ISiteParrentLocation {
-  admin_level: number;
-  admin_level_name: string;
+  gateway: LocationGateway;
   geo_point: string;
   id: string;
   name: string;
   p_code: string;
   parent: null | ISiteParrentLocation;
 }
+type LocationGateway = {
+  admin_level: null | string | number;
+  id: number;
+  name: string;
+};
 
 type GeojsonPoint = {
   coordinates: CoordinatesArray;

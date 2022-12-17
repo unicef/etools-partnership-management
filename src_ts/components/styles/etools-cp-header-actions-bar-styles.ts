@@ -1,4 +1,4 @@
-import {html} from '@polymer/polymer/polymer-element.js';
+import {html} from '@polymer/polymer';
 
 // language=HTML
 export const etoolsCpHeaderActionsBarStyles = html` <style>

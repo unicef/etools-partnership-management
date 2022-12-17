@@ -1,44 +1,55 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/components/app-shell/app-shell.js",
+  "shell": "src/app-shell.js",
   "fragments": [
-    "src/components/app-modules/partners/partners-module.js",
-    "src/components/app-modules/partners/pages/list/partners-list.js",
-    "src/components/app-modules/partners/pages/overview/partner-overview.js",
-    "src/components/app-modules/partners/pages/details/partner-details.js",
-    "src/components/app-modules/partners/pages/financial-assurance/partner-financial-assurance.js",
-
-    "src/components/app-modules/agreements/agreements-module.js",
-    "src/components/app-modules/agreements/pages/list/agreements-list.js",
-    "src/components/app-modules/agreements/pages/details/agreement-details.js",
-
-    "src/components/app-modules/interventions/interventions-module.js",
-    "src/components/app-modules/interventions/pages/list/interventions-list.js",
-    "src/components/app-modules/interventions/pages/overview/intervention-overview.js",
-    "src/components/app-modules/interventions/pages/details/intervention-details.js",
-    "src/components/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.js",
-    "src/components/app-modules/interventions/pages/attachments/intervention-attachments.js",
-    "src/components/app-modules/interventions/pages/reports/intervention-reports.js",
-    "src/components/app-modules/interventions/pages/progress/intervention-progress.js",
-
-    "src/components/app-modules/reports/reports-module.js",
-    "src/components/app-modules/reports/pages/list/reports-list.js",
-    "src/components/app-modules/reports/pages/progress/report-progress.js",
-    "src/components/app-modules/reports/pages/summary/report-summary.js",
-
-    "src/components/app-modules/settings/settings-module.js",
-    "src/components/app-modules/not-found/not-found.js"
+    "src/components/pages/partners/partners-module.js",
+    "src/components/pages/partners/pages/list/partners-list.js",
+    "src/components/pages/partners/pages/list/governments-list.js",
+    "src/components/pages/partners/pages/overview/partner-overview.js",
+    "src/components/pages/partners/pages/details/partner-details.js",
+    "src/components/pages/partners/pages/financial-assurance/partner-financial-assurance.js",
+    "src/components/pages/agreements/agreements-module.js",
+    "src/components/pages/agreements/pages/list/agreements-list.js",
+    "src/components/pages/agreements/pages/details/agreement-details.js",
+    "src/components/pages/interventions/interventions-module.js",
+    "src/components/pages/interventions/pages/list/interventions-list.js",
+    "src/components/pages/interventions/pages/new/intervention-new.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js",
+    "src/components/pages/interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js",
+    "src/components/pages/reports/reports-module.js",
+    "src/components/pages/reports/pages/list/reports-list.js",
+    "src/components/pages/reports/pages/progress/report-progress.js",
+    "src/components/pages/reports/pages/summary/report-summary.js",
+    "src/components/pages/settings/settings-module.js",
+    "src/components/pages/not-found/not-found.js"
   ],
-  "sources": [
-    "src/**/*",
-    "images/**/*",
-    "package.json"
-  ],
+  "sources": ["src/**/*", "images/**/*", "assets/**", "package.json"],
   "extraDependencies": [
     "manifest.json",
+    "version.json",
+    "upgrade-browser.html",
     "node_modules/@webcomponents/webcomponentsjs/**",
+    "node_modules/@webcomponents/shadycss/apply-shim.min.js",
     "node_modules/web-animations-js/web-animations-next-lite.min.js",
-    "node_modules/moment/min/moment.min.js"
+    "node_modules/leaflet/dist/leaflet.js",
+    "node_modules/leaflet/dist/leaflet.css",
+    "node_modules/leaflet/dist/images/**",
+    "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js",
+    "node_modules/esri-leaflet/dist/esri-leaflet.js",
+    "node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js",
+    "assets/packages/esri-leaflet-webmap.js",
+    "node_modules/dayjs/dayjs.min.js",
+    "node_modules/dayjs/plugin/utc.js",
+    "node_modules/dayjs/plugin/isBetween.js",
+    "node_modules/dayjs/plugin/isSameOrBefore.js",
+    "node_modules/dayjs/plugin/isSameOrAfter.js",
+    "node_modules/focus-visible/dist/focus-visible.min.js"
   ],
   "lint": {
     "rules": ["polymer-3"],
@@ -47,10 +58,7 @@
   "builds": [
     {
       "name": "esm-bundled",
-      "browserCapabilities": [
-        "es2015",
-        "modules"
-      ],
+      "browserCapabilities": ["es2015", "modules"],
       "js": {
         "minify": true
       },
@@ -61,11 +69,6 @@
         "minify": true
       },
       "bundle": true,
-      "addServiceWorker": true
-    },
-    {
-      "name": "es6-bundled",
-      "preset": "es6-bundled",
       "addServiceWorker": true
     }
   ],
