@@ -563,8 +563,7 @@ class AppShell extends connect(store)(
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
     fireEvent(this, 'toast', {
-      text: 'An error occurred.',
-      showCloseBtn: true
+      text: 'An error occurred.'
     });
   }
 

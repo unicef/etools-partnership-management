@@ -171,8 +171,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
   updateAgreementStatus(data: any, callback?: any) {
     if (!data.agreementId) {
       fireEvent(this, 'toast', {
-        text: 'Invalid agreement ID',
-        showCloseBtn: true
+        text: 'Invalid agreement ID'
       });
     } else {
       if (
@@ -210,8 +209,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         this._triggerAgreementRequest(requestOptions);
       } else {
         fireEvent(this, 'toast', {
-          text: "Changing status to '" + data.status + "' is not allowed!",
-          showCloseBtn: true
+          text: "Changing status to '" + data.status + "' is not allowed!"
         });
       }
     }
@@ -237,8 +235,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
   saveAgreement(agreement: GenericObject, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
       fireEvent(this, 'toast', {
-        text: 'Invalid agreement data!',
-        showCloseBtn: true
+        text: 'Invalid agreement data!'
       });
       return Promise.resolve(false);
     } else {
@@ -267,8 +264,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         });
       } else {
         fireEvent(this, 'toast', {
-          text: 'All changes are saved.',
-          showCloseBtn: false
+          text: 'All changes are saved.'
         });
         return Promise.resolve(false);
       }
@@ -316,8 +312,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'Agreement successfully deleted.',
-        showCloseBtn: true
+        text: 'Agreement successfully deleted.'
       });
     } else {
       throw new Error('Agreement was not deleted from dexie!');
@@ -330,8 +325,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     fireEvent(this, 'toast', {
       text:
         'The agreement was deleted from server database, but there was an issue on cleaning ' +
-        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
-      showCloseBtn: true
+        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.'
     });
   }
 }

@@ -391,8 +391,7 @@ export class PartnersModule extends connect(store)(
       loadingSource: 'partner-data'
     });
     fireEvent(this, 'toast', {
-      text: this._getTranslation('PARTNER_SUCCESSFULLY_DELETED'),
-      showCloseBtn: true
+      text: this._getTranslation('PARTNER_SUCCESSFULLY_DELETED')
     });
     fireEvent(this, 'update-main-path', {
       path: 'partners/list'
@@ -438,8 +437,7 @@ export class PartnersModule extends connect(store)(
 
   public _handleCreatePartnerError(errorDetails: any) {
     fireEvent(this, 'toast', {
-      text: errorDetails,
-      showCloseBtn: true
+      text: errorDetails
     });
   }
 
