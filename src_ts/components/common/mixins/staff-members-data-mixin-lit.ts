@@ -41,8 +41,7 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
           .catch((error: any) => {
             logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
             fireEvent(this, 'toast', {
-              text: 'Can not get selected partner staff members data!',
-              showCloseBtn: true
+              text: 'Can not get selected partner staff members data!'
             });
           });
       }

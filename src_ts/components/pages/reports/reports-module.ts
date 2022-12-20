@@ -347,8 +347,7 @@ export class ReportsModule extends connect(store)(
     setTimeout(() => {
       if (isNaN(id)) {
         fireEvent(this, 'toast', {
-          text: 'Invalid report ID!',
-          showCloseBtn: true
+          text: 'Invalid report ID!'
         });
         this.report = null;
         return;
