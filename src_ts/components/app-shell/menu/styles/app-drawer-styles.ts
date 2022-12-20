@@ -1,4 +1,4 @@
-import {html} from '@polymer/polymer/polymer-element';
+import {html} from 'lit-element';
 
 // language=HTML
 export const appDrawerStyles = html`

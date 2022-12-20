@@ -1,17 +1,17 @@
 import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const riskRatingStyles = html` <style>
   :host {
     --risk-rating-field: {
       display: inline-block;
-      height: 22px;
+      min-height: 22px;
       padding: 0 4px;
       border-left: var(--risk-rating-significant-color);
       /* TODO: capitalize might not be applied, iron-input bug */
       text-transform: capitalize;
       box-sizing: border-box;
+      text-align: left;
     }
 
     --risk-rating-low: {

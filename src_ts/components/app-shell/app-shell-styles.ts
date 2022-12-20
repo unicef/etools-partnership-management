@@ -1,14 +1,12 @@
-import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
-import {pageLayoutStyles} from '../styles/page-layout-styles';
-import {SharedStyles} from '../styles/shared-styles';
-import {buttonsStyles} from '../styles/buttons-styles';
+import {html} from 'lit-element';
+import {pageLayoutStyles} from '../styles/page-layout-styles-lit';
+import {sharedStyles} from '../styles/shared-styles-lit';
+import {buttonsStyles} from '../styles/buttons-styles-lit';
 
 // language=HTML
 export const AppShellStyles = html`
-  ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${appDrawerStyles}
+  ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${appDrawerStyles}
   <style>
     :host {
       display: block;

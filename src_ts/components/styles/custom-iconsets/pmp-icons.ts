@@ -1,5 +1,5 @@
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
-import {html} from '@polymer/polymer';
+import {html} from 'lit-element';
 /* eslint-disable max-len */
 
 export const pmpMainIcons = html`
@@ -80,13 +80,6 @@ export const pmpCustomIcons = html`
           <path
             d="M9.57226562,18.8144531 L7.03222656,18.8144531 L7.03222656,9.0234375 L4,9.96386719 L4,7.8984375 L9.29980469,6 L9.57226562,6 L9.57226562,18.8144531 Z M16.9589844,11.6513672 L20.1318359,11.6513672 L20.1318359,13.9453125 L16.9589844,13.9453125 L16.9589844,17.53125 L14.5419922,17.53125 L14.5419922,13.9453125 L11.3603516,13.9453125 L11.3603516,11.6513672 L14.5419922,11.6513672 L14.5419922,8.21484375 L16.9589844,8.21484375 L16.9589844,11.6513672 Z"
           ></path>
-        </g>
-
-        <g id="external-icon">
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
-          />
         </g>
       </defs>
     </svg>

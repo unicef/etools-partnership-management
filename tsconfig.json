@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2018", "dom", "esnext"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -11,10 +11,19 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "outDir": "src"
+    "outDir": "src",
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "src_ts/**/*.ts"
+    "src_ts/**/*.ts",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/en.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/es.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ro.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ar.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/ru.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/pt.json",
+    "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/fr.json"
   ],
   "exclude": []
 }

@@ -1,7 +1,7 @@
 /**
  * Update app state
  */
-export function updateAppState(routePath: string, qs: string, dispatchLocationChange: boolean) {
+export function replaceAppState(routePath: string, qs: string, dispatchLocationChange: boolean) {
   // Using replace state to change the URL here ensures the browser's
   // back button doesn't take you through every query
   const currentState = window.history.state;
