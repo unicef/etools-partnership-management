@@ -124,12 +124,12 @@ export class GeneratePcaDialog extends LitElement {
     this.errors = {};
     if (!this.acknowledgedTC) {
       this.errors.acknowledgedTC = true;
-      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_ACKNOWLEDGE'), showCloseBtn: true});
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_ACKNOWLEDGE')});
     }
 
     if (!this.selectedTemplate) {
       this.errors.selectedTemplate = true;
-      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_TEMPLATE'), showCloseBtn: true});
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_TEMPLATE')});
     }
 
     this.requestUpdate();

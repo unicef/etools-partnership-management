@@ -133,8 +133,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'Partner successfully deleted.',
-        showCloseBtn: true
+        text: 'Partner successfully deleted.'
       });
     } else {
       throw new Error('Partner was not deleted from dexie!');
@@ -147,8 +146,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
     fireEvent(this, 'toast', {
       text:
         'The partner was deleted from server database, but there was an issue on cleaning ' +
-        'partner data from browser cache. Use refresh data functionality to update cached partners data.',
-      showCloseBtn: true
+        'partner data from browser cache. Use refresh data functionality to update cached partners data.'
     });
   }
 
@@ -176,8 +174,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
   public createPartner(vendorNoObj: any, successCallback: any, errorCallback: any) {
     if (!vendorNoObj && !vendorNoObj.vendor) {
       fireEvent(this, 'toast', {
-        text: 'Invalid Vendor Number for new partner!',
-        showCloseBtn: true
+        text: 'Invalid Vendor Number for new partner!'
       });
       return;
     }
@@ -217,8 +214,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
   public savePartner(partner: any, callback?: any) {
     if (typeof partner === 'object' && Object.keys(partner).length === 0) {
       fireEvent(this, 'toast', {
-        text: 'Invalid partner data!',
-        showCloseBtn: true
+        text: 'Invalid partner data!'
       });
       return Promise.resolve(false);
     } else {
@@ -237,8 +233,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
         } else {
           // no valid partner id, cannot update
           fireEvent(this, 'toast', {
-            text: 'Update can not be made. Invalid partner ID.',
-            showCloseBtn: true
+            text: 'Update can not be made. Invalid partner ID.'
           });
           return Promise.resolve(false);
         }
@@ -260,8 +255,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
         });
       } else {
         fireEvent(this, 'toast', {
-          text: 'All changes are saved.',
-          showCloseBtn: false
+          text: 'All changes are saved.'
         });
         return Promise.resolve(false);
       }

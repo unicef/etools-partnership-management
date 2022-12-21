@@ -432,7 +432,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     }
     if (notifMessage) {
       setTimeout(() => {
-        fireEvent(this, 'toast', {text: notifMessage, showCloseBtn: true});
+        fireEvent(this, 'toast', {text: notifMessage});
       }, 0);
     }
   }

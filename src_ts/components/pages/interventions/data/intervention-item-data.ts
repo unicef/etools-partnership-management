@@ -275,8 +275,7 @@ class InterventionItemData extends connect(store)(
   saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {
-        text: 'Invalid intervention data!',
-        showCloseBtn: true
+        text: 'Invalid intervention data!'
       });
       return Promise.resolve(false);
     } else {
@@ -497,8 +496,7 @@ class InterventionItemData extends connect(store)(
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'PD/SPD successfully deleted.',
-        showCloseBtn: true
+        text: 'PD/SPD successfully deleted.'
       });
     } else {
       throw new Error('Intervention was not deleted from dexie!');
@@ -511,8 +509,7 @@ class InterventionItemData extends connect(store)(
     fireEvent(this, 'toast', {
       text:
         'The agreement was deleted from server database, but there was an issue on cleaning ' +
-        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
-      showCloseBtn: true
+        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.'
     });
   }
 }

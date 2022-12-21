@@ -252,16 +252,14 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
   _handleSuccess(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
-      text: getTranslation('DATA_SUCCESSFULLY_REFRESHED'),
-      showCloseBtn: true
+      text: getTranslation('DATA_SUCCESSFULLY_REFRESHED')
     });
   }
 
   _handleFailure(afterDataRefreshLandingPage: string | null, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {
-      text: getTranslation('ERROR_REFRESH_DATA'),
-      showCloseBtn: true
+      text: getTranslation('ERROR_REFRESH_DATA')
     });
   }
 

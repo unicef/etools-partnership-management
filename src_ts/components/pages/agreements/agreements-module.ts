@@ -390,8 +390,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     }
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
-        text: this._getTranslation('PLEASE_FILL_IN_REQUIRED_DATA'),
-        showCloseBtn: true
+        text: this._getTranslation('PLEASE_FILL_IN_REQUIRED_DATA')
       });
       return false;
     }
