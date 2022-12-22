@@ -376,7 +376,7 @@ class AppShell extends connect(store)(
     this.waitForTranslationsAndLanguageToLoad().then(() => {
       this.translationFilesAreLoaded = true;
       this.waitForEnvFlagsToLoad().then(() => {
-        if (this.canAccessPage(state.app?.routeDetails.routeName!)) {
+        if (state.app?.routeDetails && this.canAccessPage(state.app?.routeDetails.routeName!)) {
           this.module = state.app?.routeDetails.routeName!;
           this.reduxRouteDetails = state.app?.routeDetails;
         } else {
