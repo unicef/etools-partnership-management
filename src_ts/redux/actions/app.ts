@@ -110,6 +110,12 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
 };
 
 const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _getState: any) => {
+  if (!routeDetails) {
+    // invalid route => redirect to 404 page
+    updateAppLocation(ROUTE_404);
+    return;
+  }
+
   if (
     ['partners', 'interventions', 'agreements', 'government-partners', 'reports', 'settings'].includes(
       routeDetails.routeName
