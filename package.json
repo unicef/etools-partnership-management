@@ -103,7 +103,7 @@
     "gulp-replace": "^1.0.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.10",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "pixelmatch": "^4.0.2",
     "polymer-cli": "^1.9.11",
     "polyserve": "^0.27.0",
