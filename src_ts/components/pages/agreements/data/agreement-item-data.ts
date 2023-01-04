@@ -3,7 +3,7 @@ import {LitElement, property, customElement} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';
-import {addEditAgreement} from '../../../../redux/actions/agreements';
+import {addEditAgreement, setShouldReloadAgreements} from '../../../../redux/actions/agreements';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
@@ -304,6 +304,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
       .catch((dexieDeleteErr: any) => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
       .then(() => {
         // go to agreements list after delete
+        store.dispatch(setShouldReloadAgreements(true));
         fireEvent(this, 'update-main-path', {path: 'agreements/list'});
       });
   }
