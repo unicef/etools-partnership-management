@@ -4,6 +4,7 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -100,6 +101,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
   set errors(val) {
     this._errors = val;
     this.hidden = this._errorsLengthChanged(this._errors);
+    fireEvent(this, 'errors-changed', {value: this._errors});
   }
 
   @property({
