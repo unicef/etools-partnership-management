@@ -246,6 +246,10 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
       this.prevRouteDetails = routeDetials;
       this.listActive = routeDetials!.subRouteName == 'list';
+      if (this.listActive) {
+        // if list is shown, reset details errors
+        this.serverErrors = [];
+      }
       this.tabsActive = routeDetials!.subRouteName == 'details';
       const currentAgrId = state.app?.routeDetails?.params?.agreementId;
       this.newAgreementActive = currentAgrId === 'new';
