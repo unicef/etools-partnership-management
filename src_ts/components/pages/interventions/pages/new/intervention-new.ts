@@ -130,14 +130,15 @@ export class InterventionNew extends connect(store)(LitElement) {
     sendRequest({endpoint}).then(
       (users: PartnerStaffMember[]) =>
         (this.staffMembers = users
-          .sort((a: PartnerStaffMember, b: PartnerStaffMember) =>  
-            Number(b.active) - Number(a.active) || `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+          .sort(
+            (a: PartnerStaffMember, b: PartnerStaffMember) =>
+              Number(b.active) - Number(a.active) ||
+              `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
           )
           .map((member: PartnerStaffMember) => ({
             label: `${!member.active ? '[Inactive]' : ''} ${member.first_name} ${member.last_name} (${member.email})`,
             value: member.id
-          }))
-          
+          })))
     );
   }
 
