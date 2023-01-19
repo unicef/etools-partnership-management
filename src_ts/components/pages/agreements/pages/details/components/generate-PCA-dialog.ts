@@ -47,7 +47,7 @@ export class GeneratePcaDialog extends LitElement {
         <div>
           <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
-            <div class="col col-6">
+            <div class="col col-12">
               <paper-checkbox
                 @checked-changed=${({detail}: CustomEvent) => {
                   this.acknowledgedTC = detail.value;
@@ -57,12 +57,12 @@ export class GeneratePcaDialog extends LitElement {
                 @focus="${() => this.resetFieldError('acknowledgedTC')}"
                 @click="${() => this.resetFieldError('acknowledgedTC')}"
               >
-                I acknowledge the terms & conditions
+                ${translate('PCA_READ_AND_FOLLOWED_INSTRUCTIONS')}
               </paper-checkbox>
             </div>
           </div>
           <div class="layout-horizontal row-padding-v  flex-c">
-            <div class="col col-6">
+            <div class="col col-12">
               <etools-dropdown
                 class="validate-input required"
                 .selected="${this.selectedTemplate}"
