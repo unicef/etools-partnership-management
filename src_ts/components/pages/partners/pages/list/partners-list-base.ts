@@ -18,6 +18,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -100,6 +101,10 @@ export class PartnersListBase extends CommonMixin(
           .page-content {
             margin: 5px;
           }
+        }
+
+        etools-info-tooltip::part(eit-trigger-icon) {
+          margin-left: 0;
         }
       </style>
 
@@ -188,15 +193,17 @@ export class PartnersListBase extends CommonMixin(
                 <span>${this._computeName(partner.name, partner.short_name)}</span>
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
-                  <span class="marked-for-deletion">
-                    <iron-icon icon="delete"></iron-icon>
-                  </span>
+                  <etools-info-tooltip class="marked-for-deletion" custom-icon ?hidden="${!partner.deleted_flag}">
+                    <iron-icon icon="delete" slot="custom-icon"></iron-icon>
+                    <span slot="message">${translate('MARKED_FOR_DELETION')}</span>
+                  </etools-info-tooltip>
                 </span>
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.blocked}">
-                  <span class="blocked">
-                    <iron-icon icon="block"></iron-icon>
-                  </span>
+                  <etools-info-tooltip class="blocked" custom-icon ?hidden="${!partner.blocked}">
+                    <iron-icon icon="block" slot="custom-icon"></iron-icon>
+                    <span slot="message">${translate('BLOCKED')}</span>
+                  </etools-info-tooltip>
                 </span>
               </span>
               <span class="col-data col-2" data-col-header-label="${translate('PARTNER_TYPE')}">
