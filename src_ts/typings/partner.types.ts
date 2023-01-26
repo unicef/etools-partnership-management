@@ -27,6 +27,10 @@ type Partner = {
   vendor_number: string;
 };
 
+type ExtendedPartner = Partner & {
+  agreements: StaticAgreement[]
+};
+
 // eslint-disable-next-line
 type PartnerStaffMember = {
   active: boolean;
