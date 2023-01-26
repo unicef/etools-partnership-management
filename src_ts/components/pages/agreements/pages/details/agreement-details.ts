@@ -278,6 +278,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                     .appModuleItem="${this.agreement}"
                     .selectedCp="${this.agreement.country_programme}"
                     @selected-cp-changed="${this.onCountryProgrammeChanged}"
+                    @selected-object-cp-changed="${this.onCountryProgrammeObjectChanged}"
                     .editMode="${this.agreement.permissions?.edit.country_programme}"
                     ?required="${this.agreement.permissions?.required.country_programme}"
                   >
@@ -978,6 +979,11 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   onCountryProgrammeChanged(e: CustomEvent) {
     this.agreement.country_programme = e.detail.value;
+  }
+
+  onCountryProgrammeObjectChanged(e: CustomEvent){
+    this.agreement.end = e.detail.value.to_date;
+    this.requestUpdate();
   }
 
   onReferenceNumberChanged(e: CustomEvent) {
