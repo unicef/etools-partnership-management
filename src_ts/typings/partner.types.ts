@@ -27,8 +27,9 @@ type Partner = {
   vendor_number: string;
 };
 
+// eslint-disable-next-line
 type ExtendedPartner = Partner & {
-  agreements: StaticAgreement[]
+  agreements: StaticAgreement[];
 };
 
 // eslint-disable-next-line

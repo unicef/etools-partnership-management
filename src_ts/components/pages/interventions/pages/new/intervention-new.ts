@@ -210,12 +210,12 @@ export class InterventionNew extends connect(store)(LitElement) {
     event.target.invalid = false;
   }
 
-  setFilteredAgreements(partnerId?: number, agreements?: StaticAgreement[]){
-    if(!partnerId){
+  setFilteredAgreements(partnerId?: number, agreements?: StaticAgreement[]) {
+    if (!partnerId) {
       return;
     }
 
-    this.filteredAgreements = agreements && [...agreements] || [];
+    this.filteredAgreements = (agreements && [...agreements]) || [];
 
     if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId) {
       this.selectedAgreement = null;
