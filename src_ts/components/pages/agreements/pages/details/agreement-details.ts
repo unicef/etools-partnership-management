@@ -981,7 +981,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     this.agreement.country_programme = e.detail.value;
   }
 
-  onCountryProgrammeObjectChanged(e: CustomEvent){
+  onCountryProgrammeObjectChanged(e: CustomEvent) {
     this.agreement.end = e.detail.value.to_date;
     this.requestUpdate();
   }
