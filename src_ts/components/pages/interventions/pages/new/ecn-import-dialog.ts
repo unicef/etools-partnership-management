@@ -73,7 +73,6 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
           <etools-dropdown
             id="partnerDropdw"

@@ -28,6 +28,11 @@ type Partner = {
 };
 
 // eslint-disable-next-line
+type ExtendedPartner = Partner & {
+  agreements: StaticAgreement[];
+};
+
+// eslint-disable-next-line
 type PartnerStaffMember = {
   active: boolean;
   created: string;
