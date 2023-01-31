@@ -54,6 +54,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
           if (this.sortedCountryProgrammesInited && this.selectedCp !== event.detail.selectedItem?.id) {
             this.selectedCp = event.detail.selectedItem?.id;
             fireEvent(this, 'selected-cp-changed', {value: this.selectedCp});
+            fireEvent(this, 'selected-object-cp-changed', {value: event.detail.selectedItem});
           }
         }}"
       >
