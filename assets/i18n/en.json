@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE":"You need to acknowledge the terms and conditions",
   "PCA_REQUIRE_TEMPLATE":"You need to select PCA Template",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS":"I have read and followed the instructions for this PCA template",
+  "MARKED_FOR_DELETION":"Marked for deletion",
+  "BLOCKED":"Blocked",
   "COMMON_DATA": {
     "FILETYPES": {
         "FACE": "FACE",

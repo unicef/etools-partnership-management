@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "Você precisa reconhecer os termos e condições",
   "PCA_REQUIRE_TEMPLATE": "Você precisa selecionar o Modelo PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "Eu li e segui as instruções para este modelo de PCA",
+  "MARKED_FOR_DELETION": "Marcado para exclusão",
+  "BLOCKED": "Bloqueado",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ENFRENTAR",

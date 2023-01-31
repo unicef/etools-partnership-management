@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "Вам необходимо принять условия",
   "PCA_REQUIRE_TEMPLATE": "Вам нужно выбрать Шаблон PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "Я прочитал и выполнил инструкции для этого шаблона PCA",
+  "MARKED_FOR_DELETION": "Отмечено для удаления",
+  "BLOCKED": "Заблокировано",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "ЛИЦО",

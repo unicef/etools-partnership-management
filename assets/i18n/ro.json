@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "Trebuie să acceptați termenii și condițiile",
   "PCA_REQUIRE_TEMPLATE": "Trebuie să selectați șablonul PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "Am citit și am urmat instrucțiunile pentru acest șablon PCA",
+  "MARKED_FOR_DELETION": "Marcat pentru ștergere",
+  "BLOCKED": "Blocat",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "FAȚĂ",

@@ -845,6 +845,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   _cancelAoEdit() {
     (this.shadowRoot?.querySelector('#officers') as EtoolsDropdownMultiEl).resetInvalidState();
     this.allowAoEditForSSFA = false;
+    this.agreement.authorized_officers = [...(this.originalAgreementData?.authorized_officers || [])];
   }
 
   // Validate agreement fields

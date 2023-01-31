@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "أنت بحاجة إلى الاعتراف بالشروط والأحكام",
   "PCA_REQUIRE_TEMPLATE": "تحتاج إلى تحديد قالب PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "لقد قرأت واتبعت التعليمات الخاصة بقالب PCA هذا",
+  "MARKED_FOR_DELETION": "تم وضع علامة للحذف",
+  "BLOCKED": "ممنوع",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "وجه",

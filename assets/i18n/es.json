@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "Debe reconocer los términos y condiciones.",
   "PCA_REQUIRE_TEMPLATE": "Debe seleccionar la plantilla PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "He leído y seguido las instrucciones de esta plantilla PCA",
+  "MARKED_FOR_DELETION": "Marcado para borrar",
+  "BLOCKED": "Obstruido",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "CARA",

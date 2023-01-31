@@ -442,6 +442,8 @@
   "PCA_REQUIRE_ACKNOWLEDGE": "Vous devez accepter les termes et conditions",
   "PCA_REQUIRE_TEMPLATE": "Vous devez sélectionner le modèle PCA",
   "PCA_READ_AND_FOLLOWED_INSTRUCTIONS": "J'ai lu et suivi les instructions pour ce modèle PCA",
+  "MARKED_FOR_DELETION": "Marqué pour suppression",
+  "BLOCKED": "Bloqué",
   "COMMON_DATA": {
     "FILETYPES": {
       "FACE": "VISAGE",
