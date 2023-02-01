@@ -39,8 +39,8 @@ export class InterventionNew extends connect(store)(LitElement) {
     this._cpStructures = orderBy<any>(cps, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
   }
 
-  @property() partnersDropdownData: ExtendedPartner[] = [];
-  @property() selectedPartner: ExtendedPartner | null = null;
+  @property() partnersDropdownData: Partner[] = [];
+  @property() selectedPartner: Partner | null = null;
 
   @property() filteredAgreements: StaticAgreement[] = [];
   agreementsList: StaticAgreement[] = [];
@@ -87,12 +87,7 @@ export class InterventionNew extends connect(store)(LitElement) {
       this.agreementsList = [...state.agreements!.list] as unknown as StaticAgreement[];
     }
     if (!isJsonStrMatch(this.partnersDropdownData, csoPartnersSelector(state))) {
-      this.partnersDropdownData = [...csoPartnersSelector(state)]
-        .map((partner: ExtendedPartner) => ({
-          ...partner,
-          agreements: this.getPartnerAgreements(partner.id)
-        }))
-        .filter((partner: ExtendedPartner) => partner.agreements && partner.agreements.length > 0);
+      this.partnersDropdownData = [...csoPartnersSelector(state)];
     }
     if (!isJsonStrMatch(this.documentTypes, state.commonData!.documentTypes)) {
       this.documentTypes = [...state.commonData!.documentTypes];
@@ -123,8 +118,8 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.selectedPartner = detail.selectedItem;
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
     this.setInterventionField('partner', id);
+    this.filterAgreements(id);
     this.staffMembers = [];
-    this.setFilteredAgreements(this.selectedPartner?.id, this.selectedPartner?.agreements);
     if (!this.selectedPartner) {
       return;
     }
@@ -210,26 +205,19 @@ export class InterventionNew extends connect(store)(LitElement) {
     event.target.invalid = false;
   }
 
-  setFilteredAgreements(partnerId?: number, agreements?: StaticAgreement[]) {
+  private filterAgreements(partnerId: number | null): void {
     if (!partnerId) {
+      this.filteredAgreements = [];
       return;
     }
-
-    this.filteredAgreements = (agreements && [...agreements]) || [];
 
     if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId) {
       this.selectedAgreement = null;
       this.newIntervention.agreement = undefined;
       this.newIntervention.document_type = undefined;
     }
-  }
 
-  private getPartnerAgreements(partnerId: number | null) {
-    if (!partnerId) {
-      return [];
-    }
-
-    return this.agreementsList.filter((agreement: StaticAgreement) => {
+    this.filteredAgreements = this.agreementsList.filter((agreement: StaticAgreement) => {
       return (
         agreement.partner === partnerId &&
         ['suspended', 'terminated'].indexOf(agreement.status!) === -1 &&
