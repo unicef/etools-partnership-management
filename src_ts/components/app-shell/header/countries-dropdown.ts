@@ -11,6 +11,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
+import {headerDropdownStyles} from './header-dropdown-styles';
 
 /**
  * @polymer
@@ -24,6 +25,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
     // main template
     // language=HTML
     return html`
+      ${headerDropdownStyles}
       <style>
         *[hidden] {
           display: none !important;
@@ -35,37 +37,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
 
         :host(:hover) {
           cursor: pointer;
-        }
-
-        etools-dropdown {
-          --paper-listbox: {
-            max-height: 600px;
-          }
-
-          --esmm-icons: {
-            color: var(--countries-dropdown-color);
-            cursor: pointer;
-          }
-
-          --paper-input-container-underline: {
-            display: none;
-          }
-
-          --paper-input-container-underline-focus: {
-            display: none;
-          }
-
-          --paper-input-container-shared-input-style: {
-            color: var(--light-secondary-text-color);
-            cursor: pointer;
-            font-size: 16px;
-            text-align: right;
-            width: 100px;
-          }
-
-          --paper-menu-button-dropdown: {
-            max-height: 380px;
-          }
         }
 
         @media (max-width: 768px) {

@@ -9,6 +9,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
+import '../header/organizations-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -30,6 +31,7 @@ import 'dayjs/locale/ar.js';
 import 'dayjs/locale/ro.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
+import {headerDropdownStyles} from './header-dropdown-styles';
 
 store.addReducers({
   activeLanguage
@@ -50,6 +52,7 @@ class PageHeader extends connect(store)(
     // main template
     // language=HTML
     return html`
+    ${headerDropdownStyles}
       <style>
         app-toolbar {
           padding: 0 16px 0 0;
@@ -59,38 +62,6 @@ class PageHeader extends connect(store)(
 
         .titlebar {
           color: var(--header-color);
-        }
-
-        countries-dropdown {
-          --countries-dropdown-color: var(--light-secondary-text-color);
-        }
-
-        etools-dropdown {
-
-            --paper-listbox: {
-              max-height: 600px;
-            }
-
-            --esmm-icons: {
-              color: var(--light-secondary-text-color);
-              cursor: pointer;
-            }
-
-            --paper-input-container-underline: {
-              display: none;
-            }
-
-            --paper-input-container-underline-focus: {
-              display: none;
-            }
-
-            --paper-input-container-shared-input-style: {
-              color: var(--light-secondary-text-color);
-              cursor: pointer;
-              font-size: 16px;
-              text-align: right;
-              width: 100px;
-            }
         }
 
         etools-profile-dropdown,
@@ -249,7 +220,7 @@ class PageHeader extends connect(store)(
       this.profile?.country
     }">
               </countries-dropdown>
-
+              <organizations-dropdown></organizations-dropdown>
           </div>
 
           <etools-profile-dropdown

@@ -2,6 +2,9 @@ const pmpEdpoints = {
   changeCountry: {
     url: '/api/v3/users/changecountry/'
   },
+  changeOrganization: {
+    url: '/api/v3/users/changeorganization/'
+  },
   unicefUsers: {
     url: '/api/v3/users/?verbosity=minimal',
     exp: 60 * 60 * 1000, // 1h
