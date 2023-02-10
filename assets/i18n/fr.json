@@ -25,7 +25,9 @@
     "SEARCH_RECORDS": "Rechercher des enregistrements",
     "DELETE_CONFIRMATION": "Supprimer la confirmation",
     "STATUS": "Statut ",
-    "REFRESH": "Rafraîchir"
+    "REFRESH": "Rafraîchir",
+    "COUNTRY": "Pays",
+    "SELECT_ORGANIZATION": "Sélectionnez l'organisation"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Entrez les détails initiaux",

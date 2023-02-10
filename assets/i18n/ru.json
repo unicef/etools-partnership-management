@@ -25,7 +25,9 @@
     "SEARCH_RECORDS": "Поиск",
     "DELETE_CONFIRMATION": "Удалить подтверждение",
     "STATUS": "Статус",
-    "REFRESH": "Обновить"
+    "REFRESH": "Обновить",
+    "COUNTRY": "Страна",
+    "SELECT_ORGANIZATION": "Выберите организацию"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Введите основную информация",

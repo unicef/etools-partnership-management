@@ -25,7 +25,9 @@
     "SEARCH_RECORDS": "Buscar registros",
     "DELETE_CONFIRMATION": "Borrar confirmación",
     "STATUS": "Estado",
-    "REFRESH": "Actualizar"
+    "REFRESH": "Actualizar",
+    "COUNTRY": "País",
+    "SELECT_ORGANIZATION": "Seleccionar organización"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "Detalles Iniciales",

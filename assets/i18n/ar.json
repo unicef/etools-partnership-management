@@ -25,7 +25,9 @@
     "SEARCH_RECORDS": "البحث عن السجلات",
     "DELETE_CONFIRMATION": "تأكيد الحذف",
     "STATUS": "حالة",
-    "REFRESH": "ينعش"
+    "REFRESH": "ينعش",
+    "COUNTRY": "دولة",
+    "SELECT_ORGANIZATION": "حدد المنظمة"
   },
   "NEW_INTERVENTION": {
     "INITIAL_DETAILS": "أدخل التفاصيل الأولية",

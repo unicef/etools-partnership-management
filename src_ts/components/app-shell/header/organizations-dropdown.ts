@@ -81,7 +81,7 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
   checkMustSelectOrganization(user: EtoolsUser) {
     if (user && !user.organization) {
       setTimeout(() => {
-        fireEvent(this, 'toast', {text: getTranslation('SELECT_ORGANIZATION')});
+        fireEvent(this, 'toast', {text: getTranslation('GENERAL.SELECT_ORGANIZATION')});
       }, 2000);
       return 'warning';
     }
