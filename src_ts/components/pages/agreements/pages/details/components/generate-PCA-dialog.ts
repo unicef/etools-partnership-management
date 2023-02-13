@@ -103,13 +103,14 @@ export class GeneratePcaDialog extends LitElement {
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [
-    {value: 'english', label: getTranslation('ENGLISH')},
-    {value: 'french', label: getTranslation('FRENCH')},
-    {value: 'portuguese', label: getTranslation('PORTUGUESE')},
-    {value: 'russian', label: getTranslation('RUSSIAN')},
-    {value: 'spanish', label: getTranslation('SPANISH')},
-    {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
-    {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
+    {value: 'english', label: getTranslation('ENGLISH')}
+    // comment then until everything it's translated
+    // {value: 'french', label: getTranslation('FRENCH')},
+    // {value: 'portuguese', label: getTranslation('PORTUGUESE')},
+    // {value: 'russian', label: getTranslation('RUSSIAN')},
+    // {value: 'spanish', label: getTranslation('SPANISH')},
+    // {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
+    // {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
   ];
 
   @property({type: String})
