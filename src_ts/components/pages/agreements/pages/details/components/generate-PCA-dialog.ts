@@ -47,7 +47,7 @@ export class GeneratePcaDialog extends LitElement {
         <div>
           <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
-            <div class="col col-6">
+            <div class="col col-12">
               <paper-checkbox
                 @checked-changed=${({detail}: CustomEvent) => {
                   this.acknowledgedTC = detail.value;
@@ -57,12 +57,12 @@ export class GeneratePcaDialog extends LitElement {
                 @focus="${() => this.resetFieldError('acknowledgedTC')}"
                 @click="${() => this.resetFieldError('acknowledgedTC')}"
               >
-                I acknowledge the terms & conditions
+                ${translate('PCA_READ_AND_FOLLOWED_INSTRUCTIONS')}
               </paper-checkbox>
             </div>
           </div>
           <div class="layout-horizontal row-padding-v  flex-c">
-            <div class="col col-6">
+            <div class="col col-12">
               <etools-dropdown
                 class="validate-input required"
                 .selected="${this.selectedTemplate}"
@@ -103,13 +103,14 @@ export class GeneratePcaDialog extends LitElement {
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [
-    {value: 'english', label: getTranslation('ENGLISH')},
-    {value: 'french', label: getTranslation('FRENCH')},
-    {value: 'portuguese', label: getTranslation('PORTUGUESE')},
-    {value: 'russian', label: getTranslation('RUSSIAN')},
-    {value: 'spanish', label: getTranslation('SPANISH')},
-    {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
-    {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
+    {value: 'english', label: getTranslation('ENGLISH')}
+    // comment then until everything it's translated
+    // {value: 'french', label: getTranslation('FRENCH')},
+    // {value: 'portuguese', label: getTranslation('PORTUGUESE')},
+    // {value: 'russian', label: getTranslation('RUSSIAN')},
+    // {value: 'spanish', label: getTranslation('SPANISH')},
+    // {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
+    // {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
   ];
 
   @property({type: String})
@@ -124,12 +125,12 @@ export class GeneratePcaDialog extends LitElement {
     this.errors = {};
     if (!this.acknowledgedTC) {
       this.errors.acknowledgedTC = true;
-      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_ACKNOWLEDGE'), showCloseBtn: true});
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_ACKNOWLEDGE')});
     }
 
     if (!this.selectedTemplate) {
       this.errors.selectedTemplate = true;
-      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_TEMPLATE'), showCloseBtn: true});
+      fireEvent(this, 'toast', {text: getTranslation('PCA_REQUIRE_TEMPLATE')});
     }
 
     this.requestUpdate();

@@ -130,7 +130,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       } else if (typeof responseErr === 'string') {
         msg = responseErr;
       }
-      fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
+      fireEvent(this, 'toast', {text: msg});
     }
 
     public _onDeleteConfirmation(event: any) {

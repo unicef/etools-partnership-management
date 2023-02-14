@@ -376,7 +376,7 @@ class AppShell extends connect(store)(
     this.waitForTranslationsAndLanguageToLoad().then(() => {
       this.translationFilesAreLoaded = true;
       this.waitForEnvFlagsToLoad().then(() => {
-        if (this.canAccessPage(state.app?.routeDetails.routeName!)) {
+        if (state.app?.routeDetails && this.canAccessPage(state.app?.routeDetails.routeName!)) {
           this.module = state.app?.routeDetails.routeName!;
           this.reduxRouteDetails = state.app?.routeDetails;
         } else {
@@ -563,8 +563,7 @@ class AppShell extends connect(store)(
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
     fireEvent(this, 'toast', {
-      text: 'An error occurred.',
-      showCloseBtn: true
+      text: 'An error occurred.'
     });
   }
 
