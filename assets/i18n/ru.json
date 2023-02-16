@@ -466,6 +466,7 @@
       "SIMPLIFIED_PROGRAMME_DOCUMENT": "Упрощенный программный документ"
     },
     "INTERVENTIONSTATUSES": {
+      "DRAFT": "Разработка",
       "DEVELOPMENT": "Разработка",
       "REVIEW": "Обзор",
       "SIGNATURE": "Подпись",

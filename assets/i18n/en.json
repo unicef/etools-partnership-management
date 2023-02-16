@@ -322,7 +322,7 @@
   "REQUIREMENTS_REPORT_TYPE": {
     "QPR": "QPR",
     "HR": "HR",
-    "SPECIAL": "SPECIAL", 
+    "SPECIAL": "SPECIAL",
     "SR": "SR"
   },
   "ARE_YOU_SURE_DELETE_PARTNER": "Are you sure you want to delete partner {{partner}}?",
@@ -466,6 +466,7 @@
         "SIMPLIFIED_PROGRAMME_DOCUMENT": "Simplified Programme Document"
     },
     "INTERVENTIONSTATUSES": {
+        "DRAFT": "Development",
         "DEVELOPMENT": "Development",
         "REVIEW": "Review",
         "SIGNATURE": "Signature",

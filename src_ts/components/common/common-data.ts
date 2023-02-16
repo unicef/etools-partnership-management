@@ -10,9 +10,6 @@ import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement, property} from 'lit-element';
-import {listenForLangChanged} from 'lit-translate';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
-import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 import EnvironmentFlagsMixinLit from './environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 
@@ -40,16 +37,20 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       prp: ['getPRPCountries']
     };
 
+    @property({type: Object})
+    commonDataToRefreshOnLanguageChangeEndpoints = {
+      pmp: ['dropdownsPmp', 'dropdownsStatic']
+    };
+
     public loadCommonData() {
       // get PMP static data
       this.getCommonData(this.commonDataEndpoints.pmp);
       this._handlePrpData();
-      listenForLangChanged(() => {
-        store.dispatch({
-          type: commonDataActions.SET_ALL_STATIC_DATA,
-          staticData: this.translateCommonData(getStore().getState().commonData)
-        });
-      });
+    }
+
+    public loadCommonDataOnLanguageChange() {
+      this.getCommonDataOnLanguageChange(this.commonDataToRefreshOnLanguageChangeEndpoints.pmp);
+      this._handlePrpData();
     }
 
     protected getCommonData(endpointsNames: string[]) {
@@ -68,6 +69,22 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       });
     }
 
+    protected getCommonDataOnLanguageChange(endpointsNames: string[]) {
+      const promisses = endpointsNames.map((endpointName: string) => {
+        // @ts-ignore
+        return sendRequest({endpoint: {url: pmpEdpoints[endpointName].url}});
+      });
+      Promise.allSettled(promisses).then((response: any[]) => {
+        store.dispatch({
+          type: commonDataActions.SET_ALL_STATIC_DATA,
+          staticData: this.formatResponseOnLanguageChange(response)
+        });
+        store.dispatch({
+          type: commonDataActions.SET_COMMON_DATA_IS_LOADED
+        });
+      });
+    }
+
     protected _getStaticData(endpointsNames: string[]) {
       endpointsNames.forEach((endpointName: string) => {
         this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
@@ -75,10 +92,28 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     }
 
     private formatResponse(response: any[]) {
-      let data: Partial<CommonDataState> = {};
+      const data: Partial<CommonDataState> = {};
       data.countryProgrammes = this.getValue(response[0]);
 
-      const dropdownsPmpRespose = this.getValue(response[1]);
+      this.setStaticAndDynamicData(data, this.getValue(response[1]), this.getValue(response[2]));
+
+      data.locations = this.getValue(response[3]);
+      data.offices = this.getValue(response[4]);
+      data.sections = this.getValue(response[5]);
+      data.sites = this.getValue(response[6]);
+      data.unicefUsersData = this.getValue(response[7]);
+      data.countryData = this.getValue(response[8]);
+
+      return data;
+    }
+
+    private formatResponseOnLanguageChange(response: any[]) {
+      const data: Partial<CommonDataState> = {};
+      this.setStaticAndDynamicData(data, this.getValue(response[0]), this.getValue(response[1]));
+      return data;
+    }
+
+    private setStaticAndDynamicData(data: Partial<CommonDataState>, dropdownsPmpRespose: any, dropdownsStatic: any) {
       data.fileTypes = dropdownsPmpRespose.file_types;
       data.cpOutputs = dropdownsPmpRespose.cp_outputs;
       data.signedByUnicefUsers = dropdownsPmpRespose.signed_by_unicef_users;
@@ -86,7 +121,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.grants = dropdownsPmpRespose.grants;
       data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
 
-      const dropdownsStatic = this.getValue(response[2]);
       data.documentTypes = dropdownsStatic.intervention_doc_type;
       data.interventionStatuses = dropdownsStatic.intervention_status;
       data.currencies = dropdownsStatic.currencies;
@@ -104,39 +138,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
       data.cashTransferModalities = dropdownsStatic.cash_transfer_modalities;
-
-      data.locations = this.getValue(response[3]);
-      data.offices = this.getValue(response[4]);
-      data.sections = this.getValue(response[5]);
-      data.sites = this.getValue(response[6]);
-      data.unicefUsersData = this.getValue(response[7]);
-      data.countryData = this.getValue(response[8]);
-      data = this.translateCommonData(data);
-
-      return data;
-    }
-
-    translateCommonData(data: any) {
-      Object.keys(data)
-        .filter((x) => data[x] && data[x].length)
-        .forEach((x) => {
-          const key = x.replace(/ /g, '').toUpperCase();
-
-          (data as any)[x] = (data as any)[x].map((y: any) => {
-            const translation_key = y.translation_key || y.label || y.name || y;
-
-            return (
-              (typeof y === 'string' && getTranslatedValue(translation_key, `COMMON_DATA.${key}`)) || {
-                ...y,
-                translation_key,
-                ...((y.label && {label: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {}),
-                ...((y.name && {name: getTranslatedValue(translation_key, `COMMON_DATA.${key}`)}) || {})
-              }
-            );
-          });
-        });
-
-      return data;
     }
 
     getValue(response: {status: string; value?: any; reason?: any}, defaultValue: any = []) {

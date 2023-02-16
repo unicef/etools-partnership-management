@@ -377,6 +377,10 @@ class AppShell extends connect(store)(
       state.activeLanguage!.activeLanguage &&
       !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
     ) {
+      if (this.selectedLanguage) {
+        // on language change, reload parts of commonData in order to use BE localized text
+        this.loadCommonDataOnLanguageChange();
+      }
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }
