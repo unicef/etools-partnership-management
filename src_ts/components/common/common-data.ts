@@ -77,7 +77,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       Promise.allSettled(promisses).then((response: any[]) => {
         store.dispatch({
           type: commonDataActions.SET_ALL_STATIC_DATA,
-          staticData: this.formatResponseOnLanguageChnage(response)
+          staticData: this.formatResponseOnLanguageChange(response)
         });
         store.dispatch({
           type: commonDataActions.SET_COMMON_DATA_IS_LOADED
@@ -107,7 +107,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       return data;
     }
 
-    private formatResponseOnLanguageChnage(response: any[]) {
+    private formatResponseOnLanguageChange(response: any[]) {
       const data: Partial<CommonDataState> = {};
       this.setStaticAndDynamicData(data, this.getValue(response[0]), this.getValue(response[1]));
       return data;
