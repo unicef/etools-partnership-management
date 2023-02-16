@@ -466,6 +466,7 @@
       "SIMPLIFIED_PROGRAMME_DOCUMENT": "Document de programme simplifié"
     },
     "INTERVENTIONSTATUSES": {
+      "DRAFT": "Développement",
       "DEVELOPMENT": "Développement",
       "REVIEW": "Examen",
       "SIGNATURE": "Signature",
