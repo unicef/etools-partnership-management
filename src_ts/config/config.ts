@@ -11,6 +11,7 @@ declare global {
     EtoolsLogsLevel: any;
     EtoolsEsmmFitIntoEl: any;
     applyFocusVisiblePolyfill: any;
+    ajaxErrorParserTranslateFunction: (key: string) => string;
     dayjs: any;
   }
 }
