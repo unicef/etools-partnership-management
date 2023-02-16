@@ -94,7 +94,7 @@ import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
-import { getTranslatedValue } from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -329,7 +329,7 @@ class AppShell extends connect(store)(
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
 
-    // Override ajax error parser inside @unicef-polymer/etools-ajax 
+    // Override ajax error parser inside @unicef-polymer/etools-ajax
     // for string translation using lit-translate
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);

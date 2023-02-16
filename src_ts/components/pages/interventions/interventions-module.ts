@@ -37,8 +37,8 @@ import {openDialog} from '../../utils/dialog';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
 import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
-import { getTranslatedValue } from '@unicef-polymer/etools-modules-common/dist/utils/utils';
-import { translatesMap } from './pages/intervention-tab-pages/utils/intervention-labels-map';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {translatesMap} from './pages/intervention-tab-pages/utils/intervention-labels-map';
 
 // @ts-ignore
 setStore(store);
@@ -328,12 +328,12 @@ export class InterventionsModule extends connect(store)(
     });
     this._initInterventionsModuleListeners();
 
-    // Override ajax error parser inside @unicef-polymer/etools-ajax 
-    // for string translation using lit-translate and translatesMap from within 
+    // Override ajax error parser inside @unicef-polymer/etools-ajax
+    // for string translation using lit-translate and translatesMap from within
     // interventions-tab-pages
     window.ajaxErrorParserTranslateFunction = (key = '') => {
       return getTranslatedValue(translatesMap[key] || key);
-    }
+    };
 
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
