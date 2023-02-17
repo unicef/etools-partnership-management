@@ -501,7 +501,7 @@ class PageHeader extends connect(store)(
   protected _signOut() {
     this._clearDexieDbs();
     this._clearLocalStorage();
-    window.location.href = window.location.origin + '/logout';
+    window.location.href = window.location.origin + '/social/unicef-logout/';
   }
 
   protected _clearDexieDbs() {
