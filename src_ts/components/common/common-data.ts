@@ -3,9 +3,9 @@ import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
 
-import {isEmptyObject} from '../utils/utils';
+import {isEmptyObject, translateLabelAndValueArray} from '../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {Constructor} from '@unicef-polymer/etools-types';
+import {Constructor, LabelAndValue} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../endpoints/endpoints';
@@ -19,6 +19,23 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
  */
 function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class CommonDataClass extends EnvironmentFlagsMixinLit(EndpointsLitMixin(baseClass)) {
+    @property({type: Array})
+    reportStatuses: LabelAndValue[] = [
+      // TODO: reports list filter statuses? To be confirmed by unicef team.
+      {value: 'Acc', label: 'Accepted'},
+      {value: 'Due', label: 'Due'},
+      {value: 'Sen', label: 'Sent Back'},
+      {value: 'Sub', label: 'Submitted'},
+      {value: 'Ove', label: 'Overdue'}
+    ];
+
+    @property({type: Array})
+    reportTypes: LabelAndValue[] = [
+      {value: 'HR', label: 'Humanitarian Reports'},
+      {value: 'QPR', label: 'Quarterly Progress Reports'},
+      {value: 'SR', label: 'Special Reports'}
+    ];
+
     @property({type: Object})
     commonDataEndpoints = {
       pmp: [
@@ -50,7 +67,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     public loadCommonDataOnLanguageChange() {
       this.getCommonDataOnLanguageChange(this.commonDataToRefreshOnLanguageChangeEndpoints.pmp);
-      this._handlePrpData();
     }
 
     protected getCommonData(endpointsNames: string[]) {
@@ -120,6 +136,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.donors = dropdownsPmpRespose.donors;
       data.grants = dropdownsPmpRespose.grants;
       data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
+      data.csoTypes = dropdownsPmpRespose.cso_types;
 
       data.documentTypes = dropdownsStatic.intervention_doc_type;
       data.interventionStatuses = dropdownsStatic.intervention_status;
@@ -128,7 +145,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.agreementStatuses = dropdownsStatic.agreement_status;
       data.agencyChoices = dropdownsStatic.agency_choices;
       data.agreementAmendmentTypes = dropdownsStatic.agreement_amendment_types;
-      data.csoTypes = dropdownsStatic.cso_types;
       data.partnerTypes = dropdownsStatic.partner_types;
       data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
       data.assessmentTypes = dropdownsStatic.assessment_types;
@@ -138,6 +154,9 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
       data.cashTransferModalities = dropdownsStatic.cash_transfer_modalities;
+
+      data.reportStatuses = translateLabelAndValueArray(this.reportStatuses, 'COMMON_DATA.REPORTSTATUSES');
+      data.reportTypes = translateLabelAndValueArray(this.reportTypes, 'COMMON_DATA.REPORTTYPES');
     }
 
     getValue(response: {status: string; value?: any; reason?: any}, defaultValue: any = []) {

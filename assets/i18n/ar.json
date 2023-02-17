@@ -381,7 +381,8 @@
     "AUDIT": "مراجعة",
     "MICRO_ASSESSMENT": "التقييم الجزئي",
     "SPOT_CHECK": "تفتيش من وقت لاخر",
-    "SPECIAL_AUDIT": "المراجعة الخاصة"
+    "SPECIAL_AUDIT": "المراجعة الخاصة",
+    "OTHER": "آخر"
   },
   "FINAL": "نهائي",
   "ITEM_TYPE": {
