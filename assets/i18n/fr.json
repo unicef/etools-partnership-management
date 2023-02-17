@@ -381,7 +381,8 @@
     "AUDIT": "Audit",
     "MICRO_ASSESSMENT": "Micro-évaluation",
     "SPOT_CHECK": "Vérification ponctuelle",
-    "SPECIAL_AUDIT": "Audit spécial"
+    "SPECIAL_AUDIT": "Audit spécial",
+    "OTHER": "Autre"
   },
   "FINAL": "final",
   "ITEM_TYPE": {

@@ -50,6 +50,9 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: String})
     currentLanguage!: string;
 
+    @property({type: Number})
+    commonDataLoadedTimestamp = 0;
+
     connectedCallback() {
       super.connectedCallback();
       this._sortOrderChanged = this._sortOrderChanged.bind(this);

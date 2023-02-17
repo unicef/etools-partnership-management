@@ -381,7 +381,8 @@
     "AUDIT": "Audit",
     "MICRO_ASSESSMENT": "Micro Assessment",
     "SPOT_CHECK": "Spot Check",
-    "SPECIAL_AUDIT": "Special Audit"
+    "SPECIAL_AUDIT": "Special Audit",
+    "OTHER": "Other"
   },
   "FINAL":"final",
   "ITEM_TYPE": {

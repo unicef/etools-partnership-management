@@ -381,7 +381,8 @@
     "AUDIT": "Аудит",
     "MICRO_ASSESSMENT": "Микрооценка",
     "SPOT_CHECK": "Выборочная проверка",
-    "SPECIAL_AUDIT": "Специальный аудит"
+    "SPECIAL_AUDIT": "Специальный аудит",
+    "OTHER": "Другой"
   },
   "FINAL": "окончательный",
   "ITEM_TYPE": {
