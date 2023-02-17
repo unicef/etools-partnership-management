@@ -321,7 +321,6 @@ class PageHeader extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
-    this.showLanguagesForDevDomains();
 
     setTimeout(() => {
       const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
@@ -384,24 +383,6 @@ class PageHeader extends connect(store)(
     if (this.environment) {
       this.headerColor = 'var(--nonprod-header-color)';
     }
-  }
-
-  protected showLanguagesForDevDomains() {
-    const location = window.location.host;
-    const devDomains = ['localhost', 'etools-dev', 'etools-test'];
-    if (!devDomains.some((x) => location.indexOf(x) > -1)) {
-      appLanguages.splice(this.getIndexOfRoLang(), 1);
-    }
-  }
-
-  getIndexOfRoLang() {
-    let index = 0;
-    appLanguages.forEach((l, i) => {
-      if (l.value === 'ro') {
-        index = i;
-      }
-    });
-    return index;
   }
 
   private _updateCountriesList(countries: any[]) {
