@@ -153,12 +153,7 @@
       "MEDIUM": "Середина",
       "NOT_ASSESSED": "Не оценено",
       "NOT_REQUIRED": "Не требуется",
-      "SIGNIFICANT": "Значительный",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)":"Средняя мощность (умеренный риск)",
-      "LOW_CAPACITY_(HIGH_RISK)": "Низкая емкость (высокий риск)",
-      "FULL_CAPACITY_(LOW_RISK)": "Полная мощность (низкий риск)",
-      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Предполагаемая низкая пропускная способность — аварийная ситуация",
-      "NO_CONTACT_WITH_BENEFICIARIES": "Нет контакта с бенефициарами"
+      "SIGNIFICANT": "Значительный"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Двусторонний/многосторонний",
@@ -199,7 +194,12 @@
       "MEDIUM": "Середина",
       "NOT_ASSESSED": "Не оценено",
       "NOT_REQUIRED": "Не требуется",
-      "SIGNIFICANT": "Значительный"
+      "SIGNIFICANT": "Значительный",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)":"Средняя мощность (умеренный риск)",
+      "LOW_CAPACITY_(HIGH_RISK)": "Низкая емкость (высокий риск)",
+      "FULL_CAPACITY_(LOW_RISK)": "Полная мощность (низкий риск)",
+      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Предполагаемая низкая пропускная способность — аварийная ситуация",
+      "NO_CONTACT_WITH_BENEFICIARIES": "Нет контакта с бенефициарами"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "Здоровье ребенка",

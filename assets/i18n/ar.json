@@ -153,12 +153,7 @@
       "MEDIUM": "متوسط",
       "NOT_ASSESSED": "لم يتم تقييمه",
       "NOT_REQUIRED": "غير مطلوب",
-      "SIGNIFICANT": "هام",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)":"سعة متوسطة (مخاطرة معتدلة)",
-      "LOW_CAPACITY_(HIGH_RISK)": "سعة منخفضة (مخاطر عالية)",
-      "FULL_CAPACITY_(LOW_RISK)": "السعة الكاملة (مخاطر منخفضة)",
-      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "السعة المنخفضة المفترضة - الطوارئ",
-      "NO_CONTACT_WITH_BENEFICIARIES": "لا اتصال مع المستفيدين"
+      "SIGNIFICANT": "هام"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "ثنائي / متعدد الأطراف",
@@ -199,7 +194,12 @@
       "MEDIUM": "متوسط",
       "NOT_ASSESSED": "لم يتم تقييمه",
       "NOT_REQUIRED": "غير مطلوب",
-      "SIGNIFICANT": "هام"
+      "SIGNIFICANT": "هام",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)":"سعة متوسطة (مخاطرة معتدلة)",
+      "LOW_CAPACITY_(HIGH_RISK)": "سعة منخفضة (مخاطر عالية)",
+      "FULL_CAPACITY_(LOW_RISK)": "السعة الكاملة (مخاطر منخفضة)",
+      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "السعة المنخفضة المفترضة - الطوارئ",
+      "NO_CONTACT_WITH_BENEFICIARIES": "لا اتصال مع المستفيدين"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "صحة الطفل",

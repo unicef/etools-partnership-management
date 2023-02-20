@@ -153,12 +153,7 @@
       "MEDIUM": "Médio",
       "NOT_ASSESSED": "Não avaliado",
       "NOT_REQUIRED": "Não requerido",
-      "SIGNIFICANT": "Significativo",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacidade média (risco moderado)",
-      "LOW_CAPACITY_(HIGH_RISK)": "Baixa capacidade (alto risco)",
-      "FULL_CAPACITY_(LOW_RISK)": "Capacidade total (risco baixo)",
-      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Baixa Capacidade Assumida - Emergência",
-      "NO_CONTACT_WITH_BENEFICIARIES": "Nenhum contato com os beneficiários"
+      "SIGNIFICANT": "Significativo"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Bilateral/Multilateral",
@@ -199,7 +194,12 @@
       "MEDIUM": "Médio",
       "NOT_ASSESSED": "Não avaliado",
       "NOT_REQUIRED": "Não é necessário",
-      "SIGNIFICANT": "Significativo"
+      "SIGNIFICANT": "Significativo",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacidade média (risco moderado)",
+      "LOW_CAPACITY_(HIGH_RISK)": "Baixa capacidade (alto risco)",
+      "FULL_CAPACITY_(LOW_RISK)": "Capacidade total (risco baixo)",
+      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Baixa Capacidade Assumida - Emergência",
+      "NO_CONTACT_WITH_BENEFICIARIES": "Nenhum contato com os beneficiários"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "Child Health (Saúde infantil)",
