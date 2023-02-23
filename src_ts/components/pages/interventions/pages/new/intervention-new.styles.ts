@@ -31,7 +31,7 @@ export const NewInterventionStyles: CSSResult = css`
   }
 
   .row > *:not(:first-child) {
-    padding-left: 40px;
+    padding-inline-start: 40px;
     box-sizing: border-box;
   }
 
