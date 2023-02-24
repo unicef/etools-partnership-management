@@ -86,10 +86,11 @@ export class InterventionsModule extends connect(store)(
 
         .option-button {
           height: 36px;
-          border-left: 2px solid rgba(255, 255, 255, 0.12);
+          border-inline-start: 2px solid rgba(255, 255, 255, 0.12);
         }
         .main-button.with-additional {
-          padding: 0 0 0 18px;
+          padding-inline-end: 0;
+          padding-inline-start: 18px;
         }
 
         .main-button.with-additional span {

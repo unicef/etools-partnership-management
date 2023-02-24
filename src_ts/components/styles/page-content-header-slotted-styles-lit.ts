@@ -45,6 +45,6 @@ export const pageContentHeaderSlottedStyles = html` <style>
   }
 
   .content-header-actions paper-button iron-icon {
-    margin-right: 10px;
+    margin-inline-end: 10px;
   }
 </style>`;
