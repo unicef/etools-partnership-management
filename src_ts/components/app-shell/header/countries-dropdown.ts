@@ -48,6 +48,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
         id="countrySelector"
+        class="w100"
         ?hidden="${!this.countrySelectorVisible}"
         .selected="${this.currentCountry?.id}"
         placeholder="Country"

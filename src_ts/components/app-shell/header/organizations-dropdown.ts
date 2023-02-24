@@ -24,17 +24,11 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
   public render() {
     return html`
       ${headerDropdownStyles}
-      <style>
-        etools-dropdown {
-          min-width: 180px;
-          margin-left: 10px;
-        }
-      </style>
       <etools-dropdown
         ?hidden=${isEmptyObject(this.organizations)}
         id="organizationSelector"
         placeholder="${translate('GENERAL.SELECT_ORGANIZATION')}"
-        class="${this.checkMustSelectOrganization(this.user)}"
+        class="w100 ${this.checkMustSelectOrganization(this.user)}"
         .selected="${this.currentOrganizationId}"
         allow-outside-scroll
         no-label-float

@@ -50,15 +50,12 @@ export const headerDropdownStyles = html`
       margin-inline: 30px 20px;
     }
 
-    etools-dropdown::placeholder {
-      color: red;
-      opacity: 1;
+    organizations-dropdown {
+      width: 165px;
     }
 
-    countries-dropdown,
-    organizations-dropdown {
-      width: 180px;
-      margin-inline-start: 5px;
+    countries-dropdown {
+      width: 160px;
     }
 
     #languageSelector {
