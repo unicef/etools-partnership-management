@@ -99,9 +99,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
         .generate-pca {
           /* TODO:change Generate PCA btn template-this should be applied on form-element-wrapper with width auto */
-          border-right: 1px solid var(--dark-divider-color);
-          margin-right: 24px;
-          padding-right: 24px;
+          border-inline-end: 1px solid var(--dark-divider-color);
+          margin-inline-end: 24px;
+          padding-inline-end: 24px;
         }
 
         .generate-pca[hidden] + .col {

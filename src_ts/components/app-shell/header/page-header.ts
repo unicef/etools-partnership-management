@@ -52,7 +52,8 @@ class PageHeader extends connect(store)(
     return html`
       <style>
         app-toolbar {
-          padding: 0 16px 0 0;
+          padding-inline-end: 16px;
+          padding-inline-start: 0px;
           height: 60px;
           background-color: ${this.headerColor};
         }
@@ -111,7 +112,8 @@ class PageHeader extends connect(store)(
 
         .titlebar img {
           width: 34px;
-          margin: 0 8px 0 24px;
+          margin-inline-end: 8px;
+          margin-inline-start: 12px;
         }
 
         .content-align {
@@ -171,7 +173,8 @@ class PageHeader extends connect(store)(
             line-height: 16px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
         }
         @media (max-width: 768px) {
@@ -185,7 +188,8 @@ class PageHeader extends connect(store)(
             width: 42px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
 
           etools-profile-dropdown{
@@ -209,7 +213,7 @@ class PageHeader extends connect(store)(
           padding: 0px
         }
         app-toolbar {
-          padding-right: 4px;
+          padding-inline-end: 4px;
         }
       }
       </style>
