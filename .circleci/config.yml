@@ -95,3 +95,4 @@ workflows:
                 - develop
                 - epd
                 - fix-comment-mode
+                - lang-service-worker
