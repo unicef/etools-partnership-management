@@ -7,7 +7,7 @@ export const pageLayoutStyles = html` <style>
   @media only screen and (max-width: 1359px) {
     #sidebar {
       width: 100% !important;
-      padding-left: 0 !important;
+      padding-inline-start: 0 !important;
       margin-bottom: 24px !important;
     }
 
@@ -51,7 +51,7 @@ export const pageLayoutStyles = html` <style>
     -ms-flex: 0 0 224px;
     -webkit-flex: 0 0 224px;
     min-width: 0px;
-    padding-left: 24px;
+    padding-inline-start: 24px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
