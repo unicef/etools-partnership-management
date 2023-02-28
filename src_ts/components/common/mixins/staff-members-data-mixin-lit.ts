@@ -57,6 +57,7 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
             return sMember.active;
           });
         this.staffMembers = activeStaffMembers;
+        this.requestUpdate();
       }
       fireEvent(this, 'global-loading', {
         active: false,
