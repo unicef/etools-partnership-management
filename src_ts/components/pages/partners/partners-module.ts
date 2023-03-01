@@ -287,6 +287,10 @@ export class PartnersModule extends connect(store)(
       this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
       this.tabsActive = !this.listActive;
+      if (this.tabsActive && isNaN(this.selectedPartnerId)) {
+        fireEvent(this, '404');
+        return;
+      }
       this.activePage = this.reduxRouteDetails.subRouteName!;
       this._page = this.reduxRouteDetails.subRouteName!;
       this.currentModule = this.reduxRouteDetails.routeName;
