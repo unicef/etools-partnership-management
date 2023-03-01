@@ -1,3 +1,6 @@
+import { handleUrlChange } from "../../redux/actions/app";
+import { store } from "../../redux/store";
+
 /**
  * Update app state
  */
@@ -11,6 +14,7 @@ export function replaceAppState(routePath: string, qs: string, dispatchLocationC
     // This event lets app-location and app-route know
     // the URL has changed
     window.dispatchEvent(new CustomEvent('location-changed'));
+    store.dispatch(handleUrlChange(routePath));
   }
 }
 
@@ -23,4 +27,5 @@ export function changeAppState(url: string) {
   }
   window.history.pushState(window.history.state, '', url);
   window.dispatchEvent(new CustomEvent('location-changed'));
+  store.dispatch(handleUrlChange(url));
 }
