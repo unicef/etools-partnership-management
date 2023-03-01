@@ -136,7 +136,7 @@
       "CANCELLED": "Cancelado",
       "CLOSED": "Encerrado",
       "DEVELOPMENT": "Desenvolvimento",
-	    "DRAFT": "Desenvolvimento",
+      "DRAFT": "Rascunho",
       "ENDED": "Finalizado",
       "EXPIRED": "Expirado",
       "REVIEW": "Revisar",
@@ -147,13 +147,12 @@
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "Alto",
-      "HIGH_RISK_ASSUMED": "Alto Risco Assumido",
       "LOW": "Baixo",
-      "LOW_RISK_ASSUMED": "Baixo Risco Assumido",
       "MEDIUM": "Médio",
-      "NOT_ASSESSED": "Não avaliado",
-      "NOT_REQUIRED": "Não requerido",
-      "SIGNIFICANT": "Significativo"
+      "NOT_REQUIRED": "Não é necessário",
+      "SIGNIFICANT": "Significativo",
+      "HIGH_RISK_ASSUMED": "Alto Risco Assumido",
+      "LOW_RISK_ASSUMED": "Risco baixo presumido"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Bilateral/Multilateral",
@@ -195,11 +194,11 @@
       "NOT_ASSESSED": "Não avaliado",
       "NOT_REQUIRED": "Não é necessário",
       "SIGNIFICANT": "Significativo",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacidade média (risco moderado)",
-      "LOW_CAPACITY_(HIGH_RISK)": "Baixa capacidade (alto risco)",
-      "FULL_CAPACITY_(LOW_RISK)": "Capacidade total (risco baixo)",
+      "FULL_CAPACITY_(LOW_RISK)": "Capacidade total (baixo risco)",
+      "LOW_CAPACITY_(HIGH_RISK)": "Baixa capacidade (Risco elevado)",
       "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Baixa Capacidade Assumida - Emergência",
-      "NO_CONTACT_WITH_BENEFICIARIES": "Nenhum contato com os beneficiários"
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacidade média (Risco moderado)",
+      "NO_CONTACT_WITH_BENEFICIARIES": "Sem contacto com os Beneficiários"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "Child Health (Saúde infantil)",
@@ -277,7 +276,7 @@
     "MICRO_ASSESSMENT": "Micro Avaliação (Micro Assessment)",
     "SPECIAL_AUDIT": "Auditoria especial",
     "SPOT_CHECK": "Spot Check (Verificação pontual)",
-	"OTHER": "Outro"
+    "OTHER": "Outros"
   },
   "ENGLISH": "Inglês",
   "ERROR_REFRESH_DATA": "Houve um erro ao atualizar os dados",
@@ -584,7 +583,7 @@
   "SUBMITTED_BY": " Submetido por",
   "SUSPEND": "Suspenso",
   "TARGET": "Meta",
-  "TARGET_LOWCASE": "Meta",
+  "TARGET_LOWCASE": "meta",
   "TERMINATE": "Rescindir",
   "TERMINATE_AGREEMENT": "Rescindir Acordo",
   "TERMINATION_NOTICE": "Nota Rescisão",

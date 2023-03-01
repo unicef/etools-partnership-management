@@ -72,7 +72,7 @@
     "AGREEMENTSTATUSES": {
       "DRAFT": "Reclutar",
       "ENDED": "Finalizado",
-      "SIGNED": "firmado",
+      "SIGNED": "Firmado",
       "SUSPENDED": "Suspendido",
       "TERMINATED": "Terminado"
     },
@@ -136,24 +136,23 @@
       "CANCELLED": "Cancelado",
       "CLOSED": "Cerrado",
       "DEVELOPMENT": "Desarrollo",
-	  "DRAFT": "Desarrollo",
+      "DRAFT": "Borrador",
       "ENDED": "Finalizado",
       "EXPIRED": "Venció",
       "REVIEW": "Revisar",
       "SIGNATURE": "Firma",
-      "SIGNED": "firmado",
+      "SIGNED": "Firmado",
       "SUSPENDED": "Suspendido",
       "TERMINATED": "Terminado"
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "Alto",
-      "HIGH_RISK_ASSUMED": "Alto riesgo asumido",
       "LOW": "Bajo",
-      "LOW_RISK_ASSUMED": "Riesgo asumido bajo",
       "MEDIUM": "Medio",
-      "NOT_ASSESSED": "No evaluado",
-      "NOT_REQUIRED": "No es necesario",
-      "SIGNIFICANT": "Significativo"
+      "NOT_REQUIRED": "No requerido",
+      "SIGNIFICANT": "Importante",
+      "HIGH_RISK_ASSUMED": "Alto riesgo asumido",
+      "LOW_RISK_ASSUMED": "Riesgo asumido bajo"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Bilaterales / Multilaterales",
@@ -195,11 +194,11 @@
       "NOT_ASSESSED": "No evaluado",
       "NOT_REQUIRED": "No requerido",
       "SIGNIFICANT": "Importante",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)":"Capacidad Media (Riesgo Moderado)",
+      "FULL_CAPACITY_(LOW_RISK)": "Plena capacidad (bajo riesgo)",
       "LOW_CAPACITY_(HIGH_RISK)": "Baja capacidad (alto riesgo)",
-      "FULL_CAPACITY_(LOW_RISK)": "Plena Capacidad (Bajo Riesgo)",
-      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Baja capacidad supuesta: emergencia",
-      "NO_CONTACT_WITH_BENEFICIARIES": "Sin contacto con los beneficiarios"
+      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Baja Capacidad Supuesta - Emergencia",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacidad media (riesgo moderado)",
+      "NO_CONTACT_WITH_BENEFICIARIES": "Ningún contacto con los beneficiarios"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "Salud de los niños",
@@ -277,7 +276,7 @@
     "MICRO_ASSESSMENT": "Microevaluación",
     "SPECIAL_AUDIT": "Auditoría Especial",
     "SPOT_CHECK": "Verificación al contado",
-	"OTHER": "Otro"
+    "OTHER": "Otros"
   },
   "ENGLISH": "Inglés",
   "ERROR_REFRESH_DATA": "Hubo un error al actualizar los datos",
@@ -287,7 +286,7 @@
   "EXPORT_INDICATORS_XLS": "Indicadores de exportación - XLS",
   "FEEDBACK_FACE_FORM_IN_TIME": "Durante el curso de la implementación del programa, ¿proporcionó UNICEF retroalimentación oportuna sobre los formularios FACE y los informes narrativos de progreso?",
   "FIELD": "Campo",
-  "FINAL": "final",
+  "FINAL": "Final",
   "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribución financiera durante el período del informe",
   "FIRST_NAME": "Nombre",
   "FIRST_NAME_IS_REQUIRED": "Se requiere el nombre",
@@ -295,7 +294,7 @@
   "FOMRULA_CHOICES": {
     "AVG": "Promedio",
     "LATEST": "Más reciente",
-    "MAX": "máx.",
+    "MAX": "Máx.",
     "PERCENTAGE": "Porcentaje",
     "RATIO": "Relación",
     "SUM": "Suma"
@@ -452,7 +451,7 @@
     "SATISFIED": "Satisfecho",
     "UNSATISFIED": "Insatisfecho",
     "VERY_SATISFIED": "Muy Satisfecho",
-    "VERY_UNSATISFIED": "muy insatisfecho"
+    "VERY_UNSATISFIED": "Muy Insatisfecho"
   },
   "OVERALL_STATUS": "Estado general",
   "OVERVIEW": "Resumen",
@@ -575,7 +574,7 @@
     "CLOSED": "Cerrado",
     "DRAFT": "Reclutar",
     "ENDED": "Finalizado",
-    "SIGNED": "firmado",
+    "SIGNED": "Firmado",
     "SUSPENDED": "Suspendido",
     "TERMINATED": "Terminado"
   },
