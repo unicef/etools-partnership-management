@@ -9,10 +9,10 @@
   "ACTION_TO_ADDRESS": "هل اتخذت منظمتك واليونيسف إجراءات لمعالجة النتائج المحددة في أنشطة الرصد والتأكيد؟",
   "ACTIVE": "نشيط",
   "ACTIVE_STAFF": "الموظفين النشطين",
-  "ACTUAL_CASH_TRANSFER_FOR_CP": "التحويل النقدي الفعلي لل CP",
+  "ACTUAL_CASH_TRANSFER_FOR_CP": "التحويل النقدي الفعلي للبرنامج القطري",
   "ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR": "التحويل النقدي الفعلي للسنة الحالية",
   "ACTUAL_DISBURSEMENT": "الصرف الفعلي",
-  "ADDRESS": "تبوك",
+  "ADDRESS": "العنوان",
   "ADD_ACTION_POINTS": "أضف نقطة العمل",
   "ADD_AMENDMENT": "أضف تعديل",
   "ADD_DISAGGREGATION": "أضف التفصيل",
@@ -73,7 +73,7 @@
       "DRAFT": "مسودة",
       "ENDED": "انتهى",
       "SIGNED": "وقعت",
-      "SUSPENDED": "موقوف عن العمل",
+      "SUSPENDED": "مُعلَّق",
       "TERMINATED": "تم إنهاؤه"
     },
     "AGREEMENTTYPES": {
@@ -135,8 +135,8 @@
       "ACTIVE": "نشيط",
       "CANCELLED": "ألغيت",
       "CLOSED": "مغلق",
-	  "DRAFT": "تطوير",
       "DEVELOPMENT": "تطوير",
+      "DRAFT": "تطوير",
       "ENDED": "انتهى",
       "EXPIRED": "منتهي الصلاحية",
       "REVIEW": "إعادة النظر",
@@ -147,13 +147,12 @@
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "عالٍ",
-      "HIGH_RISK_ASSUMED": "يفترض وجود مخاطر عالية",
       "LOW": "قليل",
-      "LOW_RISK_ASSUMED": "يفترض مخاطر منخفضة",
       "MEDIUM": "متوسط",
-      "NOT_ASSESSED": "لم يتم تقييمه",
       "NOT_REQUIRED": "غير مطلوب",
-      "SIGNIFICANT": "هام"
+      "SIGNIFICANT": "هام",
+      "HIGH_RISK_ASSUMED": "يفترض وجود مخاطر عالية",
+      "LOW_RISK_ASSUMED": "يفترض مخاطر منخفضة"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "ثنائي / متعدد الأطراف",
@@ -195,11 +194,11 @@
       "NOT_ASSESSED": "لم يتم تقييمه",
       "NOT_REQUIRED": "غير مطلوب",
       "SIGNIFICANT": "هام",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)":"سعة متوسطة (مخاطرة معتدلة)",
-      "LOW_CAPACITY_(HIGH_RISK)": "سعة منخفضة (مخاطر عالية)",
       "FULL_CAPACITY_(LOW_RISK)": "السعة الكاملة (مخاطر منخفضة)",
+      "LOW_CAPACITY_(HIGH_RISK)": "سعة منخفضة (مخاطر عالية)",
       "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "السعة المنخفضة المفترضة - الطوارئ",
-      "NO_CONTACT_WITH_BENEFICIARIES": "لا اتصال مع المستفيدين"
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "سعة متوسطة (مخاطرة معتدلة)",
+      "NO_CONTACT_WITH_BENEFICIARIES": "لا يوجد اتصال مع المستفيدين"
     },
     "SECTIONS": {
       "CHILD_HEALTH": "صحة الطفل",
@@ -277,7 +276,7 @@
     "MICRO_ASSESSMENT": "التقييم الجزئي",
     "SPECIAL_AUDIT": "المراجعة الخاصة",
     "SPOT_CHECK": "تفتيش من وقت لاخر",
-	"OTHER": "آخر"
+    "OTHER": "أخرى"
   },
   "ENGLISH": "إنجليزي",
   "ERROR_REFRESH_DATA": "حدث خطأ أثناء تحديث البيانات",
@@ -286,7 +285,7 @@
   "EXPORT_INDICATORS_PDF": "مؤشرات التصدير - PDF",
   "EXPORT_INDICATORS_XLS": "مؤشرات التصدير - XLS",
   "FEEDBACK_FACE_FORM_IN_TIME": "أثناء تنفيذ البرنامج ، هل قدمت اليونيسف ملاحظات في الوقت المناسب على نماذج الإذن بالصرف وشهادة الإنفاق وتقارير التقدم السردية؟",
-  "FIELD": "مجال",
+  "FIELD": "حقل",
   "FINAL": "نهائي",
   "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "المساهمة المالية خلال فترة التقرير",
   "FIRST_NAME": "الاسم الاول",
