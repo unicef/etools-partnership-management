@@ -11,6 +11,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 
 /**
  * @polymer
@@ -172,7 +173,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
   }
 
   protected _handleResponse() {
-    fireEvent(this, 'update-main-path', {path: 'partners'});
+    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
     this.refresh();
   }
 
