@@ -608,5 +608,6 @@
   "VENDOR_NUMBER": "Регистрационный номер партнера",
   "VIEW_REPORT": "Посмотреть отчет",
   "VISION_VENDOR_NUMBER": "Номер партнера (в VISION)",
-  "VISION_VENDOR_NUMBER_REQUIRED": "Номер партнера (в VISION)"
+  "VISION_VENDOR_NUMBER_REQUIRED": "Номер партнера (в VISION)",
+  "ADD_AGREEMENT": "Добавить соглашение"
 }

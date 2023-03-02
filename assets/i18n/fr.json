@@ -608,5 +608,6 @@
   "VENDOR_NUMBER": "Numéro fournisseur",
   "VIEW_REPORT": "Afficher le rapport",
   "VISION_VENDOR_NUMBER": "Numéro fournisseur VISION",
-  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION"
+  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION",
+  "ADD_AGREEMENT": "Ajouter un Accord"
 }
