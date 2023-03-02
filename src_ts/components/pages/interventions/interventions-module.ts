@@ -325,6 +325,7 @@ export class InterventionsModule extends connect(store)(
       loadingSource: 'interv-page'
     });
     this._initInterventionsModuleListeners();
+
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,

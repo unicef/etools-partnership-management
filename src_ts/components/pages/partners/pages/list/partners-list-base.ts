@@ -320,29 +320,27 @@ export class PartnersListBase extends CommonMixin(
       return;
     }
 
-    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
-      if (this.currentLanguage) {
-        // language was already set, this is language change
-        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
-      }
-      this.currentLanguage = state.activeLanguage!.activeLanguage;
-      if (this.allFilters) {
-        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
-      }
-    }
-
     if (this.filteringParamsHaveChanged(stateRouteDetails) || this.shouldReGetListBecauseOfEditsOnItems(state)) {
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
       this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state.commonData!);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadListData();
       if (state.partners.shouldReloadList) {
         store.dispatch(setShouldReloadPartners(false));
       }
+    }
+
+    if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
+      // static data reloaded (because of language change), need to update filters
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
+      this.translateFilters(this.allFilters);
+      this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      this.allFilters = [...this.allFilters];
     }
   }
 
@@ -497,7 +495,7 @@ export class PartnersListBase extends CommonMixin(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded);
+    return Boolean(state.commonData?.loadedTimestamp);
   }
 
   public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {

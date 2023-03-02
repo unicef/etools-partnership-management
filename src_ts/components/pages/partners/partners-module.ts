@@ -235,6 +235,9 @@ export class PartnersModule extends connect(store)(
   @property({type: Object})
   reduxRouteDetails?: RouteDetails;
 
+  @property({type: Number})
+  commonDataLoadedTimestamp = 0;
+
   @property({type: String})
   _page = '';
 
@@ -287,6 +290,13 @@ export class PartnersModule extends connect(store)(
       this.activePage = this.reduxRouteDetails.subRouteName!;
       this._page = this.reduxRouteDetails.subRouteName!;
       this.currentModule = this.reduxRouteDetails.routeName;
+      if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp) {
+        if (this.commonDataLoadedTimestamp !== 0) {
+          // static data reloaded (because of language change), need to re-render controls (to update translations)
+          this.partner = {...this.partner, commonDataLoadedTimestamp: state.commonData!.loadedTimestamp} as any;
+        }
+        this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
+      }
     }
   }
 

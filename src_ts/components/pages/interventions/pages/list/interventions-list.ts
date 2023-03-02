@@ -361,6 +361,7 @@ export class InterventionsList extends connect(store)(
       }
       this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
       this.loadFilteredInterventions();
@@ -375,13 +376,12 @@ export class InterventionsList extends connect(store)(
       }
     }
 
-    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
-      if (this.currentLanguage) {
-        // language was already set, this is language change
-        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
-      }
-      this.currentLanguage = state.activeLanguage!.activeLanguage;
+    if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
+      // static data reloaded (because of language change), need to update filters
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
+      this.translateFilters(this.allFilters);
       this.populateDropdownFilterOptionsFromCommonData(state, this.allFilters);
+      this.allFilters = [...this.allFilters];
     }
   }
 
@@ -426,7 +426,7 @@ export class InterventionsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
-    return state.commonData?.commonDataIsLoaded && state.partners?.listIsLoaded;
+    return Boolean(state.commonData?.loadedTimestamp) && state.partners?.listIsLoaded;
   }
 
   protected initFiltersForDisplay(state: RootState): void {
