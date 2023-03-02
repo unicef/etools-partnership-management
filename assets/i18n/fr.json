@@ -136,7 +136,7 @@
       "CANCELLED": "Annulé",
       "CLOSED": "Fermé",
       "DEVELOPMENT": "Développement",
-	    "DRAFT": "Développement",
+      "DRAFT": "Développement",
       "ENDED": "Terminé",
       "EXPIRED": "Expiré",
       "REVIEW": "Examen",
@@ -147,13 +147,12 @@
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "Haute",
-      "HIGH_RISK_ASSUMED": "Risque élevé présumé",
       "LOW": "Bas",
-      "LOW_RISK_ASSUMED": "Faible risque présumé",
       "MEDIUM": "Moyen",
-      "NOT_ASSESSED": "Pas évalué",
       "NOT_REQUIRED": "Non requis",
-      "SIGNIFICANT": "Important"
+      "SIGNIFICANT": "Important",
+      "HIGH_RISK_ASSUMED": "Risque élevé présumé",
+      "LOW_RISK_ASSUMED": "Risque faible présumé"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Bilatéral / Multilatéral",
@@ -195,10 +194,10 @@
       "NOT_ASSESSED": "Pas évalué",
       "NOT_REQUIRED": "Non requis",
       "SIGNIFICANT": "Important",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)":"Capacité moyenne (risque modéré)",
-      "LOW_CAPACITY_(HIGH_RISK)": "Faible capacité (risque élevé)",
       "FULL_CAPACITY_(LOW_RISK)": "Pleine capacité (faible risque)",
-      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Faible capacité supposée - Urgence",
+      "LOW_CAPACITY_(HIGH_RISK)": "Faible capacité (risque élevé)",
+      "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Faible capacité présumée - Urgence",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Capacité moyenne (risque modéré)",
       "NO_CONTACT_WITH_BENEFICIARIES": "Aucun contact avec les bénéficiaires"
     },
     "SECTIONS": {
@@ -277,7 +276,7 @@
     "MICRO_ASSESSMENT": "Micro-évaluation",
     "SPECIAL_AUDIT": "Audit spécial",
     "SPOT_CHECK": "Vérification ponctuelle",
-	"OTHER": "Autre"
+    "OTHER": "Autre"
   },
   "ENGLISH": "Anglais",
   "ERROR_REFRESH_DATA": "Une erreur s'est produite lors de l'actualisation des données",
@@ -287,7 +286,7 @@
   "EXPORT_INDICATORS_XLS": "Indicateurs d'exportation - XLS",
   "FEEDBACK_FACE_FORM_IN_TIME": "Au cours de la mise en œuvre du programme, l'UNICEF a-t-il fourni des commentaires en temps opportun sur les formulaires FACE et les rapports d'avancement narratifs ?",
   "FIELD": "Champ",
-  "FINAL": "final",
+  "FINAL": "Final",
   "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribution financière pendant la période de référence",
   "FIRST_NAME": "Prénom",
   "FIRST_NAME_IS_REQUIRED": "Le prénom est obligatoire",
@@ -400,7 +399,7 @@
   "MARKED_FOR_DELETION": "Marqué pour suppression",
   "MONITORING_ACTIVITIES": "Activités de surveillance",
   "NA": "N / A",
-  "NAME": "nom",
+  "NAME": "Nom",
   "NAME_SHORT_FULL": "Nom (court/complet)",
   "NARRATIVE": "Récit",
   "NARRATIVE_ASSESSMENT": "Évaluation narrative",
