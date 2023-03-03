@@ -11,7 +11,6 @@ import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit'
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
 import '../../common/components/etools-error-messages-box.js';
-import '../../common/components/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
