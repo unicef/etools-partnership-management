@@ -552,7 +552,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   }
 
   linkFixUp(url: string) {
-    if (!url.includes('https://')) {
+    if (!url.includes('https://') && !url.includes('localhost')) {
       return 'https://' + url;
     }
     return url;

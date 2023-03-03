@@ -3,7 +3,6 @@ import {LitElement, html, property, PropertyValues, customElement} from 'lit-ele
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
-import '@polymer/app-route/app-route';
 
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
