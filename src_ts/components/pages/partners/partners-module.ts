@@ -3,7 +3,6 @@ import {LitElement, html, property, PropertyValues, customElement} from 'lit-ele
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
-import '@polymer/app-route/app-route';
 
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
@@ -287,6 +286,10 @@ export class PartnersModule extends connect(store)(
       this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
       this.tabsActive = !this.listActive;
+      if (this.tabsActive && isNaN(this.selectedPartnerId)) {
+        fireEvent(this, '404');
+        return;
+      }
       this.activePage = this.reduxRouteDetails.subRouteName!;
       this._page = this.reduxRouteDetails.subRouteName!;
       this.currentModule = this.reduxRouteDetails.routeName;

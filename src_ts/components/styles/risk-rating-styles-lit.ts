@@ -12,6 +12,8 @@ export const riskRatingStyles = html` <style>
       text-transform: capitalize;
       box-sizing: border-box;
       text-align: left;
+      display: flex;
+      align-items: center;
     }
 
     --risk-rating-low: {

@@ -136,7 +136,7 @@
       "CANCELLED": "Cancelled",
       "CLOSED": "Closed",
       "DEVELOPMENT": "Development",
-	  "DRAFT": "Development",
+      "DRAFT": "Development",
       "ENDED": "Ended",
       "EXPIRED": "Expired",
       "REVIEW": "Review",
@@ -147,13 +147,12 @@
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "High",
-      "HIGH_RISK_ASSUMED": "High Risk Assumed",
       "LOW": "Low",
-      "LOW_RISK_ASSUMED": "Low Risk Assumed",
       "MEDIUM": "Medium",
-      "NOT_ASSESSED": "Not Assessed",
       "NOT_REQUIRED": "Not Required",
-      "SIGNIFICANT": "Significant"
+      "SIGNIFICANT": "Significant",
+      "HIGH_RISK_ASSUMED": "High Risk Assumed",
+      "LOW_RISK_ASSUMED": "Low Risk Assumed"
     },
     "PARTNERTYPES": {
       "BILATERAL_/_MULTILATERAL": "Bilateral / Multilateral",
@@ -195,10 +194,10 @@
       "NOT_ASSESSED": "Not Assessed",
       "NOT_REQUIRED": "Not Required",
       "SIGNIFICANT": "Significant",
-      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Medium Capacity (Moderate Risk)",
-      "LOW_CAPACITY_(HIGH_RISK)": "Low Capacity (High Risk)",
       "FULL_CAPACITY_(LOW_RISK)": "Full Capacity (Low Risk)",
+      "LOW_CAPACITY_(HIGH_RISK)": "Low Capacity (High Risk)",
       "LOW_CAPACITY_ASSUMED_-_EMERGENCY": "Low Capacity Assumed - Emergency",
+      "MEDIUM_CAPACITY_(MODERATE_RISK)": "Medium Capacity (Moderate Risk)",
       "NO_CONTACT_WITH_BENEFICIARIES": "No Contact with Beneficiaries"
     },
     "SECTIONS": {
@@ -277,7 +276,7 @@
     "MICRO_ASSESSMENT": "Micro Assessment",
     "SPECIAL_AUDIT": "Special Audit",
     "SPOT_CHECK": "Spot Check",
-	"OTHER": "Other"
+    "OTHER": "Other"
   },
   "ENGLISH": "English",
   "ERROR_REFRESH_DATA": "There was an error while refreshing the data",
@@ -287,7 +286,7 @@
   "EXPORT_INDICATORS_XLS": "Export Indicators - XLS",
   "FEEDBACK_FACE_FORM_IN_TIME": "During the course of programme implementation, did UNICEF provide timely feedback on FACE forms and narrative progress reports?",
   "FIELD": "Field",
-  "FINAL": "final",
+  "FINAL": "Final",
   "FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Financial contribution during reporting period",
   "FIRST_NAME": "First Name",
   "FIRST_NAME_IS_REQUIRED": "First name is required",

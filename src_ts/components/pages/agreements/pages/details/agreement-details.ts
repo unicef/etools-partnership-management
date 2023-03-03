@@ -417,7 +417,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-3">
+          <div class="col col-6">
             <paper-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
