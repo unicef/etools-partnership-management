@@ -1,5 +1,4 @@
 import {customElement, html, LitElement, property} from 'lit-element';
-import '@polymer/app-route/app-route.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
