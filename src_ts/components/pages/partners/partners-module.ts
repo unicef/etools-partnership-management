@@ -16,7 +16,7 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '../../common/components/etools-tabs';
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
@@ -113,12 +113,12 @@ export class PartnersModule extends connect(store)(
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs
+          ? html` <etools-tabs-lit
               slot="tabs"
               .tabs="${this.partnerTabs}"
               .activeTab="${this.reduxRouteDetails?.subRouteName}"
               @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs>`
+            ></etools-tabs-lit>`
           : ''}
       </page-content-header>
 
