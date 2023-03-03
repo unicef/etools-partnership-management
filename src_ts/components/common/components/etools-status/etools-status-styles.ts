@@ -130,7 +130,7 @@ export const etoolsStatusStyles = html`
     }
 
     .custom .status {
-      margin-left: 7px;
+      margin-inline-start: 7px;
     }
 
     .completed .status,

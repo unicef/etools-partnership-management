@@ -161,7 +161,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .margin-l {
-          margin-left: 56px;
+          margin-inline-start: 56px;
         }
 
         .planning-wrapper {
@@ -170,7 +170,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .no-r-padd .row-h {
-          padding-right: 0;
+          padding-inline-end: 0;
         }
 
         .table-main div:not(:first-child) {
