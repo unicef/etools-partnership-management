@@ -3,12 +3,13 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControlMixinLit from '../../mixins/scroll-control-mixin-lit';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {LitElement, property, PropertyValues} from 'lit-element';
 import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, translate} from 'lit-translate';
+import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
 declare const ShadyCSS: any;
 
 /**
@@ -178,32 +179,18 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
       });
     }
 
-    _createStatusChangeWarningDialog() {
-      this.statusChangeWarningDialogContent = document.createElement('p');
-      this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-      this._statusChangeConfirmationCallback = this._statusChangeConfirmationCallback.bind(this);
-      const conf: any = {
-        title: this.sectionName + ' status change',
-        size: 'md',
-        okBtnText: 'Yes',
-        cancelBtnText: 'Cancel',
-        closeCallback: this._statusChangeConfirmationCallback,
-        content: this.statusChangeWarningDialogContent
-      };
-      this.warningDialog = createDynamicDialog(conf);
-    }
-
     _showStatusChangeConfirmationDialog() {
-      if (this.warningDialog) {
-        if (this.statusChangeWarningDialogContent) {
-          this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
-          this.warningDialog.opened = true;
-        } else {
-          logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
+      openDialog({
+        dialog: 'are-you-sure',
+        dialogData: {
+          title: this.sectionName + ' status change',
+          content: this.warningMessage,
+          confirmBtnText: translate('YES'),
+          cancelBtnText: translate('CANCEL')
         }
-      } else {
-        logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
-      }
+      }).then(({confirmed}) => {
+        this._statusChangeConfirmationCallback({detail: {confirmed: confirmed}} as any);
+      });
     }
 
     _setAllActionsToHidden() {
@@ -286,8 +273,8 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
       warnDeleteContent.innerHTML = this.deleteWarningMessage;
       const conf: any = {
         size: 'md',
-        okBtnText: 'Yes',
-        cancelBtnText: 'No',
+        okBtnText: translate('YES'),
+        cancelBtnText: translate('NO'),
         content: warnDeleteContent
       };
       this.deleteConfirmDialog = createDynamicDialog(conf);

@@ -101,12 +101,12 @@ export class EtoolsStatus extends connect(store)(LitElement) {
   getUploadInProgressOrUnsavedTooltip(uploadsInProgress: number, unsavedUploads: number) {
     if (Number(uploadsInProgress) > 0) {
       this.showInfoIcon = true;
-      return "Uploads in progress, you can save after they're finished.";
+      return "Uploads in progress, you can save after they're finished."; // TODO
     }
 
     if (Number(unsavedUploads) > 0) {
       this.showInfoIcon = true;
-      return "Don't forget to save uploaded files!";
+      return "Don't forget to save uploaded files!"; // TODO
     }
     this.showInfoIcon = false;
     return '';
