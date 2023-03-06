@@ -33,9 +33,10 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {translate} from 'lit-translate';
+import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -194,7 +195,7 @@ class ReportsList extends connect(store)(
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
-                      ${this.getDisplayValue(report.reporting_period, ',', false)}
+                      ${this.displayLocalizedReportingPeriod(report.reporting_period)}
                     </span>
 
                     ${!this.noPdSsfaRef
@@ -234,7 +235,398 @@ class ReportsList extends connect(store)(
   }
 
   @property({type: Array})
-  reports: [] = [];
+  reports: [] = [
+    {
+      id: 31432,
+      report_type: 'QPR',
+      report_number: 5,
+      is_final: true,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Nov-2022 - 31-Jan-2023 ',
+      submission_date: null,
+      due_date: '28-Feb-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 3570,
+        external_id: '191',
+        agreement: 'RWA/PCA2019128',
+        reference_number: 'RWA/PCA2019128/PD2021191-1',
+        title: 'UNICEF-University of Maryland Partnership to Improve PMTCT through Continuous Quality Improvement',
+        start_date: '01-Nov-2021',
+        end_date: '31-Jan-2023',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'STATE OF MD UNIVERSITY OF MARYLAND',
+      partner_vendor_number: '2500241096',
+      unicef_focal_points: ['Grace Muriisa'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 30223,
+      report_type: 'QPR',
+      report_number: 15,
+      is_final: false,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '31-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 436,
+        external_id: '109',
+        agreement: 'RWA/PCA201895',
+        reference_number: 'RWA/PCA201895/PD2018109',
+        title: 'Provision of Inclusive Market and Work-Based Early Childhood Development Services',
+        start_date: '16-Oct-2018',
+        end_date: '30-Jun-2023',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'ACTION POUR LE DEVELOPPEMENT DU PEU ADEPE',
+      partner_vendor_number: '2500239300',
+      unicef_focal_points: ['Ted Maly', 'Pierre Nzeyimana'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 30198,
+      report_type: 'QPR',
+      report_number: 6,
+      is_final: true,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '31-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 2773,
+        external_id: '180',
+        agreement: 'RWA/PCA201879',
+        reference_number: 'RWA/PCA201879/PD2021180',
+        title: 'Family strengthening and Community based support  for care of children with disabilities in families',
+        start_date: '01-Jul-2021',
+        end_date: '31-Dec-2022',
+        status: 'Terminated',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'CHANCE FOR CHILDHOOD CFC',
+      partner_vendor_number: '2500238433',
+      unicef_focal_points: ['Genevieve Uwamariya'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 32036,
+      report_type: 'QPR',
+      report_number: 4,
+      is_final: false,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 6119,
+        external_id: '227',
+        agreement: 'RWA/PCA201871',
+        reference_number: 'RWA/PCA201871/PD2022227',
+        title: 'QA-19-12-2022',
+        start_date: '01-Jan-2022',
+        end_date: '31-Dec-2023',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'IMBUTO FOUNDATION',
+      partner_vendor_number: '2500209190',
+      unicef_focal_points: ['k1 k1'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 32024,
+      report_type: 'QPR',
+      report_number: 4,
+      is_final: false,
+      partner_contribution_to_date: 'yrdy',
+      financial_contribution_to_date: '324',
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: 'yrdy',
+      proposed_way_forward: 'yrdy',
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 6129,
+        external_id: '244',
+        agreement: 'RWA/PCA2018118',
+        reference_number: 'RWA/PCA2018118/PD2023244',
+        title: 'QA-demo Schools and Health Care facilities and Sanitation promotions',
+        start_date: '01-Jan-2022',
+        end_date: '01-Jan-2024',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'HELP A CHILD',
+      partner_vendor_number: '2500239437',
+      unicef_focal_points: ['k1 k1'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 31987,
+      report_type: 'QPR',
+      report_number: 4,
+      is_final: false,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 6127,
+        external_id: '241',
+        agreement: 'RWA/PCA2018118',
+        reference_number: 'RWA/PCA2018118/PD2023241',
+        title: 'QA-10-01-2023',
+        start_date: '01-Jan-2022',
+        end_date: '01-Jan-2024',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'HELP A CHILD',
+      partner_vendor_number: '2500239437',
+      unicef_focal_points: ['k1 k1'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 31584,
+      report_type: 'QPR',
+      report_number: 2,
+      is_final: true,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Dec-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 4372,
+        external_id: '210',
+        agreement: 'RWA/PCA2022153',
+        reference_number: 'RWA/PCA2022153/PD2022210',
+        title: 'Enhance the well-being of children and youth through sports for development.',
+        start_date: '12-Sep-2022',
+        end_date: '31-Dec-2022',
+        status: 'Ended',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'UMURI FOUNDATION',
+      partner_vendor_number: '2500245200',
+      unicef_focal_points: ['Redempter Batete'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 30982,
+      report_type: 'QPR',
+      report_number: 2,
+      is_final: true,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Nov-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 4300,
+        external_id: '205',
+        agreement: 'RWA/PCA2022151',
+        reference_number: 'RWA/PCA2022151/PD2022205',
+        title: 'Improving access to HIV services for adolescents and young people in KIREHE district',
+        start_date: '15-Aug-2022',
+        end_date: '31-Dec-2022',
+        status: 'Ended',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'RWANDA DEVELOPMENT ORGANISATION',
+      partner_vendor_number: '2500244101',
+      unicef_focal_points: ['Annet Birungi'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 30888,
+      report_type: 'QPR',
+      report_number: 1,
+      is_final: false,
+      partner_contribution_to_date: 'Technical and coordination support',
+      financial_contribution_to_date: '126912756',
+      financial_contribution_currency: 'RWF',
+      challenges_in_the_reporting_period: 'Delay of TMIS activities. High turnover of SBMs',
+      proposed_way_forward: 'Continued programme implementation',
+      status: 'Sub',
+      reporting_period: '13-Oct-2022 - 31-Dec-2022 ',
+      submission_date: '07-Feb-2023',
+      due_date: '30-Jan-2023',
+      is_draft: false,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 4751,
+        external_id: '212',
+        agreement: 'RWA/PCA201867',
+        reference_number: 'RWA/PCA201867/PD2022212',
+        title: 'In-service teacher development for quality results for children',
+        start_date: '13-Oct-2022',
+        end_date: '30-Sep-2023',
+        status: 'Terminated',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'INSPIRE EDUCATE AND EMPOWER RWANDA',
+      partner_vendor_number: '2500216344',
+      unicef_focal_points: ['Yonah Nyundo'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    },
+    {
+      id: 30073,
+      report_type: 'QPR',
+      report_number: 3,
+      is_final: true,
+      partner_contribution_to_date: null,
+      financial_contribution_to_date: null,
+      financial_contribution_currency: 'USD',
+      challenges_in_the_reporting_period: null,
+      proposed_way_forward: null,
+      status: 'Ove',
+      reporting_period: '01-Oct-2022 - 31-Dec-2022 ',
+      submission_date: null,
+      due_date: '30-Jan-2023',
+      is_draft: true,
+      review_date: null,
+      review_overall_status: null,
+      review_overall_status_display: null,
+      sent_back_feedback: null,
+      programme_document: {
+        id: 3833,
+        external_id: '197',
+        agreement: 'RWA/PCA201871',
+        reference_number: 'RWA/PCA201871/PD2022197',
+        title: 'Support to gender-equitable foundational learning through a comprehensive remedial education programme',
+        start_date: '01-Apr-2022',
+        end_date: '30-Jun-2023',
+        status: 'Active',
+        document_type: 'PD',
+        document_type_display: 'Programme Document'
+      },
+      narrative: null,
+      partner_name: 'IMBUTO FOUNDATION',
+      partner_vendor_number: '2500209190',
+      unicef_focal_points: ['Marie Therese Uwizeyeyezu'],
+      reviewed_by_name: null,
+      reviewed_by_email: null,
+      reviewed_by_external_id: null
+    }
+  ];
 
   @property({type: Array})
   partners: [] = [];
@@ -514,6 +906,20 @@ class ReportsList extends connect(store)(
         }
       }
     }
+  }
+
+  displayLocalizedReportingPeriod(repPer: string) {
+    return langChanged(() => {
+      if (!repPer || !repPer.includes(' - ')) {
+        console.error('Reporting Period is not in the expected format!');
+        return repPer;
+      }
+      let date1 = '';
+      let date2 = '';
+      [date1, date2] = repPer.split(' - ');
+
+      return dayjs(date1).format('DD MMM YYYY') + ' - ' + dayjs(date2).format('DD MMM YYYY');
+    });
   }
 }
 
