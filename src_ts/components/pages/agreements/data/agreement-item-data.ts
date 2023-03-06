@@ -187,7 +187,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
           this.handleSuccResponseAdditionalCallback = callback;
         }
         fireEvent(this, 'global-loading', {
-          message: 'Changing agreement status...',
+          message: getTranslation('CHANGING_AGREEMENT_STATUS'),
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
