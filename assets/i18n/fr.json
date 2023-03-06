@@ -608,5 +608,6 @@
   "VENDOR_NUMBER": "Numéro fournisseur",
   "VIEW_REPORT": "Afficher le rapport",
   "VISION_VENDOR_NUMBER": "Numéro fournisseur VISION",
-  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION"
+  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION",
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Impossible d'obtenir les données des membres du personnel du partenaire sélectionné."
 }

@@ -6,6 +6,7 @@ import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -41,7 +42,7 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
           .catch((error: any) => {
             logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
             fireEvent(this, 'toast', {
-              text: 'Can not get selected partner staff members data!' // TODO translate
+              text: getTranslation('ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS')
             });
           });
       }
