@@ -9,7 +9,7 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
-import {translate} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -101,12 +101,12 @@ export class EtoolsStatus extends connect(store)(LitElement) {
   getUploadInProgressOrUnsavedTooltip(uploadsInProgress: number, unsavedUploads: number) {
     if (Number(uploadsInProgress) > 0) {
       this.showInfoIcon = true;
-      return "Uploads in progress, you can save after they're finished."; // TODO
+      return getTranslation('UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED');
     }
 
     if (Number(unsavedUploads) > 0) {
       this.showInfoIcon = true;
-      return "Don't forget to save uploaded files!"; // TODO
+      return getTranslation('DONT_FORGET_TO_SAVE_UPLOADED_FILES');
     }
     this.showInfoIcon = false;
     return '';

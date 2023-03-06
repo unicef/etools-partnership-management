@@ -608,5 +608,7 @@
   "VENDOR_NUMBER": "Vendor Number",
   "VIEW_REPORT": "View Report",
   "VISION_VENDOR_NUMBER": "VISION Vendor Number",
-  "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number"
+  "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number",
+  "UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED": "Uploads in progress, you can save after they're finished.",
+  "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "Don't forget to save uploaded files!"
 }

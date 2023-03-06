@@ -608,5 +608,7 @@
   "VENDOR_NUMBER": "Numéro fournisseur",
   "VIEW_REPORT": "Afficher le rapport",
   "VISION_VENDOR_NUMBER": "Numéro fournisseur VISION",
-  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION"
+  "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION",
+  "UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED": "Téléchargements en cours, vous pouvez enregistrer une fois qu'ils sont terminés.",
+  "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "N'oubliez pas de sauvegarder les fichiers téléchargés !"
 }

@@ -608,5 +608,7 @@
   "VENDOR_NUMBER": "رقم البائع",
   "VIEW_REPORT": "عرض التقرير",
   "VISION_VENDOR_NUMBER": "رقم بائع VISION",
-  "VISION_VENDOR_NUMBER_REQUIRED": "رقم بائع VISION"
+  "VISION_VENDOR_NUMBER_REQUIRED": "رقم بائع VISION",
+  "UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED": "عمليات التحميل قيد التقدم ، يمكنك الحفظ بعد انتهائها.",
+  "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "لا تنسى حفظ الملفات المرفوعة!"
 }
