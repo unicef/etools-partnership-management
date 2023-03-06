@@ -4,7 +4,7 @@ import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
-import {translate, translateConfig} from 'lit-translate';
+import {langChanged, translate, translateConfig} from 'lit-translate';
 import {formatDate} from '../../../../utils/date-utils';
 import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -151,8 +151,8 @@ export function template(this: InterventionNew): TemplateResult {
             id="partnerFocalPoints"
             label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
             placeholder="&#8212;"
-            .readonly="${!this.staffMembers.length}"
-            .options="${this.staffMembers}"
+            .readonly="${!this.partnerStaffMembers.length}"
+            .options="${langChanged(() => this.formattedPartnerStaffMembers)}"
             .selectedValues="${this.newIntervention.partner_focal_points || []}"
             @etools-selected-items-changed="${({detail}: CustomEvent) =>
               this.setInterventionField(
