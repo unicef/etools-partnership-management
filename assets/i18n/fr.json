@@ -137,13 +137,13 @@
       "CLOSED": "Fermé",
       "DEVELOPMENT": "Développement",
       "DRAFT": "Développement",
-      "ENDED": "Terminé",
+      "ENDED": "Fini",
       "EXPIRED": "Expiré",
-      "REVIEW": "Examen",
+      "REVIEW": "Consultez le site",
       "SIGNATURE": "Signature",
       "SIGNED": "Signé",
       "SUSPENDED": "Suspendu",
-      "TERMINATED": "Résilié"
+      "TERMINATED": "Terminé"
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "Haute",
