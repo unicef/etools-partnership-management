@@ -609,6 +609,9 @@
   "VIEW_REPORT": "Ver relatório",
   "VISION_VENDOR_NUMBER": "Número Vendor no VISION",
   "VISION_VENDOR_NUMBER_REQUIRED": "Número Vendor no VISION",
+  "UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED": "Uploads em andamento, você pode salvar depois que eles terminarem.",
+  "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "Não se esqueça de salvar os arquivos enviados!",
+  "CHANGING_AGREEMENT_STATUS": "Alterando o status do contrato...",
   "ADD_AGREEMENT": "Adicionar Contrato",
   "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Erro ao recuperar funcionários do parceiro. Tente novamente."
 }

@@ -33,9 +33,10 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {translate} from 'lit-translate';
+import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -194,7 +195,7 @@ class ReportsList extends connect(store)(
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
-                      ${this.getDisplayValue(report.reporting_period, ',', false)}
+                      ${this.displayLocalizedReportingPeriod(report.reporting_period)}
                     </span>
 
                     ${!this.noPdSsfaRef
@@ -514,6 +515,20 @@ class ReportsList extends connect(store)(
         }
       }
     }
+  }
+
+  displayLocalizedReportingPeriod(repPer: string) {
+    return langChanged(() => {
+      if (!repPer || !repPer.includes(' - ')) {
+        console.error('Reporting Period is not in the expected format!');
+        return repPer;
+      }
+      let date1 = '';
+      let date2 = '';
+      [date1, date2] = repPer.split(' - ');
+
+      return dayjs(date1).format('DD MMM YYYY') + ' - ' + dayjs(date2).format('DD MMM YYYY');
+    });
   }
 }
 
