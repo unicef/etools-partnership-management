@@ -44,11 +44,8 @@ store.addReducers({
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '@polymer/app-route/app-location.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-
-import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 

@@ -256,6 +256,10 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       const currentAgrId = state.app?.routeDetails?.params?.agreementId;
       this.newAgreementActive = currentAgrId === 'new';
 
+      if (currentAgrId && !this.newAgreementActive && isNaN(Number(currentAgrId))) {
+        fireEvent(this, '404');
+        return;
+      }
       this.selectedAgreementId = !currentAgrId || isNaN(Number(currentAgrId)) ? null : Number(currentAgrId);
       this._pageChanged(this.listActive, this.tabsActive, this.newAgreementActive);
     }

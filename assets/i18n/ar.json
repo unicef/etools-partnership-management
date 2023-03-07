@@ -609,5 +609,6 @@
   "VIEW_REPORT": "عرض التقرير",
   "VISION_VENDOR_NUMBER": "رقم بائع VISION",
   "VISION_VENDOR_NUMBER_REQUIRED": "رقم بائع VISION",
-  "ADD_AGREEMENT": "أضف اتفاقية"
+  "ADD_AGREEMENT": "أضف اتفاقية",
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "خطأ في استرجاع موظفي الشريك. حاول ثانية."
 }

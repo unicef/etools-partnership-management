@@ -609,5 +609,6 @@
   "VIEW_REPORT": "Посмотреть отчет",
   "VISION_VENDOR_NUMBER": "Номер партнера (в VISION)",
   "VISION_VENDOR_NUMBER_REQUIRED": "Номер партнера (в VISION)",
-  "ADD_AGREEMENT": "Добавить соглашение"
+  "ADD_AGREEMENT": "Добавить соглашение",
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Ошибка при получении сотрудников партнера. Попробуйте еще раз."
 }
