@@ -9,7 +9,7 @@ import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '../../common/components/etools-tabs';
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 
 import './components/report-status';
 import './components/report-rating-dialog';
@@ -177,12 +177,12 @@ export class ReportsModule extends connect(store)(
         </div>
 
         ${this.tabsActive
-          ? html` <etools-tabs
+          ? html` <etools-tabs-lit
               slot="tabs"
               .tabs="${this.reportTabs}"
               .activeTab="${this.reduxRouteDetails?.subRouteName}"
               @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs>`
+            ></etools-tabs-lit>`
           : ''}
       </page-content-header>
 
