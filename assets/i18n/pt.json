@@ -586,7 +586,6 @@
   "TARGET_LOWCASE": "meta",
   "TERMINATE": "Rescindir",
   "TERMINATE_AGREEMENT": "Rescindir Acordo",
-
   "THERE_ARE_NO_AMENDMENTS_ADDED": "Não há aditivos adicionados.",
   "THERE_ARE_NO_ASSESSMENTS_ADDED": "Não há avaliações adicionadas.",
   "THERE_ARE_NO_CORE_VALUE_ASSESSMENTS": "Não há Core Value Assessments.",
@@ -599,7 +598,6 @@
   "TYPE": "Tipo",
   "TYPE_OF_ASSESSMENT": "Tipo de avaliação",
   "UNICEF_CASH": "Valor (em dinheiro) do UNICEF",
-  "UNSUSPEND": "Cancelar a suspensão",
   "UPLOAD_CORE_VALUES_ASSESSMENT": "Faça o upload do Core Values Assessment",
   "USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT": "Para salvar este aditivo use o botão “Salvar” na barra lateral direita ",
   "USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING": "Use o modelo de aditivo para registrar alterações e assinaturas.",
