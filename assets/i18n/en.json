@@ -608,5 +608,6 @@
   "VENDOR_NUMBER": "Vendor Number",
   "VIEW_REPORT": "View Report",
   "VISION_VENDOR_NUMBER": "VISION Vendor Number",
-  "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number"
+  "VISION_VENDOR_NUMBER_REQUIRED": "VISION Vendor Number",
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Error on retrieving partner's staff members. Try again."
 }
