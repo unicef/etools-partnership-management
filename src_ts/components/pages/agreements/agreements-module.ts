@@ -26,7 +26,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation, langChanged} from 'lit-translate';
 import {isJsonStrMatch} from '../../utils/utils';
 import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -67,7 +67,9 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         <div slot="page-title">
           ${this.listActive ? html`<span>${translate('AGREEMENTS')}</span>` : ''}
           ${this.tabsActive
-            ? html`<span>${this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive)}</span>`
+            ? html`<span
+                >${langChanged(() => this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive))}</span
+              >`
             : ''}
         </div>
 
@@ -295,7 +297,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       return '';
     }
     if (newAgreement) {
-      return 'Add Agreement';
+      return getTranslation('ADD_AGREEMENT');
     }
     return agreement.id ? agreement.partner_name + ': ' + agreement.agreement_number : '';
   }
