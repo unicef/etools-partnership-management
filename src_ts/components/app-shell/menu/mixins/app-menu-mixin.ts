@@ -1,7 +1,4 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {store} from '../../../../redux/store';
-import {updateSmallMenu} from '../../../../redux/actions/app';
 import {LitElement, property} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer';
 
@@ -31,13 +28,13 @@ export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
       this._resizeMainLayout = this._resizeMainLayout.bind(this);
       this._toggleDrawer = this._toggleDrawer.bind(this);
 
-      this.addEventListener('toggle-small-menu', this._toggleSmallMenu);
+      this.addEventListener('toggle-small-menu', this._toggleSmallMenu as any);
       this.addEventListener('resize-main-layout', this._resizeMainLayout);
       this.addEventListener('drawer', this._toggleDrawer);
     }
 
     private _removeMenuListeners(): void {
-      this.removeEventListener('toggle-small-menu', this._toggleSmallMenu);
+      this.removeEventListener('toggle-small-menu', this._toggleSmallMenu as any);
       this.removeEventListener('resize-main-layout', this._resizeMainLayout);
       this.removeEventListener('drawer', this._toggleDrawer);
     }
@@ -57,9 +54,9 @@ export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
       return !!parseInt(menuTypeStoredVal, 10);
     }
 
-    private _toggleSmallMenu(e: Event): void {
+    private _toggleSmallMenu(e: CustomEvent): void {
       e.stopImmediatePropagation();
-      this.smallMenu = !this.smallMenu;
+      this.smallMenu = e.detail && e.detail.smallMenu != undefined ? e.detail.smallMenu : !this.smallMenu;
       this._smallMenuValueChanged(this.smallMenu);
     }
 
@@ -72,7 +69,6 @@ export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
     private _smallMenuValueChanged(newVal: boolean) {
       const localStorageVal: number = newVal ? 1 : 0;
       localStorage.setItem('etoolsAppSmallMenuIsActive', String(localStorageVal));
-      store.dispatch(updateSmallMenu(newVal));
     }
 
     private _updateDrawerStyles(): void {
