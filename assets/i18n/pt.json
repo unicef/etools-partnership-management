@@ -609,5 +609,6 @@
   "VIEW_REPORT": "Ver relatório",
   "VISION_VENDOR_NUMBER": "Número Vendor no VISION",
   "VISION_VENDOR_NUMBER_REQUIRED": "Número Vendor no VISION",
+  "ADD_AGREEMENT": "Adicionar Contrato",
   "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Erro ao recuperar funcionários do parceiro. Tente novamente."
 }
