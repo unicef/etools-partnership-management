@@ -58,7 +58,6 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
 
     private _resetStatusActionsDebouncer!: Debouncer;
     private _statusActiveChangeDebouncer!: Debouncer;
-    private statusChangeWarningDialogContent!: HTMLElement;
 
     updated(changedProperties: PropertyValues) {
       if (changedProperties.has('status')) {
