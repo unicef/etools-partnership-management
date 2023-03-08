@@ -610,5 +610,19 @@
   "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "¡No olvides guardar los archivos subidos!",
   "CHANGING_AGREEMENT_STATUS": "Cambiando el estado del acuerdo...",
   "ADD_AGREEMENT": "Agregar Acuerdo",
-  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Error al recuperar los miembros del personal del socio. Intentar otra vez."
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Error al recuperar los miembros del personal del socio. Intentar otra vez.",
+  "ERROR_CHANGE_WORKSPACE": "Algo ha ido mal al cambiar tu espacio de trabajo. Vuelva a intentarlo",
+  "CHANGES_ARE_SAVED": "Se guardan todos los cambios",
+  "INVALID_AGREEMENT_DATA": "Datos del acuerdo no válidos.",
+  "INVALID_AGREEMENT_ID": "ID de acuerdo no válido",
+  "INVALID_REPORT_ID": "¡ID de informe no válida!",
+  "INVALID_INTERVENTION_DATA": "Datos de intervención no válidos.",
+  "INVALID_PARTNER_DATA": "¡Datos de socio no válidos!",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "Error de actualización. ID de socio no válido.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "No está permitido cambiar el estado a '{0}'.",
+  "PD_DELETE_SUCCCESS": "PD/SPD borrados con éxito.",
+  "AGREEMENT_DELETE_SUCCCESS": "Acuerdo eliminado con éxito.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "¡Número de proveedor no válido para el nuevo socio!",
+  "IMPORTING_PARTNER_INFO": "Importar información de socios...",
+  "PLEASE_REFRESH_DATA": "Por favor, actualice los datos."
 }

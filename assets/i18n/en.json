@@ -610,5 +610,19 @@
   "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "Don't forget to save uploaded files!",
   "CHANGING_AGREEMENT_STATUS": "Changing agreement status...",
   "ADD_AGREEMENT": "Add Agreement",
-  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Error on retrieving partner's staff members. Try again."
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Error on retrieving partner's staff members. Try again.",
+  "ERROR_CHANGE_WORKSPACE": "Something went wrong changing your workspace. Please try again",
+  "CHANGES_ARE_SAVED": "All changes are saved",
+  "INVALID_AGREEMENT_DATA": "Invalid agreement data!",
+  "INVALID_AGREEMENT_ID": "Invalid agreement ID",
+  "INVALID_REPORT_ID": "Invalid report ID!",
+  "INVALID_INTERVENTION_DATA": "Invalid intervention data!",
+  "INVALID_PARTNER_DATA": "Invalid partner data!",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "Update failed. Invalid partner ID.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "Changing status to '{0}' is not allowed!",
+  "PD_DELETE_SUCCCESS": "PD/SPD successfully deleted.",
+  "AGREEMENT_DELETE_SUCCCESS": "Agreement successfully deleted.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "Invalid Vendor Number for new partner!",
+  "IMPORTING_PARTNER_INFO": "Importing partner information...",
+  "PLEASE_REFRESH_DATA": "Please refresh data!"
 }

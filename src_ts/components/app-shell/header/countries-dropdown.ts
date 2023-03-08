@@ -12,6 +12,7 @@ import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -187,7 +188,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
     logError('Country change failed!', 'countries-dropdown', error);
     (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).selected = this.currentCountry.id;
     fireEvent(this, 'toast', {
-      text: 'Something went wrong changing your workspace. Please try again'
+      text: getTranslation('ERROR_CHANGE_WORKSPACE')
     });
     fireEvent(this, 'global-loading', {
       active: false,

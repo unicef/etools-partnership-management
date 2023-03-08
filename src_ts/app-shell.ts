@@ -85,7 +85,7 @@ import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, translate} from 'lit-translate';
+import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
@@ -572,7 +572,7 @@ class AppShell extends connect(store)(
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
     fireEvent(this, 'toast', {
-      text: 'An error occurred.'
+      text: getTranslation('GENERAL.ERR_OCCURRED')
     });
   }
 
