@@ -56,7 +56,7 @@ export function AppMenuMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     private _toggleSmallMenu(e: CustomEvent): void {
       e.stopImmediatePropagation();
-      this.smallMenu = e.detail && e.detail.smallMenu != undefined ? e.detail.smallMenu : !this.smallMenu;
+      this.smallMenu = e.detail && e.detail.value != undefined ? e.detail.value : !this.smallMenu;
       this._smallMenuValueChanged(this.smallMenu);
     }
 
