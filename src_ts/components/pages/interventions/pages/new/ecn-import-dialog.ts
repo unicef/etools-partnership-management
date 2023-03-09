@@ -96,6 +96,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-value="id"
             option-label="agreement_number"
             trigger-value-change-event
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             @etools-selected-item-changed="${({detail}: CustomEvent) => this.selectedItemChanged(detail, 'agreement')}"
             required
             auto-validate
@@ -109,6 +110,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) =>
@@ -123,6 +125,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'sections')}"
@@ -136,6 +139,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'offices')}"
