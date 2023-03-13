@@ -610,5 +610,19 @@
   "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "Не забудьте сохранить загруженные файлы!",
   "CHANGING_AGREEMENT_STATUS": "Изменение статуса соглашения...",
   "ADD_AGREEMENT": "Добавить соглашение",
-  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Ошибка при получении сотрудников партнера. Попробуйте еще раз."
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Ошибка при получении сотрудников партнера. Попробуйте еще раз.",
+  "ERROR_CHANGE_WORKSPACE": "Что-то пошло не так при изменении вашего рабочего пространства. Пожалуйста, попробуйте еще раз",
+  "CHANGES_ARE_SAVED": "Все изменения сохраняются",
+  "INVALID_AGREEMENT_DATA": "Неверные данные соглашения!",
+  "INVALID_AGREEMENT_ID": "Неверный идентификатор соглашения",
+  "INVALID_REPORT_ID": "Неверный идентификатор отчета!",
+  "INVALID_INTERVENTION_DATA": "Неверные данные о вмешательстве!",
+  "INVALID_PARTNER_DATA": "Неверные данные о партнере!",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "Обновление не удалось. Неверный идентификатор партнера.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "Изменение статуса на '{0}' не допускается!",
+  "PD_DELETE_SUCCCESS": "PD/SPD успешно удалены.",
+  "AGREEMENT_DELETE_SUCCCESS": "Соглашение успешно удалено.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "Неверный номер поставщика для нового партнера!",
+  "IMPORTING_PARTNER_INFO": "Импорт информации о партнере...",
+  "PLEASE_REFRESH_DATA": "Пожалуйста, обновите данные!"
 }

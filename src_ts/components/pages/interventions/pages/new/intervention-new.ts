@@ -136,7 +136,9 @@ export class InterventionNew extends connect(store)(LitElement) {
               `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
           )
           .map((member: PartnerStaffMember) => ({
-            label: `${!member.active ? '[Inactive]' : ''} ${member.first_name} ${member.last_name} (${member.email})`,
+            label: `${!member.active ? [getTranslation('INACTIVE')] : ''} ${member.first_name} ${member.last_name} (${
+              member.email
+            })`,
             value: member.id
           })))
     );

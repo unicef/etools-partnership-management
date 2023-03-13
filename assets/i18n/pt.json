@@ -610,5 +610,19 @@
   "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "Não se esqueça de salvar os arquivos enviados!",
   "CHANGING_AGREEMENT_STATUS": "Alterando o status do contrato...",
   "ADD_AGREEMENT": "Adicionar Contrato",
-  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Erro ao recuperar funcionários do parceiro. Tente novamente."
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Erro ao recuperar funcionários do parceiro. Tente novamente.",
+  "ERROR_CHANGE_WORKSPACE": "Algo correu mal ao mudar o seu espaço de trabalho. Por favor, tente novamente",
+  "CHANGES_ARE_SAVED": "Todas as alterações são guardadas",
+  "INVALID_AGREEMENT_DATA": "Dados de acordo inválidos!",
+  "INVALID_AGREEMENT_ID": "ID do acordo inválido",
+  "INVALID_REPORT_ID": "ID do relatório inválido!",
+  "INVALID_INTERVENTION_DATA": "Dados de intervenção inválidos!",
+  "INVALID_PARTNER_DATA": "Dados do parceiro inválidos!",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "A actualização falhou. ID do parceiro inválido.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "Não é permitido alterar o estado para '{0}'!",
+  "PD_DELETE_SUCCCESS": "PD/SPD apagado com sucesso.",
+  "AGREEMENT_DELETE_SUCCCESS": "O acordo foi eliminado com sucesso.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "Número de Vendedor Inválido para novo parceiro!",
+  "IMPORTING_PARTNER_INFO": "Importar informação do parceiro...",
+  "PLEASE_REFRESH_DATA": "Por favor, actualize os dados!"
 }

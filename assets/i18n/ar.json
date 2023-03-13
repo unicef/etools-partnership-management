@@ -610,5 +610,19 @@
   "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "لا تنسى حفظ الملفات المرفوعة!",
   "CHANGING_AGREEMENT_STATUS": "...تغيير حالة الاتفاقية ",
   "ADD_AGREEMENT": "أضف اتفاقية",
-  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "خطأ في استرجاع موظفي الشريك. حاول ثانية."
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "خطأ في استرجاع موظفي الشريك. حاول ثانية.",
+  "ERROR_CHANGE_WORKSPACE": "حدث خطأ ما أثناء تغيير مساحة العمل الخاصة بك. حاول مرة اخرى",
+  "CHANGES_ARE_SAVED": "تم حفظ جميع التغييرات",
+  "INVALID_AGREEMENT_DATA": "!بيانات الاتفاقية غير صالحة",
+  "INVALID_AGREEMENT_ID": "معرف اتفاقية غير صالح",
+  "INVALID_REPORT_ID": "!معرّف التقرير غير صالح",
+  "INVALID_INTERVENTION_DATA": "!بيانات تدخل غير صالحة",
+  "INVALID_PARTNER_DATA": "!بيانات الشريك غير صالحة",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "فشل التحديث. معرف الشريك غير صالح.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "!تغيير الحالة إلى '{0}' غير مسموح به",
+  "PD_DELETE_SUCCCESS": "تم حذف PD / SPD بنجاح.",
+  "AGREEMENT_DELETE_SUCCCESS": "تم حذف الاتفاقية بنجاح.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "!رقم البائع غير صالح لشريك جديد",
+  "IMPORTING_PARTNER_INFO": "... جاري استيراد معلومات الشريك",
+  "PLEASE_REFRESH_DATA": "يرجى تحديث البيانات!"
 }
