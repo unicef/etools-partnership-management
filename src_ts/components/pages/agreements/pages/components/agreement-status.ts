@@ -102,7 +102,6 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
     this.sectionName = getTranslation('AGREEMENT');
     this._handleStickyScroll();
 
-    this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
     this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
