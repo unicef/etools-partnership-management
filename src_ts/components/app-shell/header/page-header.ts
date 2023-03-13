@@ -3,7 +3,6 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, _checkEnvironment} from '../../../config/config';
-import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -379,7 +378,7 @@ class PageHeader extends connect(store)(
   }
 
   public menuBtnClicked() {
-    store.dispatch(updateDrawerState(true));
+    fireEvent(this, 'change-drawer-state');
   }
 
   public _setBgColor() {

@@ -11,8 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import {Action, ActionCreator} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 import {RouteDetails} from '../../components/utils/router';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
-export const UPDATE_SMALLMENU_STATE = 'UPDATE_SMALLMENU_STATE';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {BASE_URL} from '../../config/config';
 import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../components/utils/routes';
@@ -38,20 +36,6 @@ export type AppAction =
   | AppActionShowToast
   | AppActionCloseToast
   | AppActionUpdateRouteDetails;
-
-export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
-  return {
-    type: UPDATE_DRAWER_STATE,
-    opened
-  };
-};
-
-export const updateSmallMenu: any = (smallMenu: boolean) => {
-  return {
-    type: UPDATE_SMALLMENU_STATE,
-    smallMenu
-  };
-};
 
 export const updateStoreRouteDetails: ActionCreator<AppActionUpdateRouteDetails> = (routeDetails: any) => {
   return {
