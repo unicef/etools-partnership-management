@@ -75,15 +75,16 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
-          padding: 0 24px 0 48px !important;
+          padding: 0 !important;
+          padding-inline: 48px 24px !important;
         }
 
         .overview-header etools-data-table-column {
-          padding-right: 0;
+          padding-inline-end: 0;
         }
 
         .overview-row {
-          padding-left: 48px !important;
+          padding-inline-start: 48px !important;
         }
 
         .vision {
@@ -93,8 +94,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           font-size: 16px;
           border: 2px solid rgba(0, 97, 233, 0.38);
           height: 56px;
-          margin-left: -24px;
-          padding-left: 24px;
+          margin-inline-start: -24px;
+          padding-inline-start: 24px;
           line-height: normal;
           box-sizing: content-box !important;
         }
@@ -152,12 +153,12 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         .report {
           color: var(--primary-color, #0099ff);
           cursor: pointer;
-          margin-left: -8px;
+          margin-inline-start: -8px;
           align-items: center;
         }
 
         .report-header {
-          padding-left: 2px;
+          padding-inline-start: 2px;
         }
 
         .margin-l {

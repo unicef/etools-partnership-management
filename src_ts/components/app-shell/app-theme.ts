@@ -211,17 +211,15 @@ documentContainer.innerHTML = `
           width: auto !important;
           max-width: 100%;
           right: auto;
-          padding-right: 15px;
+          padding-inline-end: 15px;
         }
       }
 
       html[dir="rtl"] {
-        --list-row-wrapper-padding: 0;
-
         --required-star-style: {
           background: url('./images/required.svg') no-repeat 99% 20%/8px;
           right: auto;
-          padding-right: 15px;
+          padding-inline-end: 15px;
         }
       }
 

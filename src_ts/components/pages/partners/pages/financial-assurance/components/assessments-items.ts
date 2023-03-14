@@ -57,7 +57,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
 
         iron-icon {
           color: var(--dark-icon-color);
-          margin-right: 8px;
+          margin-inline-end: 8px;
         }
 
         icons-actions2 {

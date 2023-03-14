@@ -10,7 +10,8 @@ export const buttonsStyles = html` <style>
     }
 
     --primary-button-with-prefix: {
-      padding: 5px 10px 5px 16px;
+      padding-block: 5px;
+      padding-inline: 16px 10px;
     }
   }
 
@@ -65,8 +66,8 @@ export const buttonsStyles = html` <style>
 
   paper-button.w100 {
     width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline-end: 0;
+    margin-inline-start: 0;
   }
 
   .secondary-btn-wrapper {
@@ -83,7 +84,7 @@ export const buttonsStyles = html` <style>
   }
 
   .secondary-btn iron-icon {
-    margin-right: 5px;
+    margin-inline-end: 5px;
   }
 
   .white-btn {

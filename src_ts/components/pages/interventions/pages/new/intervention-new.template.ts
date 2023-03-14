@@ -28,7 +28,7 @@ export function template(this: InterventionNew): TemplateResult {
           width: auto !important;
           max-width: 100%;
           right: auto;
-          padding-right: 15px;
+          padding-inline-end: 15px;
         }
       }
       paper-input[required][label],
@@ -59,7 +59,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
       etools-dropdown-multi::part(esmm-label-container) {
         --iron-icon: {
-          margin-left: 10px;
+          margin-inline-start: 10px;
           color: var(--primary-color);
         }
         --paper-tooltip: {

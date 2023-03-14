@@ -85,7 +85,7 @@ export const etoolsStatusStyles = html`
     }
 
     .status {
-      margin-left: 10px;
+      margin-inline-start: 10px;
       margin-top: auto;
       margin-bottom: auto;
       text-transform: capitalize;
@@ -106,7 +106,7 @@ export const etoolsStatusStyles = html`
       background-color: inherit;
       width: 29px;
       height: 29px;
-      margin-left: -3px;
+      margin-inline-start: -3px;
     }
 
     .custom .status-icon .icon-wrapper .custom-icon {

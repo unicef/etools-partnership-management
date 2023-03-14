@@ -27,7 +27,7 @@ documentContainer.innerHTML = `
           width: 28px;
           height: 28px;
           padding: 0;
-          margin-right: 15px;
+          margin-inline-end: 15px;
         };
 
         --paper-fab-btn-green: {
@@ -42,7 +42,8 @@ documentContainer.innerHTML = `
           width: auto;
           margin: 0;
           color: var(--primary-color);
-          padding: 0 5px 0 0;
+          padding: 0;
+          padding-inline-end: 5px;
           font-size: 14px;
           font-weight: bold;
         };

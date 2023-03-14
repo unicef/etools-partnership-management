@@ -76,7 +76,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         }
 
         .indicator-header {
-          padding: 8px 24px 8px 16px;
+          padding-block: 8px;
+          padding-inline: 16px 24px;
           background: var(--medium-theme-background-color);
         }
 

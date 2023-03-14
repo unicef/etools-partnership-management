@@ -105,7 +105,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         }
 
         .generate-pca[hidden] + .col {
-          padding-left: 0;
+          padding-inline-start: 0;
         }
 
         #generateMyPca {
@@ -120,7 +120,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           color: var(--error-color);
         }
         .padd-right {
-          padding-right: 16px;
+          padding-inline-end: 16px;
         }
         .year-coll {
           width: 105px;

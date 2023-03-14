@@ -30,7 +30,7 @@ export const disaggregationTableStyles = html` <style>
   }
   span.total {
     float: right;
-    padding-left: 15px;
+    padding-inline-start: 15px;
   }
 
   /*   Table header    */

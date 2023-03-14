@@ -9,7 +9,7 @@ export const requiredFieldStarredStyles = html` <style>
       width: auto !important;
       max-width: 100%;
       right: auto;
-      padding-right: 15px;
+      padding-inline-end: 15px;
     }
   }
 

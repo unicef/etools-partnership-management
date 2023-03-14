@@ -38,7 +38,7 @@ export const riskRatingStyles = html` <style>
       color: var(--primary-text-color);
       background-color: transparent;
       text-align: left;
-      padding-left: 0;
+      padding-inline-start: 0;
     }
     --risk-rating-not-assessed: {
       @apply --risk-rating-field;

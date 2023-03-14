@@ -41,7 +41,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           display: block;
         }
         .padd-left {
-          padding-left: 48px !important;
+          padding-inline-start: 48px !important;
         }
       </style>
 
