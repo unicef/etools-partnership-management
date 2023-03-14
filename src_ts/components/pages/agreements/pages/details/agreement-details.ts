@@ -213,7 +213,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               id="partner"
               label="${translate('PARTNER_NAME')}"
               placeholder="&#8212;"
-              .options="${this.partnersDropdownData}"
+              .options="${this.filteredPartnerDropdownData}"
               .selected="${this.agreement.partner}"
               trigger-value-change-event
               @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
@@ -563,6 +563,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   @property({type: Array})
   partnersDropdownData!: any[];
+
+  get filteredPartnerDropdownData() {
+    return this.partnersDropdownData.filter(
+      (partner) =>
+        !this._typeMatches(this.agreement.agreement_type, 'PCA') || partner.type === 'Civil Society Organization'
+    );
+  }
 
   @property({type: Array})
   agreementTypes!: LabelAndValue[];
