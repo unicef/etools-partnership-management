@@ -1,5 +1,4 @@
-import {html} from '@polymer/polymer/polymer-element';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {html} from 'lit-element';
 
 // language=HTML
 export const navMenuStyles = html`
@@ -9,11 +8,16 @@ export const navMenuStyles = html`
     }
 
     :host {
-      @apply --layout-vertical;
+      display: flex;
+      flex-direction: column;
       height: 100%;
       overflow-y: var(--side-bar-scrolling);
       overflow-x: hidden;
-      border-right: 1px solid var(--dark-divider-color);
+      border-right: 1px solid var(--light-divider-color);
+    }
+
+    .chev-right {
+      position: relative;
     }
 
     :host([small-menu]) {
@@ -33,12 +37,13 @@ export const navMenuStyles = html`
     .menu-header,
     :host([small-menu]) .menu-header .ripple-wrapper.main,
     .nav-menu-item {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
 
     .menu-header {
-      @apply --layout-justified;
+      justify-content: space-between;
       background-color: var(--primary-color);
       color: white;
       min-height: 60px;
@@ -61,13 +66,14 @@ export const navMenuStyles = html`
     .nav-menu-item.section-title,
     :host([small-menu]) .nav-menu-item,
     :host([small-menu]) .menu-header .ripple-wrapper.main {
-      @apply --layout-center-justified;
+      justify-content: center;
     }
 
     :host([small-menu]) #app-name,
     :host #menu-header-top-icon,
     :host([small-menu]) .nav-menu-item .name,
     :host(:not([small-menu])) paper-tooltip,
+    :host(:not([small-menu])) #expand-menu,
     :host([small-menu]) .section-title span,
     :host([small-menu]) #minimize-menu,
     :host([small-menu]) .menu-header .ripple-wrapper:not(.main) {
@@ -88,7 +94,8 @@ export const navMenuStyles = html`
     }
 
     #menu-header-top-icon,
-    #minimize-menu {
+    #minimize-menu,
+    #expand-menu {
       cursor: pointer;
     }
 
@@ -103,7 +110,8 @@ export const navMenuStyles = html`
     }
 
     .nav-menu {
-      @apply --layout-vertical;
+      display: flex;
+      flex-direction: column;
       background: var(--primary-background-color);
       min-height: 550px;
       padding: 8px 0 0;
@@ -111,7 +119,7 @@ export const navMenuStyles = html`
 
     .nav-menu,
     .nav-menu iron-selector[role='navigation'] {
-      @apply --layout-flex;
+      flex: 1;
     }
 
     .nav-menu-item {

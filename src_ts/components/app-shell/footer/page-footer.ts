@@ -1,22 +1,22 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {property} from '@polymer/decorators';
+import {html, LitElement} from 'lit-element';
+import {BASE_URL} from '../../../config/config';
 
 /**
  * page footer element
  * @polymer
  * @customElement
  */
-class PageFooter extends PolymerElement {
-  public static get template() {
+class PageFooter extends LitElement {
+  render() {
     // main template
     // language=HTML
     return html`
       <style>
         :host {
-          @apply --layout-vertical;
-          @apply --layout-flex;
-          @apply --layout-end-justified;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          justify-content: flex-end;
           padding: 18px 24px;
           width: 100%;
           min-height: 90px;
@@ -24,12 +24,14 @@ class PageFooter extends PolymerElement {
         }
 
         #footer-content {
-          @apply --layout-horizontal;
+          display: flex;
+          flex-direction: row;
         }
 
         #unicef-logo {
-          @apply --layout-horizontal;
-          @apply --layout-inline;
+          display: flex;
+          flex-direction: row;
+          display: inline-flex;
           padding-right: 30px;
         }
 
@@ -57,7 +59,7 @@ class PageFooter extends PolymerElement {
       <footer>
         <div id="footer-content">
           <span id="unicef-logo">
-            <img src$="[[rootPath]]images/UNICEF_logo.png" alt="UNICEF logo" />
+            <img src="${BASE_URL}images/UNICEF_logo.png" alt="UNICEF logo" />
           </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>
@@ -67,9 +69,6 @@ class PageFooter extends PolymerElement {
       </footer>
     `;
   }
-
-  @property({type: String})
-  rootPath!: string;
 }
 
 window.customElements.define('page-footer', PageFooter);

@@ -1,12 +1,11 @@
-FROM node:12.18.3-alpine
+FROM node:12.22.7-alpine3.12
 RUN apk update
 RUN apk add --update bash
 
 RUN apk add git
-RUN npm install -g gulp-cli
-RUN npm install -g gulp
-
 RUN npm install -g --unsafe-perm polymer-cli
+# gulp needed when switching between epd and develop branch
+RUN npm install -g gulp 
 
 RUN npm install -g typescript
 

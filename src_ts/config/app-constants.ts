@@ -1,3 +1,5 @@
+import {GenericObject} from '@unicef-polymer/etools-types/dist/global.types';
+
 const CONSTANTS = {
   PD_EXPORT_TYPES: {
     PdResult: 'PD Result',
@@ -9,6 +11,7 @@ const CONSTANTS = {
     PD: 'PD',
     SSFA: 'SSFA',
     SHPD: 'SHPD',
+    SPD: 'SPD',
     ProgrammeDocument: 'Programme Document',
     SmallScaleFundingAgreement: 'Small Scale Funding Agreement',
     SimplifiedHumanitarianProgrammeDocument: 'Simplified Humanitarian Programme Document'
@@ -40,5 +43,14 @@ const CONSTANTS = {
     SR: 'SR' // Special Report, value frm PRP
   }
 };
+
+export const appLanguages: GenericObject[] = [
+  {value: 'en', display_name: 'English'},
+  {value: 'fr', display_name: 'French'},
+  {value: 'es', display_name: 'Spanish'},
+  {value: 'ar', display_name: 'Arabic'},
+  {value: 'pt', display_name: 'Portuguese'},
+  {value: 'ru', display_name: 'Russian'}
+];
 
 export default CONSTANTS;

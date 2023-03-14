@@ -1,36 +1,52 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
-import {_checkEnvironment} from '../../../config/config';
-import {updateDrawerState} from '../../../actions/app';
+import {store, RootState} from '../../../redux/store';
+import {BASE_URL, _checkEnvironment} from '../../../config/config';
+import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
-import '@unicef-polymer/etools-app-selector/etools-app-selector';
+import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
-import ProfileOperationsMixin from '../../user/profile-operations-mixin';
+import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
-import '../../layout/support-btn';
+import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from '@polymer/decorators';
+import {translate, use} from 'lit-translate';
+import {setActiveLanguage} from '../../../redux/actions/active-language.js';
+import {activeLanguage} from '../../../redux/reducers/active-language.js';
+import {html, LitElement, query} from 'lit-element';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax';
+import pmpEdpoints from '../../endpoints/endpoints';
+import {updateUserData} from '../../../redux/actions/user';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import 'dayjs/locale/fr.js';
+import 'dayjs/locale/ru.js';
+import 'dayjs/locale/pt.js';
+import 'dayjs/locale/ar.js';
+import 'dayjs/locale/ro.js';
+import 'dayjs/locale/es.js';
+import {appLanguages} from '../../../config/app-constants';
+
+store.addReducers({
+  activeLanguage
+});
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin GestureEventListeners
  * @appliesMixin ProfileOperationsMixin
  */
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(ProfileOperationsMixin(MatomoMixin(PolymerElement)))
+  MatomoMixin(ProfileOperationsMixin(LitElement))
 ) {
-  public static get template() {
+  render() {
     // main template
     // language=HTML
     return html`
@@ -38,7 +54,7 @@ class PageHeader extends connect(store)(
         app-toolbar {
           padding: 0 16px 0 0;
           height: 60px;
-          background-color: var(--header-bg-color);
+          background-color: ${this.headerColor};
         }
 
         .titlebar {
@@ -49,7 +65,34 @@ class PageHeader extends connect(store)(
           --countries-dropdown-color: var(--light-secondary-text-color);
         }
 
-        support-btn,
+        etools-dropdown {
+
+            --paper-listbox: {
+              max-height: 600px;
+            }
+
+            --esmm-icons: {
+              color: var(--light-secondary-text-color);
+              cursor: pointer;
+            }
+
+            --paper-input-container-underline: {
+              display: none;
+            }
+
+            --paper-input-container-underline-focus: {
+              display: none;
+            }
+
+            --paper-input-container-shared-input-style: {
+              color: var(--light-secondary-text-color);
+              cursor: pointer;
+              font-size: 16px;
+              text-align: right;
+              width: 100px;
+            }
+        }
+
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -61,7 +104,7 @@ class PageHeader extends connect(store)(
         }
 
         .titlebar {
-          @apply --layout-flex;
+          flex: 1;
           font-size: 28px;
           font-weight: 300;
         }
@@ -72,8 +115,9 @@ class PageHeader extends connect(store)(
         }
 
         .content-align {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
         }
 
         #app-logo {
@@ -81,15 +125,35 @@ class PageHeader extends connect(store)(
           width: auto;
         }
 
+        .dropdowns {
+          display: flex;
+          margin-right: 5px;
+        }
+
+        .header {
+          flex-wrap: wrap;
+          height: 100%;
+          justify-content: space-between;
+        }
+
+        .nav-menu-button {
+          min-width: 70px;
+        }
+
+        .header__item {
+          display: flex;
+          align-items: center;
+        }
+
+        .header__right-group {
+          justify-content: space-evenly;
+        }
+
         .envWarning {
           color: var(--nonprod-text-warn-color);
           font-weight: 700;
           font-size: 18px;
           line-height: 20px;
-        }
-
-        support-btn {
-          margin-left: 24px;
         }
 
         etools-profile-dropdown {
@@ -123,9 +187,7 @@ class PageHeader extends connect(store)(
           .titlebar img {
             margin: 0 8px 0 12px;
           }
-          support-btn {
-            margin-left: 4px;
-          }
+
           etools-profile-dropdown{
             margin-left: 0px;
             width: 40px;
@@ -152,35 +214,60 @@ class PageHeader extends connect(store)(
       }
       </style>
 
-      <app-toolbar sticky class="content-align">
-        <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
-        <div class="titlebar content-align">
-          <etools-app-selector id="app-selector"></etools-app-selector>
-          <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
-          <template is="dom-if" if="[[environment]]">
-            <div class="envWarning">
-              <span class='envLong'> - </span>[[environment]]
+      <app-toolbar sticky class="content-align header">
+        <div class="header__item">
+          <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
+          <div class="titlebar content-align">
+            <etools-app-selector id="app-selector" .user="${this.profile}" .language="${
+      this.selectedLanguage
+    }"></etools-app-selector>
+            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
+            <div class="envWarning" ?hidden="${!this.environment}">
+              <span class='envLong'> - </span>${this.environment}
               <span class='envLong'>TESTING ENVIRONMENT<span>
             </div>
-          </template>
+          </div>
         </div>
-        <div class="content-align">
-          <countries-dropdown id="countries" countries="[[countries]]"
-                              current-country="[[profile.country]]">
-          </countries-dropdown>
 
-          <support-btn on-tap="trackAnalytics" tracker="Support"></support-btn>
+        <div class="header__item header__right-group">
+          <div class="dropdowns">
+              <etools-dropdown
+                id="languageSelector"
+                .selected="${this.selectedLanguage}"
+                .options="${appLanguages}"
+                option-label="display_name"
+                option-value="value"
+                @etools-selected-item-changed="${this.languageChanged}"
+                trigger-value-change-event
+                hide-search
+                allow-outside-scroll
+                no-label-float
+                auto-width
+              ></etools-dropdown>
+
+              <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${
+      this.profile?.country
+    }">
+              </countries-dropdown>
+
+          </div>
 
           <etools-profile-dropdown
-              sections="[[allSections]]"
-              offices="[[allOffices]]"
-              users="[[allUsers]]"
-              profile="{{profile}}"
-              on-save-profile="_saveProfile"
-              on-sign-out="_signOut"></etools-profile-dropdown>
+              title="${translate('PROFILE_AND_SIGNOUT')}"
+              .sections="${this.allSections}"
+              .offices="${this.allOffices}"
+              .users="${this.allUsers}"
+              .profile="${this.profile}"
+              .language="${this.selectedLanguage}"
+              @save-profile="${this._saveProfile}"
+              @sign-out="${this._signOut}"></etools-profile-dropdown>
 
-          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"
-            tracker="hard refresh"> 
+          <paper-icon-button
+            title="${translate('GENERAL.REFRESH')}"
+            id="refresh"
+            icon="refresh"
+            tracker="hard refresh"
+            @tap="${this._onRefreshClick}">
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -202,21 +289,13 @@ class PageHeader extends connect(store)(
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(sections)'
-  })
+  @property({type: Array})
   allSections: LabelAndValue[] = [];
 
-  @property({
-    type: Array,
-    notify: true,
-    computed: '_convertCollection(offices)'
-  })
+  @property({type: Array})
   allOffices: LabelAndValue[] = [];
 
-  @property({type: Array, notify: true, computed: '_convertUsers(users)'})
+  @property({type: Array})
   allUsers: LabelAndValue[] = [];
 
   @property({type: String})
@@ -231,13 +310,22 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
-  public static get observers() {
-    return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
-  }
+  @property({type: String})
+  headerColor = 'var(--header-bg-color)';
+
+  @property({type: String})
+  selectedLanguage = '';
+
+  @query('#languageSelector') private languageDropdown!: EtoolsDropdownEl;
 
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
+
+    setTimeout(() => {
+      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+      this.languageDropdown.fitInto = fitInto;
+    }, 0);
   }
 
   public stateChanged(state: RootState) {
@@ -246,19 +334,43 @@ class PageHeader extends connect(store)(
     }
     if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
       this.offices = [...state.commonData.offices];
+      this.allOffices = this._convertCollection(this.offices);
     }
     if (!isJsonStrMatch(state.commonData.sections, this.sections)) {
       this.sections = [...state.commonData.sections];
+      this.allSections = this._convertCollection(this.sections);
     }
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
+      this.allUsers = this._convertUsers(this.users);
     }
-    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
-      this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
+
+    if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
+      this.profile = state.user!.data;
+
+      this._profileChanged(this.profile);
+
+      // TODO _updateCountriesList called 2 times bellow
+      this._updateCountriesList(this.profile.countries_available);
 
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
       }
+    }
+
+    if (state.activeLanguage!.activeLanguage && state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      localStorage.setItem('defaultLanguage', this.selectedLanguage);
+      this.setLanguageDirection();
+    }
+  }
+
+  private setLanguageDirection() {
+    const htmlTag = document.querySelector('html');
+    if (this.selectedLanguage === 'ar') {
+      htmlTag!.setAttribute('dir', 'rtl');
+    } else if (htmlTag!.getAttribute('dir')) {
+      htmlTag!.removeAttribute('dir');
     }
   }
 
@@ -269,7 +381,7 @@ class PageHeader extends connect(store)(
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (this.environment) {
-      this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
+      this.headerColor = 'var(--nonprod-header-color)';
     }
   }
 
@@ -298,10 +410,41 @@ class PageHeader extends connect(store)(
     return countriesList;
   }
 
-  // @ts-ignore
-  private _openDataRefreshDialog(e) {
-    // @ts-ignore
+  languageChanged(e: CustomEvent): void {
+    if (!e.detail.selectedItem) {
+      return;
+    }
+
+    const newLanguage = e.detail.selectedItem.value;
+    if (newLanguage) {
+      window.dayjs.locale(newLanguage);
+      // Event caught by self translating npm packages
+      fireEvent(this, 'language-changed', {language: newLanguage});
+    }
+    if (newLanguage !== this.selectedLanguage) {
+      localStorage.setItem('defaultLanguage', newLanguage);
+      use(newLanguage).then(() => {
+        if (this.profile?.preferences?.language != newLanguage) {
+          this.updateUserPreference(newLanguage);
+        }
+      });
+    }
+  }
+
+  private updateUserPreference(language: string) {
+    sendRequest({endpoint: pmpEdpoints.myProfile, method: 'PATCH', body: {preferences: {language: language}}})
+      .then((response) => {
+        store.dispatch(updateUserData(response));
+        store.dispatch(setActiveLanguage(language));
+      })
+      .catch((err: any) => parseRequestErrorsAndShowAsToastMsgs(err, this));
+  }
+  private _onRefreshClick(e: CustomEvent) {
     this.trackAnalytics(e);
+    this._openDataRefreshDialog();
+  }
+
+  private _openDataRefreshDialog() {
     fireEvent(this, 'open-data-refresh-dialog');
   }
 
@@ -339,7 +482,7 @@ class PageHeader extends connect(store)(
   protected _signOut() {
     this._clearDexieDbs();
     this._clearLocalStorage();
-    window.location.href = window.location.origin + '/logout';
+    window.location.href = window.location.origin + '/social/unicef-logout/';
   }
 
   protected _clearDexieDbs() {
@@ -354,7 +497,7 @@ class PageHeader extends connect(store)(
     if (profile) {
       const appSelector = this.shadowRoot!.querySelector('#app-selector');
       if (appSelector) {
-        (appSelector as PolymerElement).set('user', profile);
+        (appSelector as any).user = profile;
       }
     }
   }

@@ -1,20 +1,22 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {RootState} from '../../store';
+import {RootState} from '../../redux/store';
 
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
-import {Constructor, User, GenericObject} from '../../typings/globals.types';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
+import get from 'lodash-es/get';
+import {LitElement} from 'lit-element';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function EndpointsMixin<T extends Constructor<PolymerElement | LitElement>>(baseClass: T) {
   class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
     @property({type: Object})
     prpCountries!: GenericObject[];
@@ -23,11 +25,14 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     currentUser!: User;
 
     public endStateChanged(state: RootState) {
-      if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
-        this.prpCountries = [...state.commonData!.PRPCountryData];
+      if (
+        get(state, 'commonData.PRPCountryData') &&
+        !isJsonStrMatch(state.commonData!.PRPCountryData!, this.prpCountries)
+      ) {
+        this.prpCountries = [...state.commonData!.PRPCountryData!];
       }
-      if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
-        this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser));
+      if (get(state, 'user.data') && !isJsonStrMatch(state.user!.data, this.currentUser)) {
+        this.currentUser = JSON.parse(JSON.stringify(state.user!.data));
       }
     }
 
