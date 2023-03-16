@@ -78,7 +78,7 @@ export class ReportsModule extends connect(store)(
           padding-inline-end: 0;
         }
         .move-to-the-right {
-          margin-right: -20px;
+          margin-inline-end: -20px;
         }
         .secondary-title {
           font-size: 12px;

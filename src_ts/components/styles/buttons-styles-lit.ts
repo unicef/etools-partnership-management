@@ -10,7 +10,7 @@ export const buttonsStyles = html` <style>
     }
 
     --primary-button-with-prefix: {
-      padding-block: 5px;
+      padding: 5px;
       padding-inline: 16px 10px;
     }
   }
