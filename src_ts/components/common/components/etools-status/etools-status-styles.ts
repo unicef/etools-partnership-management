@@ -165,7 +165,7 @@ export const etoolsStatusStyles = html`
         min-width: 160px;
       }
       .divider-line {
-        border-left: none;
+        border-inline-start: none;
         margin-top: 32px;
         padding-top: 24px;
         border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
@@ -187,7 +187,7 @@ export const etoolsStatusStyles = html`
       .divider-line {
         margin: 8px 11px;
         border-top: none;
-        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
+        border-inline-start: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding-top: 40px;
       }
     }

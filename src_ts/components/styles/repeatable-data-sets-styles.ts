@@ -31,7 +31,7 @@ export const repeatableDataSetsStyles = html` ${actionIconBtnsStyles}
       flex-direction: column;
       flex: 1;
       margin-inline-start: 10px;
-      border-left: 1px solid var(--darker-divider-color);
+      border-inline-start: 1px solid var(--darker-divider-color);
     }
 
     .item-container .item-content > * {
@@ -59,7 +59,7 @@ export const repeatableDataSetsStylesV2 = html` <style>
   .item-actions-container {
     position: relative;
     padding-inline-end: 10px;
-    border-right: 2px solid var(--primary-color);
+    border-inline-end: 2px solid var(--primary-color);
     margin-top: 25px;
   }
 
@@ -82,7 +82,7 @@ export const repeatableDataSetsStylesV2 = html` <style>
   }
 
   .item-actions-container.locked {
-    border-right-color: var(--darker-divider-color);
+    border-inline-end-color: var(--darker-divider-color);
   }
 
   .item-actions-container.locked:before {
@@ -93,7 +93,7 @@ export const repeatableDataSetsStylesV2 = html` <style>
     display: inline-block;
     width: 100%;
     margin-inline-start: 0;
-    border-left: none;
+    border-inline-start: none;
   }
 </style>`;
 
@@ -113,7 +113,7 @@ export const repeatableDataSetsStylesV3 = html` <style>
   }
 
   .item-container .item-content {
-    border-left-style: dashed;
+    border-inline-start-style: dashed;
   }
 
   .item-content > * {

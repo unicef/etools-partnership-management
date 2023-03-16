@@ -58,7 +58,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           z-index: 1;
           color: white;
           padding: 0 4px;
-          border-right: 1px solid var(--primary-background-color);
+          border-inline-end: 1px solid var(--primary-background-color);
         }
 
         .indicator-toggle paper-icon-button {

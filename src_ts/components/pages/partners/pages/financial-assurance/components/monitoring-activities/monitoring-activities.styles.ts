@@ -103,7 +103,7 @@ export const monitoringActivitiesStyles = html`<style>
     height: 100%;
     width: 8px;
     border: 1px solid #000000;
-    border-right: none;
+    border-inline-end: none;
   }
   .activities .remove .description,
   .activities .braces .description {
