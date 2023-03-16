@@ -2,7 +2,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
-import {BASE_URL, _checkEnvironment} from '../../../config/config';
+import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -66,31 +66,30 @@ class PageHeader extends connect(store)(
         }
 
         etools-dropdown {
+          --paper-listbox: {
+            max-height: 600px;
+          }
 
-            --paper-listbox: {
-              max-height: 600px;
-            }
+          --esmm-icons: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+          }
 
-            --esmm-icons: {
-              color: var(--light-secondary-text-color);
-              cursor: pointer;
-            }
+          --paper-input-container-underline: {
+            display: none;
+          }
 
-            --paper-input-container-underline: {
-              display: none;
-            }
+          --paper-input-container-underline-focus: {
+            display: none;
+          }
 
-            --paper-input-container-underline-focus: {
-              display: none;
-            }
-
-            --paper-input-container-shared-input-style: {
-              color: var(--light-secondary-text-color);
-              cursor: pointer;
-              font-size: 16px;
-              text-align: right;
-              width: 100px;
-            }
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: right;
+            width: 100px;
+          }
         }
 
         etools-profile-dropdown,
@@ -188,86 +187,93 @@ class PageHeader extends connect(store)(
             margin: 0 8px 0 12px;
           }
 
-          etools-profile-dropdown{
+          etools-profile-dropdown {
             margin-left: 0px;
             width: 40px;
+          }
         }
-      }
-      @media (max-width: 576px) {
-        etools-app-selector {
-        --app-selector-button-padding: 18px 8px;
+        @media (max-width: 576px) {
+          etools-app-selector {
+            --app-selector-button-padding: 18px 8px;
+          }
+          #app-logo {
+            display: none;
+          }
+          .envWarning {
+            font-size: 10px;
+            margin-left: 2px;
+          }
+          #refresh {
+            width: 24px;
+            padding: 0px;
+          }
+          app-toolbar {
+            padding-right: 4px;
+          }
         }
-        #app-logo {
-          display: none;
-        }
-        .envWarning {
-          font-size: 10px;
-          margin-left: 2px;
-        }
-        #refresh{
-          width: 24px;
-          padding: 0px
-        }
-        app-toolbar {
-          padding-right: 4px;
-        }
-      }
       </style>
 
       <app-toolbar sticky class="content-align header">
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector id="app-selector" .user="${this.profile}" .language="${
-      this.selectedLanguage
-    }"></etools-app-selector>
-            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
-            <div class="envWarning" ?hidden="${!this.environment}">
+            <etools-app-selector
+              id="app-selector"
+              .user="${this.profile}"
+              .language="${this.selectedLanguage}"
+            ></etools-app-selector>
+            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
+            ${this.isStaging
+              ? html`<div class="envWarning" ?hidden="${!this.environment}">
               <span class='envLong'> - </span>${this.environment}
               <span class='envLong'>TESTING ENVIRONMENT<span>
-            </div>
+            </div>`
+              : ''}
           </div>
         </div>
 
         <div class="header__item header__right-group">
           <div class="dropdowns">
-              <etools-dropdown
-                id="languageSelector"
-                .selected="${this.selectedLanguage}"
-                .options="${appLanguages}"
-                option-label="display_name"
-                option-value="value"
-                @etools-selected-item-changed="${this.languageChanged}"
-                trigger-value-change-event
-                hide-search
-                allow-outside-scroll
-                no-label-float
-                auto-width
-              ></etools-dropdown>
+            <etools-dropdown
+              id="languageSelector"
+              .selected="${this.selectedLanguage}"
+              .options="${appLanguages}"
+              option-label="display_name"
+              option-value="value"
+              @etools-selected-item-changed="${this.languageChanged}"
+              trigger-value-change-event
+              hide-search
+              allow-outside-scroll
+              no-label-float
+              auto-width
+            ></etools-dropdown>
 
-              <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${
-      this.profile?.country
-    }">
-              </countries-dropdown>
-
+            <countries-dropdown
+              id="countries"
+              .countries="${this.countries}"
+              .currentCountry="${this.profile?.country}"
+            >
+            </countries-dropdown>
           </div>
 
           <etools-profile-dropdown
-              title="${translate('PROFILE_AND_SIGNOUT')}"
-              .sections="${this.allSections}"
-              .offices="${this.allOffices}"
-              .users="${this.allUsers}"
-              .profile="${this.profile}"
-              .language="${this.selectedLanguage}"
-              @save-profile="${this._saveProfile}"
-              @sign-out="${this._signOut}"></etools-profile-dropdown>
+            title="${translate('PROFILE_AND_SIGNOUT')}"
+            .sections="${this.allSections}"
+            .offices="${this.allOffices}"
+            .users="${this.allUsers}"
+            .profile="${this.profile}"
+            .language="${this.selectedLanguage}"
+            @save-profile="${this._saveProfile}"
+            @sign-out="${this._signOut}"
+          ></etools-profile-dropdown>
 
           <paper-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
             icon="refresh"
             tracker="hard refresh"
-            @tap="${this._onRefreshClick}">
+            @tap="${this._onRefreshClick}"
+          >
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -300,6 +306,9 @@ class PageHeader extends connect(store)(
 
   @property({type: String})
   environment: string | null = _checkEnvironment();
+
+  @property({type: Boolean})
+  isStaging = !isProductionServer();
 
   @property({type: Object})
   profile: User | null = null;
@@ -380,7 +389,7 @@ class PageHeader extends connect(store)(
 
   public _setBgColor() {
     // If not production environment, changing header color to red
-    if (this.environment) {
+    if (!isProductionServer()) {
       this.headerColor = 'var(--nonprod-header-color)';
     }
   }
