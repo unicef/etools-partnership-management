@@ -200,7 +200,7 @@ class PageHeader extends connect(store)(
             margin-inline-start: 12px;
           }
 
-          etools-profile-dropdown{
+          etools-profile-dropdown {
             margin-inline-start: 0px;
             width: 40px;
           }
