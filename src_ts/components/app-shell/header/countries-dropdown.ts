@@ -70,7 +70,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
           }
         }
 
-        :host-context([dir="rtl"]) etools-dropdown {
+        :host-context([dir='rtl']) etools-dropdown {
           --paper-input-container-shared-input-style: {
             color: var(--light-secondary-text-color);
             cursor: pointer;
