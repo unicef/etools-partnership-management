@@ -10,6 +10,7 @@ import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import '@material/web/textfield/filled-text-field';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -68,6 +69,12 @@ export function template(this: InterventionNew): TemplateResult {
       }
       info-icon-tooltip {
         --iit-font-size: 16px;
+      }
+      md-filled-text-field {
+        --_container-color: white;
+        --md-filled-field-container-padding-horizontal: 0;
+        --md-filled-field-label-text-color: var(--secondary-text-color);
+        --md-filled-field-supporting-text-padding: 0;
       }
     </style>
 
@@ -352,19 +359,30 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <paper-input
-            id="title"
-            label=${translate('NEW_INTERVENTION.DOC_TITLE')}
-            char-counter
-            maxlength="256"
-            placeholder="&#8212;"
-            required
-            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
-            .value="${this.newIntervention?.title}"
-            @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
-            @focus="${this.resetError}"
-            @click="${this.resetError}"
-          ></paper-input>
+          <md-filled-text-field label="Document Details" required style="width: 200px" max-length="150">
+            <info-icon-tooltip
+              slot="leadingicon"
+              position="top"
+              offset="48"
+              .language="${translateConfig.lang}"
+              .tooltipText="${this.getDocTypeTooltip()}"
+            ></info-icon-tooltip>
+          </md-filled-text-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <md-filled-field label="Textarea test" required style="width: 200px" max-length="350">
+            <info-icon-tooltip
+              slot="start"
+              position="top"
+              offset="48"
+              .language="${translateConfig.lang}"
+              .tooltipText="${this.getDocTypeTooltip()}"
+            ></info-icon-tooltip>
+            <textarea></textarea>
+          </md-filled-field>
         </div>
       </div>
 

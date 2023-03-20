@@ -107,9 +107,11 @@
     "web-animations-js": "^2.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
-    "@babel/plugin-proposal-optional-chaining": "^7.18.9",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@material/web": "^1.0.0-pre.4",
     "@polymer/test-fixture": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
