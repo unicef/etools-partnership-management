@@ -624,5 +624,6 @@
   "AGREEMENT_DELETE_SUCCCESS": "Соглашение успешно удалено.",
   "PARTNER_INVALID_VENDOR_NUMBER": "Неверный номер поставщика для нового партнера!",
   "IMPORTING_PARTNER_INFO": "Импорт информации о партнере...",
-  "PLEASE_REFRESH_DATA": "Пожалуйста, обновите данные!"
+  "PLEASE_REFRESH_DATA": "Пожалуйста, обновите данные!",
+  "SUPPORT": "Поддерживать"
 }

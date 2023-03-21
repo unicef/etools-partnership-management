@@ -160,6 +160,10 @@ class PageHeader extends connect(store)(
           margin-left: 16px;
         }
 
+        support-btn {
+          color: var(--header-color);
+        }
+
         @media (min-width: 850px) {
           #menuButton {
             display: none;
@@ -260,6 +264,7 @@ class PageHeader extends connect(store)(
             </countries-dropdown>
           </div>
 
+          <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
             title="${translate('PROFILE_AND_SIGNOUT')}"
             .sections="${this.allSections}"
