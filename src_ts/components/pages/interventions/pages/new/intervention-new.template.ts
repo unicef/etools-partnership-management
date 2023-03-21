@@ -11,6 +11,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import '@material/web/textfield/filled-text-field';
+import '@material/web/switch/switch';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -355,25 +356,56 @@ export function template(this: InterventionNew): TemplateResult {
           </etools-dropdown>
         </div>
       </div>
-
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <md-filled-text-field label="Document Details" required style="width: 200px" max-length="150">
+          <paper-input
+            id="title"
+            label=${translate('NEW_INTERVENTION.DOC_TITLE')}
+            char-counter
+            maxlength="256"
+            placeholder="&#8212;"
+            required
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
+            @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
+            @focus="${this.resetError}"
+            @click="${this.resetError}"
+          ></paper-input>
+        </div>
+      </div>
+      <div class="row">
+        <!--   Document Title   -->
+        <div class="col-12">
+          <md-filled-text-field
+            label="Document Details"
+            required
+            style="width: 100%"
+            maxlength="150"
+            @input="${(event: CustomEvent) => {
+              console.log('here');
+              this.setInterventionField('title', event.target.value);
+            }}"
+          >
             <info-icon-tooltip
               slot="leadingicon"
               position="top"
               offset="48"
+              .value="${this.newIntervention?.title}"
               .language="${translateConfig.lang}"
               .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
           </md-filled-text-field>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <md-switch icons @change="${(event) => console.log(event.target.selected)}"></md-switch>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-12">
-          <md-filled-field label="Textarea test" required style="width: 200px" max-length="350">
+          <md-filled-field label="Textarea test" required style="width: 500px" maxlength="350" populated>
             <info-icon-tooltip
               slot="start"
               position="top"
@@ -381,7 +413,7 @@ export function template(this: InterventionNew): TemplateResult {
               .language="${translateConfig.lang}"
               .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
-            <textarea></textarea>
+            <textarea rows="4" style="width: 300px">Textarea attempt. Official textarea is in progress.</textarea>
           </md-filled-field>
         </div>
       </div>

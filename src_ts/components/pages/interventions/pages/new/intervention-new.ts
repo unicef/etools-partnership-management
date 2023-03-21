@@ -49,6 +49,9 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
 
+  @property({type: Number})
+  workDamnIt = 'my test text';
+
   @property() staffMembers: LabelAndValue<number>[] = [];
   get allStaffMembers(): string {
     return this.staffMembers.map((member: LabelAndValue<number>) => member.label).join(', ');
