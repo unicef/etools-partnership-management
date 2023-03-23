@@ -624,5 +624,6 @@
   "AGREEMENT_DELETE_SUCCCESS": "تم حذف الاتفاقية بنجاح.",
   "PARTNER_INVALID_VENDOR_NUMBER": "!رقم البائع غير صالح لشريك جديد",
   "IMPORTING_PARTNER_INFO": "... جاري استيراد معلومات الشريك",
-  "PLEASE_REFRESH_DATA": "يرجى تحديث البيانات!"
+  "PLEASE_REFRESH_DATA": "يرجى تحديث البيانات!",
+  "SUPPORT": "يدعم"
 }

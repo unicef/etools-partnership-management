@@ -624,5 +624,6 @@
   "AGREEMENT_DELETE_SUCCCESS": "O acordo foi eliminado com sucesso.",
   "PARTNER_INVALID_VENDOR_NUMBER": "Número de Vendedor Inválido para novo parceiro!",
   "IMPORTING_PARTNER_INFO": "Importar informação do parceiro...",
-  "PLEASE_REFRESH_DATA": "Por favor, actualize os dados!"
+  "PLEASE_REFRESH_DATA": "Por favor, actualize os dados!",
+  "SUPPORT": "Apoiar"
 }
