@@ -93,6 +93,16 @@ class PageHeader extends connect(store)(
           }
         }
 
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
+          }
+        }
+
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -128,7 +138,7 @@ class PageHeader extends connect(store)(
 
         .dropdowns {
           display: flex;
-          margin-right: 5px;
+          margin-inline-end: 5px;
         }
 
         .header {
@@ -158,7 +168,7 @@ class PageHeader extends connect(store)(
         }
 
         etools-profile-dropdown {
-          margin-left: 16px;
+          margin-inline-start: 16px;
         }
 
         support-btn {
@@ -196,7 +206,7 @@ class PageHeader extends connect(store)(
           }
 
           etools-profile-dropdown {
-            margin-left: 0px;
+            margin-inline-start: 0px;
             width: 40px;
           }
         }
@@ -209,7 +219,7 @@ class PageHeader extends connect(store)(
           }
           .envWarning {
             font-size: 10px;
-            margin-left: 2px;
+            margin-inline-start: 2px;
           }
           #refresh {
             width: 24px;

@@ -42,7 +42,7 @@ export const appGridStyles = html` <style>
     flex-wrap: wrap;
 
     padding-top: var(--app-grid-gutter, 0px);
-    padding-left: var(--app-grid-gutter, 0px);
+    padding-inline-start: var(--app-grid-gutter, 0px);
     box-sizing: border-box;
   }
 
@@ -63,7 +63,7 @@ export const appGridStyles = html` <style>
       (100% - 0.1px - (var(--app-grid-gutter, 0px) * var(--app-grid-columns, 1))) / var(--app-grid-columns, 1)
     );
     margin-bottom: var(--app-grid-gutter, 0px);
-    margin-right: var(--app-grid-gutter, 0px);
+    margin-inline-end: var(--app-grid-gutter, 0px);
     height: var(--app-grid-item-height);
     box-sizing: border-box;
   }

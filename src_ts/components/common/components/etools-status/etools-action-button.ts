@@ -82,7 +82,7 @@ export class EtoolsActionButton extends LitElement {
         }
 
         iron-icon[icon='info-outline'] {
-          padding-left: 5px;
+          padding-inline-start: 5px;
         }
       </style>
 

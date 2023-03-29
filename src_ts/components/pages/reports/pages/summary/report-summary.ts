@@ -46,7 +46,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         iron-icon[icon='speaker-notes'] {
           color: var(--primary-color);
           padding-top: 14px;
-          padding-left: 8px;
+          padding-inline-start: 8px;
           cursor: pointer;
         }
         .report-status {

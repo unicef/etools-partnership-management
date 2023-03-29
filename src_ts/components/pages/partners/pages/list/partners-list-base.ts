@@ -67,7 +67,7 @@ export class PartnersListBase extends CommonMixin(
       ${listFilterStyles} ${partnerStatusStyles}${sharedStyles}
       <style>
         ${elevationStyles} ${dataTableStylesLit} .sm-status-wrapper {
-          padding-left: 10px;
+          padding-inline-end: 10px;
         }
         :host {
           box-sizing: border-box;
@@ -104,7 +104,7 @@ export class PartnersListBase extends CommonMixin(
         }
 
         etools-info-tooltip::part(eit-trigger-icon) {
-          margin-left: 0;
+          margin-inline-start: 0;
         }
       </style>
 

@@ -71,7 +71,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
         #download-template-btn {
           max-width: 220px;
-          margin: 0 0 0 24px;
+          margin: 0;
+          margin-inline-start: 24px;
           padding: 0;
         }
 
@@ -83,7 +84,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
         .attachment {
           color: var(--dark-icon-color);
-          margin-right: 8px;
+          margin-inline-end: 8px;
         }
         .unsaved-amendment {
           color: var(--warning-color);

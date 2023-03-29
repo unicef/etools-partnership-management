@@ -50,7 +50,7 @@ export const partnerStatusStyles = html` <style>
     bottom: 6px;
     width: 14px;
     height: 14px;
-    left: 8.5px;
+    inset-inline-start: 8.5px;
     font-weight: bold;
   }
 

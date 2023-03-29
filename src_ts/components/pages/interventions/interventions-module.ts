@@ -92,11 +92,11 @@ export class InterventionsModule extends connect(store)(
         }
 
         .main-button.with-additional span {
-          margin-right: 15px;
+          margin-inline-end: 15px;
         }
 
         .main-button span {
-          margin-right: 7px;
+          margin-inline-end: 7px;
           vertical-align: middle;
           line-height: 36px;
         }

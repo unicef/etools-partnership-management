@@ -28,9 +28,19 @@ export function template(this: InterventionNew): TemplateResult {
           width: auto !important;
           max-width: 100%;
           right: auto;
-          padding-right: 15px;
+          padding-inline-end: 15px;
         }
       }
+      :host-context([dir='rtl']) > * {
+        --required-star-style: {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
+          width: auto !important;
+          max-width: 100%;
+          right: auto;
+          padding-inline-end: 15px;
+        }
+      }
+
       paper-input[required][label],
       paper-input-container[required] {
         --paper-input-container-label: {
@@ -59,7 +69,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
       etools-dropdown-multi::part(esmm-label-container) {
         --iron-icon: {
-          margin-left: 10px;
+          margin-inline-start: 10px;
           color: var(--primary-color);
         }
         --paper-tooltip: {

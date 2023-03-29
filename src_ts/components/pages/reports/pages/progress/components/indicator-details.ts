@@ -33,8 +33,8 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
           display: block;
           min-height: 150px;
           position: relative;
-          padding-left: 24px;
-          padding-right: 24px;
+          padding-inline-start: 24px;
+          padding-inline-end: 24px;
 
           --app-grid-columns: 2;
           --app-grid-gutter: 24px;
@@ -43,7 +43,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
           --paper-tabs-selection-bar-color: var(--primary-color);
 
           --paper-tabs: {
-            padding-left: 13px;
+            padding-inline-start: 13px;
             border-bottom: 1px solid var(--dark-divider-color);
           }
         }

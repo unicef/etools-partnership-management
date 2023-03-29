@@ -29,7 +29,7 @@ export const pageContentHeaderSlottedStyles = html` <style>
   }
 
   .content-header-actions paper-button:not(.primary-btn) {
-    padding: var(--primary-button-default_-_padding);
+    padding: 5px 10px;
     font-size: 16px;
     font-weight: bold;
     display: flex;

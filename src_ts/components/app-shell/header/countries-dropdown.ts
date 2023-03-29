@@ -70,6 +70,16 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
           }
         }
 
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
+          }
+        }
+
         @media (max-width: 768px) {
           etools-dropdown {
             width: 130px;

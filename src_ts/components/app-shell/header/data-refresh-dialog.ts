@@ -43,7 +43,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
           height: 100%;
         }
         .row-indent {
-          padding-left: 40px;
+          padding-inline-start: 40px;
         }
         .title-indent {
           padding: 0 24px;

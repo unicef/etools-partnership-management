@@ -21,7 +21,7 @@ export class ReportStatus extends LitElement {
         iron-icon {
           --iron-icon-width: 16px;
           --iron-icon-height: 16px;
-          padding-right: 4px;
+          padding-inline-end: 4px;
           margin-top: -2px;
         }
 
