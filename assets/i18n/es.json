@@ -624,5 +624,6 @@
   "AGREEMENT_DELETE_SUCCCESS": "Acuerdo eliminado con éxito.",
   "PARTNER_INVALID_VENDOR_NUMBER": "¡Número de proveedor no válido para el nuevo socio!",
   "IMPORTING_PARTNER_INFO": "Importar información de socios...",
-  "PLEASE_REFRESH_DATA": "Por favor, actualice los datos."
+  "PLEASE_REFRESH_DATA": "Por favor, actualice los datos.",
+  "SUPPORT": "Apoyo"
 }

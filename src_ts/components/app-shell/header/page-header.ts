@@ -29,6 +29,7 @@ import 'dayjs/locale/ar.js';
 import 'dayjs/locale/ro.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
+import '../../common/components/support-btn';
 
 store.addReducers({
   activeLanguage
@@ -170,6 +171,10 @@ class PageHeader extends connect(store)(
           margin-inline-start: 16px;
         }
 
+        support-btn {
+          color: var(--header-color);
+        }
+
         @media (min-width: 850px) {
           #menuButton {
             display: none;
@@ -270,6 +275,7 @@ class PageHeader extends connect(store)(
             </countries-dropdown>
           </div>
 
+          <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
             title="${translate('PROFILE_AND_SIGNOUT')}"
             .sections="${this.allSections}"
