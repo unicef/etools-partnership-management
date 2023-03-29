@@ -177,6 +177,9 @@ documentContainer.innerHTML = `
           color: var(--secondary-text-color, #737373);
         };
 
+        --paper-button_-_padding-inline-start: 0.57em;
+        --paper-button_-_padding-inline-end: 0.57em;
+
         /* In Edge, paper-input's internal value is not updated
            when it's cleared by click on x btn, so we're hiding the btn
         */
@@ -217,7 +220,7 @@ documentContainer.innerHTML = `
 
       html[dir="rtl"] {
         --required-star-style: {
-          background: url('./images/required.svg') no-repeat 99% 20%/8px;
+          background: url('./images/required.svg') no-repeat 0 20%/8px;
           right: auto;
           padding-inline-end: 15px;
         }

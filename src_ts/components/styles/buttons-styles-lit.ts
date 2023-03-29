@@ -2,19 +2,6 @@ import {html} from 'lit-element';
 
 // language=HTML
 export const buttonsStyles = html` <style>
-  :host > * {
-    --primary-button-default: {
-      color: var(--light-primary-text-color, #fff);
-      font-weight: bold;
-      padding: 5px 10px;
-    }
-
-    --primary-button-with-prefix: {
-      padding: 5px;
-      padding-inline: 16px 10px;
-    }
-  }
-
   .buttons-section {
     border-top: 1px solid var(--dark-divider-color);
     padding: 24px;
@@ -34,9 +21,9 @@ export const buttonsStyles = html` <style>
 
   .primary-btn {
     background-color: var(--primary-color);
-    --paper-button: {
-      @apply --primary-button-default;
-    }
+    color: var(--light-primary-text-color, #fff);
+    font-weight: bold;
+    padding: 5px 10px;
   }
 
   .danger-btn {
@@ -52,10 +39,10 @@ export const buttonsStyles = html` <style>
   }
 
   .primary-btn.with-prefix {
-    --paper-button: {
-      @apply --primary-button-default;
-      @apply --primary-button-with-prefix;
-    }
+    color: var(--light-primary-text-color, #fff);
+    font-weight: bold;
+    padding: 5px;
+    padding-inline: 16px 10px;
   }
   paper-button .btn-label {
     display: flex;
@@ -73,13 +60,25 @@ export const buttonsStyles = html` <style>
   .secondary-btn-wrapper {
     width: 100%;
     --paper-input-container-input: {
-      @apply --basic-btn-style;
+      width: auto;
+      margin: 0;
+      color: var(--primary-color);
+      padding: 0;
+      padding-inline-end: 5px;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 
   .secondary-btn {
     --paper-button: {
-      @apply --basic-btn-style;
+      width: auto;
+      margin: 0;
+      color: var(--primary-color);
+      padding: 0;
+      padding-inline-end: 5px;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 

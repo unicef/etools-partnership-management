@@ -31,6 +31,16 @@ export function template(this: InterventionNew): TemplateResult {
           padding-inline-end: 15px;
         }
       }
+      :host-context([dir='rtl']) > * {
+        --required-star-style: {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
+          width: auto !important;
+          max-width: 100%;
+          right: auto;
+          padding-inline-end: 15px;
+        }
+      }
+
       paper-input[required][label],
       paper-input-container[required] {
         --paper-input-container-label: {
