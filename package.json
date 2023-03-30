@@ -77,7 +77,7 @@
     "@unicef-polymer/etools-info-tooltip": "^4.1.9",
     "@unicef-polymer/etools-loading": "^6.1.0",
     "@unicef-polymer/etools-modules-common": "^2.0.0",
-    "@unicef-polymer/etools-piwik-analytics": "^3.1.0",
+    "@unicef-polymer/etools-piwik-analytics": "^3.2.0",
     "@unicef-polymer/etools-profile-dropdown": "^8.2.0",
     "@unicef-polymer/etools-table": "^2.0.0",
     "@unicef-polymer/etools-toasts": "^1.0.6",
