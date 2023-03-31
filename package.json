@@ -33,7 +33,11 @@
     "lint:prettier": "prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format:prettier": "prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "lint": "npm run lint:eslint",
-    "format": "npm run format:eslint"
+    "format": "npm run format:eslint",
+    "rd:init": "relative-deps init",
+    "rd:add": "relative-deps add",
+    "rd:reload": "relative-deps",
+    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent"
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
@@ -85,6 +89,7 @@
     "@unicef-polymer/etools-upload": "^4.5.0",
     "@webcomponents/webcomponentsjs": "^2.6.0",
     "browser-capabilities": "^1.1.4",
+    "chokidar-cli": "^3.0.0",
     "dayjs": "^1.11.5",
     "dexie": "^3.2.2",
     "esri-leaflet": "^3.0.8",
@@ -121,6 +126,9 @@
     "eslint-plugin-prettier": "^4.0.0",
     "polymer-cli": "^1.9.11",
     "prettier": "~2.5.1",
+    "relative-deps": "^1.0.7",
     "typescript": "^4.5.4"
+  },
+  "relativeDependencies": {
   }
 }
