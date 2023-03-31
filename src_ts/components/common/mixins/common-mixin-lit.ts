@@ -1,10 +1,10 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {prettyDate} from '../../utils/date-utils';
+import {prettyDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {LitElement} from 'lit-element';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
 import {PolymerElement} from '@polymer/polymer';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
 
 /**
  * @polymer

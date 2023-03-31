@@ -10,7 +10,7 @@ import '@unicef-polymer/etools-loading';
 import '@polymer/paper-icon-button';
 import '@polymer/paper-button';
 import '@polymer/iron-icons/editor-icons';
-import {getUniqueId} from '../../../../../../utils/utils';
+import {getUniqueId} from '@unicef-polymer/etools-utils/dist/general.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';

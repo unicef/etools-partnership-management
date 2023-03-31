@@ -4,7 +4,7 @@ import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-reques
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
 import {deletePartner, setShouldReloadPartners} from '../../../../redux/actions/partners';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

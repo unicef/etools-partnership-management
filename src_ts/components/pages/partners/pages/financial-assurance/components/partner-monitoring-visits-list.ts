@@ -2,7 +2,7 @@ import {customElement, html, LitElement, property, PropertyValues} from 'lit-ele
 import '@unicef-polymer/etools-loading/etools-loading.js';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {isEmptyObject} from '../../../../../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';

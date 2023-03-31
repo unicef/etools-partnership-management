@@ -17,12 +17,12 @@ import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../redux/store';
-import {isJsonStrMatch} from '../../../../../../utils/utils';
-import {fireEvent} from '../../../../../../utils/fire-custom-event';
-import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
 
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 
 /**

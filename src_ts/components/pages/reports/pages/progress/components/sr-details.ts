@@ -8,7 +8,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
 
 @customElement('sr-details')
 export class SrDetails extends LitElement {

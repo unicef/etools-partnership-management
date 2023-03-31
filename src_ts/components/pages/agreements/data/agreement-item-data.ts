@@ -6,10 +6,10 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement, setShouldReloadAgreements} from '../../../../redux/actions/agreements';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
-import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
 /**

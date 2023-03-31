@@ -1,5 +1,5 @@
 import {LitElement, property} from 'lit-element';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {MinimalStaffMember} from '../../../models/partners.models';

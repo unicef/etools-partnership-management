@@ -1,9 +1,9 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
 import {store} from '../../../../redux/store';
-import {isEmptyObject} from '../../../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
 import {setPartners} from '../../../../redux/actions/partners';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {customElement, LitElement, property} from 'lit-element';

@@ -1,9 +1,9 @@
 /* eslint no-invalid-this: 0 */
 import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
-import {isJsonStrMatch, areEqual} from '../../../../utils/utils';
+import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/general.util';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
@@ -19,7 +19,7 @@ import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polyme
 import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
-import {EtoolsRouter} from '../../../../utils/routes';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {

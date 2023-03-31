@@ -1,8 +1,8 @@
 import '../../../common/components/etools-status/etools-status.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
-import {isEmptyObject} from '../../../utils/utils';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';

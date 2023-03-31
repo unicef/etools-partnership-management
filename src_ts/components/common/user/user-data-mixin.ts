@@ -1,8 +1,8 @@
 import {store} from '../../../redux/store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {updateUserData} from '../../../redux/actions/user';
-import {isEmptyObject, languageIsAvailableInApp} from '../../utils/utils';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
@@ -10,6 +10,7 @@ import {setActiveLanguage} from '../../../redux/actions/active-language';
 import {property} from 'lit-element';
 import pmpEdpoints from '../../endpoints/endpoints';
 import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
+import {languageIsAvailableInApp} from '../../utils/language';
 
 /**
  * @polymer

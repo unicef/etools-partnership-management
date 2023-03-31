@@ -4,9 +4,9 @@ import '@unicef-polymer/etools-loading/etools-loading.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {translate, get as getTranslation} from 'lit-translate';
 

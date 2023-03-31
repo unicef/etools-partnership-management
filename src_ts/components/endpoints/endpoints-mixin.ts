@@ -4,7 +4,7 @@ import {RootState} from '../../redux/store';
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
-import {isJsonStrMatch} from '../utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

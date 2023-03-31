@@ -8,7 +8,7 @@ import {
 } from '../../../redux/actions/upload-status';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement, property} from 'lit-element';
-import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 
 /**

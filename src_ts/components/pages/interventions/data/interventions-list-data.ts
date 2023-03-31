@@ -1,6 +1,6 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import {customElement, LitElement, property} from 'lit-element';

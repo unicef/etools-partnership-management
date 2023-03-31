@@ -1,6 +1,6 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement, property, PropertyValues} from 'lit-element';

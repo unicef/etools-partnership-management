@@ -24,22 +24,23 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
-import {EtoolsTab, RouteDetails, UserPermissions} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../utils/dialog';
+import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate, get as getTranslation, listenForLangChanged} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 /**
  * @polymer
@@ -232,7 +233,7 @@ export class PartnersModule extends connect(store)(
   originalPartnerData!: Partner;
 
   @property({type: Object})
-  reduxRouteDetails?: RouteDetails;
+  reduxRouteDetails?: EtoolsRouteDetails;
 
   @property({type: Number})
   commonDataLoadedTimestamp = 0;
@@ -290,9 +291,9 @@ export class PartnersModule extends connect(store)(
         fireEvent(this, '404');
         return;
       }
-      this.activePage = this.reduxRouteDetails.subRouteName!;
-      this._page = this.reduxRouteDetails.subRouteName!;
-      this.currentModule = this.reduxRouteDetails.routeName;
+      this.activePage = this.reduxRouteDetails?.subRouteName!;
+      this._page = this.reduxRouteDetails?.subRouteName!;
+      this.currentModule = this.reduxRouteDetails?.routeName!;
       if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp) {
         if (this.commonDataLoadedTimestamp !== 0) {
           // static data reloaded (because of language change), need to re-render controls (to update translations)
@@ -362,7 +363,7 @@ export class PartnersModule extends connect(store)(
     this._savePartner({id: this.partner.id, basis_for_risk_rating: e.detail});
   }
 
-  public _pageChanged(listActive: boolean, routeDetails: RouteDetails) {
+  public _pageChanged(listActive: boolean, routeDetails: EtoolsRouteDetails) {
     if (!routeDetails || !['partners', 'government-partners'].includes(routeDetails?.routeName!)) {
       return;
     }
@@ -523,14 +524,14 @@ export class PartnersModule extends connect(store)(
     });
   }
 
-  govListActive(listActive: boolean, route?: RouteDetails) {
+  govListActive(listActive: boolean, route?: EtoolsRouteDetails) {
     if (!route) {
       return false;
     }
     return listActive && route.routeName === 'government-partners';
   }
 
-  partnersListActive(listActive: boolean, route?: RouteDetails) {
+  partnersListActive(listActive: boolean, route?: EtoolsRouteDetails) {
     if (!route) {
       return false;
     }

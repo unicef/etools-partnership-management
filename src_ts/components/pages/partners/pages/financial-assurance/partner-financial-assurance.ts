@@ -27,16 +27,17 @@ import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
 import './components/partner-monitoring-visits-list';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PartnerAssessment} from '../../../../../models/partners.models';
 import './components/hact-edit-dialog';
 import clone from 'lodash-es/clone';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
-import {cloneDeep, getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
 
 /**
  * @polymer

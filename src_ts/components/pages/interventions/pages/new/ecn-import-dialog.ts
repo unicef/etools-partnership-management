@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';

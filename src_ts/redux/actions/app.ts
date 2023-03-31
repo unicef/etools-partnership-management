@@ -10,13 +10,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /* eslint-disable max-len*/
 import {Action, ActionCreator} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
-import {RouteDetails} from '../../components/utils/router';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {BASE_URL} from '../../config/config';
-import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../components/utils/routes';
-import {getRedirectToListPath} from '../../components/utils/subpage-redirect';
-import {isJsonStrMatch} from '../../components/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
 import {enableCommentMode} from '../../components/pages/interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
@@ -29,7 +29,7 @@ export interface AppActionShowToast extends Action<'SHOW_TOAST'> {
 
 export type AppActionCloseToast = Action<'CLOSE_TOAST'>;
 export interface AppActionUpdateRouteDetails extends Action<'UPDATE_ROUTE_DETAILS'> {
-  routeDetails: RouteDetails;
+  routeDetails: EtoolsRouteDetails;
 }
 export type AppAction =
   | AppActionUpdateDrawerState
@@ -93,10 +93,10 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
   }
 };
 
-const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _getState: any) => {
+const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any, _getState: any) => {
   if (!routeDetails) {
     // invalid route => redirect to 404 page
-    updateAppLocation(ROUTE_404);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
     return;
   }
 
@@ -108,13 +108,13 @@ const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _get
     if ('government-partners' == routeDetails.routeName) {
       import(`${window.location.origin}/pmp/src/components/pages/partners/partners-module.js`)
         .then(() => importSubRoutes('partners', routeDetails.subRouteName))
-        .catch(() => updateAppLocation(ROUTE_404));
+        .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
     } else {
       import(
         `${window.location.origin}/pmp/src/components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`
       )
         .then(() => importSubRoutes(routeDetails.routeName, routeDetails.subRouteName))
-        .catch(() => updateAppLocation(ROUTE_404));
+        .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
     }
   }
   if (routeDetails.routeName == 'not-found') {
@@ -126,15 +126,15 @@ const loadPageComponents = (routeDetails: RouteDetails) => (_dispatch: any, _get
 export const handleUrlChange = (path: string) => (dispatch: any, getState: any) => {
   // if app route is accessed, redirect to default route (if not already on it)
   // @ts-ignore
-  if (path === BASE_URL && BASE_URL !== DEFAULT_ROUTE) {
-    updateAppLocation(DEFAULT_ROUTE);
+  if (path === BASE_URL && BASE_URL !== EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT)) {
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT));
     return;
   }
 
   // some routes need redirect to subRoute list
-  const redirectPath: string | undefined = getRedirectToListPath(path);
+  const redirectPath: string | undefined = EtoolsRouter.getRedirectToListPath(path);
   if (redirectPath) {
-    updateAppLocation(redirectPath);
+    EtoolsRouter.updateAppLocation(redirectPath);
     return;
   }
 

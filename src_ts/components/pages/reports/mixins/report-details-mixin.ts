@@ -1,7 +1,7 @@
 import {LitElement, property} from 'lit-element';
 import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {AnyObject, Constructor, User} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';

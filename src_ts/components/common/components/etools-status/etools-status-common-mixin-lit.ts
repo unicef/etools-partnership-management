@@ -9,7 +9,7 @@ import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
-import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 declare const ShadyCSS: any;
 
 /**

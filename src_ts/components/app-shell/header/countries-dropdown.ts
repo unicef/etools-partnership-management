@@ -4,7 +4,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../../utils/fire-custom-event.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {GenericObject} from '@unicef-polymer/etools-types';

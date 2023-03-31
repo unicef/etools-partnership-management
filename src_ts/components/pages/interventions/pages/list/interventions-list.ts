@@ -15,13 +15,10 @@ import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
-import {EtoolsRouter} from '../../../../utils/routes';
-import {
-  buildUrlQueryString,
-  getTranslatedValue,
-  translateValue
-} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-filters/src/etools-filters';
 import {translate} from 'lit-translate';
@@ -38,7 +35,7 @@ import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelp
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
 import {ListFilterOption} from '../../../../../typings/filter.types';
-import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 

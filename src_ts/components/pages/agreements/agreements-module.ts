@@ -21,17 +21,17 @@ import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation, langChanged} from 'lit-translate';
-import {isJsonStrMatch} from '../../utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
 import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
-import {replaceAppState} from '../../utils/navigation-helper';
-import {EtoolsRouter} from '../../utils/routes';
+import {replaceAppState} from '@unicef-polymer/etools-utils/dist/navigation.util';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 
 /**
  * @polymer

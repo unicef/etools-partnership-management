@@ -3,7 +3,7 @@ import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
 
-import {isEmptyObject, translateLabelAndValueArray} from '../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, LabelAndValue} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
@@ -12,6 +12,7 @@ import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement, property} from 'lit-element';
 import EnvironmentFlagsMixinLit from './environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import {translateLabelAndValueArray} from '../utils/language';
 
 /**
  * @polymer

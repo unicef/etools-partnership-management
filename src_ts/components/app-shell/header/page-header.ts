@@ -9,8 +9,8 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown'
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
-import {isJsonStrMatch} from '../../utils/utils';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from '@polymer/decorators';
 import {translate, use} from 'lit-translate';

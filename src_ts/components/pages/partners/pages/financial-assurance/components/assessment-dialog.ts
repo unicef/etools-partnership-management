@@ -10,15 +10,15 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../redux/store';
-import {isJsonStrMatch, copy} from '../../../../../utils/utils';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {isJsonStrMatch, copy} from '@unicef-polymer/etools-utils/dist/general.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {formatDate} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 import {translate} from 'lit-translate';
