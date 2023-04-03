@@ -37,7 +37,8 @@
     "rd:init": "relative-deps init",
     "rd:add": "relative-deps add",
     "rd:reload": "relative-deps",
-    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent"
+    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent",
+    "prepare": "relative-deps"
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
@@ -80,13 +81,14 @@
     "@unicef-polymer/etools-filters": "^2.0.0",
     "@unicef-polymer/etools-info-tooltip": "^4.1.9",
     "@unicef-polymer/etools-loading": "^6.1.0",
-    "@unicef-polymer/etools-modules-common": "^2.0.0",
+    "@unicef-polymer/etools-modules-common": "^3.0.0",
     "@unicef-polymer/etools-piwik-analytics": "^3.1.0",
     "@unicef-polymer/etools-profile-dropdown": "^8.2.0",
     "@unicef-polymer/etools-table": "^2.0.0",
     "@unicef-polymer/etools-toasts": "^1.0.6",
     "@unicef-polymer/etools-types": "^1.11.11",
     "@unicef-polymer/etools-upload": "^4.5.0",
+    "@unicef-polymer/etools-utils": "0.0.1",
     "@webcomponents/webcomponentsjs": "^2.6.0",
     "browser-capabilities": "^1.1.4",
     "chokidar-cli": "^3.0.0",
@@ -129,6 +131,5 @@
     "relative-deps": "^1.0.7",
     "typescript": "^4.5.4"
   },
-  "relativeDependencies": {
-  }
+  "relativeDependencies": {}
 }
