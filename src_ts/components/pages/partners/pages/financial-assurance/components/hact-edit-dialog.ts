@@ -13,7 +13,7 @@ import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 @customElement('hact-edit-dialog')
 export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)) {

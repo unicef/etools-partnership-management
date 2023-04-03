@@ -20,7 +20,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
-import {translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer

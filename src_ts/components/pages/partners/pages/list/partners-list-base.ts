@@ -37,7 +37,7 @@ import {PartnersListData} from '../../data/partners-list-data';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import omit from 'lodash-es/omit';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';

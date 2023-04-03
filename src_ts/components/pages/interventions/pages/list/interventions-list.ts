@@ -18,7 +18,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.util';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-filters/src/etools-filters';
 import {translate} from 'lit-translate';

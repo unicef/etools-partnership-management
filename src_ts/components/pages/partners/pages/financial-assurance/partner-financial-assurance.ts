@@ -37,7 +37,7 @@ import './components/monitoring-activities/monitoring-activities';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer

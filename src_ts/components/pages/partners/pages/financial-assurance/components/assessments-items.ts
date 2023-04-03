@@ -21,7 +21,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
-import {translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @customElement

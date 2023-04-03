@@ -41,7 +41,7 @@ import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
-import {translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';

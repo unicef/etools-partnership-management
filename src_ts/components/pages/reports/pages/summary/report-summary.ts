@@ -18,7 +18,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer

@@ -1,6 +1,6 @@
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {appLanguages} from '../../config/app-constants';
-import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 export const languageIsAvailableInApp = (lngCode: string) => {
   return appLanguages.some((lng) => lng.value === lngCode);

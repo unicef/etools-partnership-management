@@ -91,7 +91,7 @@ import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
-import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 
 declare const dayjs: any;

@@ -8,7 +8,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import '../../data/agreement-termination';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {get as getTranslation, listenForLangChanged} from 'lit-translate';
-import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer

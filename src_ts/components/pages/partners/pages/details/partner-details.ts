@@ -37,7 +37,7 @@ import {translate} from 'lit-translate';
 import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-utils/dist/language.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 declare const dayjs: any;
 
