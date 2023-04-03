@@ -93,7 +93,6 @@ import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
-
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
