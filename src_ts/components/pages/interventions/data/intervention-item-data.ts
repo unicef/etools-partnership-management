@@ -3,7 +3,7 @@ import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mix
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';

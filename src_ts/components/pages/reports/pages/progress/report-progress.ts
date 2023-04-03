@@ -15,7 +15,7 @@ import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';

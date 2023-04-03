@@ -35,7 +35,7 @@ import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
-import {formatDateLocalized} from '@unicef-polymer/etools-utils/dist/date.util';
+import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 declare const dayjs: any;
 
 /**

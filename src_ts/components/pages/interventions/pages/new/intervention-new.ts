@@ -3,7 +3,7 @@ import {LitElement, customElement, property, CSSResultArray, TemplateResult} fro
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
-import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';

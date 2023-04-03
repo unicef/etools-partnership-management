@@ -5,7 +5,7 @@ import {store} from '../../../../redux/store';
 declare const dayjs: any;
 import Dexie from 'dexie';
 
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {setAgreements} from '../../../../redux/actions/agreements';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';

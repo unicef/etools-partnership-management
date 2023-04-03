@@ -9,7 +9,7 @@ import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-reques
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
 /**

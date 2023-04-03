@@ -7,7 +7,7 @@ import '@unicef-polymer/etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {appGridStyles} from './disaggregations/styles/app-grid-styles';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';

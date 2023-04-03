@@ -15,7 +15,7 @@ import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../redux/store';
 import {patchDisaggregation} from '../../../../redux/actions/common-data';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '@unicef-polymer/etools-modules-common/dist/utils/user-permissions';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';

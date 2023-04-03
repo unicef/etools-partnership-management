@@ -24,7 +24,7 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';

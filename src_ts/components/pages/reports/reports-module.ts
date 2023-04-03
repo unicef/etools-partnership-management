@@ -29,7 +29,7 @@ import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elev
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';

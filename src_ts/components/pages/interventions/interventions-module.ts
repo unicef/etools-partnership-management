@@ -15,7 +15,7 @@ import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {store, RootState} from '../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -324,7 +324,6 @@ export class InterventionsModule extends connect(store)(
       loadingSource: 'interv-page'
     });
     this._initInterventionsModuleListeners();
-
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,

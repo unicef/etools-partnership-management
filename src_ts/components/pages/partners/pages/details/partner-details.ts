@@ -14,7 +14,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
-import {isEmptyObject, isJsonStrMatch, stopGlobalLoading} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject, isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {RootState, store} from '../../../../../redux/store';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
@@ -374,7 +374,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      stopGlobalLoading(this, 'partners-page');
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
     }, 200);
   }
 

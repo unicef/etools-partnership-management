@@ -1,6 +1,6 @@
 import {LitElement, property} from 'lit-element';
 import {store} from '../../../redux/store';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';

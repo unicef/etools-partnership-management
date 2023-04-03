@@ -1,7 +1,7 @@
 import '../../../common/components/etools-status/etools-status.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
-import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';

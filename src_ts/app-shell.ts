@@ -72,6 +72,7 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
+import './components/utils/routes';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -79,7 +80,7 @@ setPassiveTouchGestures(true);
 import {BASE_URL} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
@@ -91,7 +92,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-utils/dist/language.util';
-import './components/utils/routes';
+
 
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;

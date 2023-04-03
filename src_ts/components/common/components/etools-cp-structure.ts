@@ -4,7 +4,7 @@ import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../../redux/store';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/general.util';
+import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {html, LitElement, property} from 'lit-element';

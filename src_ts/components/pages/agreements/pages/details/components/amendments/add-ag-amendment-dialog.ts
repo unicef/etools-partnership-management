@@ -13,7 +13,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
-import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/general.util.js';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util.js';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 
