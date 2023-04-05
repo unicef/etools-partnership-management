@@ -116,8 +116,11 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
   }
 
   protected _handleResponse() {
-    fireEvent(this, 'update-main-path', {path: 'partners'});
+    // clear Dexie and storage
     this.refresh();
+    this.clearLocalStorage();
+
+    fireEvent(this, 'update-main-path', {path: 'partners'});
   }
 
   protected _handleError(error: any) {
