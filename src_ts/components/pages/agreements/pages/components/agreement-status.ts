@@ -51,8 +51,9 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
   @property({type: Array})
   possibleActions: any = [];
 
-  @property({type: String})
-  deleteWarningMessage = getTranslation('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT');
+  get deleteWarningMessage() {
+    return getTranslation('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AGREEMENT');
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -102,14 +103,13 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
     this.sectionName = getTranslation('AGREEMENT');
     this._handleStickyScroll();
 
-    this._createDeleteConfirmationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
+    this.addEventListener('delete-confirmed', this._triggerAgDeleteOnConfirm as any);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm as any);
+    this.removeEventListener('delete-confirmed', this._triggerAgDeleteOnConfirm as any);
   }
 
   updated(changedProperties: PropertyValues) {
@@ -367,9 +367,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
     this._updateStatus(CONSTANTS.STATUSES.Signed.toLowerCase());
   }
 
-  _triggerAgDeleteOnConfirm(e: CustomEvent) {
-    if (e.detail.confirmed) {
-      fireEvent(this, 'delete-agreement', {id: this.agreementId});
-    }
+  _triggerAgDeleteOnConfirm() {
+    fireEvent(this, 'delete-agreement', {id: this.agreementId});
   }
 }
