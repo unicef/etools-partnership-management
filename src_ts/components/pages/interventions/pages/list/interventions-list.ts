@@ -113,7 +113,7 @@ export class InterventionsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
-        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
+        @list-loading="${this.onListLoading}"
         list-data-path="filteredInterventions"
         fire-data-loaded
       >
@@ -325,17 +325,14 @@ export class InterventionsList extends connect(store)(
   partners = [];
 
   @property({type: Boolean})
+  isInitialPageLoading = true;
+
+  @property({type: Boolean})
   listLoadingActive = false;
 
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
-
     super.connectedCallback();
-
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'interv-page'
-    });
   }
 
   stateChanged(state: RootState): void {
@@ -351,7 +348,6 @@ export class InterventionsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
-      this.listLoadingActive = true;
       return;
     }
 
@@ -359,7 +355,6 @@ export class InterventionsList extends connect(store)(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
-      this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state);
@@ -518,6 +513,25 @@ export class InterventionsList extends connect(store)(
 
   filtersChange(e: CustomEvent) {
     this.updateCurrentParams({...e.detail, page: 1}, true);
+  }
+
+  onListLoading(e: CustomEvent) {
+    this.hideLoadingAfterDataListLoaded(!e.detail?.active);
+    if (!this.isInitialPageLoading) {
+      this.listLoadingActive = e.detail.active;
+    }
+  }
+
+  hideLoadingAfterDataListLoaded(listLoaded: boolean) {
+    if (this.isInitialPageLoading && listLoaded) {
+      this.isInitialPageLoading = false;
+      setTimeout(() => {
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'interv-page'
+        });
+      }, 100);
+    }
   }
 
   // Override from lists-common-mixin
