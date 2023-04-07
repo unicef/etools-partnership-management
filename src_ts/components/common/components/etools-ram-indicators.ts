@@ -8,7 +8,7 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {translate} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -37,7 +37,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
 
         #ram-indicators-list {
           margin: 0;
-          padding-left: 24px;
+          padding-inline-start: 24px;
           list-style: circle;
         }
       </style>
@@ -110,7 +110,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
       .catch((error: any) => {
         if (error.status === 404) {
           fireEvent(this, 'toast', {
-            text: 'PMP is not synced with PRP'
+            text: getTranslation('PMP_NOT_SYNCED')
           });
         } else {
           parseRequestErrorsAndShowAsToastMsgs(error, this);

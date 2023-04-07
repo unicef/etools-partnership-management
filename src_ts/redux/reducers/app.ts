@@ -9,14 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Reducer} from 'redux';
-import {UPDATE_DRAWER_STATE, UPDATE_SMALLMENU_STATE} from '../actions/app.js';
 import {UPDATE_ROUTE_DETAILS} from '../actions/actionsConstants.js';
 import {RouteDetails} from '../../components/utils/router.js';
 
 export class AppState {
   page = '';
-  drawerOpened = false;
-  smallMenu = false;
   routeDetails: RouteDetails = {} as RouteDetails;
 }
 
@@ -28,16 +25,6 @@ const app: Reducer<AppState, any> = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         routeDetails: action.routeDetails
-      };
-    case UPDATE_DRAWER_STATE:
-      return {
-        ...state,
-        drawerOpened: action.opened
-      };
-    case UPDATE_SMALLMENU_STATE:
-      return {
-        ...state,
-        smallMenu: action.smallMenu
       };
     default:
       return state;

@@ -30,7 +30,7 @@ export const disaggregationTableStyles = html` <style>
   }
   span.total {
     float: right;
-    padding-left: 15px;
+    padding-inline-start: 15px;
   }
 
   /*   Table header    */
@@ -85,11 +85,11 @@ export const disaggregationTableStyles = html` <style>
   }
 
   td:first-child {
-    border-left: 1px solid white;
+    border-inline-start: 1px solid white;
   }
 
   td:not(:last-child) {
-    border-right: 1px solid white;
+    border-inline-end: 1px solid white;
   }
 
   .cellTitle,

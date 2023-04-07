@@ -1,9 +1,7 @@
 import '../../../common/components/etools-status/etools-status.js';
-import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
 import {isEmptyObject} from '../../../utils/utils';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
@@ -44,7 +42,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       <etools-status
         .statuses="${this.statuses}"
         .actions="${this.possibleActions}"
-        @partner-delete="${this._showDeleteConfirmationDialog}"
+        @partner-delete="${this._openDeleteConfirmation}"
       >
       </etools-status>
     `;
@@ -55,9 +53,6 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   @property({type: Boolean})
   editMode = false;
-
-  @property({type: Object})
-  deleteWarningDialogContent: any = null;
 
   @property({type: Array})
   possibleStatuses: Status[] = [];
@@ -81,6 +76,12 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     }
   ];
 
+  get deleteWarningMessage() {
+    return getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {
+      partner: this.partner.name
+    });
+  }
+
   connectedCallback() {
     super.connectedCallback();
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -89,6 +90,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       this.setPossibleStatuses();
       this._computeAvailableActions(this.partner.hidden, this.editMode);
     });
+    this.addEventListener('delete-confirmed', this._dialogConfirmationCallback.bind(this) as any);
   }
 
   setPossibleActions() {
@@ -124,25 +126,11 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   }
 
   firstUpdated() {
-    this.deleteWarningDialogContent = document.createElement('div');
-    this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
-    this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
-    this.warningDialog = createDynamicDialog({
-      title: getTranslation('GENERAL.DELETE_CONFIRMATION'),
-      size: 'md',
-      okBtnText: getTranslation('GENERAL.YES'),
-      cancelBtnText: getTranslation('GENERAL.NO'),
-      closeCallback: this._dialogConfirmationCallback,
-      content: this.deleteWarningDialogContent,
-      id: 'delWarning'
-    });
-
     this._handleStickyScroll();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback as any);
   }
 
   setPossibleStatuses() {
@@ -200,30 +188,11 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     this._forceScollPositionRecalculation();
   }
 
-  _showDeleteConfirmationDialog() {
-    if (!this.warningDialog) {
-      logWarn('warningDialog not created!', 'pmp partner status change');
+  _dialogConfirmationCallback() {
+    if (!this.editMode) {
       return;
     }
-
-    if (!this.deleteWarningDialogContent) {
-      logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
-      return;
-    }
-    const warningMessage = getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {
-      partner: this.partner.name
-    });
-    this.deleteWarningDialogContent.innerHTML = warningMessage;
-    this.warningDialog.opened = true;
-  }
-
-  _dialogConfirmationCallback(event: CustomEvent) {
-    if (event.detail.confirmed) {
-      if (!this.editMode) {
-        return;
-      }
-      fireEvent(this, 'delete-partner', {id: this.partner.id});
-    }
+    fireEvent(this, 'delete-partner', {id: this.partner.id});
   }
 
   _computeAvailableActions(_hidden: boolean, editMode: boolean) {

@@ -43,7 +43,7 @@ export class EtoolsActionButton extends LitElement {
         }
 
         paper-icon-button {
-          border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+          border-inline-start: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
         }
 
         .main-btn-part {
@@ -82,7 +82,7 @@ export class EtoolsActionButton extends LitElement {
         }
 
         iron-icon[icon='info-outline'] {
-          padding-left: 5px;
+          padding-inline-start: 5px;
         }
       </style>
 

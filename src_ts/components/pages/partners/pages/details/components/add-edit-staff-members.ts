@@ -37,11 +37,11 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         }
 
         .col:first-of-type {
-          padding-right: 12px;
+          padding-inline-end: 12px;
         }
 
         .col:not(:first-of-type) {
-          padding-left: 12px;
+          padding-inline-start: 12px;
         }
 
         .layout-horizontal:last-of-type {

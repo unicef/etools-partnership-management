@@ -8,5 +8,6 @@ export default /** @type {import('@web/dev-server').DevServerConfig} */ ({
   watch: false,
   /** Set appIndex to enable SPA routing */
   appIndex: 'index.html',
-  basePath: '/pmp'
+  basePath: '/pmp',
+  preserveSymlinks: false
 });

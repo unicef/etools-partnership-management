@@ -11,6 +11,8 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -65,6 +67,16 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
 
           --paper-menu-button-dropdown: {
             max-height: 380px;
+          }
+        }
+
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
           }
         }
 
@@ -172,7 +184,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
   }
 
   protected _handleResponse() {
-    fireEvent(this, 'update-main-path', {path: 'partners'});
+    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
     this.refresh();
   }
 
@@ -186,7 +198,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
     logError('Country change failed!', 'countries-dropdown', error);
     (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).selected = this.currentCountry.id;
     fireEvent(this, 'toast', {
-      text: 'Something went wrong changing your workspace. Please try again'
+      text: getTranslation('ERROR_CHANGE_WORKSPACE')
     });
     fireEvent(this, 'global-loading', {
       active: false,

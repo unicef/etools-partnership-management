@@ -26,7 +26,8 @@ export const monitoringActivitiesStyles = html`<style>
   paper-button.save {
     @apply --layout-horizontal;
     padding: 0;
-    margin: 15px 24px 15px 0;
+    margin: 15px;
+    margin-inline: 0 24px;
     height: 36px;
     background-color: var(--etools-action-button-main-color, #0099ff);
     color: var(--etools-action-button-text-color, #fff);
@@ -70,11 +71,12 @@ export const monitoringActivitiesStyles = html`<style>
   }
   .activities.hovered:not(.origin-group),
   .activities.grouped {
-    padding: 10px 0 10px 30px;
+    padding-block: 10px;
+    padding-inline: 30px 0;
   }
   .activities.hovered:not(.origin-group) .row,
   .activities.grouped .row {
-    padding-left: 5px;
+    padding-inline-start: 5px;
   }
   .activities .remove,
   .activities .braces {
@@ -101,7 +103,7 @@ export const monitoringActivitiesStyles = html`<style>
     height: 100%;
     width: 8px;
     border: 1px solid #000000;
-    border-right: none;
+    border-inline-end: none;
   }
   .activities .remove .description,
   .activities .braces .description {
@@ -140,7 +142,7 @@ export const monitoringActivitiesStyles = html`<style>
     left: 0;
   }
   iron-icon {
-    margin-right: 10px;
+    margin-inline-end: 10px;
     cursor: pointer;
   }
   .actions {
@@ -149,7 +151,7 @@ export const monitoringActivitiesStyles = html`<style>
     justify-content: flex-end;
   }
   .cell:not(:last-of-type) {
-    padding-right: 16px;
+    padding-inline-end: 16px;
   }
   .panel-row-tall {
     height: 56px;

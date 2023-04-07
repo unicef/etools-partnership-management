@@ -47,7 +47,7 @@ function ProfileOperationsMixin<T extends Constructor<LitElement>>(baseClass: T)
       if (isEmptyObject(profile)) {
         // empty profile means no changes found
         fireEvent(this, 'toast', {
-          text: 'All changes are saved.'
+          text: getTranslation('CHANGES_ARE_SAVED')
         });
         return;
       }

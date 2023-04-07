@@ -94,4 +94,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - fix-comment-mode
+                - after-code-freeze
