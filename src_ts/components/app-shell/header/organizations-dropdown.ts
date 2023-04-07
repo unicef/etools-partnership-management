@@ -14,6 +14,7 @@ import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/ut
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {headerDropdownStyles} from './header-dropdown-styles';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 
 /**
  * @LitElement
@@ -120,7 +121,7 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
     this.refresh();
     this.clearLocalStorage();
 
-    fireEvent(this, 'update-main-path', {path: 'partners'});
+    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
   }
 
   protected _handleError(error: any) {
