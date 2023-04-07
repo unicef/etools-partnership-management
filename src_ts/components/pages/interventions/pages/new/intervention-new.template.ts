@@ -10,6 +10,7 @@ import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -78,6 +79,30 @@ export function template(this: InterventionNew): TemplateResult {
       }
       info-icon-tooltip {
         --iit-font-size: 16px;
+      }
+      sl-input[data-user-invalid] div[slot='help-text'] {
+        display: block;
+      }
+
+      sl-input div[slot='help-text'] {
+        display: none;
+      }
+      sl-input[data-user-invalid] {
+        --sl-input-border-color: red;
+      }
+
+      sl-input {
+        --sl-input-label-color: var(--secondary-text-color);
+        --sl-input-required-content-color: red;
+        --sl-spacing-3x-small: 0;
+        --sl-input-font-size-small: 16px;
+        --sl-input-spacing-small: 0;
+      }
+      sl-input::part(form-control-label) {
+        font-size: 13px;
+      }
+      sl-input[readonly] {
+        --sl-input-border-width: 0;
       }
     </style>
 
@@ -362,7 +387,10 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <paper-input
+          <sl-input label="${translate('NEW_INTERVENTION.DOC_TITLE')}" required value="Test texty text" placeholder="—">
+            <div slot="help-text" style="color: red;">This field is required</div>
+          </sl-input>
+          <!-- <paper-input
             id="title"
             label=${translate('NEW_INTERVENTION.DOC_TITLE')}
             char-counter
@@ -374,7 +402,7 @@ export function template(this: InterventionNew): TemplateResult {
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          ></paper-input>
+          ></paper-input> -->
         </div>
       </div>
 
