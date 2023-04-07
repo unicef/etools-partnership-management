@@ -78,7 +78,7 @@
     "@unicef-polymer/etools-dialog": "^7.0.0",
     "@unicef-polymer/etools-dropdown": "^5.0.0",
     "@unicef-polymer/etools-filters": "^2.0.0",
-    "@unicef-polymer/etools-info-tooltip": "^4.1.9",
+    "@unicef-polymer/etools-info-tooltip": "^4.1.10",
     "@unicef-polymer/etools-loading": "^6.1.0",
     "@unicef-polymer/etools-modules-common": "^2.0.0",
     "@unicef-polymer/etools-piwik-analytics": "^3.2.0",
