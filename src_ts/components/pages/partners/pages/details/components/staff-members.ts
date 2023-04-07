@@ -10,12 +10,10 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
 
 import '../../../../../common/components/icons-actions';
-import './add-edit-staff-members';
 import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
-import {openDialog} from '../../../../../utils/dialog';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
-import cloneDeep from 'lodash-es/cloneDeep';
+import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
 
 /**
  * @polymer
@@ -78,15 +76,11 @@ export class StaffMembers extends LitElement {
           >
             ${translate('SHOW_INACTIVE')}
           </paper-toggle-button>
-          <div class="separator" ?hidden="${!this.editMode}"></div>
-          <paper-icon-button
-            icon="add-box"
-            ?disabled="${!this.editMode}"
-            ?hidden="${!this.editMode}"
-            title="${translate('GENERAL.ADD')}"
-            @click="${this._addPartnerContact}"
-          >
-          </paper-icon-button>
+          <div class="separator"></div>
+          <a href="${this._getAMPLink(this.partnerId)}" target="_blank">
+            <iron-icon id="information-icon" icon="icons:open-in-new"></iron-icon>
+            <paper-tooltip for="information-icon" position="top">Access Management Portal</paper-tooltip>
+          </a>
         </div>
 
         <div ?hidden="${this._emptyList(this.dataItems?.length)}">
@@ -115,13 +109,6 @@ export class StaffMembers extends LitElement {
                   <span ?hidden="${item.active}" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" ?hidden="${!item.active}"></iron-icon>
                 </span>
-                <icons-actions2
-                  .item="${item}"
-                  ?hidden="${!this.editMode}"
-                  .showDelete="${this.showDelete}"
-                  @edit="${this._editPartnerContact}"
-                >
-                </icons-actions2>
               </div>
             </etools-data-table-row>`
           )}
@@ -136,12 +123,6 @@ export class StaffMembers extends LitElement {
 
   @property({type: Boolean})
   showInactive = false;
-
-  @property({type: Boolean})
-  showDelete = false;
-
-  @property({type: Boolean})
-  editMode = false;
 
   @property({type: Array})
   dataItems: StaffMember[] = [];
@@ -175,27 +156,13 @@ export class StaffMembers extends LitElement {
     this.showInactive = (e.currentTarget as HTMLInputElement).checked;
   }
 
-  _addPartnerContact() {
-    this.openAddEditDialog(new StaffMember({}));
-  }
-
-  _editPartnerContact(e: CustomEvent) {
-    this.openAddEditDialog(e.detail);
-  }
-
-  openAddEditDialog(item?: any) {
-    if (!item) {
-      item = new StaffMember({});
+  _getAMPLink(partnerId: number | null) {
+    const user = getStore().getState().user.data;
+    let url = `/amp/users/`;
+    if (user && user.is_unicef_user) {
+      url += `list?organization_type=partner&organization_id=${partnerId}`;
     }
-    openDialog({
-      dialog: 'add-edit-staff-members',
-      dialogData: {
-        item: cloneDeep(item),
-        partnerId: this.partnerId,
-        dataItems: cloneDeep(this.dataItems),
-        mainEl: this
-      }
-    });
+    return url;
   }
 
   _isVisible(active: boolean, showInactive: boolean) {
