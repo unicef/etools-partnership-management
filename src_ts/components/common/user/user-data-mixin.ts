@@ -3,14 +3,14 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
 import {setActiveLanguage} from '../../../redux/actions/active-language';
 import {property} from 'lit-element';
 import pmpEdpoints from '../../endpoints/endpoints';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
 import {languageIsAvailableInApp} from '../../utils/language';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @polymer
@@ -19,7 +19,7 @@ import {languageIsAvailableInApp} from '../../utils/language';
  * @appliesMixin EndpointsMixin
  */
 function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
-  class UserDataClass extends EtoolsPageRefreshMixinLit(baseClass) {
+  class UserDataClass extends baseClass {
     @property({type: Object})
     user!: User;
 
@@ -49,7 +49,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         })
         .catch((error: any) => {
           this._resetUserAndPermissions();
-          logError('Error occurred on logged user data request', 'user request', error);
+          EtoolsLogger.error('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
             fireEvent(this, 'forbidden', {bubbles: true, composed: true});
           }
@@ -110,7 +110,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
               };
               fireEvent(this, 'global-loading', eventPayload);
               // @ts-ignore TODOOO
-              this.refresh();
+              DexieRefresh.refresh();
             }
           } else {
             this.addCountryInIndexedDb(country);

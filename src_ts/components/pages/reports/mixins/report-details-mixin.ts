@@ -1,5 +1,5 @@
 import {LitElement, property} from 'lit-element';
-import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
@@ -47,7 +47,7 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
 
     requestReportDetails(id: string) {
       if (!this.currentUser) {
-        logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
+        EtoolsLogger.warn('Logged user data not init in Redux store.', this._logMsgPrefix);
         return;
       }
 
@@ -70,7 +70,7 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
         })
         .catch((error: any) => {
           const errMsg = 'Reports details data request failed!';
-          logError(errMsg, this._logMsgPrefix, error);
+          EtoolsLogger.error(errMsg, this._logMsgPrefix, error);
           parseRequestErrorsAndShowAsToastMsgs(error, this, true);
           fireEvent(this, 'global-loading', {
             active: false,
@@ -96,7 +96,7 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
         })
         .catch((error: any) => {
           const errMsg = 'Report attachment request failed!';
-          logError(errMsg, this._logMsgPrefix, error);
+          EtoolsLogger.error(errMsg, this._logMsgPrefix, error);
           if (error.status === 404) {
             // it means there is no attachment, which seems like a weird approach
           } else {

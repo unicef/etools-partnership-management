@@ -6,7 +6,7 @@ import {store, RootState} from '../../../redux/store';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {html, LitElement, property} from 'lit-element';
 import CommonMixinLit from '../mixins/common-mixin-lit';
 import {get as getTranslation} from 'lit-translate';
@@ -131,7 +131,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
         this.setDefaultSelectedCpStructure();
       } else {
         if (this._hasExpiredCpAssigned(this.selectedCp)) {
-          logWarn(this._getExpiredCPWarning());
+          EtoolsLogger.warn(this._getExpiredCPWarning());
         }
       }
     }

@@ -2,7 +2,7 @@ import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/d
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
@@ -141,7 +141,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         if (id) {
           // @ts-ignore
           if (!this._deleteEpName) {
-            logError('You must define _deleteEpName property to be able to remove existing records');
+            EtoolsLogger.error('You must define _deleteEpName property to be able to remove existing records');
             return;
           }
 

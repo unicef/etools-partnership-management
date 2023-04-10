@@ -2,8 +2,7 @@ import {html, LitElement, property} from 'lit-element';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -17,6 +16,7 @@ import {setPartners} from '../../../redux/actions/partners';
 import {setShouldReGetList} from '../../pages/interventions/pages/intervention-tab-pages/common/actions/interventions';
 import {setAgreements} from '../../../redux/actions/agreements';
 import {translate, get as getTranslation} from 'lit-translate';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @polymer
@@ -24,7 +24,7 @@ import {translate, get as getTranslation} from 'lit-translate';
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitElement)) {
+class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
   static get styles() {
     return [gridLayoutStylesLit];
   }
@@ -181,7 +181,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
       fireEvent(this, 'update-main-path', {
         path: afterDataRefreshLandingPage + '/list'
       });
-      this.refresh();
+      DexieRefresh.refresh();
       return;
     }
 
@@ -219,7 +219,7 @@ class DataRefreshDialog extends EndpointsLitMixin(EtoolsPageRefreshMixinLit(LitE
       })
       .catch((error: any) => {
         // transaction failed
-        logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+        EtoolsLogger.warn('Dexie data clearing failed.', 'data-refresh-dialog', error);
         this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
       });
   }

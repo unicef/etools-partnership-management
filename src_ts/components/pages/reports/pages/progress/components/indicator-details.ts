@@ -12,7 +12,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {appGridStyles} from './disaggregations/styles/app-grid-styles';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 import {translate} from 'lit-translate';
@@ -220,7 +220,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         this._hideLoading();
       })
       .catch((error: any) => {
-        logError('Indicator details data request failed!', 'reports-indicator-details', error);
+        EtoolsLogger.error('Indicator details data request failed!', 'reports-indicator-details', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this);
         this._hideLoading();
       });

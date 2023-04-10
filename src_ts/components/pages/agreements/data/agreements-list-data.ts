@@ -8,7 +8,7 @@ import Dexie from 'dexie';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {setAgreements} from '../../../../redux/actions/agreements';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -162,7 +162,7 @@ export class AgreementsListData extends ListDataMixin(LitElement) {
         if (error.name === 'DatabaseClosedError') {
           window.location.reload();
         }
-        logError('Error querying agreements: ', 'agreements-list-data', error);
+        EtoolsLogger.error('Error querying agreements: ', 'agreements-list-data', error);
         fireEvent(self, 'list-loading', {
           active: false
         });

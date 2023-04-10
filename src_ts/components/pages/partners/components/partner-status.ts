@@ -3,7 +3,7 @@ import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog'
 import EtoolsStatusCommonMixin from '../../../common/components/etools-status/etools-status-common-mixin-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
@@ -202,12 +202,12 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   _showDeleteConfirmationDialog() {
     if (!this.warningDialog) {
-      logWarn('warningDialog not created!', 'pmp partner status change');
+      EtoolsLogger.warn('warningDialog not created!', 'pmp partner status change');
       return;
     }
 
     if (!this.deleteWarningDialogContent) {
-      logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
+      EtoolsLogger.warn('#deleteWarningContent element not found!', 'pmp partner status change');
       return;
     }
     const warningMessage = getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {

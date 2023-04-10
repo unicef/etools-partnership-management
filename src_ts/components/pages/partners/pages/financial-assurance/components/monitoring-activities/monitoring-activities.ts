@@ -3,7 +3,7 @@ import {LitElement, html, customElement, property} from 'lit-element';
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-content-panel';
 import '@unicef-polymer/etools-loading';
@@ -180,7 +180,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         this.mapActivitiesToGroups();
       })
       .catch((err: any) => {
-        logError('Partner Activities list data request failed!', 'partnerActivities', err);
+        EtoolsLogger.error('Partner Activities list data request failed!', 'partnerActivities', err);
       })
       .finally(() => (this.loading = false));
   }

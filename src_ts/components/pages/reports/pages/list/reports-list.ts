@@ -21,7 +21,7 @@ import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './reports-filters';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
@@ -460,7 +460,7 @@ class ReportsList extends connect(store)(
           // req aborted
           return;
         }
-        logError('Reports list data request failed!', 'reports-list', error);
+        EtoolsLogger.error('Reports list data request failed!', 'reports-list', error);
 
         parseRequestErrorsAndShowAsToastMsgs(error, this);
         this.listLoadingActive = false;

@@ -1,7 +1,7 @@
 import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-label/iron-label';
 import '@unicef-polymer/etools-loading/etools-loading.js';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
@@ -115,7 +115,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
         } else {
           parseRequestErrorsAndShowAsToastMsgs(error, this);
         }
-        logError(
+        EtoolsLogger.error(
           'Error occurred on RAM Indicators request for PD ID: ' +
             reqPayload.intervention_id +
             ' and CP Output ID: ' +
