@@ -37,7 +37,8 @@
     "rd:init": "relative-deps init",
     "rd:add": "relative-deps add",
     "rd:reload": "relative-deps",
-    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent"
+    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent",
+    "prepare": "relative-deps"
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
@@ -77,7 +78,7 @@
     "@unicef-polymer/etools-dexie-caching": "^1.0.4",
     "@unicef-polymer/etools-dialog": "^7.0.0",
     "@unicef-polymer/etools-dropdown": "^5.0.0",
-    "@unicef-polymer/etools-filters": "^2.0.0",
+    "@unicef-polymer/etools-filters": "^2.0.1",
     "@unicef-polymer/etools-info-tooltip": "^4.1.10",
     "@unicef-polymer/etools-loading": "^6.1.0",
     "@unicef-polymer/etools-modules-common": "^2.0.0",
