@@ -28,7 +28,7 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
       <etools-dropdown
         ?hidden=${isEmptyObject(this.organizations)}
         id="organizationSelector"
-        placeholder="${translate('GENERAL.SELECT_ORGANIZATION')}"
+        placeholder="${translate('SELECT_ORGANIZATION')}"
         class="w100 ${this.checkMustSelectOrganization(this.user)}"
         .selected="${this.currentOrganizationId}"
         allow-outside-scroll
@@ -76,7 +76,7 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
   checkMustSelectOrganization(user: EtoolsUser) {
     if (user && !user.organization) {
       setTimeout(() => {
-        fireEvent(this, 'toast', {text: getTranslation('GENERAL.SELECT_ORGANIZATION')});
+        fireEvent(this, 'toast', {text: getTranslation('SELECT_ORGANIZATION')});
       }, 2000);
       return 'warning';
     }

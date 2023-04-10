@@ -292,18 +292,16 @@ export class AgreementsList extends connect(store)(
     this.partnersDropdownData = partnersDropdownDataSelector(state);
 
     if (!this.allFilters) {
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
-      if (this.currentLanguage) {
-        // language was already set, this is language change
-        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
-      }
-      this.currentLanguage = state.activeLanguage!.activeLanguage;
-      if (this.allFilters) {
-        this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
-      }
+    if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
+      // static data reloaded (because of language change), need to update filters
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
+      this.translateFilters(this.allFilters);
+      this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      this.allFilters = [...this.allFilters];
     }
 
     if (this.filteringParamsHaveChanged(stateRouteDetails) || state.agreements.shouldReloadList) {
@@ -395,7 +393,7 @@ export class AgreementsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded) && Boolean(state.partners?.listIsLoaded);
+    return Boolean(state.commonData?.loadedTimestamp) && Boolean(state.partners?.listIsLoaded);
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {

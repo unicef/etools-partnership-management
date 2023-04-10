@@ -2,8 +2,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
-import {BASE_URL, _checkEnvironment} from '../../../config/config';
-import {updateDrawerState} from '../../../redux/actions/app';
+import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -32,6 +31,7 @@ import 'dayjs/locale/ro.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
+import '../../common/components/support-btn';
 
 store.addReducers({
   activeLanguage
@@ -52,16 +52,58 @@ class PageHeader extends connect(store)(
     // main template
     // language=HTML
     return html`
-    ${headerDropdownStyles}
+      ${headerDropdownStyles}
       <style>
         app-toolbar {
-          padding: 0 16px 0 0;
+          padding-inline-end: 16px;
+          padding-inline-start: 0px;
           height: 60px;
           background-color: ${this.headerColor};
         }
 
         .titlebar {
           color: var(--header-color);
+        }
+
+        countries-dropdown {
+          --countries-dropdown-color: var(--light-secondary-text-color);
+        }
+
+        etools-dropdown {
+          --paper-listbox: {
+            max-height: 600px;
+          }
+
+          --esmm-icons: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+          }
+
+          --paper-input-container-underline: {
+            display: none;
+          }
+
+          --paper-input-container-underline-focus: {
+            display: none;
+          }
+
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: right;
+            width: 100px;
+          }
+        }
+
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
+          }
         }
 
         etools-profile-dropdown,
@@ -82,7 +124,8 @@ class PageHeader extends connect(store)(
 
         .titlebar img {
           width: 34px;
-          margin: 0 8px 0 24px;
+          margin-inline-end: 8px;
+          margin-inline-start: 12px;
         }
 
         .content-align {
@@ -98,7 +141,7 @@ class PageHeader extends connect(store)(
 
         .dropdowns {
           display: flex;
-          margin-right: 5px;
+          margin-inline-end: 5px;
         }
 
         .header {
@@ -128,7 +171,15 @@ class PageHeader extends connect(store)(
         }
 
         etools-profile-dropdown {
-          margin-left: 16px;
+          margin-inline-start: 16px;
+        }
+
+        support-btn {
+          color: var(--header-color);
+        }
+
+        support-btn {
+          color: var(--header-color);
         }
 
         @media (min-width: 850px) {
@@ -142,7 +193,8 @@ class PageHeader extends connect(store)(
             line-height: 16px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
         }
         @media (max-width: 768px) {
@@ -156,89 +208,120 @@ class PageHeader extends connect(store)(
             width: 42px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
 
-          etools-profile-dropdown{
-            margin-left: 0px;
+          etools-profile-dropdown {
+            margin-inline-start: 0px;
             width: 40px;
+          }
         }
-      }
-      @media (max-width: 576px) {
-        etools-app-selector {
-        --app-selector-button-padding: 18px 8px;
+        @media (max-width: 576px) {
+          etools-app-selector {
+            --app-selector-button-padding: 18px 8px;
+          }
+          #app-logo {
+            display: none;
+          }
+          .envWarning {
+            font-size: 10px;
+            margin-inline-start: 2px;
+          }
+          #refresh {
+            width: 24px;
+            padding: 0px;
+          }
+          app-toolbar {
+            padding-inline-end: 4px;
+          }
         }
-        #app-logo {
-          display: none;
-        }
-        .envWarning {
-          font-size: 10px;
-          margin-left: 2px;
-        }
-        #refresh{
-          width: 24px;
-          padding: 0px
-        }
-        app-toolbar {
-          padding-right: 4px;
-        }
-      }
       </style>
 
       <app-toolbar sticky class="content-align header">
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector id="app-selector" .user="${this.profile}" .language="${
-      this.selectedLanguage
-    }"></etools-app-selector>
-            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg">
+            <etools-app-selector
+              id="app-selector"
+              .user="${this.profile}"
+              .language="${this.selectedLanguage}"
+            ></etools-app-selector>
+            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
+            ${this.isStaging
+              ? html`
             <div class="envWarning" ?hidden="${!this.environment}">
               <span class='envLong'> - </span>${this.environment}
               <span class='envLong'>TESTING ENVIRONMENT<span>
-            </div>
+            </div>`
+              : ''}
           </div>
         </div>
 
         <div class="header__item header__right-group">
           <div class="dropdowns">
-              <etools-dropdown
-                id="languageSelector"
-                .selected="${this.selectedLanguage}"
-                .options="${appLanguages}"
-                option-label="display_name"
-                option-value="value"
-                @etools-selected-item-changed="${this.languageChanged}"
-                trigger-value-change-event
-                hide-search
-                allow-outside-scroll
-                no-label-float
-                auto-width
-              ></etools-dropdown>
+            <etools-dropdown
+              id="languageSelector"
+              .selected="${this.selectedLanguage}"
+              .options="${appLanguages}"
+              option-label="display_name"
+              option-value="value"
+              @etools-selected-item-changed="${this.languageChanged}"
+              trigger-value-change-event
+              hide-search
+              allow-outside-scroll
+              no-label-float
+              auto-width
+            ></etools-dropdown>
 
-              <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${
-      this.profile?.country
-    }">
-              </countries-dropdown>
-              <organizations-dropdown></organizations-dropdown>
+            <countries-dropdown
+              id="countries"
+              .countries="${this.countries}"
+              .currentCountry="${this.profile?.country}"
+            >
+            </countries-dropdown>
+            <organizations-dropdown></organizations-dropdown>
+
+            <etools-dropdown
+              id="languageSelector"
+              .selected="${this.selectedLanguage}"
+              .options="${appLanguages}"
+              option-label="display_name"
+              option-value="value"
+              @etools-selected-item-changed="${this.languageChanged}"
+              trigger-value-change-event
+              hide-search
+              allow-outside-scroll
+              no-label-float
+              auto-width
+            ></etools-dropdown>
+
+            <countries-dropdown
+              id="countries"
+              .countries="${this.countries}"
+              .currentCountry="${this.profile?.country}"
+            >
+            </countries-dropdown>
           </div>
-
+          <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
-              title="${translate('PROFILE_AND_SIGNOUT')}"
-              .sections="${this.allSections}"
-              .offices="${this.allOffices}"
-              .users="${this.allUsers}"
-              .profile="${this.profile}"
-              .language="${this.selectedLanguage}"
-              @save-profile="${this._saveProfile}"
-              @sign-out="${this._signOut}"></etools-profile-dropdown>
+            title="${translate('PROFILE_AND_SIGNOUT')}"
+            .sections="${this.allSections}"
+            .offices="${this.allOffices}"
+            .users="${this.allUsers}"
+            .profile="${this.profile}"
+            .language="${this.selectedLanguage}"
+            @save-profile="${this._saveProfile}"
+            @sign-out="${this._signOut}"
+          ></etools-profile-dropdown>
 
           <paper-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
             icon="refresh"
             tracker="hard refresh"
-            @tap="${this._onRefreshClick}">
+            @tap="${this._onRefreshClick}"
+          >
           </paper-icon-button>
         </div>
       </app-toolbar>
@@ -272,6 +355,9 @@ class PageHeader extends connect(store)(
   @property({type: String})
   environment: string | null = _checkEnvironment();
 
+  @property({type: Boolean})
+  isStaging = !isProductionServer();
+
   @property({type: Object})
   profile: User | null = null;
 
@@ -292,7 +378,6 @@ class PageHeader extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
-    this.showLanguagesForDevDomains();
 
     setTimeout(() => {
       const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
@@ -347,32 +432,14 @@ class PageHeader extends connect(store)(
   }
 
   public menuBtnClicked() {
-    store.dispatch(updateDrawerState(true));
+    fireEvent(this, 'change-drawer-state');
   }
 
   public _setBgColor() {
     // If not production environment, changing header color to red
-    if (this.environment) {
+    if (!isProductionServer()) {
       this.headerColor = 'var(--nonprod-header-color)';
     }
-  }
-
-  protected showLanguagesForDevDomains() {
-    const location = window.location.host;
-    const devDomains = ['localhost', 'etools-dev', 'etools-test'];
-    if (!devDomains.some((x) => location.indexOf(x) > -1)) {
-      appLanguages.splice(this.getIndexOfRoLang(), 1);
-    }
-  }
-
-  getIndexOfRoLang() {
-    let index = 0;
-    appLanguages.forEach((l, i) => {
-      if (l.value === 'ro') {
-        index = i;
-      }
-    });
-    return index;
   }
 
   private _updateCountriesList(countries: any[]) {
@@ -472,7 +539,7 @@ class PageHeader extends connect(store)(
   protected _signOut() {
     this._clearDexieDbs();
     this._clearLocalStorage();
-    window.location.href = window.location.origin + '/logout';
+    window.location.href = window.location.origin + '/social/unicef-logout/';
   }
 
   protected _clearDexieDbs() {

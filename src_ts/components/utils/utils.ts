@@ -1,8 +1,9 @@
-import {GenericObject} from '@unicef-polymer/etools-types';
+import {GenericObject, LabelAndValue} from '@unicef-polymer/etools-types';
 import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
 import difference from 'lodash-es/difference';
 import {formatDate} from './date-utils';
 import {appLanguages} from '../../config/app-constants';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 
 export const isObject = (a: any) => {
   return a && a.constructor === Object;
@@ -134,3 +135,9 @@ function _formatYYYY_MM_DD(obj2: string | Date) {
 export const languageIsAvailableInApp = (lngCode: string) => {
   return appLanguages.some((lng) => lng.value === lngCode);
 };
+
+export function translateLabelAndValueArray(arrData: LabelAndValue[], keyPrefix: string): LabelAndValue[] {
+  const arrTranslated: LabelAndValue[] = [];
+  arrData.forEach((x) => arrTranslated.push({value: x.value, label: getTranslatedValue(x.label, keyPrefix)}));
+  return arrTranslated;
+}

@@ -1,5 +1,4 @@
 import {customElement, html, LitElement, property} from 'lit-element';
-import '@polymer/app-route/app-route.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -11,7 +10,6 @@ import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit'
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
 import '../../common/components/etools-error-messages-box.js';
-import '../../common/components/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
@@ -86,18 +84,19 @@ export class InterventionsModule extends connect(store)(
 
         .option-button {
           height: 36px;
-          border-left: 2px solid rgba(255, 255, 255, 0.12);
+          border-inline-start: 2px solid rgba(255, 255, 255, 0.12);
         }
         .main-button.with-additional {
-          padding: 0 0 0 18px;
+          padding-inline-end: 0;
+          padding-inline-start: 18px;
         }
 
         .main-button.with-additional span {
-          margin-right: 15px;
+          margin-inline-end: 15px;
         }
 
         .main-button span {
-          margin-right: 7px;
+          margin-inline-end: 7px;
           vertical-align: middle;
           line-height: 36px;
         }
@@ -325,6 +324,7 @@ export class InterventionsModule extends connect(store)(
       loadingSource: 'interv-page'
     });
     this._initInterventionsModuleListeners();
+
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,

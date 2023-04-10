@@ -88,7 +88,7 @@ const pmpEdpoints = {
     cachingKey: 'dropdownsPmp'
   },
   dropdownsStatic: {
-    url: '/api/v2/dropdowns/static',
+    url: '/api/v2/dropdowns/static/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cachingKey: 'dropdownsStatic'
   },

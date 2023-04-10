@@ -55,6 +55,7 @@ import {
   Country,
   LocationObject
 } from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
@@ -87,19 +88,8 @@ export class CommonDataState {
   disaggregations: Disaggregation[] = [];
   PRPCountryData: GenericObject[] = [];
   genderEquityRatings: LabelAndValue[] = [];
-  reportStatuses: LabelAndValue[] = [
-    // TODO: reports list filter statuses? To be confirmed by unicef team.
-    {value: 'Acc', label: 'Accepted'},
-    {value: 'Due', label: 'Due'},
-    {value: 'Sen', label: 'Sent Back'},
-    {value: 'Sub', label: 'Submitted'},
-    {value: 'Ove', label: 'Overdue'}
-  ];
-  reportTypes: LabelAndValue[] = [
-    {value: 'HR', label: 'Humanitarian Reports'},
-    {value: 'QPR', label: 'Quarterly Progress Reports'},
-    {value: 'SR', label: 'Special Reports'}
-  ];
+  reportStatuses: LabelAndValue[] = [];
+  reportTypes: LabelAndValue[] = [];
   locationTypes: {id: number; name: string; admin_level: any}[] = [];
   grants: GenericObject[] = [];
   providedBy: GenericObject[] = [];
@@ -109,7 +99,7 @@ export class CommonDataState {
   riskTypes: LabelAndValue[] = [];
   cashTransferModalities: LabelAndValue[] = [];
   sites: [] = [];
-  commonDataIsLoaded = false;
+  loadedTimestamp = 0;
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -127,7 +117,7 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     case SET_COMMON_DATA_IS_LOADED:
       return {
         ...state,
-        commonDataIsLoaded: true
+        loadedTimestamp: new Date().getTime()
       };
     case UPDATE_COUNTRY_PROGRAMMES:
       return {
@@ -362,7 +352,7 @@ export const flaggedSortedDisaggregs = createSelector(disaggregationsSelector, (
   return copy(disagregs)
     .map((d: Disaggregation) => {
       if (!d.active) {
-        d.name = '(*Inactive) ' + d.name;
+        d.name = `(*${getTranslation('INACTIVE')}) ` + d.name;
       }
       return d;
     })

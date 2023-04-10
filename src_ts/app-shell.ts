@@ -18,9 +18,8 @@ import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
 import {
-  handleUrlChange,
+  handleUrlChange
   // navigate,
-  updateDrawerState
 } from './redux/actions/app.js';
 
 // Lazy loading CommonData reducer.
@@ -44,11 +43,8 @@ store.addReducers({
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '@polymer/app-route/app-location.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-
-import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
@@ -88,12 +84,13 @@ import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from './components/utils/routes.js';
-import {registerTranslateConfig, use, translate} from 'lit-translate';
+import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;
@@ -327,6 +324,13 @@ class AppShell extends connect(store)(
         .shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
+
+    // Override ajax error parser inside @unicef-polymer/etools-ajax
+    // for string translation using lit-translate
+    window.ajaxErrorParserTranslateFunction = (key: string) => {
+      return getTranslatedValue(key);
+    };
+
     if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.
@@ -346,7 +350,7 @@ class AppShell extends connect(store)(
     // @ts-ignore
     this.loadCommonData();
 
-    installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
+    installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
   }
@@ -359,8 +363,6 @@ class AppShell extends connect(store)(
   }
 
   public stateChanged(state: RootState) {
-    this._drawerOpened = state.app!.drawerOpened;
-    this.smallMenu = state.app!.smallMenu;
     this.uploadsStateChanged(state);
 
     // @ts-ignore EndpointsMixin
@@ -369,6 +371,10 @@ class AppShell extends connect(store)(
       state.activeLanguage!.activeLanguage &&
       !isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)
     ) {
+      if (this.selectedLanguage) {
+        // on language change, reload parts of commonData in order to use BE localized text
+        this.loadCommonDataOnLanguageChange();
+      }
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
       this.loadLocalization();
     }
@@ -482,13 +488,14 @@ class AppShell extends connect(store)(
     this._updateMainPath = this._updateMainPath.bind(this);
     this._onForbidden = this._onForbidden.bind(this);
     this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
-    this._drawerChanged = this._drawerChanged.bind(this);
 
     this.addEventListener('404', this._pageNotFound);
     this.addEventListener('update-main-path', this._updateMainPath as any);
     this.addEventListener('forbidden', this._onForbidden);
     this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
-    this.addEventListener('app-drawer-transitioned', this._drawerChanged);
+    // Event trigerred by the app-drawer component
+    this.addEventListener('app-drawer-transitioned', this.syncWithDrawerState);
+    this.addEventListener('change-drawer-state', this.changeDrawerState);
   }
 
   private _removeListeners() {
@@ -496,7 +503,8 @@ class AppShell extends connect(store)(
     this.removeEventListener('update-main-path', this._updateMainPath as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
-    this.removeEventListener('app-drawer-transitioned', this._drawerChanged);
+    this.removeEventListener('app-drawer-transitioned', this.syncWithDrawerState);
+    this.removeEventListener('change-drawer-state', this.changeDrawerState);
   }
 
   public disconnectedCallback() {
@@ -504,9 +512,12 @@ class AppShell extends connect(store)(
     this._removeListeners();
   }
 
-  public _drawerChanged() {
-    // need this for catching drawer closing event and keep _drawerOpened updated
-    store.dispatch(updateDrawerState(Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened)));
+  public syncWithDrawerState() {
+    this._drawerOpened = Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened);
+  }
+
+  public changeDrawerState() {
+    this._drawerOpened = !this._drawerOpened;
   }
 
   private async _showConfirmNewVersionDialog() {
@@ -563,7 +574,7 @@ class AppShell extends connect(store)(
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
     fireEvent(this, 'toast', {
-      text: 'An error occurred.'
+      text: getTranslation('GENERAL.ERR_OCCURRED')
     });
   }
 

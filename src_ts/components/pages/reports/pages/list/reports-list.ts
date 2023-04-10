@@ -33,9 +33,10 @@ import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debounc
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '../../../../utils/routes';
-import {translate} from 'lit-translate';
+import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -82,7 +83,7 @@ class ReportsList extends connect(store)(
           font-size: 10px;
           text-transform: uppercase;
           background-color: var(--paper-grey-300);
-          margin-left: 5px;
+          margin-inline-start: 5px;
           font-weight: bold;
         }
 
@@ -194,7 +195,7 @@ class ReportsList extends connect(store)(
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
-                      ${this.getDisplayValue(report.reporting_period, ',', false)}
+                      ${this.displayLocalizedReportingPeriod(report.reporting_period)}
                     </span>
 
                     ${!this.noPdSsfaRef
@@ -298,19 +299,16 @@ class ReportsList extends connect(store)(
     this.partners = partnersDropdownDataSelector(state);
 
     if (!this.allFilters) {
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state.commonData!);
     }
 
-    if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
-      if (this.currentLanguage) {
-        // language was already set, this is language change
-        this.allFilters = [...this.translateFilters(this.allFilters)] as EtoolsFilter[];
-        if (this.allFilters) {
-          this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
-        }
-      }
-
-      this.currentLanguage = state.activeLanguage!.activeLanguage;
+    if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
+      // static data reloaded (because of language change), need to update filters
+      this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
+      this.translateFilters(this.allFilters);
+      this.populateDropdownFilterOptionsFromCommonData(state.commonData!, this.allFilters);
+      this.allFilters = [...this.allFilters];
     }
 
     this.endStateChanged(state);
@@ -345,7 +343,7 @@ class ReportsList extends connect(store)(
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState): boolean {
-    return Boolean(state.commonData?.commonDataIsLoaded && state.user?.data && state.partners?.listIsLoaded);
+    return Boolean(state.commonData?.loadedTimestamp && state.user?.data && state.partners?.listIsLoaded);
   }
 
   initFiltersForDisplay(commonData: CommonDataState) {
@@ -517,6 +515,20 @@ class ReportsList extends connect(store)(
         }
       }
     }
+  }
+
+  displayLocalizedReportingPeriod(repPer: string) {
+    return langChanged(() => {
+      if (!repPer || !repPer.includes(' - ')) {
+        console.error('Reporting Period is not in the expected format!');
+        return repPer;
+      }
+      let date1 = '';
+      let date2 = '';
+      [date1, date2] = repPer.split(' - ');
+
+      return dayjs(date1).format('DD MMM YYYY') + ' - ' + dayjs(date2).format('DD MMM YYYY');
+    });
   }
 }
 

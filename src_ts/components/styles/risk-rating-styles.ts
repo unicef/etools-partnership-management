@@ -7,7 +7,7 @@ export const riskRatingStyles = html` <style>
       display: inline-block;
       min-height: 22px;
       padding: 0 4px;
-      border-left: var(--risk-rating-significant-color);
+      border-inline-start: var(--risk-rating-significant-color);
       /* TODO: capitalize might not be applied, iron-input bug */
       text-transform: capitalize;
       box-sizing: border-box;
@@ -16,21 +16,21 @@ export const riskRatingStyles = html` <style>
 
     --risk-rating-low: {
       @apply --risk-rating-field;
-      border-left: 4px solid var(--risk-rating-low-color);
+      border-inline-start: 4px solid var(--risk-rating-low-color);
     }
     --risk-rating-moderate: {
       @apply --risk-rating-field;
-      border-left: 4px solid var(--risk-rating-moderate-color);
+      border-inline-start: 4px solid var(--risk-rating-moderate-color);
     }
     --risk-rating-high: {
       @apply --risk-rating-field;
       color: var(--primary-text-color);
-      border-left: 4px solid var(--risk-rating-high-color);
+      border-inline-start: 4px solid var(--risk-rating-high-color);
     }
     --risk-rating-significant: {
       @apply --risk-rating-field;
       color: var(--primary-text-color);
-      border-left: 4px solid var(--risk-rating-significant-color);
+      border-inline-start: 4px solid var(--risk-rating-significant-color);
     }
 
     --risk-rating-unavailable: {
@@ -38,16 +38,16 @@ export const riskRatingStyles = html` <style>
       color: var(--primary-text-color);
       background-color: transparent;
       text-align: left;
-      padding-left: 0;
+      padding-inline-start: 0;
     }
     --risk-rating-not-assessed: {
       @apply --risk-rating-field;
-      border-left: 4px solid var(--risk-rating-not-assesed-color);
+      border-inline-start: 4px solid var(--risk-rating-not-assesed-color);
     }
 
     --risk-rating-not-required: {
       @apply --risk-rating-field;
-      border-left: 4px solid var(--risk-rating-not-required-color);
+      border-inline-start: 4px solid var(--risk-rating-not-required-color);
     }
   }
 

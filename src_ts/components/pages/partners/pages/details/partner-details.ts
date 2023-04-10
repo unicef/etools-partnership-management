@@ -91,7 +91,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         .cvs-file {
           width: auto;
           max-width: calc(100% - 32px);
-          margin-left: 8px;
+          margin-inline-start: 8px;
           word-break: break-all;
         }
       </style>
