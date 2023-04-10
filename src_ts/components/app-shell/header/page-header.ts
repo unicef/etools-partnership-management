@@ -280,27 +280,6 @@ class PageHeader extends connect(store)(
             >
             </countries-dropdown>
             <organizations-dropdown></organizations-dropdown>
-
-            <etools-dropdown
-              id="languageSelector"
-              .selected="${this.selectedLanguage}"
-              .options="${appLanguages}"
-              option-label="display_name"
-              option-value="value"
-              @etools-selected-item-changed="${this.languageChanged}"
-              trigger-value-change-event
-              hide-search
-              allow-outside-scroll
-              no-label-float
-              auto-width
-            ></etools-dropdown>
-
-            <countries-dropdown
-              id="countries"
-              .countries="${this.countries}"
-              .currentCountry="${this.profile?.country}"
-            >
-            </countries-dropdown>
           </div>
           <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
