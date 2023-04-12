@@ -2,14 +2,15 @@
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControlMixinLit from '../../mixins/scroll-control-mixin-lit';
-import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {LitElement, property, PropertyValues} from 'lit-element';
 import {Status, StatusAction} from '../../../../typings/etools-status.types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+
 declare const ShadyCSS: any;
 
 /**
@@ -47,14 +48,9 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
     @property({type: Array})
     possibleActions!: StatusAction[];
 
-    @property({type: Object})
-    warningDialog!: EtoolsDialog;
-
-    @property({type: Object})
-    deleteConfirmDialog!: EtoolsDialog;
-
-    @property({type: String})
-    deleteWarningMessage!: string;
+    get deleteWarningMessage() {
+      return '';
+    }
 
     private _resetStatusActionsDebouncer!: Debouncer;
     private _statusActiveChangeDebouncer!: Debouncer;
@@ -71,13 +67,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      if (this.warningDialog) {
-        this.warningDialog.removeEventListener('close', this._statusChangeConfirmationCallback as any);
-        removeDialog(this.warningDialog);
-      }
-      if (this.deleteConfirmDialog) {
-        removeDialog(this.deleteConfirmDialog);
-      }
+
       this._resetScrollHandler();
       this._resetResizeHandler();
     }
@@ -267,20 +257,21 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
       }
     }
 
-    _createDeleteConfirmationDialog() {
-      const warnDeleteContent = document.createElement('div');
-      warnDeleteContent.innerHTML = this.deleteWarningMessage;
-      const conf: any = {
-        size: 'md',
-        okBtnText: translate('YES'),
-        cancelBtnText: translate('NO'),
-        content: warnDeleteContent
-      };
-      this.deleteConfirmDialog = createDynamicDialog(conf);
-    }
+    async _openDeleteConfirmation() {
+      const confirmed = await openDialog({
+        dialog: 'are-you-sure',
+        dialogData: {
+          content: this.deleteWarningMessage,
+          confirmBtnText: translate('YES'),
+          cancelBtnText: translate('NO')
+        }
+      }).then(({confirmed}) => {
+        return confirmed;
+      });
 
-    _openDeleteConfirmation() {
-      this.deleteConfirmDialog.opened = true;
+      if (confirmed) {
+        fireEvent(this, 'delete-confirmed');
+      }
     }
   }
   return EtoolsStatusCommonClass;

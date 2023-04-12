@@ -464,7 +464,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </paper-input-container>
           </div>
           <div
-            class="generate-pca col col-3"
+            class="generate-pca col col-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
               this.isNewAgreement,
