@@ -40,18 +40,18 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../utils/dialog';
-import {stopGlobalLoading} from '../../../../utils/utils';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
+import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
 
@@ -608,7 +608,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   stateChanged(state: RootState) {
-    if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
+    if (EtoolsRouter.pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
       return;
     }
 
@@ -647,7 +647,10 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      stopGlobalLoading(this, 'ag-page');
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'ag-page'
+      });
     }, 200);
   }
 

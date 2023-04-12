@@ -1,11 +1,11 @@
 import {LitElement, property} from 'lit-element';
 import {store} from '../../../redux/store';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateUserData} from '../../../redux/actions/user';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '@unicef-polymer/etools-types';

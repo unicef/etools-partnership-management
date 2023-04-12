@@ -8,7 +8,7 @@ import '@polymer/paper-ripple/paper-ripple.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';

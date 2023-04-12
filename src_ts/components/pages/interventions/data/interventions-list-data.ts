@@ -1,7 +1,7 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
-import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import {customElement, LitElement, property} from 'lit-element';
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
@@ -212,7 +212,7 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
           if (error.name === 'DatabaseClosedError') {
             window.location.reload();
           }
-          logError('Error querying interventions: ' + error, 'interventions-list-data');
+          EtoolsLogger.error('Error querying interventions: ' + error, 'interventions-list-data');
           fireEvent(self, 'list-loading', {
             active: false
           });

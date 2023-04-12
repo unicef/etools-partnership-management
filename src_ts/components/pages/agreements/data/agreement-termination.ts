@@ -12,7 +12,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CONSTANTS from '../../../../config/app-constants';
 import {translate} from 'lit-translate';
 

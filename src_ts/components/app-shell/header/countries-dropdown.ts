@@ -1,11 +1,10 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../../utils/fire-custom-event.js';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
@@ -13,6 +12,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 import {get as getTranslation} from 'lit-translate';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @polymer
@@ -21,7 +21,7 @@ import {get as getTranslation} from 'lit-translate';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement)))) {
+class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(LitElement))) {
   render() {
     // main template
     // language=HTML
@@ -185,7 +185,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
 
   protected _handleResponse() {
     history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
-    this.refresh();
+    DexieRefresh.refresh();
   }
 
   protected _countrySelectorUpdate(countries: any[]) {
@@ -195,7 +195,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
   }
 
   protected _handleError(error: any) {
-    logError('Country change failed!', 'countries-dropdown', error);
+    EtoolsLogger.error('Country change failed!', 'countries-dropdown', error);
     (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).selected = this.currentCountry.id;
     fireEvent(this, 'toast', {
       text: getTranslation('ERROR_CHANGE_WORKSPACE')
