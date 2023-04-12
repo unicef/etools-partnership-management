@@ -85,6 +85,7 @@ export class Partner extends ModelsCommon {
   last_assessment_date = ''; // TODO: update type to date
   monitoring_activity_groups: number[][] = [];
   name = '';
+  organization_id = '';
   partner_type = '';
   partner_type_slug = ''; // TODO: if cannot be used => remove property
   phone_number = '';
