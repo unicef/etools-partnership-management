@@ -1,5 +1,5 @@
 import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
-import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -15,7 +15,7 @@ import './components/report-status';
 import './components/report-rating-dialog';
 import './components/report-reject-dialog';
 
-import {GenericObject, RouteDetails, User} from '@unicef-polymer/etools-types';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
@@ -28,16 +28,18 @@ import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-s
 import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {isEmptyObject} from '../../utils/utils';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
-import {openDialog} from '../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate, get as getTranslation} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+
 declare const dayjs: any;
 
 /**
@@ -243,7 +245,7 @@ export class ReportsModule extends connect(store)(
   moduleName = 'reports';
 
   @property({type: Object})
-  reduxRouteDetails?: RouteDetails;
+  reduxRouteDetails?: EtoolsRouteDetails;
 
   @property({type: String})
   _page = '';
@@ -258,8 +260,8 @@ export class ReportsModule extends connect(store)(
       this.reduxRouteDetails = state.app.routeDetails!;
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
       this.tabsActive = !this.listActive;
-      this.activePage = this.reduxRouteDetails.subRouteName!;
-      this._page = this.reduxRouteDetails.subRouteName!;
+      this.activePage = this.reduxRouteDetails?.subRouteName!;
+      this._page = this.reduxRouteDetails?.subRouteName!;
     }
   }
 

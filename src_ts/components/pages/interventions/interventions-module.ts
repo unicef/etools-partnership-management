@@ -15,23 +15,23 @@ import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {isJsonStrMatch} from '../../utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {store, RootState} from '../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import InterventionItemData from './data/intervention-item-data.js';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
-import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {openDialog} from '../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
 import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
@@ -324,7 +324,6 @@ export class InterventionsModule extends connect(store)(
       loadingSource: 'interv-page'
     });
     this._initInterventionsModuleListeners();
-
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,

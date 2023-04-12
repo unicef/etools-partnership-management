@@ -10,10 +10,10 @@ import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
-import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
-import {isJsonStrMatch} from '../../../../../../utils/utils.js';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util.js';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 

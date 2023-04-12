@@ -7,7 +7,7 @@ import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';

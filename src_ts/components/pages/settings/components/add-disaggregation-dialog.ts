@@ -19,7 +19,7 @@ import {addDisaggregation} from '../../../../redux/actions/common-data';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 

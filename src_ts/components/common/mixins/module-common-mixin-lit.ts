@@ -3,8 +3,8 @@ import {ListQueryParams} from '../../../typings/route.types'; // TODO - load usi
 import {LitElement, property} from 'lit-element';
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 
-import {fireEvent} from '../../utils/fire-custom-event';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
@@ -131,7 +131,7 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
         }
       } catch (err) {
         // @ts-ignore
-        logWarn('List refresh error occurred', '[' + this.moduleName + '-module]', err);
+        EtoolsLogger.warn('List refresh error occurred', '[' + this.moduleName + '-module]', err);
       }
     }
   }

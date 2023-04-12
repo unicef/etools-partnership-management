@@ -7,9 +7,10 @@ import {LitElement, property, PropertyValues} from 'lit-element';
 import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
-import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event'; // TODO modify import
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+
 declare const ShadyCSS: any;
 
 /**

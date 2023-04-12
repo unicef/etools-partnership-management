@@ -6,10 +6,10 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement, setShouldReloadAgreements} from '../../../../redux/actions/agreements';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
-import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
-import {isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
 /**
@@ -74,7 +74,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
       })
       .catch((error: any) => {
         if (error instanceof EtoolsRequestError === false) {
-          logError('handleErrorResponse', 'agreement-item-data', error);
+          EtoolsLogger.error('handleErrorResponse', 'agreement-item-data', error);
         }
         this.handleErrorResponse(error, ajaxMethod, true);
         return false;
@@ -151,7 +151,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     let propName: string;
     for (propName in minimalAgrData) {
       if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
-        logWarn('Mapping property not found');
+        EtoolsLogger.warn('Mapping property not found');
       } else {
         // @ts-ignore
         minimalAgrData[propName] = detail[propName];
@@ -322,7 +322,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
 
   _handleAgreementDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+    EtoolsLogger.error('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: getTranslation('PLEASE_REFRESH_DATA')
     });

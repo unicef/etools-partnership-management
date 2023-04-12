@@ -8,17 +8,17 @@ import '../../../../common/components/etools-form-element-wrapper';
 
 import './sent-bk-comments.js';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer
