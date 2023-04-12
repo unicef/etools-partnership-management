@@ -93,7 +93,7 @@ export class EtoolsActionButton extends LitElement {
               ${this.primaryAction.label}
             </div>
             ${(this.secondaryActions || []).length
-              ? html` <paper-menu-button horizontal-align="right">
+              ? html` <paper-menu-button horizontal-align>
                   <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
                   <paper-listbox slot="dropdown-content">
                     <div class="list-wrapper">

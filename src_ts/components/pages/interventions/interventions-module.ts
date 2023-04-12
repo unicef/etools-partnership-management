@@ -164,7 +164,7 @@ export class InterventionsModule extends connect(store)(
               >
                 <iron-icon icon="add"></iron-icon>
                 ${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}
-                <paper-menu-button id="importEcn" horizontal-align="right">
+                <paper-menu-button id="importEcn" horizontal-align>
                   <paper-icon-button
                     slot="dropdown-trigger"
                     class="option-button"

@@ -77,7 +77,7 @@
     "@unicef-polymer/etools-dexie-caching": "^1.0.4",
     "@unicef-polymer/etools-dialog": "^7.0.0",
     "@unicef-polymer/etools-dropdown": "^5.0.0",
-    "@unicef-polymer/etools-filters": "^2.0.0",
+    "@unicef-polymer/etools-filters": "^2.0.1",
     "@unicef-polymer/etools-info-tooltip": "^4.1.10",
     "@unicef-polymer/etools-loading": "^6.1.0",
     "@unicef-polymer/etools-modules-common": "^3.0.0",
