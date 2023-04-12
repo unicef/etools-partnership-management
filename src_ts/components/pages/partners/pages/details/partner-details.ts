@@ -288,7 +288,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         </div>
       </etools-content-panel>
 
-      <staff-members id="staffMembersList" .dataItems="${this.partner.staff_members}" .partnerId="${this.partner.organization_id}">
+      <staff-members id="staffMembersList"
+        .dataItems="${this.partner.staff_members}"
+        .partnerId="${this.partner.organization_id}"
+        >
       </staff-members>
     `;
   }
