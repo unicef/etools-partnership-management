@@ -215,7 +215,6 @@ export function template(this: InterventionNew): TemplateResult {
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
         </div>
       </div>
