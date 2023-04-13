@@ -370,7 +370,7 @@ export class InterventionsList extends connect(store)(
           pmpEdpoints.interventions.bypassCache = true;
           interventionsListElement._elementReady().finally(() => {
             this.loadFilteredInterventions();
-            pmpEdpoints.interventions.bypassCache = false
+            pmpEdpoints.interventions.bypassCache = false;
           });
         }
       } else {
