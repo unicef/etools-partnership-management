@@ -3,7 +3,6 @@ import {LitElement, html, property, PropertyValues, customElement} from 'lit-ele
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
-import '@polymer/app-route/app-route';
 
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
@@ -16,7 +15,7 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '../../common/components/etools-tabs';
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
@@ -113,12 +112,12 @@ export class PartnersModule extends connect(store)(
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs
+          ? html` <etools-tabs-lit
               slot="tabs"
               .tabs="${this.partnerTabs}"
               .activeTab="${this.reduxRouteDetails?.subRouteName}"
               @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs>`
+            ></etools-tabs-lit>`
           : ''}
       </page-content-header>
 
@@ -287,6 +286,10 @@ export class PartnersModule extends connect(store)(
       this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
       this.tabsActive = !this.listActive;
+      if (this.tabsActive && isNaN(this.selectedPartnerId)) {
+        fireEvent(this, '404');
+        return;
+      }
       this.activePage = this.reduxRouteDetails.subRouteName!;
       this._page = this.reduxRouteDetails.subRouteName!;
       this.currentModule = this.reduxRouteDetails.routeName;

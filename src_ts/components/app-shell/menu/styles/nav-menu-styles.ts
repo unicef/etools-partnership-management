@@ -158,7 +158,7 @@ export const navMenuStyles = html`
     }
 
     .nav-menu-item .name {
-      margin-left: 16px;
+      margin-inline-start: 16px;
       color: var(--primary-text-color);
     }
 

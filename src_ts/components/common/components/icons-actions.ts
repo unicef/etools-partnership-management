@@ -35,6 +35,11 @@ class IconsActions extends PolymerElement {
           bottom: 0;
         }
 
+        :host-context([dir='rtl']):host {
+          right: unset;
+          left: 0;
+        }
+
         paper-icon-button {
           color: var(--dark-icon-color, #6f6f70);
         }

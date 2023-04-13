@@ -26,7 +26,7 @@ class EtoolsFormElementWrapper extends LitElement {
             display: none;
           }
           --paper-input-prefix: {
-            margin-right: 5px;
+            margin-inline-end: 5px;
             margin-top: -2px;
             color: var(--dark-secondary-text-color);
           }

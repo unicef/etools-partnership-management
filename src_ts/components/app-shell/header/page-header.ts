@@ -3,7 +3,6 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
-import {updateDrawerState} from '../../../redux/actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
@@ -53,7 +52,8 @@ class PageHeader extends connect(store)(
     return html`
       <style>
         app-toolbar {
-          padding: 0 16px 0 0;
+          padding-inline-end: 16px;
+          padding-inline-start: 0px;
           height: 60px;
           background-color: ${this.headerColor};
         }
@@ -93,6 +93,16 @@ class PageHeader extends connect(store)(
           }
         }
 
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
+          }
+        }
+
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -111,7 +121,8 @@ class PageHeader extends connect(store)(
 
         .titlebar img {
           width: 34px;
-          margin: 0 8px 0 24px;
+          margin-inline-end: 8px;
+          margin-inline-start: 12px;
         }
 
         .content-align {
@@ -127,7 +138,7 @@ class PageHeader extends connect(store)(
 
         .dropdowns {
           display: flex;
-          margin-right: 5px;
+          margin-inline-end: 5px;
         }
 
         .header {
@@ -157,7 +168,11 @@ class PageHeader extends connect(store)(
         }
 
         etools-profile-dropdown {
-          margin-left: 16px;
+          margin-inline-start: 16px;
+        }
+
+        support-btn {
+          color: var(--header-color);
         }
 
         support-btn {
@@ -175,7 +190,8 @@ class PageHeader extends connect(store)(
             line-height: 16px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
         }
         @media (max-width: 768px) {
@@ -189,11 +205,12 @@ class PageHeader extends connect(store)(
             width: 42px;
           }
           .titlebar img {
-            margin: 0 8px 0 12px;
+            margin-inline-end: 8px;
+            margin-inline-start: 12px;
           }
 
           etools-profile-dropdown {
-            margin-left: 0px;
+            margin-inline-start: 0px;
             width: 40px;
           }
         }
@@ -206,14 +223,14 @@ class PageHeader extends connect(store)(
           }
           .envWarning {
             font-size: 10px;
-            margin-left: 2px;
+            margin-inline-start: 2px;
           }
           #refresh {
             width: 24px;
             padding: 0px;
           }
           app-toolbar {
-            padding-right: 4px;
+            padding-inline-end: 4px;
           }
         }
       </style>
@@ -229,7 +246,8 @@ class PageHeader extends connect(store)(
             ></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
             ${this.isStaging
-              ? html`<div class="envWarning" ?hidden="${!this.environment}">
+              ? html`
+            <div class="envWarning" ?hidden="${!this.environment}">
               <span class='envLong'> - </span>${this.environment}
               <span class='envLong'>TESTING ENVIRONMENT<span>
             </div>`
@@ -389,7 +407,7 @@ class PageHeader extends connect(store)(
   }
 
   public menuBtnClicked() {
-    store.dispatch(updateDrawerState(true));
+    fireEvent(this, 'change-drawer-state');
   }
 
   public _setBgColor() {

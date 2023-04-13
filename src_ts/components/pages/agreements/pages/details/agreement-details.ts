@@ -99,13 +99,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
         .generate-pca {
           /* TODO:change Generate PCA btn template-this should be applied on form-element-wrapper with width auto */
-          border-right: 1px solid var(--dark-divider-color);
-          margin-right: 24px;
-          padding-right: 24px;
+          border-inline-end: 1px solid var(--dark-divider-color);
+          margin-inline-end: 24px;
+          padding-inline-end: 24px;
         }
 
         .generate-pca[hidden] + .col {
-          padding-left: 0;
+          padding-inline-start: 0;
         }
 
         #generateMyPca {
@@ -120,7 +120,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           color: var(--error-color);
         }
         .padd-right {
-          padding-right: 16px;
+          padding-inline-end: 16px;
         }
         .year-coll {
           width: 105px;
@@ -213,7 +213,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               id="partner"
               label="${translate('PARTNER_NAME')}"
               placeholder="&#8212;"
-              .options="${this.partnersDropdownData}"
+              .options="${this.filteredPartnerDropdownData}"
               .selected="${this.agreement.partner}"
               trigger-value-change-event
               @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
@@ -417,7 +417,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-3">
+          <div class="col col-6">
             <paper-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
@@ -464,7 +464,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </paper-input-container>
           </div>
           <div
-            class="generate-pca col col-3"
+            class="generate-pca col col-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
               this.isNewAgreement,
@@ -563,6 +563,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   @property({type: Array})
   partnersDropdownData!: any[];
+
+  get filteredPartnerDropdownData() {
+    return this.partnersDropdownData.filter(
+      (partner) =>
+        !this._typeMatches(this.agreement.agreement_type, 'PCA') || partner.type === 'Civil Society Organization'
+    );
+  }
 
   @property({type: Array})
   agreementTypes!: LabelAndValue[];
@@ -761,10 +768,20 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       this.oldSelectedPartnerId = currentPartnerId;
     }
     this.getPartnerStaffMembers(currentPartnerId, showLoading);
+
+    if (this.agreement.id) {
+      this.handleUsersNoLongerAvailable(
+        this.partnersDropdownData,
+        [{value: this.agreement.partner, label: this.agreement.partner_name}],
+        'value',
+        'label'
+      );
+    }
   }
 
   _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: PartnerStaffMember[]) {
     if (staffMembers instanceof Array && staffMembers.length) {
+      this.handleUsersNoLongerAvailable(staffMembers, agreementAuthorizedOfficers, 'id', 'name');
       return staffMembers;
     }
 
@@ -772,6 +789,23 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }
     return [];
+  }
+
+  handleUsersNoLongerAvailable(availableUsers: any, savedUsers: any, idLabel: string, nameLabel: string) {
+    if (!(savedUsers && savedUsers.length > 0 && availableUsers && availableUsers.length > 0)) {
+      return false;
+    }
+    let changed = false;
+    savedUsers.forEach((savedUsr: any) => {
+      if (availableUsers.findIndex((x: any) => x[idLabel] === savedUsr[idLabel]) < 0) {
+        availableUsers.push(savedUsr);
+        changed = true;
+      }
+    });
+    if (changed) {
+      availableUsers.sort((a: any, b: any) => (a[nameLabel] < b[nameLabel] ? -1 : 1));
+    }
+    return changed;
   }
 
   _getReadonlySignedByPartner(staffMembers: MinimalStaffMember[], selectedId?: number | null) {

@@ -49,9 +49,14 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
 
-  @property() staffMembers: LabelAndValue<number>[] = [];
-  get allStaffMembers(): string {
-    return this.staffMembers.map((member: LabelAndValue<number>) => member.label).join(', ');
+  @property() partnerStaffMembers: PartnerStaffMember[] = [];
+  get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
+    return this.partnerStaffMembers.map((member: PartnerStaffMember) => ({
+      label: `${!member.active ? `[${getTranslation('INACTIVE')}]` : ''} ${member.first_name} ${member.last_name} (${
+        member.email
+      })`,
+      value: member.id
+    }));
   }
 
   get authorizedOfficers(): string {
@@ -119,7 +124,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
     this.setInterventionField('partner', id);
     this.filterAgreements(id);
-    this.staffMembers = [];
+    this.partnerStaffMembers = [];
     if (!this.selectedPartner) {
       return;
     }
@@ -129,16 +134,11 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.newIntervention.partner_focal_points = [];
     sendRequest({endpoint}).then(
       (users: PartnerStaffMember[]) =>
-        (this.staffMembers = users
-          .sort(
-            (a: PartnerStaffMember, b: PartnerStaffMember) =>
-              Number(b.active) - Number(a.active) ||
-              `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
-          )
-          .map((member: PartnerStaffMember) => ({
-            label: `${!member.active ? '[Inactive]' : ''} ${member.first_name} ${member.last_name} (${member.email})`,
-            value: member.id
-          })))
+        (this.partnerStaffMembers = users.sort(
+          (a: PartnerStaffMember, b: PartnerStaffMember) =>
+            Number(b.active) - Number(a.active) ||
+            `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
+        ))
     );
   }
 

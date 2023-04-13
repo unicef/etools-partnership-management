@@ -31,7 +31,7 @@ export const NewInterventionStyles: CSSResult = css`
   }
 
   .row > *:not(:first-child) {
-    padding-left: 40px;
+    padding-inline-start: 40px;
     box-sizing: border-box;
   }
 
@@ -49,7 +49,7 @@ export const NewInterventionStyles: CSSResult = css`
   paper-button {
     background-color: var(--light-disabled-text-color);
     padding: 8px 20px;
-    margin-left: 24px;
+    margin-inline-start: 24px;
   }
 
   .primary-btn {

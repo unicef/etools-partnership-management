@@ -8,9 +8,7 @@ export function replaceAppState(routePath: string, qs: string, dispatchLocationC
   window.history.replaceState(currentState, '', routePath + (qs.length ? '?' + qs : ''));
 
   if (dispatchLocationChange) {
-    // This event lets app-location and app-route know
-    // the URL has changed
-    window.dispatchEvent(new CustomEvent('location-changed'));
+    window.dispatchEvent(new CustomEvent('popstate'));
   }
 }
 
@@ -22,5 +20,5 @@ export function changeAppState(url: string) {
     return;
   }
   window.history.pushState(window.history.state, '', url);
-  window.dispatchEvent(new CustomEvent('location-changed'));
+  window.dispatchEvent(new CustomEvent('popstate'));
 }

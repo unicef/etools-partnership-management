@@ -58,7 +58,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           z-index: 1;
           color: white;
           padding: 0 4px;
-          border-right: 1px solid var(--primary-background-color);
+          border-inline-end: 1px solid var(--primary-background-color);
         }
 
         .indicator-toggle paper-icon-button {
@@ -76,7 +76,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         }
 
         .indicator-header {
-          padding: 8px 24px 8px 16px;
+          padding-block: 8px;
+          padding-inline: 16px 24px;
           background: var(--medium-theme-background-color);
         }
 

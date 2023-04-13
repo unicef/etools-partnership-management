@@ -153,9 +153,7 @@ export class PartnerOverview extends PaginationMixin(
               </div>
             </div>
             <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 2)}</div>
-            <div class="col col-2 center-align block">
-              $${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}
-            </div>
+            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}</div>
             <div class="col col-2 center-align">
               <strong>
                 ${this.partner.hact_values?.programmatic_visits?.planned?.total} /

@@ -31,7 +31,7 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
         .target-row span:last-child {
           display: inline-block;
           width: 70px;
-          margin-left: 8px;
+          margin-inline-start: 8px;
           @apply --indicator-report-row-value;
         }
 
@@ -48,18 +48,18 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
             display: inline;
             width: auto;
             text-align: left;
-            padding-right: 0;
-            margin-right: 16px;
+            padding-inline-end: 0;
+            margin-inline-end: 16px;
           }
 
           :host(.print-inline) .target-row:last-child {
-            margin-right: 0;
+            margin-inline-end: 0;
           }
 
           :host(.print-inline) .target-row span:last-child {
             display: initial;
             width: auto;
-            margin-left: 8px;
+            margin-inline-start: 8px;
             overflow: visible;
             text-overflow: unset;
           }
