@@ -341,19 +341,11 @@ export class InterventionsModule extends connect(store)(
     // this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-
-    this.onAmendmentAdded = this.onAmendmentAdded.bind(this);
-    this.onAmendmentDeleted = this.onAmendmentDeleted.bind(this);
-    this.addEventListener('amendment-added', this.onAmendmentAdded as any);
-    this.addEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
 
   _removeInterventionsModuleListeners() {
     this.removeEventListener('intervention-save-error', this._interventionSaveErrors as any);
     // this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-
-    this.removeEventListener('amendment-added', this.onAmendmentAdded as any);
-    this.removeEventListener('amendment-deleted', this.onAmendmentDeleted as any);
   }
 
   pageChanged(page: string) {
@@ -367,16 +359,6 @@ export class InterventionsModule extends connect(store)(
     if (['list', 'new'].includes(page)) {
       this.reportsPrevParams = {};
     }
-  }
-
-  onAmendmentDeleted(e: CustomEvent) {
-    (this.shadowRoot?.querySelector('#interventionData') as InterventionItemData).deleteInterventionFromDexie(
-      e.detail.id
-    );
-  }
-
-  onAmendmentAdded(e: CustomEvent) {
-    this.updateDexieData(e.detail);
   }
 
   updateDexieData(intervention: Intervention) {

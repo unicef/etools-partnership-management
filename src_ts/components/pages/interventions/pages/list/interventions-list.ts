@@ -356,20 +356,25 @@ export class InterventionsList extends connect(store)(
       if (this.hadToinitializeUrlWithPrevQueryString(stateRouteDetails)) {
         return;
       }
+
       this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
-      this.loadFilteredInterventions();
 
       if (state.interventions.shouldReGetList) {
+        getStore().dispatch(setShouldReGetList(false));
         const interventionsListElement = this.shadowRoot!.querySelector<InterventionsListData>('#interventions');
         if (interventionsListElement) {
           pmpEdpoints.interventions.bypassCache = true;
-          interventionsListElement._elementReady().finally(() => (pmpEdpoints.interventions.bypassCache = false));
+          interventionsListElement._elementReady().finally(() => {
+            this.loadFilteredInterventions();
+            pmpEdpoints.interventions.bypassCache = false;
+          });
         }
-        getStore().dispatch(setShouldReGetList(false));
+      } else {
+        this.loadFilteredInterventions();
       }
     }
 
