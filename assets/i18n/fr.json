@@ -71,10 +71,10 @@
     },
     "AGREEMENTSTATUSES": {
       "DRAFT": "Brouillon",
-      "ENDED": "Terminé",
+      "ENDED": "Fini",
       "SIGNED": "Signé",
       "SUSPENDED": "Suspendu",
-      "TERMINATED": "Résilié"
+      "TERMINATED": "Terminé"
     },
     "AGREEMENTTYPES": {
       "MEMORANDUM_OF_UNDERSTANDING": "Protocole d'entente",
@@ -573,10 +573,10 @@
     "ACTIVE": "Actif",
     "CLOSED": "Fermé",
     "DRAFT": "Brouillon",
-    "ENDED": "Terminé",
+    "ENDED": "Fini",
     "SIGNED": "Signé",
     "SUSPENDED": "Suspendu",
-    "TERMINATED": "Résilié"
+    "TERMINATED": "Terminé"
   },
   "STATUS_IS_CHANGING": "Vous modifiez le statut de <strong>{{from}}</strong> à <strong>{{to}}</strong> . Voulez-vous continuer?",
   "SUBMISSION_DATE": "Date de soumission",
