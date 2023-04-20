@@ -70,7 +70,7 @@
       "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "Changement de nom légal du partenaire de mise en œuvre"
     },
     "AGREEMENTSTATUSES": {
-      "DRAFT": "Brouillon",
+      "DRAFT": "Développement",
       "ENDED": "Fini",
       "SIGNED": "Signé",
       "SUSPENDED": "Suspendu",
@@ -572,7 +572,7 @@
   "STATUSES": {
     "ACTIVE": "Actif",
     "CLOSED": "Fermé",
-    "DRAFT": "Brouillon",
+    "DRAFT": "Développement",
     "ENDED": "Fini",
     "SIGNED": "Signé",
     "SUSPENDED": "Suspendu",
