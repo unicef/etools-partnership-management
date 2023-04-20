@@ -13,6 +13,8 @@ import pmpEdpoints from '../../endpoints/endpoints.js';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 import {get as getTranslation} from 'lit-translate';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
+import '@shoelace-style/shoelace/dist/components/select/select.js';
+import '@shoelace-style/shoelace/dist/components/option/option.js';
 
 /**
  * @polymer
@@ -87,7 +89,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         }
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
-      <etools-dropdown
+      <sl-select
         id="countrySelector"
         ?hidden="${!this.countrySelectorVisible}"
         .selected="${this.currentCountry?.id}"
@@ -102,7 +104,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         .shownOptionsLimit="${250}"
         hide-search
         auto-width
-      ></etools-dropdown>
+      ></sl-dropdown>
     `;
   }
 
