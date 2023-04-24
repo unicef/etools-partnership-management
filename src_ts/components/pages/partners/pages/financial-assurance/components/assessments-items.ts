@@ -17,11 +17,11 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 import {store} from '../../../../../../redux/store';
 import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../redux/actions/upload-status';
 import {PartnerAssessment} from '../../../../../../models/partners.models';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {openDialog} from '../../../../../utils/dialog';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
-import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils.js';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @customElement

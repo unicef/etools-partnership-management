@@ -1,6 +1,5 @@
-import {fireEvent} from '../../utils/fire-custom-event';
-import {replaceAppState} from '../../utils/navigation-helper';
-import {isEmptyObject} from '../../utils/utils';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 import {ListFilterOption} from '../../../typings/filter.types';
 import get from 'lodash-es/get';
@@ -8,6 +7,7 @@ import {LitElement, property} from 'lit-element';
 import {EtoolsDataTableRow} from '@unicef-polymer/etools-data-table/etools-data-table-row';
 import {get as getTranslation} from 'lit-translate';
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 
 function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class ListsCommonClass extends baseClass {
@@ -223,7 +223,7 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
     _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
       if (qs !== lastUrlQueryStr) {
         // update URL
-        replaceAppState(currentPageUrlPath, qs, true);
+        EtoolsRouter.replaceAppLocation(currentPageUrlPath, qs);
         // filter agreements
         if (this.requiredDataLoaded) {
           filterData();
@@ -232,7 +232,7 @@ function ListsCommonMixin<T extends Constructor<LitElement>>(baseClass: T) {
         if (location.search === '') {
           // only update URL query string, without location change event being fired(no page refresh)
           // used to keep prev list filters values when navigating from details to list page
-          replaceAppState(currentPageUrlPath, qs, false);
+          EtoolsRouter.replaceState(currentPageUrlPath, qs);
         }
         if (this.forceDataRefresh && this.requiredDataLoaded) {
           // re-filter list data

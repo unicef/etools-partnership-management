@@ -13,7 +13,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {setStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {store, RootState} from './redux/store';
 
 // These are the actions needed by this element.
@@ -72,25 +72,27 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
+import './components/utils/routes';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
-import {fireEvent} from './components/utils/fire-custom-event.js';
-import {isJsonStrMatch} from './components/utils/utils.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {EtoolsRouter} from './components/utils/routes.js';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
-import {openDialog} from '@unicef-polymer/etools-modules-common/dist/utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 declare const dayjs_plugin_isSameOrBefore: any;

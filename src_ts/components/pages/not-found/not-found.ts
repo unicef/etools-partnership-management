@@ -3,7 +3,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {html, LitElement} from 'lit-element';
 import {BASE_URL} from '../../../config/config';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
  * @polymer

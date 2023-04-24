@@ -4,11 +4,11 @@ import CONSTANTS from '../../../../../config/app-constants';
 import EtoolsStatusCommonMixin from '../../../../common/components/etools-status/etools-status-common-mixin-lit';
 import '../../../../common/components/etools-status/etools-status';
 import '../../../../common/components/etools-status/etools-status-common-mixin-lit';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import '../../data/agreement-termination';
-import {openDialog} from '../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {get as getTranslation, listenForLangChanged} from 'lit-translate';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer

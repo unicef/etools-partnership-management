@@ -4,9 +4,9 @@ import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-reques
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
 import {deletePartner, setShouldReloadPartners} from '../../../../redux/actions/partners';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner} from '../../../../models/partners.models';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
@@ -142,7 +142,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
 
   public _handlePartnerDeleteFromDexieErr(dexieDeleteErr: any) {
     // Partner dexie deleted issue
-    logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
+    EtoolsLogger.error('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: getTranslation('PLEASE_REFRESH_DATA')
     });
@@ -150,7 +150,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
 
   public _handleErrorResponse(response: any, ajaxMethod: any) {
     if (response instanceof EtoolsRequestError === false) {
-      logError('_handleErrorResponse', 'partner-item-data', response);
+      EtoolsLogger.error('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {
       fireEvent(this, 'global-loading', {

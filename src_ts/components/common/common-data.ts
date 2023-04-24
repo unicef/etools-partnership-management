@@ -3,8 +3,8 @@ import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
 
-import {isEmptyObject, translateLabelAndValueArray} from '../utils/utils';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor, LabelAndValue} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
@@ -12,6 +12,7 @@ import pmpEdpoints from '../endpoints/endpoints';
 import {LitElement, property} from 'lit-element';
 import EnvironmentFlagsMixinLit from './environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
+import {translateLabelAndValueArray} from '../utils/language';
 
 /**
  * @polymer
@@ -185,7 +186,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     }
 
     protected _errorHandler(err: any) {
-      logError('Error getting static data', 'static-common-data', err);
+      EtoolsLogger.error('Error getting static data', 'static-common-data', err);
     }
 
     protected _getEndpointSuccessHandler(endpointName: string) {
