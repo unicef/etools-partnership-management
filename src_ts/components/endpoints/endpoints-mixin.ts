@@ -4,8 +4,8 @@ import {RootState} from '../../redux/store';
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
-import {isJsonStrMatch} from '../utils/utils';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
@@ -220,7 +220,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement | LitElement>>(base
       activeReqKey?: string
     ) {
       if (!endpoint) {
-        logError('Endpoint name is missing.', 'Endpoints:fireRequest');
+        EtoolsLogger.error('Endpoint name is missing.', 'Endpoints:fireRequest');
         return;
       }
       const defer = this._getDeferrer();

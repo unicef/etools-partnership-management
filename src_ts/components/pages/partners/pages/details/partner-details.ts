@@ -14,7 +14,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
-import {isEmptyObject, isJsonStrMatch, stopGlobalLoading} from '../../../../utils/utils';
+import {isEmptyObject, isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {RootState, store} from '../../../../../redux/store';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
@@ -27,17 +27,17 @@ import '../../../../common/components/icons-actions';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';
-import {fireEvent} from '../../../../utils/fire-custom-event';
-import {convertDate} from '../../../../utils/date-utils';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {convertDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {Partner} from '../../../../../models/partners.models';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
 import {translate} from 'lit-translate';
 import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 declare const dayjs: any;
 
@@ -373,7 +373,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      stopGlobalLoading(this, 'partners-page');
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
     }, 200);
   }
 

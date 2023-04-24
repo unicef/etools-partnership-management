@@ -2,8 +2,8 @@ import {customElement, html, LitElement, property, PropertyValues} from 'lit-ele
 import '@unicef-polymer/etools-loading/etools-loading.js';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {isEmptyObject} from '../../../../../utils/utils';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 
@@ -227,7 +227,7 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
       })
       .catch((_error: any) => {
         this.showLoading = false;
-        logError('Error on get TPM visits');
+        EtoolsLogger.error('Error on get TPM visits');
       });
   }
 

@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
@@ -73,7 +73,6 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
           <etools-dropdown
             id="partnerDropdw"

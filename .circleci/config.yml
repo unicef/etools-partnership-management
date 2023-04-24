@@ -94,5 +94,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - amp
-                - after-code-freeze

@@ -10,11 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import {Reducer} from 'redux';
 import {UPDATE_ROUTE_DETAILS} from '../actions/actionsConstants.js';
-import {RouteDetails} from '../../components/utils/router.js';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 export class AppState {
   page = '';
-  routeDetails: RouteDetails = {} as RouteDetails;
+  routeDetails: EtoolsRouteDetails = {} as EtoolsRouteDetails;
 }
 
 const INITIAL_STATE = new AppState();
