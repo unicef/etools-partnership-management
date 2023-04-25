@@ -335,7 +335,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     if (!isJsonStrMatch(this.sharedPartenerValues, state.commonData!.agencyChoices)) {
       this.sharedPartenerValues = state.commonData!.agencyChoices;
     }
-    if (state.user && state.user.data &&!isJsonStrMatch(this.user, state.user.data)) {
+    if (state.user && state.user.data && !isJsonStrMatch(this.user, state.user.data)) {
       this.user = state.user.data;
     }
   }
