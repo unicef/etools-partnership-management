@@ -36,6 +36,7 @@ export class MinimalStaffMember extends ModelsCommon {
   first_name = '';
   last_name = '';
   active = true;
+  has_active_realm = true;
 
   constructor(staffMemberData: GenericObject) {
     super();

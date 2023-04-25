@@ -13,7 +13,7 @@ import '../../../../../common/components/icons-actions';
 import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
-import {getStore} from '@unicef-polymer/etools-modules-common/dist/utils/redux-store-access';
+import {User} from '@unicef-polymer/etools-types/dist/user.types';
 
 /**
  * @polymer
@@ -77,7 +77,7 @@ export class StaffMembers extends LitElement {
             ${translate('SHOW_INACTIVE')}
           </paper-toggle-button>
           <div class="separator"></div>
-          <a href="${this._getAMPLink(this.partnerId)}" target="_blank">
+          <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
             <iron-icon id="information-icon" icon="icons:open-in-new"></iron-icon>
             <paper-tooltip for="information-icon" position="top">Access Management Portal</paper-tooltip>
           </a>
@@ -97,7 +97,7 @@ export class StaffMembers extends LitElement {
             (item) => html`<etools-data-table-row
               secondary-bg-on-hover
               no-collapse
-              ?hidden="${!this._isVisible(item.active, this.showInactive)}"
+              ?hidden="${!this._isVisible(item.has_active_realm, this.showInactive)}"
             >
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-2">${this._displayValue(item.title)}</span>
@@ -106,8 +106,8 @@ export class StaffMembers extends LitElement {
                 <span class="col-data col-2">${this._displayValue(item.phone)}</span>
                 <span class="col-data col-2">${this._displayValue(item.email)}</span>
                 <span class="col-data col-2 center-align">
-                  <span ?hidden="${item.active}" class="placeholder-style">&#8212;</span>
-                  <iron-icon icon="check" ?hidden="${!item.active}"></iron-icon>
+                  <span ?hidden="${item.has_active_realm}" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="check" ?hidden="${!item.has_active_realm}"></iron-icon>
                 </span>
               </div>
             </etools-data-table-row>`
@@ -129,6 +129,9 @@ export class StaffMembers extends LitElement {
 
   @property({type: Number})
   partnerId: number | null = null;
+
+  @property({type: Object})
+  user!: User;
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('dataItems')) {
@@ -156,8 +159,7 @@ export class StaffMembers extends LitElement {
     this.showInactive = (e.currentTarget as HTMLInputElement).checked;
   }
 
-  _getAMPLink(partnerId: number | null) {
-    const user = getStore().getState().user.data;
+  _getAMPLink(partnerId: number | null, user: User) {
     let url = `/amp/users/`;
     if (user && user.is_unicef_user) {
       url += `list?organization_type=partner&organization_id=${partnerId}`;
@@ -165,8 +167,8 @@ export class StaffMembers extends LitElement {
     return url;
   }
 
-  _isVisible(active: boolean, showInactive: boolean) {
-    return active || showInactive;
+  _isVisible(has_active_realm: boolean, showInactive: boolean) {
+    return has_active_realm || showInactive;
   }
 
   _emptyList(length: number) {
