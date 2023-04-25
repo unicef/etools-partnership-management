@@ -1,7 +1,7 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement, property, PropertyValues} from 'lit-element';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin-lit';
@@ -70,7 +70,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
 
     _elementReady() {
       if (!this.endpointName) {
-        logWarn('Please specify an endpointName property', 'list-data-mixin');
+        EtoolsLogger.warn('Please specify an endpointName property', 'list-data-mixin');
         return Promise.resolve(false);
       } else {
         if (!this.noGetRequest) {
@@ -105,7 +105,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       fireEvent(this, 'data-loaded', res);
       if (this.fireDataLoaded) {
         if (!this.dataLoadedEventName) {
-          logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
+          EtoolsLogger.warn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
         } else {
           fireEvent(this, this.dataLoadedEventName);
         }

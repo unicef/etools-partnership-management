@@ -5,7 +5,7 @@ import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate, translateConfig} from 'lit-translate';
-import {formatDate} from '../../../../utils/date-utils';
+import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
@@ -215,7 +215,6 @@ export function template(this: InterventionNew): TemplateResult {
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
         </div>
       </div>

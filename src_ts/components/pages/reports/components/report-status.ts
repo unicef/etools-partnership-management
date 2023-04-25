@@ -1,7 +1,7 @@
 import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/image-icons.js';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {listenForLangChanged} from 'lit-translate';
 
 /**

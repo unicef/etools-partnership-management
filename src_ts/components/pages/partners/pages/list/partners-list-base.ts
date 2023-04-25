@@ -30,18 +30,14 @@ import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import {PartnersListData} from '../../data/partners-list-data';
-import {EtoolsRouter} from '../../../../utils/routes';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import omit from 'lodash-es/omit';
-import {
-  buildUrlQueryString,
-  cloneDeep,
-  getTranslatedValue,
-  translateValue
-} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
+import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';

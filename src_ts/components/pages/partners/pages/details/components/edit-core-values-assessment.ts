@@ -7,7 +7,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import '../../../../../common/components/etools-form-element-wrapper';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
 

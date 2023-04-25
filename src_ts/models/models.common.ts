@@ -1,6 +1,6 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
-import {copy} from '../components/utils/utils';
+import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 
 export class ModelsCommon {
   setObjProperties(data: GenericObject) {

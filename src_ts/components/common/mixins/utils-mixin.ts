@@ -1,4 +1,4 @@
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
@@ -26,7 +26,7 @@ function UtilsMixin<T extends Constructor<any>>(baseClass: T) {
       thousandsPoint = thousandsPoint ? thousandsPoint : '';
 
       if (decimalsPoint && thousandsPoint && decimalsPoint === thousandsPoint) {
-        logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
+        EtoolsLogger.warn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
         return nr;
       }
       const nrParts = nr.split('.');

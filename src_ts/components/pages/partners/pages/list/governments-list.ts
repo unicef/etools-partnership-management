@@ -1,4 +1,4 @@
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {customElement} from 'lit-element';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';

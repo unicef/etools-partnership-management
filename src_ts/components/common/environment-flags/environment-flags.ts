@@ -5,7 +5,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../redux/store';
 import {updateEnvFlags} from '../../../redux/actions/common-data';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {property} from '@polymer/decorators';
 import {EnvFlags} from '@unicef-polymer/etools-types';
 
@@ -51,7 +51,7 @@ class EnvironmentFlagsPolymerMixin2 extends connect(store)(EndpointsMixin(Polyme
         }
       })
       .catch((error: any) => {
-        logError('Env flags request failed', null, error);
+        EtoolsLogger.error('Env flags request failed', null, error);
         store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
       });
   }
