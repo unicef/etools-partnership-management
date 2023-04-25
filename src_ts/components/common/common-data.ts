@@ -138,6 +138,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.grants = dropdownsPmpRespose.grants;
       data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
       data.csoTypes = dropdownsPmpRespose.cso_types;
+      data.locationTypes = dropdownsPmpRespose.location_types;
 
       data.documentTypes = dropdownsStatic.intervention_doc_type;
       data.interventionStatuses = dropdownsStatic.intervention_status;
@@ -150,7 +151,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
       data.assessmentTypes = dropdownsStatic.assessment_types;
       data.interventionAmendmentTypes = dropdownsStatic.intervention_amendment_types;
-      data.locationTypes = dropdownsStatic.location_types;
       data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
