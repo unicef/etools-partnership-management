@@ -110,7 +110,7 @@ export class InterventionsList extends connect(store)(
           // etools-data-table-footer is not displayed without this:
           setTimeout(() => this.requestUpdate());
         }}"
-        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
+        @list-loading="${this.onListLoading}"
         list-data-path="filteredInterventions"
         fire-data-loaded
       >
@@ -305,6 +305,9 @@ export class InterventionsList extends connect(store)(
   @property({type: Array})
   allFilters!: EtoolsFilter[];
 
+  @property({type: Boolean})
+  isInitialPageLoading = true;
+
   @property({type: Object})
   prevQueryStringObj: GenericObject = {
     size: 10,
@@ -328,11 +331,6 @@ export class InterventionsList extends connect(store)(
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
 
     super.connectedCallback();
-
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'interv-page'
-    });
   }
 
   stateChanged(state: RootState): void {
@@ -348,7 +346,6 @@ export class InterventionsList extends connect(store)(
     }
 
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
-      this.listLoadingActive = true;
       return;
     }
 
@@ -389,6 +386,25 @@ export class InterventionsList extends connect(store)(
 
   filteringParamsHaveChanged(stateRouteDetails: any) {
     return JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails);
+  }
+
+  onListLoading(e: CustomEvent) {
+    this.hideLoadingAfterDataListLoaded(!e.detail?.active);
+    if (!this.isInitialPageLoading) {
+      this.listLoadingActive = e.detail.active;
+    }
+  }
+
+  hideLoadingAfterDataListLoaded(listLoaded: boolean) {
+    if (this.isInitialPageLoading && listLoaded) {
+      this.isInitialPageLoading = false;
+      setTimeout(() => {
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'interv-page'
+        });
+      }, 100);
+    }
   }
 
   /**
