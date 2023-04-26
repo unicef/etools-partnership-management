@@ -36,6 +36,7 @@ export class MinimalStaffMember extends ModelsCommon {
   first_name = '';
   last_name = '';
   active = true;
+  has_active_realm = true;
 
   constructor(staffMemberData: GenericObject) {
     super();
@@ -85,6 +86,7 @@ export class Partner extends ModelsCommon {
   last_assessment_date = ''; // TODO: update type to date
   monitoring_activity_groups: number[][] = [];
   name = '';
+  organization_id = '';
   partner_type = '';
   partner_type_slug = ''; // TODO: if cannot be used => remove property
   phone_number = '';

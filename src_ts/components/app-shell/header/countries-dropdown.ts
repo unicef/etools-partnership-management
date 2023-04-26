@@ -10,8 +10,9 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
+import {headerDropdownStyles} from './header-dropdown-styles';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation, translate} from 'lit-translate';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
@@ -26,6 +27,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
     // main template
     // language=HTML
     return html`
+      ${headerDropdownStyles}
       <style>
         *[hidden] {
           display: none !important;
@@ -37,37 +39,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
 
         :host(:hover) {
           cursor: pointer;
-        }
-
-        etools-dropdown {
-          --paper-listbox: {
-            max-height: 600px;
-          }
-
-          --esmm-icons: {
-            color: var(--countries-dropdown-color);
-            cursor: pointer;
-          }
-
-          --paper-input-container-underline: {
-            display: none;
-          }
-
-          --paper-input-container-underline-focus: {
-            display: none;
-          }
-
-          --paper-input-container-shared-input-style: {
-            color: var(--light-secondary-text-color);
-            cursor: pointer;
-            font-size: 16px;
-            text-align: right;
-            width: 100px;
-          }
-
-          --paper-menu-button-dropdown: {
-            max-height: 380px;
-          }
         }
 
         :host-context([dir='rtl']) etools-dropdown {
@@ -89,9 +60,10 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
         id="countrySelector"
+        class="w100"
         ?hidden="${!this.countrySelectorVisible}"
         .selected="${this.currentCountry?.id}"
-        placeholder="Country"
+        placeholder="${translate('COUNTRY')}"
         allow-outside-scroll
         no-label-float
         .options="${this.countries}"

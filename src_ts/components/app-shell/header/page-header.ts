@@ -8,6 +8,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
+import '../header/organizations-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -26,9 +27,9 @@ import 'dayjs/locale/fr.js';
 import 'dayjs/locale/ru.js';
 import 'dayjs/locale/pt.js';
 import 'dayjs/locale/ar.js';
-import 'dayjs/locale/ro.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
+import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
 
 store.addReducers({
@@ -50,6 +51,7 @@ class PageHeader extends connect(store)(
     // main template
     // language=HTML
     return html`
+      ${headerDropdownStyles}
       <style>
         app-toolbar {
           padding-inline-end: 16px;
@@ -277,6 +279,7 @@ class PageHeader extends connect(store)(
               .currentCountry="${this.profile?.country}"
             >
             </countries-dropdown>
+            <organizations-dropdown></organizations-dropdown>
           </div>
           <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
