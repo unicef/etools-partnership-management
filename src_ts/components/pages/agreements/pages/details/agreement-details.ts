@@ -571,7 +571,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   get filteredPartnerDropdownData() {
     return this.amendedPartnersDropdownData.filter(
       (partner) =>
-        !this._typeMatches(this.agreement.agreement_type, 'PCA') || partner.type === 'Civil Society Organization'
+        !partner.type ||
+        !this._typeMatches(this.agreement.agreement_type, 'PCA') ||
+        partner.type === 'Civil Society Organization'
     );
   }
 
