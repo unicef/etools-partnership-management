@@ -241,11 +241,7 @@ class PageHeader extends connect(store)(
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector
-              id="app-selector"
-              .user="${this.profile}"
-              .language="${this.selectedLanguage}"
-            ></etools-app-selector>
+            <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
             ${this.isStaging
               ? html`
@@ -288,7 +284,6 @@ class PageHeader extends connect(store)(
             .offices="${this.allOffices}"
             .users="${this.allUsers}"
             .profile="${this.profile}"
-            .language="${this.selectedLanguage}"
             @save-profile="${this._saveProfile}"
             @sign-out="${this._signOut}"
           ></etools-profile-dropdown>
@@ -395,7 +390,7 @@ class PageHeader extends connect(store)(
 
     if (state.activeLanguage!.activeLanguage && state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      localStorage.setItem('defaultLanguage', this.selectedLanguage);
+      window.EtoolsLanguage = this.selectedLanguage;
       this.setLanguageDirection();
     }
   }
@@ -457,7 +452,7 @@ class PageHeader extends connect(store)(
       fireEvent(this, 'language-changed', {language: newLanguage});
     }
     if (newLanguage !== this.selectedLanguage) {
-      localStorage.setItem('defaultLanguage', newLanguage);
+      window.EtoolsLanguage = this.selectedLanguage;
       use(newLanguage).then(() => {
         if (this.profile?.preferences?.language != newLanguage) {
           this.updateUserPreference(newLanguage);
