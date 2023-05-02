@@ -564,10 +564,16 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   @property({type: Array})
   partnersDropdownData!: any[];
 
+  /** Include deleted partners already saved on the agreement */
+  @property({type: Array})
+  amendedPartnersDropdownData!: any[];
+
   get filteredPartnerDropdownData() {
-    return this.partnersDropdownData.filter(
+    return this.amendedPartnersDropdownData.filter(
       (partner) =>
-        !this._typeMatches(this.agreement.agreement_type, 'PCA') || partner.type === 'Civil Society Organization'
+        !partner.type ||
+        !this._typeMatches(this.agreement.agreement_type, 'PCA') ||
+        partner.type === 'Civil Society Organization'
     );
   }
 
@@ -602,7 +608,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   connectedCallback() {
     super.connectedCallback();
-    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
+    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 70) as any;
 
     fireEvent(this, 'tab-content-attached');
   }
@@ -619,6 +625,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     this.isNewAgreement = state.app?.routeDetails?.params?.agreementId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
+      this.amendedPartnersDropdownData = [...this.partnersDropdownData];
     }
 
     const agreementTypes = (state.commonData!.agreementTypes || []).filter((ag: LabelAndValue) => ag.value !== 'SSFA');
@@ -774,7 +781,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
     if (this.agreement.id) {
       this.handleUsersNoLongerAvailable(
-        this.partnersDropdownData,
+        this.amendedPartnersDropdownData,
         [{value: this.agreement.partner, label: this.agreement.partner_name}],
         'value',
         'label'
