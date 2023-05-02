@@ -94,4 +94,4 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - 2-after-code-freeze
+                - undisplayed-partner
