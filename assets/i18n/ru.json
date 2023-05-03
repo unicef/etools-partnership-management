@@ -408,7 +408,6 @@
     "ACTIVATION_PROTOCOL": "Протокол активации",
     "AGREEMENT_AUTH_OFFICERS": "Уполномоченные лица",
     "AGREEMENT_REQUIRED": "Требуется соглашение",
-    "CFEI_EXPECTED_FORMAT": "Предполагаемый формат: CEF/3-буквенный код страны/4-значный год/3-значный номер",
     "CFEI_EXPECTED_FORMAT_SHORT": "'CEF/3-буквенный код страны/4-значный год/3-значный номер'",
     "CONTINGENCY_DOC": "Это ПД на случай непредвиденных/чрезвычайных ситуаций",
     "CP_STRUCTURES": "Страновая Программа",
@@ -430,8 +429,7 @@
     "UNICEF_BUDGET_OWNER": "Ответственный за финансы в ЮНИСЕФ",
     "UNICEF_FOCAL_POINTS": "Ответственные сотрудники ЮНИСЕФ",
     "UNICEF_OFFICES": "Офис/ы ЮНИСЕФ",
-    "UNICEF_SECTIONS": "Секции ЮНИСЕФ",
-    "UNPP_CFEI_DSR_REF_NUM": "Номер ПВЗ/ПО из ПП ООН"
+    "UNICEF_SECTIONS": "Секции ЮНИСЕФ"
   },
   "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Нефинансовый вклад за отчетный период",
   "NOT_SAVED": "Не сохранено",
