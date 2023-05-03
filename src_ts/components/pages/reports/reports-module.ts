@@ -295,7 +295,8 @@ export class ReportsModule extends connect(store)(
       changedProperties.has('_page') ||
       changedProperties.has('tabsActive') ||
       changedProperties.has('prpCountries') ||
-      changedProperties.has('currentUser')
+      changedProperties.has('currentUser') ||
+      changedProperties.has('reduxRouteDetails')
     ) {
       this._loadReport(this.reduxRouteDetails?.params?.itemId, this.tabsActive, this.prpCountries, this.currentUser);
     }
