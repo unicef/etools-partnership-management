@@ -206,12 +206,12 @@ export function template(this: InterventionNew): TemplateResult {
           <paper-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
             error-message="${this.windowWidthIsSmall
               ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-              : translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+              : translate('CFEI_EXPECTED_FORMAT')}"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
