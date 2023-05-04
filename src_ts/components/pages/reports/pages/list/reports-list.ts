@@ -520,7 +520,7 @@ class ReportsList extends connect(store)(
   displayLocalizedReportingPeriod(repPer: string) {
     return langChanged(() => {
       if (!repPer || !repPer.includes(' - ')) {
-        return repPer; 
+        return repPer;
       }
       let date1 = '';
       let date2 = '';
