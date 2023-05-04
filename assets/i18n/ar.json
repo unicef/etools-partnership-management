@@ -409,7 +409,6 @@
     "ACTIVATION_PROTOCOL": "بروتوكول التنشيط",
     "AGREEMENT_AUTH_OFFICERS": "اتفاق المسؤولين المعتمدين",
     "AGREEMENT_REQUIRED": "الاتفاق مطلوب",
-    "CFEI_EXPECTED_FORMAT": "التنسيق المتعارف عليه: CEF / 3 أحرف رمز البلد / 4 أرقام السنة / 3 أرقام",
     "CFEI_EXPECTED_FORMAT_SHORT": "\"CEF / رمز البلد المكون من 3 أحرف / السنة المكون من 4 أرقام / رقم مكون من 3 أرقام\"",
     "CONTINGENCY_DOC": "هذه وثيقة طوارئ",
     "CP_STRUCTURES": "هياكل CP",
@@ -431,8 +430,7 @@
     "UNICEF_BUDGET_OWNER": "مالك ميزانية اليونيسف",
     "UNICEF_FOCAL_POINTS": "نقاط اتصال اليونيسف",
     "UNICEF_OFFICES": "مكتب (مكاتب) اليونيسف",
-    "UNICEF_SECTIONS": "أقسام اليونيسف",
-    "UNPP_CFEI_DSR_REF_NUM": "رقم مرجع UNPP CFEI / DSR"
+    "UNICEF_SECTIONS": "أقسام اليونيسف"
   },
   "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "المساهمة غير المالية خلال فترة التقرير",
   "NOT_SAVED": "يتم حفظ",

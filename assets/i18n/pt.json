@@ -409,7 +409,6 @@
     "ACTIVATION_PROTOCOL": "Protocolo de ativação",
     "AGREEMENT_AUTH_OFFICERS": "Oficiais Autorizados a assinar o Acordo",
     "AGREEMENT_REQUIRED": "Acordo obrigatório",
-    "CFEI_EXPECTED_FORMAT": "Formato esperado: CEF/código do país 3 letras/ano 4 dígitos/número 3 dígitos",
     "CFEI_EXPECTED_FORMAT_SHORT": "“Código CEF/3 letras código país/ano 4 dígitos/número 3 dígitos”",
     "CONTINGENCY_DOC": "Este é o documento de contingência",
     "CP_STRUCTURES": "Estruturas do CP (CP Country Programme)",
@@ -431,8 +430,7 @@
     "UNICEF_BUDGET_OWNER": "UNICEF Budget Owner",
     "UNICEF_FOCAL_POINTS": "Pontos focais do UNICEF",
     "UNICEF_OFFICES": "Escritório (s) do UNICEF",
-    "UNICEF_SECTIONS": "Seções do UNICEF",
-    "UNPP_CFEI_DSR_REF_NUM": "Número de referência UNPP CFEI/DSR"
+    "UNICEF_SECTIONS": "Seções do UNICEF"
   },
   "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribuição não financeira durante o período abrangido pelo relatório",
   "NOT_SAVED": "Não salvo",
