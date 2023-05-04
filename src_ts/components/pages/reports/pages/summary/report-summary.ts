@@ -45,14 +45,14 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         }
         iron-icon[icon='speaker-notes'] {
           color: var(--primary-color);
-          padding-top: 14px;
+          padding-top: 26px;
           padding-inline-start: 8px;
           cursor: pointer;
         }
         .report-status {
           display: flex;
           flex-direction: row;
-          align-items: center;
+          align-items: flex-start;
         }
         .w-auto {
           width: auto;
@@ -348,10 +348,10 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     let stat = '';
     switch (status) {
       case 'Acc':
-        stat = `${getTranslation('SENT_BACK_BY')} `;
+        stat = `${getTranslation('ACCEPTED_BY')} `;
         break;
       case 'Sen':
-        stat = `${getTranslation('ACCEPTED_BY')} `;
+        stat = `${getTranslation('SENT_BACK_BY')} `;
         break;
       default:
         stat = '';
