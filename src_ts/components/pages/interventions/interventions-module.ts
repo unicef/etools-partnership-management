@@ -161,6 +161,7 @@ export class InterventionsModule extends connect(store)(
               <paper-button
                 class="primary-btn with-prefix main-button with-additional"
                 @click="${this._goToNewInterventionPage}"
+                ?hidden="${this.listLoadingActive  }"
               >
                 <iron-icon icon="add"></iron-icon>
                 ${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}
@@ -204,6 +205,7 @@ export class InterventionsModule extends connect(store)(
               ?hidden="${!this._pageEquals(this.activePage, 'list')}"
               .active="${this._pageEquals(this.activePage, 'list')}"
               @csv-download-url-changed="${this.csvDownloadUrlChanged}"
+              @list-loading-active="${(ev:CustomEvent) => this.listLoadingActive = ev.detail.value}"
             >
             </interventions-list>
 
@@ -260,6 +262,9 @@ export class InterventionsModule extends connect(store)(
 
   @property({type: Object})
   prevRouteDetails!: any;
+
+  @property({type: Boolean)
+  listLoadingActive = true;
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
