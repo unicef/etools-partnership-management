@@ -311,6 +311,7 @@ export class PartnersModule extends connect(store)(
 
   public _initListeners() {
     this._partnerSaveError = this._partnerSaveError.bind(this);
+    this._newPartnerCreated = this._newPartnerCreated.bind(this);
     this._partnerContactsUpdated = this._partnerContactsUpdated.bind(this);
     this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
     this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
