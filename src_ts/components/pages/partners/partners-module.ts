@@ -444,6 +444,8 @@ export class PartnersModule extends connect(store)(
   }
 
   public _newPartnerCreated(partner: any) {
+    (this.shadowRoot?.querySelector('#partnerData') as PartnerItemData).updatePartnersListInDexieDb(partner);
+
     fireEvent(this, 'update-main-path', {
       path: 'partners/' + partner.id + '/details'
     });

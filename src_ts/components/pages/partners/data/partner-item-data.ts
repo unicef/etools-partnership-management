@@ -96,11 +96,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
 
     if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
       // update the partners list in dexieDB
-      window.EtoolsPmpApp.DexieDb.table('partners')
-        .put(partner)
-        .then(() => {
-          fireEvent(this, 'reload-list');
-        });
+      this.updatePartnersListInDexieDb(partner);
     }
     if (ajaxMethod === 'DELETE') {
       store.dispatch(deletePartner(this.deletedPartnerId));
@@ -109,6 +105,14 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
     if (['PATCH', 'DELETE', 'POST'].includes(ajaxMethod)) {
       store.dispatch(setShouldReloadPartners(true));
     }
+  }
+
+  updatePartnersListInDexieDb(partner: any) {
+    window.EtoolsPmpApp.DexieDb.table('partners')
+      .put(partner)
+      .then(() => {
+        fireEvent(this, 'reload-list');
+      });
   }
 
   public _deletePartnerFromDexie(id: any) {
