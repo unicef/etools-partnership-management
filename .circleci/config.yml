@@ -94,4 +94,3 @@ workflows:
                 - staging
                 - develop
                 - epd
-                - fix-add-partner
