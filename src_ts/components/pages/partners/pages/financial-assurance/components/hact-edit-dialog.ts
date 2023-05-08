@@ -1,5 +1,5 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import '@polymer/paper-input/paper-input';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
@@ -13,7 +13,7 @@ import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 @customElement('hact-edit-dialog')
 export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)) {

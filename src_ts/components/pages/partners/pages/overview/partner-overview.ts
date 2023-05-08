@@ -13,11 +13,11 @@ import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
 import {translate} from 'lit-translate';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
-import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer
@@ -153,9 +153,7 @@ export class PartnerOverview extends PaginationMixin(
               </div>
             </div>
             <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_cp, '0', 2)}</div>
-            <div class="col col-2 center-align block">
-              $${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}
-            </div>
+            <div class="col col-2 center-align">$${this.displayCurrencyAmount(this.partner?.total_ct_ytd, '0', 2)}</div>
             <div class="col col-2 center-align">
               <strong>
                 ${this.partner.hact_values?.programmatic_visits?.planned?.total} /

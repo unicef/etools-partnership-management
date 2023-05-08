@@ -4,9 +4,9 @@ import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-reques
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
 import {deletePartner, setShouldReloadPartners} from '../../../../redux/actions/partners';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner} from '../../../../models/partners.models';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
@@ -133,7 +133,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'Partner successfully deleted.'
+        text: getTranslation('PARTNER_SUCCESSFULLY_DELETED')
       });
     } else {
       throw new Error('Partner was not deleted from dexie!');
@@ -142,17 +142,15 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
 
   public _handlePartnerDeleteFromDexieErr(dexieDeleteErr: any) {
     // Partner dexie deleted issue
-    logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
+    EtoolsLogger.error('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
-      text:
-        'The partner was deleted from server database, but there was an issue on cleaning ' +
-        'partner data from browser cache. Use refresh data functionality to update cached partners data.'
+      text: getTranslation('PLEASE_REFRESH_DATA')
     });
   }
 
   public _handleErrorResponse(response: any, ajaxMethod: any) {
     if (response instanceof EtoolsRequestError === false) {
-      logError('_handleErrorResponse', 'partner-item-data', response);
+      EtoolsLogger.error('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {
       fireEvent(this, 'global-loading', {
@@ -174,12 +172,12 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
   public createPartner(vendorNoObj: any, successCallback: any, errorCallback: any) {
     if (!vendorNoObj && !vendorNoObj.vendor) {
       fireEvent(this, 'toast', {
-        text: 'Invalid Vendor Number for new partner!'
+        text: getTranslation('PARTNER_INVALID_VENDOR_NUMBER')
       });
       return;
     }
     fireEvent(this, 'global-loading', {
-      message: 'Importing partner information...',
+      message: getTranslation('IMPORTING_PARTNER_INFO'),
       active: true,
       loadingSource: this.ajaxLoadingMsgSource
     });
@@ -214,7 +212,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
   public savePartner(partner: any, callback?: any) {
     if (typeof partner === 'object' && Object.keys(partner).length === 0) {
       fireEvent(this, 'toast', {
-        text: 'Invalid partner data!'
+        text: getTranslation('INVALID_PARTNER_DATA')
       });
       return Promise.resolve(false);
     } else {
@@ -233,7 +231,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
         } else {
           // no valid partner id, cannot update
           fireEvent(this, 'toast', {
-            text: 'Update can not be made. Invalid partner ID.'
+            text: getTranslation('UPDATE_FAILED_INVALID_PARTNER_ID')
           });
           return Promise.resolve(false);
         }
@@ -255,7 +253,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
         });
       } else {
         fireEvent(this, 'toast', {
-          text: 'All changes are saved.'
+          text: getTranslation('CHANGES_ARE_SAVED')
         });
         return Promise.resolve(false);
       }

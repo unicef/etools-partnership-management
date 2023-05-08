@@ -1,10 +1,22 @@
-import {RouteDetails, RouteCallbackParams, Router} from './router';
 import {BASE_URL} from '../../config/config';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {
+  EtoolsRouteCallbackParams,
+  EtoolsRouteDetails
+} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-export const EtoolsRouter = new Router(BASE_URL);
 const routeParamRegex = '([^\\/?#=+]+)';
 
-EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallbackParams): RouteDetails => {
+EtoolsRouter.init({
+  baseUrl: BASE_URL,
+  redirectPaths: {
+    notFound: '/not-found',
+    default: '/partners/list'
+  },
+  redirectedPathsToSubpageLists: ['interventions', 'partners', 'reports', 'government-partners']
+});
+
+EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
   return {
     routeName: 'interventions',
     subRouteName: 'list',
@@ -13,7 +25,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
     params: null
   };
 })
-  .addRoute(new RegExp('^partners/list$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^partners/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'partners',
       subRouteName: 'list',
@@ -22,7 +34,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^settings$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^settings$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'settings',
       subRouteName: '',
@@ -31,7 +43,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^agreements/list$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^agreements/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'agreements',
       subRouteName: 'list',
@@ -40,7 +52,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^interventions/new$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^interventions/new$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'interventions',
       subRouteName: 'new',
@@ -49,7 +61,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^government-partners/list$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^government-partners/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'government-partners',
       subRouteName: 'list',
@@ -58,7 +70,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       params: null
     };
   })
-  .addRoute(new RegExp('^reports/list$'), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp('^reports/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'reports',
       subRouteName: 'list',
@@ -69,7 +81,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
   })
   .addRoute(
     new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}$`),
-    (params: RouteCallbackParams): RouteDetails => {
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: 'interventions',
         subRouteName: params.matchDetails[2], // tab name
@@ -84,7 +96,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
   )
   .addRoute(
     new RegExp(`^agreements\\/${routeParamRegex}\\/${routeParamRegex}$`),
-    (params: RouteCallbackParams): RouteDetails => {
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: 'agreements',
         subRouteName: params.matchDetails[2], // tab name
@@ -96,7 +108,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       };
     }
   )
-  .addRoute(new RegExp(`^agreements\\/?$`), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp(`^agreements\\/?$`), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'agreements',
       subRouteName: '', // tab name
@@ -107,7 +119,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
   })
   .addRoute(
     new RegExp(`^interventions\\/${routeParamRegex}\\/${routeParamRegex}\\/${routeParamRegex}$`),
-    (params: RouteCallbackParams): RouteDetails => {
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: 'interventions',
         subRouteName: params.matchDetails[2], // tab name
@@ -121,7 +133,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       };
     }
   )
-  .addRoute(new RegExp(`^not-found$`), (params: RouteCallbackParams): RouteDetails => {
+  .addRoute(new RegExp(`^not-found$`), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'not-found',
       subRouteName: null,
@@ -132,7 +144,7 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
   })
   .addRoute(
     new RegExp(`^${routeParamRegex}\\/${routeParamRegex}\\/${routeParamRegex}$`),
-    (params: RouteCallbackParams): RouteDetails => {
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: params.matchDetails[1],
         subRouteName: params.matchDetails[3], // tab name
@@ -144,40 +156,15 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: RouteCallback
       };
     }
   )
-  .addRoute(new RegExp(`^${routeParamRegex}\\/${routeParamRegex}$`), (params: RouteCallbackParams): RouteDetails => {
-    return {
-      routeName: params.matchDetails[0],
-      subRouteName: 'list',
-      path: params.matchDetails[1],
-      queryParams: params.queryParams,
-      params: null
-    };
-  });
-
-/**
- * Utility used to update location based on routes and dispatch navigate action (optional)
- */
-export const updateAppLocation = (newLocation: string): void => {
-  const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
-
-  EtoolsRouter.pushState(_newLocation);
-
-  window.dispatchEvent(new CustomEvent('popstate'));
-};
-
-export const replaceAppLocation = (newLocation: string): void => {
-  const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
-
-  EtoolsRouter.replaceState(_newLocation);
-
-  /**
-   * Note that just calling history.pushState() or history.replaceState()
-   * won't trigger a popstate event.
-   * The popstate event is only triggered by doing a browser action
-   * such as a click on the back button (or calling history.back() in JavaScript).
-   */
-  window.dispatchEvent(new CustomEvent('popstate'));
-};
-
-export const ROUTE_404 = '/not-found';
-export const DEFAULT_ROUTE = '/partners/list';
+  .addRoute(
+    new RegExp(`^${routeParamRegex}\\/${routeParamRegex}$`),
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+      return {
+        routeName: params.matchDetails[0],
+        subRouteName: 'list',
+        path: params.matchDetails[1],
+        queryParams: params.queryParams,
+        params: null
+      };
+    }
+  );

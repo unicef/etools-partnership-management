@@ -70,11 +70,11 @@
       "CHANGE_IN_LEGAL_NAME_OF_IMPLEMENTING_PARTNER": "Changement de nom légal du partenaire de mise en œuvre"
     },
     "AGREEMENTSTATUSES": {
-      "DRAFT": "Brouillon",
-      "ENDED": "Terminé",
+      "DRAFT": "Développement",
+      "ENDED": "Fini",
       "SIGNED": "Signé",
       "SUSPENDED": "Suspendu",
-      "TERMINATED": "Résilié"
+      "TERMINATED": "Terminé"
     },
     "AGREEMENTTYPES": {
       "MEMORANDUM_OF_UNDERSTANDING": "Protocole d'entente",
@@ -137,13 +137,13 @@
       "CLOSED": "Fermé",
       "DEVELOPMENT": "Développement",
       "DRAFT": "Développement",
-      "ENDED": "Terminé",
+      "ENDED": "Fini",
       "EXPIRED": "Expiré",
-      "REVIEW": "Examen",
+      "REVIEW": "Consultez le site",
       "SIGNATURE": "Signature",
       "SIGNED": "Signé",
       "SUSPENDED": "Suspendu",
-      "TERMINATED": "Résilié"
+      "TERMINATED": "Terminé"
     },
     "PARTNERRISKRATINGS": {
       "HIGH": "Haute",
@@ -408,7 +408,6 @@
     "ACTIVATION_PROTOCOL": "Protocole d'activation ",
     "AGREEMENT_AUTH_OFFICERS": "Officiers autorisés de l'accord",
     "AGREEMENT_REQUIRED": "Accord requis",
-    "CFEI_EXPECTED_FORMAT": "Format attendu: CEF/code pays à 3 lettres/année à 4 chiffres/numéro à 3 chiffres",
     "CFEI_EXPECTED_FORMAT_SHORT": "'CEF/code pays à 3 lettres/année à 4 chiffres/numéro à 3 chiffres'",
     "CONTINGENCY_DOC": "Ceci est un document de contingence",
     "CP_STRUCTURES": "Structures du PP",
@@ -430,8 +429,7 @@
     "UNICEF_BUDGET_OWNER": "Propriétaire du budget de l'UNICEF",
     "UNICEF_FOCAL_POINTS": "Points focaux UNICEF",
     "UNICEF_OFFICES": "Bureau(x) de l'UNICEF",
-    "UNICEF_SECTIONS": "Sections UNICEF",
-    "UNPP_CFEI_DSR_REF_NUM": "Numéro de référence UNPP CFEI/DSR"
+    "UNICEF_SECTIONS": "Sections UNICEF"
   },
   "NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD": "Contribution non financière pendant la période de référence",
   "NOT_SAVED": "Non enregistré",
@@ -572,11 +570,11 @@
   "STATUSES": {
     "ACTIVE": "Actif",
     "CLOSED": "Fermé",
-    "DRAFT": "Brouillon",
-    "ENDED": "Terminé",
+    "DRAFT": "Développement",
+    "ENDED": "Fini",
     "SIGNED": "Signé",
     "SUSPENDED": "Suspendu",
-    "TERMINATED": "Résilié"
+    "TERMINATED": "Terminé"
   },
   "STATUS_IS_CHANGING": "Vous modifiez le statut de <strong>{{from}}</strong> à <strong>{{to}}</strong> . Voulez-vous continuer?",
   "SUBMISSION_DATE": "Date de soumission",
@@ -586,8 +584,6 @@
   "TARGET_LOWCASE": "cible",
   "TERMINATE": "Résilier",
   "TERMINATE_AGREEMENT": "Résilier le contrat",
-  "TERMINATION_NOTICE": "Avis de résiliation",
-  "TERMINATION_NOTICE_FILE_IS_REQUIRED": "Le fichier d'avis de résiliation est requis",
   "THERE_ARE_NO_AMENDMENTS_ADDED": "Aucun amendement n'a été ajouté",
   "THERE_ARE_NO_ASSESSMENTS_ADDED": "Aucune évaluation n'a été ajoutée",
   "THERE_ARE_NO_CORE_VALUE_ASSESSMENTS": "Il n'y a pas d'évaluation des valeurs fondamentales.",
@@ -600,7 +596,6 @@
   "TYPE": "Type",
   "TYPE_OF_ASSESSMENT": "Type d'évaluation",
   "UNICEF_CASH": "Espèces UNICEF",
-  "UNSUSPEND": "Annuler la suspension",
   "UPLOAD_CORE_VALUES_ASSESSMENT": "Télécharger l'évaluation des valeurs fondamentales",
   "USE_RIGHT_SIDEBAR_SAVE_BTN_TO_SAVE_THIS_AMENDMENT": "Utilisez le bouton 'Enregistrer' de la barre latérale droite pour enregistrer cet amendement",
   "USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING": "Utilisez le modèle d'amendement pour documenter les modifications et signer.",
@@ -609,5 +604,24 @@
   "VIEW_REPORT": "Afficher le rapport",
   "VISION_VENDOR_NUMBER": "Numéro fournisseur VISION",
   "VISION_VENDOR_NUMBER_REQUIRED": "Numéro fournisseur VISION",
+  "UPLOADS_IN_PROGRESS_YOU_CAN_SAVE_AFTER_THEY_RE_FINISHED": "Téléchargements en cours, vous pouvez enregistrer une fois qu'ils sont terminés.",
+  "DONT_FORGET_TO_SAVE_UPLOADED_FILES": "N'oubliez pas de sauvegarder les fichiers téléchargés !",
+  "CHANGING_AGREEMENT_STATUS": "Modification de l'état de l'accord...",
+  "ADD_AGREEMENT": "Ajouter un Accord",
+  "ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS": "Erreur lors de la récupération des membres du personnel du partenaire. Essayer à nouveau.",
+  "ERROR_CHANGE_WORKSPACE": "Un problème est survenu lors de la modification de votre espace de travail. Veuillez réessayer",
+  "CHANGES_ARE_SAVED": "Toutes les modifications sont enregistrées",
+  "INVALID_AGREEMENT_DATA": "Données d'accord non valides !",
+  "INVALID_AGREEMENT_ID": "ID de l'accord non valide",
+  "INVALID_REPORT_ID": "ID de rapport non valide !",
+  "INVALID_INTERVENTION_DATA": "Données d'intervention non valides !",
+  "INVALID_PARTNER_DATA": "Données du partenaire non valides !",
+  "UPDATE_FAILED_INVALID_PARTNER_ID": "La mise à jour a échoué. ID de partenaire non valide.",
+  "CHANGE_TO_STATUS_NOT_ALLOWED": "La modification du statut en '{0}' n'est pas autorisée !",
+  "PD_DELETE_SUCCCESS": "PD/SPD supprimé avec succès.",
+  "AGREEMENT_DELETE_SUCCCESS": "Accord supprimé avec succès.",
+  "PARTNER_INVALID_VENDOR_NUMBER": "Numéro de fournisseur non valide pour le nouveau partenaire !",
+  "IMPORTING_PARTNER_INFO": "Importation d'informations sur les partenaires...",
+  "PLEASE_REFRESH_DATA": "Veuillez actualiser les données !",
   "SUPPORT": "Soutien"
 }

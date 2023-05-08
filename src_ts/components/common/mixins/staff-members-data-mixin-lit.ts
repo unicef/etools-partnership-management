@@ -1,11 +1,12 @@
 import {LitElement, property} from 'lit-element';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints';
+import {get as getTranslation} from 'lit-translate';
 
 /**
  * @polymer
@@ -39,9 +40,9 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
             this._handleStaffMembersResponse(response);
           })
           .catch((error: any) => {
-            logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
+            EtoolsLogger.error('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
             fireEvent(this, 'toast', {
-              text: 'Can not get selected partner staff members data!'
+              text: getTranslation('ERROR_ON_RETRIEVING_PARTNER_STAFF_MEMBERS')
             });
           });
       }

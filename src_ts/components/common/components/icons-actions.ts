@@ -3,7 +3,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
@@ -33,6 +33,11 @@ class IconsActions extends PolymerElement {
           right: 0;
           top: 0;
           bottom: 0;
+        }
+
+        :host-context([dir='rtl']):host {
+          right: unset;
+          left: 0;
         }
 
         paper-icon-button {

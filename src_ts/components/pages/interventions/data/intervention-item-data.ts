@@ -3,10 +3,10 @@ import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mix
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
-import {isJsonStrMatch} from '../../../utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {
   ExpectedResult,
   FrsDetails,
@@ -238,7 +238,7 @@ class InterventionItemData extends connect(store)(
     let propName: string;
     for (propName in minimalAgrData) {
       if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
-        logWarn('Mapping property not found');
+        EtoolsLogger.warn('Mapping property not found');
       } else {
         // @ts-ignore
         minimalAgrData[propName] = detail[propName];
@@ -275,7 +275,7 @@ class InterventionItemData extends connect(store)(
   saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {
-        text: 'Invalid intervention data!'
+        text: getTranslation('INVALID_INTERVENTION_DATA')
       });
       return Promise.resolve(false);
     } else {
@@ -496,7 +496,7 @@ class InterventionItemData extends connect(store)(
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'PD/SPD successfully deleted.'
+        text: getTranslation('PD_DELETE_SUCCCESS')
       });
     } else {
       throw new Error('Intervention was not deleted from dexie!');
@@ -505,11 +505,9 @@ class InterventionItemData extends connect(store)(
 
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+    EtoolsLogger.error('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
-      text:
-        'The agreement was deleted from server database, but there was an issue on cleaning ' +
-        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.'
+      text: getTranslation('PLEASE_REFRESH_DATA')
     });
   }
 }

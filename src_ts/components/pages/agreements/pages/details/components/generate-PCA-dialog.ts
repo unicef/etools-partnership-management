@@ -3,7 +3,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
 import '@polymer/paper-checkbox/paper-checkbox.js';

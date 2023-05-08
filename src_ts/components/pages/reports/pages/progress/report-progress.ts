@@ -15,12 +15,12 @@ import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {isEmptyObject} from '../../../../utils/utils';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
-import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
  * @polymer
@@ -58,7 +58,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           z-index: 1;
           color: white;
           padding: 0 4px;
-          border-right: 1px solid var(--primary-background-color);
+          border-inline-end: 1px solid var(--primary-background-color);
         }
 
         .indicator-toggle paper-icon-button {
@@ -76,7 +76,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         }
 
         .indicator-header {
-          padding: 8px 24px 8px 16px;
+          padding-block: 8px;
+          padding-inline: 16px 24px;
           background: var(--medium-theme-background-color);
         }
 

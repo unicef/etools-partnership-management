@@ -8,7 +8,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
 
 /**
@@ -43,7 +43,7 @@ export class EtoolsActionButton extends LitElement {
         }
 
         paper-icon-button {
-          border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+          border-inline-start: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
         }
 
         .main-btn-part {
@@ -82,7 +82,7 @@ export class EtoolsActionButton extends LitElement {
         }
 
         iron-icon[icon='info-outline'] {
-          padding-left: 5px;
+          padding-inline-start: 5px;
         }
       </style>
 
@@ -93,7 +93,7 @@ export class EtoolsActionButton extends LitElement {
               ${this.primaryAction.label}
             </div>
             ${(this.secondaryActions || []).length
-              ? html` <paper-menu-button horizontal-align="right">
+              ? html` <paper-menu-button horizontal-align>
                   <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
                   <paper-listbox slot="dropdown-content">
                     <div class="list-wrapper">

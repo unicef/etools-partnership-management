@@ -17,12 +17,11 @@ import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../redux/store';
-import {isJsonStrMatch} from '../../../../../../utils/utils';
-import {fireEvent} from '../../../../../../utils/fire-custom-event';
-import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 
 /**
@@ -71,7 +70,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
         #download-template-btn {
           max-width: 220px;
-          margin: 0 0 0 24px;
+          margin: 0;
+          margin-inline-start: 24px;
           padding: 0;
         }
 
@@ -83,7 +83,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
         .attachment {
           color: var(--dark-icon-color);
-          margin-right: 8px;
+          margin-inline-end: 8px;
         }
         .unsaved-amendment {
           color: var(--warning-color);

@@ -1,10 +1,10 @@
 declare const dayjs: any;
 import Dexie from 'dexie';
 import {store} from '../../../../redux/store';
-import {isEmptyObject} from '../../../utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {setPartners} from '../../../../redux/actions/partners';
-import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {customElement, LitElement, property} from 'lit-element';
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
@@ -170,7 +170,7 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
         if (error.name === 'DatabaseClosedError') {
           window.location.reload();
         }
-        logError('Error querying partners!', 'partners-list-data', error);
+        EtoolsLogger.error('Error querying partners!', 'partners-list-data', error);
         fireEvent(self, 'list-loading', {
           active: false
         });

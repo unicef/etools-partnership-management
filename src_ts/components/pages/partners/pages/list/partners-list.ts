@@ -1,7 +1,7 @@
 import {customElement} from 'lit-element';
 import {store, RootState} from '../../../../../redux/store';
 
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PartnersListBase} from './partners-list-base';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';

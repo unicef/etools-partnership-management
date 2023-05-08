@@ -41,7 +41,7 @@ import {
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
-import {copy} from '../../components/utils/utils';
+import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {
   Disaggregation,
   EnvFlags,
@@ -55,6 +55,7 @@ import {
   Country,
   LocationObject
 } from '@unicef-polymer/etools-types';
+import {get as getTranslation} from 'lit-translate';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
@@ -351,7 +352,7 @@ export const flaggedSortedDisaggregs = createSelector(disaggregationsSelector, (
   return copy(disagregs)
     .map((d: Disaggregation) => {
       if (!d.active) {
-        d.name = '(*Inactive) ' + d.name;
+        d.name = `(*${getTranslation('INACTIVE')}) ` + d.name;
       }
       return d;
     })

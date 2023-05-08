@@ -103,12 +103,12 @@ export const sharedStyles = html`
     paper-input {
       --paper-input-prefix: {
         margin-top: -5px;
-        margin-right: 10px;
+        margin-inline-end: 10px;
         color: var(--dark-secondary-text-color);
       }
       --paper-input-suffix: {
         margin-top: -5px;
-        margin-left: 10px;
+        margin-inline-start: 10px;
         color: var(--dark-secondary-text-color);
       }
     }

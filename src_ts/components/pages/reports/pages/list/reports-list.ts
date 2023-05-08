@@ -5,7 +5,7 @@ import '@unicef-polymer/etools-data-table/etools-data-table';
 import '@polymer/iron-media-query/iron-media-query.js';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import '../../components/report-status';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
@@ -21,21 +21,22 @@ import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './reports-filters';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import CONSTANTS from '../../../../../config/app-constants';
 import get from 'lodash-es/get';
-import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
-import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
+import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
-import {EtoolsRouter} from '../../../../utils/routes';
-import {translate} from 'lit-translate';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
-import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/date-utils';
+import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -82,7 +83,7 @@ class ReportsList extends connect(store)(
           font-size: 10px;
           text-transform: uppercase;
           background-color: var(--paper-grey-300);
-          margin-left: 5px;
+          margin-inline-start: 5px;
           font-weight: bold;
         }
 
@@ -194,7 +195,7 @@ class ReportsList extends connect(store)(
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
-                      ${this.getDisplayValue(report.reporting_period, ',', false)}
+                      ${this.displayLocalizedReportingPeriod(report.reporting_period)}
                     </span>
 
                     ${!this.noPdSsfaRef
@@ -459,7 +460,7 @@ class ReportsList extends connect(store)(
           // req aborted
           return;
         }
-        logError('Reports list data request failed!', 'reports-list', error);
+        EtoolsLogger.error('Reports list data request failed!', 'reports-list', error);
 
         parseRequestErrorsAndShowAsToastMsgs(error, this);
         this.listLoadingActive = false;
@@ -514,6 +515,20 @@ class ReportsList extends connect(store)(
         }
       }
     }
+  }
+
+  displayLocalizedReportingPeriod(repPer: string) {
+    return langChanged(() => {
+      if (!repPer || !repPer.includes(' - ')) {
+        console.error('Reporting Period is not in the expected format!');
+        return repPer;
+      }
+      let date1 = '';
+      let date2 = '';
+      [date1, date2] = repPer.split(' - ');
+
+      return dayjs(date1).format('DD MMM YYYY') + ' - ' + dayjs(date2).format('DD MMM YYYY');
+    });
   }
 }
 

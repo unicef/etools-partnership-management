@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
@@ -67,13 +67,12 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
           <paper-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')}"
             required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
           <etools-dropdown
             id="partnerDropdw"
@@ -96,6 +95,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-value="id"
             option-label="agreement_number"
             trigger-value-change-event
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             @etools-selected-item-changed="${({detail}: CustomEvent) => this.selectedItemChanged(detail, 'agreement')}"
             required
             auto-validate
@@ -109,6 +109,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) =>
@@ -123,6 +124,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'sections')}"
@@ -136,6 +138,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             option-label="name"
             option-value="id"
             required
+            error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
             @etools-selected-items-changed="${({detail}: CustomEvent) => this.selectedItemsChanged(detail, 'offices')}"

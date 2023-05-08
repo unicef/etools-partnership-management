@@ -38,7 +38,7 @@ export class DisaggregationTableCellRatio extends UtilsMixin(LitElement) {
         }
 
         .item:not(:first-child) {
-          border-left: 1px solid white;
+          border-inline-start: 1px solid white;
         }
 
         .computed-value {

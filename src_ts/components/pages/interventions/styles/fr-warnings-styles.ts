@@ -13,7 +13,7 @@ export const frWarningsStyles = html`
     etools-info-tooltip.frs-inline-list {
       --etools-tooltip-trigger-icon: {
         color: var(--error-color);
-        margin-left: 24px !important;
+        margin-inline-start: 24px !important;
       }
     }
 
@@ -22,7 +22,7 @@ export const frWarningsStyles = html`
     }
 
     .amount-currency {
-      margin-right: 4px;
+      margin-inline-end: 4px;
     }
   </style>
 `;

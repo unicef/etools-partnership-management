@@ -1,16 +1,18 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {fireEvent} from '../../utils/fire-custom-event.js';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, property} from 'lit-element';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
+import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {get as getTranslation} from 'lit-translate';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @polymer
@@ -19,7 +21,7 @@ import pmpEdpoints from '../../endpoints/endpoints.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement)))) {
+class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(LitElement))) {
   render() {
     // main template
     // language=HTML
@@ -65,6 +67,16 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
 
           --paper-menu-button-dropdown: {
             max-height: 380px;
+          }
+        }
+
+        :host-context([dir='rtl']) etools-dropdown {
+          --paper-input-container-shared-input-style: {
+            color: var(--light-secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            width: 100px;
           }
         }
 
@@ -172,8 +184,8 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
   }
 
   protected _handleResponse() {
-    fireEvent(this, 'update-main-path', {path: 'partners'});
-    this.refresh();
+    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
+    DexieRefresh.refresh();
   }
 
   protected _countrySelectorUpdate(countries: any[]) {
@@ -183,10 +195,10 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EtoolsPageRefreshMix
   }
 
   protected _handleError(error: any) {
-    logError('Country change failed!', 'countries-dropdown', error);
+    EtoolsLogger.error('Country change failed!', 'countries-dropdown', error);
     (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).selected = this.currentCountry.id;
     fireEvent(this, 'toast', {
-      text: 'Something went wrong changing your workspace. Please try again'
+      text: getTranslation('ERROR_CHANGE_WORKSPACE')
     });
     fireEvent(this, 'global-loading', {
       active: false,

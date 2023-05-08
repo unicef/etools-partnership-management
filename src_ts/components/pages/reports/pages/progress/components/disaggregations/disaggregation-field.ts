@@ -1,6 +1,6 @@
 import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {toNumericValues} from './mixins/disaggregation-field';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 import {GenericObject} from '@unicef-polymer/etools-types';

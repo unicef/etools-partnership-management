@@ -4,7 +4,7 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
  * @polymer

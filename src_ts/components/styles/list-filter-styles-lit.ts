@@ -23,7 +23,7 @@ export const listFilterStyles = html` <style>
     align-items: center;
     flex-wrap: wrap;
     flex: 1;
-    margin-right: auto;
+    margin-inline-end: auto;
   }
 
   #filters-fields .filter {
@@ -54,7 +54,7 @@ export const listFilterStyles = html` <style>
   }
 
   #filters-fields > *:not(:last-child) {
-    margin-right: 16px;
+    margin-inline-end: 16px;
   }
 
   #hiddenToggle {
@@ -67,7 +67,7 @@ export const listFilterStyles = html` <style>
   }
 
   #hiddenToggle paper-toggle-button {
-    margin-left: 10px;
+    margin-inline-start: 10px;
   }
 
   .fixed-controls {
@@ -97,7 +97,7 @@ export const listFilterStyles = html` <style>
   }
 
   #filterMenu .button iron-icon {
-    margin-right: 5px;
+    margin-inline-end: 5px;
   }
 
   #filterMenu paper-listbox {
@@ -116,7 +116,7 @@ export const listFilterStyles = html` <style>
     font-weight: normal !important;
     background: var(--esmm-list-item-selected-color, #dcdcdc);
     --paper-item-icon: {
-      margin-right: 16px;
+      margin-inline-end: 16px;
     }
   }
 
@@ -136,7 +136,7 @@ export const listFilterStyles = html` <style>
     flex-direction: row;
     align-items: center;
     color: var(--primary-color);
-    padding-right: 16px;
+    padding-inline-end: 16px;
     border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
   }
 

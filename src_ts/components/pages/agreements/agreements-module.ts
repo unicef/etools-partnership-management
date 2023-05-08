@@ -11,7 +11,6 @@ import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import CONSTANTS from '../../../config/app-constants.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
-import '../../common/components/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import '../../common/components/page-content-header';
 
@@ -22,17 +21,16 @@ import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
 import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {translate, get as getTranslation} from 'lit-translate';
-import {isJsonStrMatch} from '../../utils/utils';
+import {translate, get as getTranslation, langChanged} from 'lit-translate';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
-import {replaceAppState} from '../../utils/navigation-helper';
-import {EtoolsRouter} from '../../utils/routes';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 
 /**
  * @polymer
@@ -63,11 +61,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         }
       </style>
 
-      <page-content-header ?with-tabs-visible="${this._showPageTabs(this.activePage)}">
+      <page-content-header>
         <div slot="page-title">
           ${this.listActive ? html`<span>${translate('AGREEMENTS')}</span>` : ''}
           ${this.tabsActive
-            ? html`<span>${this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive)}</span>`
+            ? html`<span
+                >${langChanged(() => this._getAgreementDetailsTitle(this.agreement, this.newAgreementActive))}</span
+              >`
             : ''}
         </div>
 
@@ -87,16 +87,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
             </paper-button>
           </div>
         </div>
-
-        ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs
-              slot="tabs"
-              .tabs="${this.agreementsTabs}"
-              active-tab="details"
-              @iron-select="${this._handleTabSelectAction}"
-            >
-            </etools-tabs>`
-          : ''}
       </page-content-header>
 
       <div id="main">
@@ -239,21 +229,25 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     }
 
     if (!state.app?.routeDetails!.subRouteName) {
-      replaceAppState('/pmp/agreements/list', '', true);
+      EtoolsRouter.replaceAppLocation('/pmp/agreements/list');
     }
 
-    const routeDetials = state.app?.routeDetails;
-    if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
-      this.prevRouteDetails = routeDetials;
-      this.listActive = routeDetials!.subRouteName == 'list';
+    const routeDetails = state.app?.routeDetails;
+    if (!isJsonStrMatch(this.prevRouteDetails, routeDetails) || this.activePage !== routeDetails!.subRouteName) {
+      this.prevRouteDetails = routeDetails;
+      this.listActive = routeDetails!.subRouteName == 'list';
       if (this.listActive) {
         // if list is shown, reset details errors
         this.serverErrors = [];
       }
-      this.tabsActive = routeDetials!.subRouteName == 'details';
+      this.tabsActive = routeDetails!.subRouteName == 'details';
       const currentAgrId = state.app?.routeDetails?.params?.agreementId;
       this.newAgreementActive = currentAgrId === 'new';
 
+      if (currentAgrId && !this.newAgreementActive && isNaN(Number(currentAgrId))) {
+        fireEvent(this, '404');
+        return;
+      }
       this.selectedAgreementId = !currentAgrId || isNaN(Number(currentAgrId)) ? null : Number(currentAgrId);
       this._pageChanged(this.listActive, this.tabsActive, this.newAgreementActive);
     }
@@ -291,7 +285,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       return '';
     }
     if (newAgreement) {
-      return 'Add Agreement';
+      return getTranslation('ADD_AGREEMENT');
     }
     return agreement.id ? agreement.partner_name + ': ' + agreement.agreement_number : '';
   }

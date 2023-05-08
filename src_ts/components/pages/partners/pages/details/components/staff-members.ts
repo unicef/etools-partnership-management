@@ -13,7 +13,7 @@ import '../../../../../common/components/icons-actions';
 import './add-edit-staff-members';
 import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
-import {openDialog} from '../../../../../utils/dialog';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 import cloneDeep from 'lodash-es/cloneDeep';
 

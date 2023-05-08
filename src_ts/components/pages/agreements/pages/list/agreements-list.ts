@@ -33,18 +33,19 @@ import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import '../../data/agreements-list-data.js';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {fireEvent} from '../../../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation} from 'lit-translate';
 import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
-import {buildUrlQueryString, cloneDeep, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
-import {debounce} from '@unicef-polymer/etools-modules-common/dist/utils/debouncer';
+import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
+import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
-import {EtoolsRouter} from '../../../../utils/routes';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**

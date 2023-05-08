@@ -40,18 +40,18 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import {cloneDeep, isJsonStrMatch} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
-import {openDialog} from '../../../../utils/dialog';
-import {stopGlobalLoading} from '../../../../utils/utils';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
+import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {translate, get as getTranslation} from 'lit-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import {pageIsNotCurrentlyActive} from '@unicef-polymer/etools-modules-common/dist/utils/common-methods';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
 
@@ -99,13 +99,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
         .generate-pca {
           /* TODO:change Generate PCA btn template-this should be applied on form-element-wrapper with width auto */
-          border-right: 1px solid var(--dark-divider-color);
-          margin-right: 24px;
-          padding-right: 24px;
+          border-inline-end: 1px solid var(--dark-divider-color);
+          margin-inline-end: 24px;
+          padding-inline-end: 24px;
         }
 
         .generate-pca[hidden] + .col {
-          padding-left: 0;
+          padding-inline-start: 0;
         }
 
         #generateMyPca {
@@ -120,7 +120,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           color: var(--error-color);
         }
         .padd-right {
-          padding-right: 16px;
+          padding-inline-end: 16px;
         }
         .year-coll {
           width: 105px;
@@ -213,7 +213,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               id="partner"
               label="${translate('PARTNER_NAME')}"
               placeholder="&#8212;"
-              .options="${this.partnersDropdownData}"
+              .options="${this.filteredPartnerDropdownData}"
               .selected="${this.agreement.partner}"
               trigger-value-change-event
               @etools-selected-item-changed="${this.onAgreementPartnerChanged}"
@@ -417,7 +417,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-3">
+          <div class="col col-6">
             <paper-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
@@ -464,7 +464,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </paper-input-container>
           </div>
           <div
-            class="generate-pca col col-3"
+            class="generate-pca col col-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
               this.isNewAgreement,
@@ -564,6 +564,19 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   @property({type: Array})
   partnersDropdownData!: any[];
 
+  /** Include deleted partners already saved on the agreement */
+  @property({type: Array})
+  amendedPartnersDropdownData!: any[];
+
+  get filteredPartnerDropdownData() {
+    return this.amendedPartnersDropdownData.filter(
+      (partner) =>
+        !partner.type ||
+        !this._typeMatches(this.agreement.agreement_type, 'PCA') ||
+        partner.type === 'Civil Society Organization'
+    );
+  }
+
   @property({type: Array})
   agreementTypes!: LabelAndValue[];
 
@@ -595,13 +608,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
   connectedCallback() {
     super.connectedCallback();
-    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 50) as any;
+    this.debouncedPartnerChanged = debounce(this._partnerChanged.bind(this), 70) as any;
 
     fireEvent(this, 'tab-content-attached');
   }
 
   stateChanged(state: RootState) {
-    if (pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
+    if (EtoolsRouter.pageIsNotCurrentlyActive(get(state, 'app.routeDetails'), 'agreements', 'details')) {
       return;
     }
 
@@ -612,6 +625,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     this.isNewAgreement = state.app?.routeDetails?.params?.agreementId === 'new';
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
+      this.amendedPartnersDropdownData = [...this.partnersDropdownData];
     }
 
     const agreementTypes = (state.commonData!.agreementTypes || []).filter((ag: LabelAndValue) => ag.value !== 'SSFA');
@@ -640,7 +654,10 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
     setTimeout(() => {
-      stopGlobalLoading(this, 'ag-page');
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'ag-page'
+      });
     }, 200);
   }
 
@@ -761,10 +778,20 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       this.oldSelectedPartnerId = currentPartnerId;
     }
     this.getPartnerStaffMembers(currentPartnerId, showLoading);
+
+    if (this.agreement.id) {
+      this.handleUsersNoLongerAvailable(
+        this.amendedPartnersDropdownData,
+        [{value: this.agreement.partner, label: this.agreement.partner_name}],
+        'value',
+        'label'
+      );
+    }
   }
 
   _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: PartnerStaffMember[]) {
     if (staffMembers instanceof Array && staffMembers.length) {
+      this.handleUsersNoLongerAvailable(staffMembers, agreementAuthorizedOfficers, 'id', 'name');
       return staffMembers;
     }
 
@@ -772,6 +799,23 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }
     return [];
+  }
+
+  handleUsersNoLongerAvailable(availableUsers: any, savedUsers: any, idLabel: string, nameLabel: string) {
+    if (!(savedUsers && savedUsers.length > 0 && availableUsers && availableUsers.length > 0)) {
+      return false;
+    }
+    let changed = false;
+    savedUsers.forEach((savedUsr: any) => {
+      if (availableUsers.findIndex((x: any) => x[idLabel] === savedUsr[idLabel]) < 0) {
+        availableUsers.push(savedUsr);
+        changed = true;
+      }
+    });
+    if (changed) {
+      availableUsers.sort((a: any, b: any) => (a[nameLabel] < b[nameLabel] ? -1 : 1));
+    }
+    return changed;
   }
 
   _getReadonlySignedByPartner(staffMembers: MinimalStaffMember[], selectedId?: number | null) {

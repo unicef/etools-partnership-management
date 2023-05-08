@@ -32,7 +32,7 @@ class PageFooter extends LitElement {
           display: flex;
           flex-direction: row;
           display: inline-flex;
-          padding-right: 30px;
+          padding-inline-end: 30px;
         }
 
         #unicef-logo img {
@@ -47,7 +47,7 @@ class PageFooter extends LitElement {
         }
 
         .footer-link:first-of-type {
-          margin-left: 30px;
+          margin-inline-start: 30px;
         }
 
         @media print {

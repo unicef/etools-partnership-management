@@ -1,6 +1,6 @@
 import {RootState} from '../../../redux/store';
 import {LitElement, property} from 'lit-element';
-import {copy} from '../../utils/utils';
+import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {EnvFlags, Constructor} from '@unicef-polymer/etools-types';
 
 /**

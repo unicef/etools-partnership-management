@@ -3,7 +3,7 @@ import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 
 /**

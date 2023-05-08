@@ -1,5 +1,5 @@
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {PolymerElement} from '@polymer/polymer';
 import {Constructor} from '@unicef-polymer/etools-types';
 
@@ -20,10 +20,12 @@ function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(base
             dropdownEl.set('ajaxParams', params);
             dropdownEl.set('url', endpointUrl);
           } else {
-            logWarn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+            EtoolsLogger.warn(
+              'Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!'
+            );
           }
         } catch (err) {
-          logError('An error occurred at ghost data esmm setup.', err);
+          EtoolsLogger.error('An error occurred at ghost data esmm setup.', err);
         }
       });
     }

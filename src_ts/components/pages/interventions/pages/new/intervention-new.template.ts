@@ -4,8 +4,8 @@ import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
-import {translate, translateConfig} from 'lit-translate';
-import {formatDate} from '../../../../utils/date-utils';
+import {langChanged, translate, translateConfig} from 'lit-translate';
+import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
@@ -28,9 +28,19 @@ export function template(this: InterventionNew): TemplateResult {
           width: auto !important;
           max-width: 100%;
           right: auto;
-          padding-right: 15px;
+          padding-inline-end: 15px;
         }
       }
+      :host-context([dir='rtl']) > * {
+        --required-star-style: {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
+          width: auto !important;
+          max-width: 100%;
+          right: auto;
+          padding-inline-end: 15px;
+        }
+      }
+
       paper-input[required][label],
       paper-input-container[required] {
         --paper-input-container-label: {
@@ -59,7 +69,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
       etools-dropdown-multi::part(esmm-label-container) {
         --iron-icon: {
-          margin-left: 10px;
+          margin-inline-start: 10px;
           color: var(--primary-color);
         }
         --paper-tooltip: {
@@ -151,8 +161,8 @@ export function template(this: InterventionNew): TemplateResult {
             id="partnerFocalPoints"
             label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
             placeholder="&#8212;"
-            .readonly="${!this.staffMembers.length}"
-            .options="${this.staffMembers}"
+            .readonly="${!this.partnerStaffMembers.length}"
+            .options="${langChanged(() => this.formattedPartnerStaffMembers)}"
             .selectedValues="${this.newIntervention.partner_focal_points || []}"
             @etools-selected-items-changed="${({detail}: CustomEvent) =>
               this.setInterventionField(
@@ -196,16 +206,15 @@ export function template(this: InterventionNew): TemplateResult {
           <paper-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             .value="${this.newIntervention.cfei_number}"
             error-message="${this.windowWidthIsSmall
               ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-              : translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT')}"
+              : translate('CFEI_EXPECTED_FORMAT')}"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-            @invalid-changed="${(e: any) => console.log(e)}"
           ></paper-input>
         </div>
       </div>

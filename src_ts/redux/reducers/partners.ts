@@ -59,6 +59,7 @@ export const csoPartnersSelector = createSelector(notHiddenPartnersSelector, (pa
 export const partnersDropdownDataSelector = createSelector(notHiddenPartnersSelector, (partners: any) => {
   return partners.map((p: any) => {
     return {
+      type: p.partner_type,
       value: p.id,
       label: p.name
     };

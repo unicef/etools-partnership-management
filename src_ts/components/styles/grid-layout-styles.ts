@@ -28,8 +28,8 @@ export const gridLayoutStyles = html` <style>
     padding: 16px 24px;
   }
   .row-padding-h {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-inline-start: 24px;
+    padding-inline-end: 24px;
   }
   .row-padding-v {
     padding-top: 16px;
@@ -107,7 +107,7 @@ export const gridLayoutStyles = html` <style>
   }
 
   .col:not(:first-of-type) {
-    padding-left: 24px;
+    padding-inline-start: 24px;
   }
 
   .col-1 {

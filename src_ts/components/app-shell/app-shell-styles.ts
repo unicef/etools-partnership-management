@@ -28,7 +28,8 @@ export const AppShellStyles = html`
       background-color: var(--amendment-mode-color);
       color: var(--light-primary-text-color);
       box-sizing: border-box;
-      padding: 12px 12px 12px 65px;
+      padding: 12px;
+      padding-inline-start: 65px;
       position: fixed;
       bottom: 0;
       width: calc(100% - var(--app-drawer-width, 0px)); /* 0px instead of 0 is an IE requirement */
