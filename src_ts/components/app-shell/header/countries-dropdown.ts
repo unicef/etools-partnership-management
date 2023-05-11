@@ -61,7 +61,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
       <etools-dropdown
         id="countrySelector"
         class="w100"
-        ?hidden="${!this.countrySelectorVisible}"
         .selected="${this.currentCountry?.id}"
         placeholder="${translate('COUNTRY')}"
         allow-outside-scroll
@@ -71,6 +70,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this._countrySelected}"
+        ?readonly="${!this.enableCountrySelector(this.countries)}"
         .shownOptionsLimit="${250}"
         hide-search
         auto-width
@@ -89,11 +89,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
 
   set countries(val: []) {
     this._countries = val;
-    this._countrySelectorUpdate(this._countries);
   }
-
-  @property({type: Boolean})
-  countrySelectorVisible = false;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -160,10 +156,8 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
     DexieRefresh.refresh();
   }
 
-  protected _countrySelectorUpdate(countries: any[]) {
-    if (Array.isArray(countries) && countries.length > 1) {
-      this.countrySelectorVisible = true;
-    }
+  protected enableCountrySelector(countries: GenericObject[]): boolean {
+    return Array.isArray(countries) && countries.length > 1;
   }
 
   protected _handleError(error: any) {
