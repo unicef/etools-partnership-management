@@ -69,7 +69,7 @@
     "@types/leaflet": "^1.7.11",
     "@types/lodash-es": "^4.17.6",
     "@unicef-polymer/etools-ajax": "^4.5.0",
-    "@unicef-polymer/etools-app-selector": "^4.0.10",
+    "@unicef-polymer/etools-app-selector": "^5.0.0",
     "@unicef-polymer/etools-content-panel": "^5.1.0",
     "@unicef-polymer/etools-currency-amount-input": "^4.0.4",
     "@unicef-polymer/etools-data-table": "^7.0.3",
