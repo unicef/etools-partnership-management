@@ -1,5 +1,6 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {ModelsCommon} from './models.common';
+import {get as getTranslation} from 'lit-translate';
 
 export class PartnerAssessment {
   id: number | null = null;
@@ -43,7 +44,7 @@ export class MinimalStaffMember extends ModelsCommon {
 
     if (Object.keys(staffMemberData)) {
       this.setObjProperties(staffMemberData);
-      this.name = this.first_name + ' ' + this.last_name;
+      this.name = (this.active ? '' : `[${getTranslation('INACTIVE')}] `) + this.first_name + ' ' + this.last_name;
     }
   }
 }

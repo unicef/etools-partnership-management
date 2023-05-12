@@ -50,14 +50,10 @@ function StaffMembersDataMixinLit<T extends Constructor<LitElement>>(baseClass: 
 
     _handleStaffMembersResponse(res: any) {
       if (res instanceof Array && res.length) {
-        const activeStaffMembers = res
-          .map(function (sMember) {
-            return new MinimalStaffMember(sMember);
-          })
-          .filter(function (sMember) {
-            return sMember.active;
-          });
-        this.staffMembers = activeStaffMembers;
+        const prefixedStaffMembers = res.map(function (sMember) {
+          return new MinimalStaffMember(sMember);
+        });
+        this.staffMembers = prefixedStaffMembers;
       }
       fireEvent(this, 'global-loading', {
         active: false,
