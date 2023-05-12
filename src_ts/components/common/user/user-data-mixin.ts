@@ -80,7 +80,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         }
       }
       if (!currentLanguage) {
-        const storageLang = localStorage.getItem('defaultLanguage');
+        const storageLang = window.EtoolsLanguage;
         if (storageLang && languageIsAvailableInApp(storageLang)) {
           currentLanguage = storageLang;
         }
