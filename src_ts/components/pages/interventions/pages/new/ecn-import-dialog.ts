@@ -67,7 +67,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
           <paper-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
+            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
             error-message="${translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')}"
             required
