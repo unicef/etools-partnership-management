@@ -452,7 +452,7 @@ class PageHeader extends connect(store)(
       fireEvent(this, 'language-changed', {language: newLanguage});
     }
     if (newLanguage !== this.selectedLanguage) {
-      window.EtoolsLanguage = this.selectedLanguage;
+      window.EtoolsLanguage = newLanguage;
       use(newLanguage).then(() => {
         if (this.profile?.preferences?.language != newLanguage) {
           this.updateUserPreference(newLanguage);
