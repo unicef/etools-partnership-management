@@ -70,7 +70,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this._countrySelected}"
-        ?readonly="${!this.enableCountrySelector(this.countries)}"
         .shownOptionsLimit="${250}"
         hide-search
         auto-width
@@ -154,10 +153,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
   protected _handleResponse() {
     history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
     DexieRefresh.refresh();
-  }
-
-  protected enableCountrySelector(countries: GenericObject[]): boolean {
-    return Array.isArray(countries) && countries.length > 1;
   }
 
   protected _handleError(error: any) {
