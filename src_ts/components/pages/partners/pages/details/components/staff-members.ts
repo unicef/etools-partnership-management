@@ -122,7 +122,7 @@ export class StaffMembers extends LitElement {
   }
 
   @property({type: Boolean})
-  showInactive = false;
+  showInactive = false; // Should we rename the toggle to Show Inactive/Inoperative?
 
   @property({type: Array})
   dataItems: StaffMember[] = [];
@@ -148,7 +148,7 @@ export class StaffMembers extends LitElement {
       return;
     }
     this.dataItems.sort((a: any, b: any) => {
-      return b.active - a.active;
+      return b.has_active_realm - a.has_active_realm;
     });
   }
 
