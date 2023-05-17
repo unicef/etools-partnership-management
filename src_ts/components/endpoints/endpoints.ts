@@ -62,7 +62,7 @@ const pmpEdpoints = {
     template: '/api/v2/partners/delete/<%=id%>/'
   },
   partnerStaffMembers: {
-    template: '/api/v2/partners/<%=id%>/staff-members/'
+    template: '/api/pmp/v3/partners/<%=id%>/staff-members/'
   },
   interventions: {
     url: '/api/pmp/v3/interventions/?show_amendments=true',
