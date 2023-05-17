@@ -344,13 +344,15 @@ class AppShell extends connect(store)(
         loadingSource: 'main-page'
       });
     }
-    installRouter((location) =>
-      this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
-    );
+
     await this.requestUserData();
     // trigger common data load requests
     // @ts-ignore
-    this.loadCommonData();
+    await this.loadCommonData();
+    // Order of method calls matters
+    installRouter((location) =>
+      this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
+    );
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
     // @ts-ignore

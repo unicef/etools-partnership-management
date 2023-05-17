@@ -60,10 +60,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       pmp: ['dropdownsPmp', 'dropdownsStatic']
     };
 
-    public loadCommonData() {
+    public async loadCommonData() {
       // get PMP static data
-      this.getCommonData(this.commonDataEndpoints.pmp);
-      this._handlePrpData();
+      await this.getCommonData(this.commonDataEndpoints.pmp);
+      // await this._handlePrpData();
     }
 
     public loadCommonDataOnLanguageChange() {
@@ -75,7 +75,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // @ts-ignore
         return sendRequest({endpoint: {url: pmpEdpoints[endpointName].url}});
       });
-      Promise.allSettled(promisses).then((response: any[]) => {
+      return Promise.allSettled(promisses).then((response: any[]) => {
         store.dispatch({
           type: commonDataActions.SET_ALL_STATIC_DATA,
           staticData: this.formatResponse(response)
@@ -165,7 +165,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     }
 
     protected _handlePrpData() {
-      this.waitForEnvFlagsToLoad().then(() => {
+      return this.waitForEnvFlagsToLoad().then(() => {
         if (this.shouldShowPrpReports()) {
           this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
           if (this.prpServerIsOn()) {
