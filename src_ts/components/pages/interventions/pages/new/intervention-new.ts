@@ -52,9 +52,13 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() partnerStaffMembers: PartnerStaffMember[] = [];
   get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
     return this.partnerStaffMembers.map((member: PartnerStaffMember) => ({
-      label: `${!member.active ? `[${getTranslation('INACTIVE')}]` : ''} ${member.first_name} ${member.last_name} (${
-        member.email
-      })`,
+      label: `${
+        member.active
+          ? member.has_active_realm
+            ? ''
+            : `[${getTranslation('INOPERATIVE')}]`
+          : `[${getTranslation('INACTIVE')}]`
+      } ${member.first_name} ${member.last_name} (${member.email})`,
       value: member.id
     }));
   }

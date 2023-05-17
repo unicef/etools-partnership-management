@@ -44,7 +44,15 @@ export class MinimalStaffMember extends ModelsCommon {
 
     if (Object.keys(staffMemberData)) {
       this.setObjProperties(staffMemberData);
-      this.name = (this.active ? '' : `[${getTranslation('INACTIVE')}] `) + this.first_name + ' ' + this.last_name;
+      this.name =
+        (this.active
+          ? this.has_active_realm
+            ? ''
+            : `[${getTranslation('INOPERATIVE')}] `
+          : `[${getTranslation('INACTIVE')}] `) +
+        this.first_name +
+        ' ' +
+        this.last_name;
     }
   }
 }
