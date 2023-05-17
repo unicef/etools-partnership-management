@@ -30,7 +30,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
     permissions!: UserPermissions;
 
     public requestUserData() {
-      sendRequest({
+      return sendRequest({
         endpoint: pmpEdpoints.myProfile
       })
         .then((res: any) => {

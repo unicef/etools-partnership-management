@@ -316,7 +316,7 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   private translationFilesAreLoaded = false;
 
-  public connectedCallback() {
+  public async connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
@@ -347,7 +347,7 @@ class AppShell extends connect(store)(
     installRouter((location) =>
       this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
-    this.requestUserData();
+    await this.requestUserData();
     // trigger common data load requests
     // @ts-ignore
     this.loadCommonData();
