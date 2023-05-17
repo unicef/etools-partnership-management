@@ -63,7 +63,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     public async loadCommonData() {
       // get PMP static data
       await this.getCommonData(this.commonDataEndpoints.pmp);
-      // await this._handlePrpData();
+      await this._handlePrpData();
     }
 
     public loadCommonDataOnLanguageChange() {
