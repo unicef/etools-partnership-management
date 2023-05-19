@@ -321,8 +321,16 @@ export class InterventionsList extends connect(store)(
   @property({type: Array})
   partners = [];
 
+  private _listLoadingActive = false;
   @property({type: Boolean})
-  listLoadingActive = false;
+  get listLoadingActive() {
+    return this._listLoadingActive;
+  }
+
+  set listLoadingActive(value: boolean) {
+    this._listLoadingActive = value;
+    fireEvent(this, 'list-loading-active', {value: value});
+  }
 
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
