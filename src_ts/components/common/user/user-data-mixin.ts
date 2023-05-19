@@ -30,7 +30,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
     permissions!: UserPermissions;
 
     public requestUserData() {
-      sendRequest({
+      return sendRequest({
         endpoint: pmpEdpoints.myProfile
       })
         .then((res: any) => {
@@ -80,7 +80,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         }
       }
       if (!currentLanguage) {
-        const storageLang = localStorage.getItem('defaultLanguage');
+        const storageLang = window.EtoolsLanguage;
         if (storageLang && languageIsAvailableInApp(storageLang)) {
           currentLanguage = storageLang;
         }

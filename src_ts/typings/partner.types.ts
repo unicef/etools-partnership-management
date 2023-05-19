@@ -30,6 +30,7 @@ type Partner = {
 // eslint-disable-next-line
 type PartnerStaffMember = {
   active: boolean;
+  has_active_realm: boolean;
   created: string;
   email: string;
   first_name: string;

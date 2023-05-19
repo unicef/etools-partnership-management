@@ -4,6 +4,7 @@ import {html} from 'lit-element';
 export const etoolsCpHeaderActionsBarStyles = html` <style>
   .cp-header-actions-bar {
     @apply --layout-horizontal;
+    align-items: center;
   }
 
   .cp-header-actions-bar paper-icon-button[disabled] {

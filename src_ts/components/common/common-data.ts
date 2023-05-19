@@ -60,10 +60,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       pmp: ['dropdownsPmp', 'dropdownsStatic']
     };
 
-    public loadCommonData() {
+    public async loadCommonData() {
       // get PMP static data
-      this.getCommonData(this.commonDataEndpoints.pmp);
-      this._handlePrpData();
+      await this.getCommonData(this.commonDataEndpoints.pmp);
+      await this._handlePrpData();
     }
 
     public loadCommonDataOnLanguageChange() {
@@ -75,7 +75,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // @ts-ignore
         return sendRequest({endpoint: {url: pmpEdpoints[endpointName].url}});
       });
-      Promise.allSettled(promisses).then((response: any[]) => {
+      return Promise.allSettled(promisses).then((response: any[]) => {
         store.dispatch({
           type: commonDataActions.SET_ALL_STATIC_DATA,
           staticData: this.formatResponse(response)
@@ -138,6 +138,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.grants = dropdownsPmpRespose.grants;
       data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
       data.csoTypes = dropdownsPmpRespose.cso_types;
+      data.locationTypes = dropdownsPmpRespose.location_types;
 
       data.documentTypes = dropdownsStatic.intervention_doc_type;
       data.interventionStatuses = dropdownsStatic.intervention_status;
@@ -150,7 +151,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
       data.assessmentTypes = dropdownsStatic.assessment_types;
       data.interventionAmendmentTypes = dropdownsStatic.intervention_amendment_types;
-      data.locationTypes = dropdownsStatic.location_types;
       data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
@@ -165,7 +165,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     }
 
     protected _handlePrpData() {
-      this.waitForEnvFlagsToLoad().then(() => {
+      return this.waitForEnvFlagsToLoad().then(() => {
         if (this.shouldShowPrpReports()) {
           this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
           if (this.prpServerIsOn()) {

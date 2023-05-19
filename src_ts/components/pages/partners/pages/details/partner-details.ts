@@ -30,7 +30,7 @@ import './components/staff-members';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {convertDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {Partner} from '../../../../../models/partners.models';
-import {LabelAndValue} from '@unicef-polymer/etools-types';
+import {LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
 import {translate} from 'lit-translate';
@@ -291,8 +291,8 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
       <staff-members
         id="staffMembersList"
         .dataItems="${this.partner.staff_members}"
-        ?editMode="${this.editMode}"
-        .partnerId="${this.partner.id}"
+        .partnerId="${this.partner.organization_id}"
+        .user="${this.user}"
       >
       </staff-members>
     `;
@@ -300,6 +300,9 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
   @property({type: Object})
   partner!: Partner;
+
+  @property({type: Object})
+  user!: User;
 
   @property({type: Boolean})
   editMode = false;
@@ -331,6 +334,9 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     }
     if (!isJsonStrMatch(this.sharedPartenerValues, state.commonData!.agencyChoices)) {
       this.sharedPartenerValues = state.commonData!.agencyChoices;
+    }
+    if (state.user && state.user.data && !isJsonStrMatch(this.user, state.user.data)) {
+      this.user = state.user.data;
     }
   }
 

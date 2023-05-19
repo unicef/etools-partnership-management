@@ -1,5 +1,6 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {ModelsCommon} from './models.common';
+import {get as getTranslation} from 'lit-translate';
 
 export class PartnerAssessment {
   id: number | null = null;
@@ -36,13 +37,22 @@ export class MinimalStaffMember extends ModelsCommon {
   first_name = '';
   last_name = '';
   active = true;
+  has_active_realm = true;
 
   constructor(staffMemberData: GenericObject) {
     super();
 
     if (Object.keys(staffMemberData)) {
       this.setObjProperties(staffMemberData);
-      this.name = this.first_name + ' ' + this.last_name;
+      this.name =
+        (this.active
+          ? this.has_active_realm
+            ? ''
+            : `[${getTranslation('INOPERATIVE')}] `
+          : `[${getTranslation('INACTIVE')}] `) +
+        this.first_name +
+        ' ' +
+        this.last_name;
     }
   }
 }
@@ -85,6 +95,7 @@ export class Partner extends ModelsCommon {
   last_assessment_date = ''; // TODO: update type to date
   monitoring_activity_groups: number[][] = [];
   name = '';
+  organization_id = '';
   partner_type = '';
   partner_type_slug = ''; // TODO: if cannot be used => remove property
   phone_number = '';

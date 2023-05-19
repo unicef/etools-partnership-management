@@ -8,6 +8,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
+import '../header/organizations-dropdown';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -26,9 +27,9 @@ import 'dayjs/locale/fr.js';
 import 'dayjs/locale/ru.js';
 import 'dayjs/locale/pt.js';
 import 'dayjs/locale/ar.js';
-import 'dayjs/locale/ro.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
+import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
 
 store.addReducers({
@@ -50,6 +51,7 @@ class PageHeader extends connect(store)(
     // main template
     // language=HTML
     return html`
+      ${headerDropdownStyles}
       <style>
         app-toolbar {
           padding-inline-end: 16px;
@@ -239,11 +241,7 @@ class PageHeader extends connect(store)(
         <div class="header__item">
           <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
-            <etools-app-selector
-              id="app-selector"
-              .user="${this.profile}"
-              .language="${this.selectedLanguage}"
-            ></etools-app-selector>
+            <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
             ${this.isStaging
               ? html`
@@ -277,6 +275,7 @@ class PageHeader extends connect(store)(
               .currentCountry="${this.profile?.country}"
             >
             </countries-dropdown>
+            <organizations-dropdown></organizations-dropdown>
           </div>
           <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
@@ -285,7 +284,6 @@ class PageHeader extends connect(store)(
             .offices="${this.allOffices}"
             .users="${this.allUsers}"
             .profile="${this.profile}"
-            .language="${this.selectedLanguage}"
             @save-profile="${this._saveProfile}"
             @sign-out="${this._signOut}"
           ></etools-profile-dropdown>
@@ -392,7 +390,7 @@ class PageHeader extends connect(store)(
 
     if (state.activeLanguage!.activeLanguage && state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      localStorage.setItem('defaultLanguage', this.selectedLanguage);
+      window.EtoolsLanguage = this.selectedLanguage;
       this.setLanguageDirection();
     }
   }
@@ -454,7 +452,7 @@ class PageHeader extends connect(store)(
       fireEvent(this, 'language-changed', {language: newLanguage});
     }
     if (newLanguage !== this.selectedLanguage) {
-      localStorage.setItem('defaultLanguage', newLanguage);
+      window.EtoolsLanguage = newLanguage;
       use(newLanguage).then(() => {
         if (this.profile?.preferences?.language != newLanguage) {
           this.updateUserPreference(newLanguage);
