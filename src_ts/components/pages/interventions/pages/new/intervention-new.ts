@@ -56,7 +56,7 @@ export class InterventionNew extends connect(store)(LitElement) {
         member.active
           ? member.has_active_realm
             ? ''
-            : `[${getTranslation('INOPERATIVE')}]`
+            : `[${getTranslation('NO_ACCESS')}]`
           : `[${getTranslation('INACTIVE')}]`
       } ${member.first_name} ${member.last_name} (${member.email})`,
       value: member.id

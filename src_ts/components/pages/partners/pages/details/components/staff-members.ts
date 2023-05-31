@@ -106,7 +106,13 @@ export class StaffMembers extends LitElement {
                 <span class="col-data col-2">${this._displayValue(item.phone)}</span>
                 <span class="col-data col-2">${this._displayValue(item.email)}</span>
                 <span class="col-data col-2 center-align">
-                  <span ?hidden="${item.has_active_realm}" class="placeholder-style">&#8212;</span>
+                  <span ?hidden="${item.has_active_realm}" class="placeholder-style"
+                    >${!item.active
+                      ? translate('INACTIVE')
+                      : !item.has_active_realm
+                      ? translate('NO_ACCESS')
+                      : ''}</span
+                  >
                   <iron-icon icon="check" ?hidden="${!item.has_active_realm}"></iron-icon>
                 </span>
               </div>
@@ -122,7 +128,7 @@ export class StaffMembers extends LitElement {
   }
 
   @property({type: Boolean})
-  showInactive = false; // Should we rename the toggle to Show Inactive/Inoperative?
+  showInactive = false;
 
   @property({type: Array})
   dataItems: StaffMember[] = [];

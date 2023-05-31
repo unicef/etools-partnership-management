@@ -48,7 +48,7 @@ export class MinimalStaffMember extends ModelsCommon {
         (this.active
           ? this.has_active_realm
             ? ''
-            : `[${getTranslation('INOPERATIVE')}] `
+            : `[${getTranslation('NO_ACCESS')}] `
           : `[${getTranslation('INACTIVE')}] `) +
         this.first_name +
         ' ' +
