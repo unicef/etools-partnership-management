@@ -10,7 +10,6 @@ import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
-import '@shoelace-style/shoelace/dist/components/input/input.js';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -360,9 +359,19 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <sl-input label="${translate('NEW_INTERVENTION.DOC_TITLE')}" required value="Test texty text" placeholder="—">
-            <div slot="help-text" style="color: red;">This field is required</div>
-          </sl-input>
+          <paper-input
+            id="title"
+            label=${translate('NEW_INTERVENTION.DOC_TITLE')}
+            char-counter
+            maxlength="256"
+            placeholder="&#8212;"
+            required
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
+            .value="${this.newIntervention?.title}"
+            @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
+            @focus="${this.resetError}"
+            @click="${this.resetError}"
+          ></paper-input>
         </div>
       </div>
 
