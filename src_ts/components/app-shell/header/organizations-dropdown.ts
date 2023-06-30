@@ -5,12 +5,12 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {customElement, LitElement, html, property, query} from 'lit-element';
 
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsUser} from '@unicef-polymer/etools-types';
 import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {get as getTranslation, translate} from 'lit-translate';
-import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {headerDropdownStyles} from './header-dropdown-styles';

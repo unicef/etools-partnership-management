@@ -17,7 +17,7 @@ export class SentBkComments extends LitElement {
         :host {
           display: block;
         }
-        etools-dialog::part(ed-title) {
+        etools-dialog::part(title) {
           border-bottom: solid 1px var(--dark-divider-color);
         }
       </style>
