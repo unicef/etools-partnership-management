@@ -87,7 +87,6 @@ export class AddDisaggregationDialog extends connect(store)(
         ok-btn-text="${translate('GENERAL.SAVE')}"
         dialog-title="${translate('ADD_DISAGGREGATION')}"
         ?disable-confirm-btn="${this.disableConfirmBtn}"
-        opened
         @confirm-btn-clicked="${this._validateAndSaveDisaggregation}"
         @close="${this._onClose}"
         ?show-spinner="${this.disableConfirmBtn}"

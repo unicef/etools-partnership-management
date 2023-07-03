@@ -23,7 +23,6 @@ export class NewPartnerDialog extends LitElement {
         ?disable-confirm-btn="${this.vendorNumberIsEmpty}"
         dialog-title="${translate('IMPORT_SYNC_PARTNER')}"
         keep-dialog-open
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._handleDialogClosed}"
       >

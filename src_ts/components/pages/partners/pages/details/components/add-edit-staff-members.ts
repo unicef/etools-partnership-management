@@ -54,7 +54,6 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         size="md"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._savePartnerContact}"
       >

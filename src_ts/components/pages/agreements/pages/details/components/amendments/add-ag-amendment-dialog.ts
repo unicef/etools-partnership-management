@@ -34,7 +34,6 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         no-padding
         keep-dialog-open
         id="add-ag-amendment"
-        opened
         size="md"
         ?hidden="${this.datePickerOpen}"
         .okBtnText="${translate('GENERAL.SAVE')}"

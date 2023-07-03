@@ -42,7 +42,6 @@ export class GeneratePcaDialog extends LitElement {
         keep-dialog-open
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._onConfirm}"
-        opened
       >
         <div>
           <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>

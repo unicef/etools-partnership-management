@@ -37,7 +37,6 @@ export class EditCoreValuesAssessment extends CommonMixinLit(LitElement) {
         size="md"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._saveCoreValueAssessment}"
         .disableConfirmBtn="${this.uploadInProgress}"

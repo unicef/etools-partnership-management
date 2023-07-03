@@ -44,7 +44,6 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         no-padding
         keep-dialog-open
         id="agreementTermination"
-        opened
         size="md"
         ?hidden="${this.warningOpened}"
         .okBtnText="${translate('TERMINATE')}"
@@ -86,9 +85,6 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
 
   @property({type: Number})
   agreementId!: number;
-
-  @property({type: Boolean})
-  opened!: boolean;
 
   @property({type: Boolean})
   warningOpened!: boolean;

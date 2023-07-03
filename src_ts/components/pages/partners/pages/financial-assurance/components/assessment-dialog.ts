@@ -53,7 +53,6 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         size="md"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         dialog-title="${translate('ASSESSMENT')}"
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._validateAndSaveAssessment}"
         ?disable-confirm-btn="${this.uploadInProgress}"

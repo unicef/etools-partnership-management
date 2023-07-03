@@ -32,7 +32,6 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRejectDialog"
         size="md"
         keep-dialog-open
-        opened
         spinner-text="Sending rating..."
         ?disable-confirm-btn="${!this.comment.length}"
         ok-btn-text="Send Back to Partner"

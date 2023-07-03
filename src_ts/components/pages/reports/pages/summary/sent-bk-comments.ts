@@ -23,7 +23,6 @@ export class SentBkComments extends LitElement {
       </style>
 
       <etools-dialog
-        opened
         @close="${this._onClose}"
         dialog-title="${translate('SENT_BACK_COMMENTS')}"
         size="md"

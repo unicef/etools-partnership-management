@@ -47,7 +47,6 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         dialog-title="${translate('IMPORT_ECN')}"
         keep-dialog-open
         ?show-spinner="${this.loadingInProcess}"
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this.save}"
       >

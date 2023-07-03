@@ -40,7 +40,6 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRatingDialog"
         size="md"
         keep-dialog-open
-        opened
         spinner-text="Sending rating..."
         ?disable-confirm-btn="${!this.selectedOverallStatus.length}"
         ok-btn-text="${this.okBtnText}"
