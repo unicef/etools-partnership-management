@@ -11,6 +11,7 @@ documentContainer.innerHTML = `
         --primary-color: #0099ff;
         --secondary-color: #0061e9; /* TODO: unused color, remove? */
         --ternary-color: #009a54;
+        --sl-color-neutral-0: #0099ff;
 
         --primary-background-color: #FFFFFF;
         --secondary-background-color: #eeeeee;

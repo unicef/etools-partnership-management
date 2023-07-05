@@ -89,6 +89,7 @@ export class InterventionNew extends connect(store)(LitElement) {
       active: false,
       loadingSource: 'interv-page'
     });
+    this.addEventListener('sl-invalid', (e) => e.preventDefault());
   }
 
   stateChanged(state: RootState): void {
