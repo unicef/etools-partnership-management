@@ -93,4 +93,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - epd
+                - sl-tooltip
