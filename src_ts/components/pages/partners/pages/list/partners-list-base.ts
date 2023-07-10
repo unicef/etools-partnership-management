@@ -88,6 +88,7 @@ export class PartnersListBase extends CommonMixin(
 
         .filters {
           position: relative;
+          z-index: 1;
         }
 
         @media (max-width: 576px) {
