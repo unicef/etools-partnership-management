@@ -92,7 +92,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-import {setBasePath} from '@shoelace-style/shoelace';
+import {setBasePath} from '@shoelace-style/shoelace/dist/shoelace.js';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 declare const dayjs: any;
