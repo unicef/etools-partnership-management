@@ -12,7 +12,7 @@ import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/style
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {customIcons} from '@unicef-polymer/etools-modules-common/dist/styles/custom-icons';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
-import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
+import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -38,6 +38,10 @@ import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {
+  EtoolsRouteDetails,
+  EtoolsRouteQueryParams
+} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -313,7 +317,7 @@ export class InterventionsList extends connect(store)(
   };
 
   @property({type: Object})
-  routeDetails!: RouteDetails | null;
+  routeDetails!: EtoolsRouteDetails | null;
 
   @property({type: Array})
   filteredInterventions: ListItemIntervention[] = [];
@@ -451,7 +455,7 @@ export class InterventionsList extends connect(store)(
     }
 
     // update filter selection and assign the result to etools-filters(trigger render)
-    const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
     this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
       omit(currentParams, ['page', 'size', 'sort']),
       availableFilters
@@ -495,12 +499,12 @@ export class InterventionsList extends connect(store)(
 
     const queryParams = this.routeDetails?.queryParams;
 
-    const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
+    const sortOrder = queryParams?.sort ? queryParams?.sort?.toString().split('.') : [];
 
     intervElem.query(
       sortOrder[0],
       sortOrder[1],
-      queryParams?.search?.toLowerCase() || '',
+      queryParams?.search?.toString().toLowerCase() || '',
       this.getFilterUrlValuesAsArray(queryParams?.type || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cp_outputs || ''),
       this.getFilterUrlValuesAsArray(queryParams?.donors || ''),
@@ -513,17 +517,17 @@ export class InterventionsList extends connect(store)(
       this.getFilterUrlValuesAsArray(queryParams?.offices || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
       Boolean(queryParams?.contingency_pd || false),
-      queryParams?.editable_by || '',
-      queryParams?.start || '',
-      queryParams?.end || '',
-      queryParams?.endAfter || '',
+      queryParams?.editable_by.toString() || '',
+      queryParams?.start.toString() || '',
+      queryParams?.end.toString() || '',
+      queryParams?.endAfter.toString() || '',
       queryParams?.page ? Number(queryParams.page) : 1,
       queryParams?.size ? Number(queryParams.size) : 10,
       false
     );
   }
-  getFilterUrlValuesAsArray(types: string) {
-    return types ? types.split(',') : [];
+  getFilterUrlValuesAsArray(types: string | number) {
+    return types ? types.toString().split(',') : [];
   }
 
   filtersChange(e: CustomEvent) {

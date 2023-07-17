@@ -82,7 +82,7 @@ import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
-import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
@@ -92,6 +92,8 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, property, PropertyValues} from 'lit-element';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
@@ -120,6 +122,7 @@ const translationConfig = registerTranslateConfig({
 });
 
 setRootPath(BASE_URL);
+setBasePath(BASE_URL);
 
 /**
  * @customElement
@@ -311,7 +314,7 @@ class AppShell extends connect(store)(
   currentLanguageIsSet!: boolean;
 
   @property({type: Object})
-  reduxRouteDetails?: RouteDetails;
+  reduxRouteDetails?: EtoolsRouteDetails;
 
   @property({type: Boolean})
   private translationFilesAreLoaded = false;

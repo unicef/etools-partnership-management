@@ -26,6 +26,7 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
     return html`
       ${headerDropdownStyles}
       <etools-dropdown
+        transparent
         ?hidden=${isEmptyObject(this.organizations)}
         id="organizationSelector"
         placeholder="${translate('SELECT_ORGANIZATION')}"
@@ -56,11 +57,6 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
 
   public connectedCallback() {
     super.connectedCallback();
-
-    setTimeout(() => {
-      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      this.organizationSelectorDropdown.fitInto = fitInto;
-    }, 0);
   }
 
   public stateChanged(state: RootState) {
