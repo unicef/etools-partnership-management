@@ -54,7 +54,7 @@ export class EtoolsInput extends LitElement {
         ?readonly="${this.readonly}"
         .value="${this.value ? this.value : ''}"
         @sl-invalid="${(e: any) => e.preventDefault()}"
-        @sl-input="${(event: Event) => fireEvent(this, 'value-changed', {detail: {value: event.target.value}})}"
+        @sl-input="${(event: Event) => fireEvent(this, 'value-changed', {detail: {value: event.target!.value}})}"
       >
         <div slot="help-text" class="err-msg">
           <div>${this.errorMessage}</div>
