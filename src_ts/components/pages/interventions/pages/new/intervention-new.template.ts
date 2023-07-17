@@ -78,6 +78,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
       info-icon-tooltip {
         --iit-font-size: 16px;
+        --iit-max-width: auto;
       }
     </style>
 

@@ -92,6 +92,6 @@ workflows:
               only:
                 - master
                 - staging
-                - develop
-                - epd
+                - develop           
                 - sl-dialog-tests
+
