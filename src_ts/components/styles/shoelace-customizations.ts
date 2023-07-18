@@ -2,22 +2,28 @@ import {css} from 'lit-element';
 // TODO - submodule should not import it fro here
 
 const validationStyles = css`
-  sl-input[data-user-invalid] div[slot='help-text'],
-  sl-textarea[data-user-invalid] div[slot='help-text'] {
+  sl-input div[slot='help-text'] div.char-counter,
+  sl-textarea div[slot='help-text'] div.char-counter {
+    visibility: visible;
+  }
+  sl-textarea[show-char-counter] div.err-msg {
+    overflow-x: clip;
+  }
+
+  sl-input[readonly] div[slot='help-text'] div.char-counter,
+  sl-textarea[readonly] div[slot='help-text'] div.char-counter {
+    visibility: hidden;
+  }
+
+  sl-input[data-user-invalid] div[slot='help-text'] div.err-msg,
+  sl-textarea[data-user-invalid] div[slot='help-text'] div.err-msg {
     visibility: visible;
     height: 15px;
     overflow: visible;
   }
 
-  sl-input div[slot='help-text'] div,
-  sl-textarea div[slot='help-text'] div {
-    position: relative;
-    top: 0;
-    left: 0;
-  }
-
-  sl-input div[slot='help-text'],
-  sl-textarea div[slot='help-text'] {
+  sl-input div[slot='help-text'] div.err-msg,
+  sl-textarea div[slot='help-text'] div.err-msg {
     visibility: hidden;
     height: 15px;
     overflow: hidden;
