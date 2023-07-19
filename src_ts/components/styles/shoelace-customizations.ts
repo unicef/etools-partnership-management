@@ -47,8 +47,8 @@ const labelStyles = css`
   sl-textarea {
     --sl-input-label-color: var(--secondary-text-color);
     --sl-input-required-content-color: red;
-    --sl-spacing-3x-medium: 0;
-    --sl-input-spacing-medium: 2px;
+    --sl-spacing-3x-small: 0;
+    --sl-input-spacing-small: 2px;
   }
   sl-input::part(form-control-label) {
     font-size: 13px;
@@ -56,12 +56,39 @@ const labelStyles = css`
 `;
 
 export const ShoelaceCustomizations = css`
+  sl-input,
+  sl-textarea {
+    --sl-input-font-size-small: 16px;
+  }
   sl-input[readonly],
   sl-textarea[readonly] {
     --sl-input-border-width: 0;
-    --sl-input-spacing-medium: 0;
+    --sl-input-spacing-small: 0;
     --sl-input-focus-ring-color: rgba(0, 0, 0, 0);
   }
+
+  sl-input:not([readonly]):focus::part(base),
+  sl-textarea:not([readonly]):focus::part(base) {
+    border: none;
+    border-bottom: 2px solid var(--primary-color);
+    box-shadow: 0 0 0 -1px var(--primary-color), 0 2px 3px -2px var(--primary-color);
+    border-radius: 0;
+  }
+
+  sl-input::part(base),
+  sl-textarea::part(base) {
+    border: none;
+    border-bottom: 1px solid var(--secondary-text-color);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  sl-input[readonly]::part(base),
+  sl-textarea[readonly]::part(base) {
+    border: none;
+    border-bottom: none;
+  }
+
   ${labelStyles}
   ${validationStyles}
 `;
