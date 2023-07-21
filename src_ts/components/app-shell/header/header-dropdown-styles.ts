@@ -19,6 +19,10 @@ export const headerDropdownStyles = html`
       --paper-input-container-shared-input-style_-_max-width: 75px;
     }
 
+    etools-dropdown::part(display-input) {
+      text-align: right;
+    }
+
     etools-dropdown {
       --paper-listbox: {
         max-height: 600px;
