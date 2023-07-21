@@ -1,7 +1,7 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -92,7 +92,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               ? html` <div class="layout-vertical col-3">
                   <div class="heading">${translate('PLANNED_PROGRAMMATIC_VISITS')}</div>
                   <div class="layout-horizontal space-around">
-                    <paper-input
+                    <etools-input
                       type="number"
                       allowed-pattern="[0-9]"
                       auto-validate
@@ -102,8 +102,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q1 = detail.value;
                       }}"
                       label="Q1"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       .value="${this.editableValues.planned_visits.programmatic_q2}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q2 = detail.value;
@@ -113,8 +113,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q2"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       .value="${this.editableValues.planned_visits.programmatic_q3}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q3 = detail.value;
@@ -124,8 +124,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q3"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       type="number"
                       allowed-pattern="[0-9]"
                       auto-validate
@@ -135,7 +135,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q4 = detail.value;
                       }}"
                       label="Q4"
-                    ></paper-input>
+                    ></etools-input>
                   </div>
                 </div>`
               : html``}
@@ -143,7 +143,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
             <div class="layout-vertical col-2">
               <div class="heading">${translate('FOLLOW_UP_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
-                <paper-input
+                <etools-input
                   .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
@@ -151,14 +151,14 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   type="number"
                   allowed-pattern="[0-9]"
                 >
-                </paper-input>
+                </etools-input>
               </div>
             </div>
 
             <div class="layout-vertical col-3">
               <div class="heading">${translate('PLANNED_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
-                <paper-input
+                <etools-input
                   type="number"
                   allowed-pattern="[0-9]"
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q1}"
@@ -166,8 +166,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                     this.editableValues.planned_engagement.spot_check_planned_q1 = detail.value;
                   }}"
                   label="Q1"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
                   allowed-pattern="[0-9]"
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q2}"
@@ -175,8 +175,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                     this.editableValues.planned_engagement.spot_check_planned_q2 = detail.value;
                   }}"
                   label="Q2"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
                   allowed-pattern="[0-9]"
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q3}"
@@ -184,8 +184,8 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                     this.editableValues.planned_engagement.spot_check_planned_q3 = detail.value;
                   }}"
                   label="Q3"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
                   allowed-pattern="[0-9]"
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q4}"
@@ -193,7 +193,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                     this.editableValues.planned_engagement.spot_check_planned_q4 = detail.value;
                   }}"
                   label="Q4"
-                ></paper-input>
+                ></etools-input>
               </div>
             </div>
 

@@ -41,13 +41,13 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         @close="${this._onClose}"
       >
         <div id="content-box">
-          <paper-input
+          <etools-input
             required
             label="Feedback/Comments"
             placeholder="&#8212;"
             .value="${this.comment}"
             @value-changed="${({detail}: CustomEvent) => (this.comment = detail.value)}"
-          ></paper-input>
+          ></etools-input>
         </div>
       </etools-dialog>
     `;

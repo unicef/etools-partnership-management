@@ -93,7 +93,7 @@ export class AddDisaggregationDialog extends connect(store)(
       >
         <div class="layout-horizontal flex-c row-padding-v extra-padd">
           <div class="col col-4">
-            <paper-input
+            <etools-input
               id="disaggregateByEl"
               label="${translate('DISAGGREGATION')}"
               .value="${this.disaggregation.name}"
@@ -106,7 +106,7 @@ export class AddDisaggregationDialog extends connect(store)(
               error-message="${translate('PLEASE_ADD_DISAGGREGATION')}"
               placeholder="&#8212;"
             >
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-8">
             <div class="layout-vertical">
@@ -114,7 +114,7 @@ export class AddDisaggregationDialog extends connect(store)(
               <div class="layout-horizontal groups">
                 ${(this.data || []).map(
                   (item: any, index) => html`
-                    <paper-input
+                    <etools-input
                       class="newGroup"
                       no-label-float
                       label="${translate('NEW_GROUP')}"
@@ -127,7 +127,7 @@ export class AddDisaggregationDialog extends connect(store)(
                         this.requestUpdate();
                       }}"
                     >
-                    </paper-input>
+                    </etools-input>
                     <paper-icon-button
                       class="action delete no-padding"
                       icon="cancel"

@@ -2,7 +2,7 @@
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
@@ -111,7 +111,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             </etools-form-element-wrapper2>
           </div>
           <div class="col col-4">
-            <paper-input
+            <etools-input
               label="${translate('ALTERNATE_NAME')}"
               .value="${this.partner.alternate_name}"
               @value-changed="${({detail}: CustomEvent) => {
@@ -119,7 +119,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               }}"
               placeholder="&#8212;"
               ?readonly="${!this.editMode}"
-            ></paper-input>
+            ></etools-input>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 import '@unicef-polymer/etools-dialog/etools-dialog';
@@ -59,7 +59,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
       >
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-9">
-            <paper-input
+            <etools-input
               id="title"
               label="${translate('POSITION')}"
               .value="${this.item.title}"
@@ -71,7 +71,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               required
               auto-validate
               .errorMessage="${translate('POSITION_IS_REQUIRED')}"
-            ></paper-input>
+            ></etools-input>
           </div>
           <div class="col col-3 right-align">
             <paper-checkbox
@@ -85,7 +85,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="firstName"
               label="${translate('FIRST_NAME')}"
               .value="${this.item.first_name}"
@@ -98,10 +98,10 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               auto-validate
               .errorMessage="${translate('FIRST_NAME_IS_REQUIRED')}"
             >
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="lastName"
               label="${translate('LAST_NAME')}"
               .value="${this.item.last_name}"
@@ -114,12 +114,12 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               auto-validate
               .errorMessage="${translate('LAST_NAME_IS_REQUIRED')}"
             >
-            </paper-input>
+            </etools-input>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="email"
               label="${translate('EMAIL_ADDRESS')}"
               .value="${this.item.email}"
@@ -135,10 +135,10 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               .errorMessage="${translate('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')}"
             >
               <iron-icon slot="prefix" icon="communication:email"></iron-icon>
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="phone"
               label="${translate('PHONE_NUMBER')}"
               .value="${this.item.phone}"
@@ -150,7 +150,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               }}"
             >
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            </paper-input>
+            </etools-input>
           </div>
         </div>
       </etools-dialog>

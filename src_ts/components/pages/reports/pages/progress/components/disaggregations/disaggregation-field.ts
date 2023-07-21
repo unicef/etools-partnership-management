@@ -31,7 +31,7 @@ export class DisaggregationField extends LitElement {
         }
       </style>
 
-      <paper-input
+      <etools-input
         id="field"
         .value="${this.value}"
         type="number"
@@ -43,7 +43,7 @@ export class DisaggregationField extends LitElement {
         required
         auto-validate
       >
-      </paper-input>
+      </etools-input>
     `;
   }
 
