@@ -117,7 +117,7 @@ export class AddDisaggregationDialog extends connect(store)(
                     <etools-input
                       class="newGroup"
                       no-label-float
-                      label="${translate('NEW_GROUP')}"
+                      placeholder="${translate('NEW_GROUP')}"
                       .value="${item.value}"
                       required
                       error-message="${translate('REQUIRED')}"
