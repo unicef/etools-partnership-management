@@ -92,6 +92,5 @@ workflows:
               only:
                 - master
                 - staging
-                - develop           
-                - sl-dialog-tests
-
+                - develop
+                - sl-dropdown-fixes
