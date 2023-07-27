@@ -107,8 +107,8 @@ export class GeneratePcaDialog extends LitElement {
     {value: 'french', label: getTranslation('FRENCH')},
     {value: 'portuguese', label: getTranslation('PORTUGUESE')},
     {value: 'russian', label: getTranslation('RUSSIAN')},
-    {value: 'spanish', label: getTranslation('SPANISH')},
-    {value: 'arabic', label: getTranslation('ARABIC')}
+    {value: 'spanish', label: getTranslation('SPANISH')}
+    // {value: 'arabic', label: getTranslation('ARABIC')} // Not working as expected on backend
     // {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
     // {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
   ];
