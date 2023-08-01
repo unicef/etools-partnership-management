@@ -6,7 +6,7 @@ import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from 'lit-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
-import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';

@@ -10,7 +10,7 @@ import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
 import '../../../../common/components/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';

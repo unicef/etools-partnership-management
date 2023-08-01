@@ -26,7 +26,7 @@ import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
 import '../../data/interventions-list-data.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import {InterventionsListData} from '../../data/interventions-list-data.js';
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
