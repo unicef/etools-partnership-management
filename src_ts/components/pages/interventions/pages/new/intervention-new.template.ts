@@ -232,6 +232,7 @@ export function template(this: InterventionNew): TemplateResult {
             required
             .options="${this.documentTypes}"
             .selected="${this.newIntervention.document_type}"
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
               this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
             trigger-value-change-event
