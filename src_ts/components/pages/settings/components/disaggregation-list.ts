@@ -26,6 +26,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 
 /**
  * @polymer
@@ -61,7 +62,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
       </style>
 
       <div id="filters" class="paper-material elevation" elevation="1">
-        <paper-input
+        <etools-input
           id="query"
           class="qFilter"
           type="search"
@@ -74,7 +75,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           placeholder="${translate('GENERAL.SEARCH')}"
         >
           <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+        </etools-input>
       </div>
 
       <etools-content-panel panel-title="${translate('DISAGGREGATIONS')}">

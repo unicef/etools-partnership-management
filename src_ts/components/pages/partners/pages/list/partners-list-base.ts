@@ -8,7 +8,7 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import '../../data/partners-list-data.js';
 
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-listbox/paper-listbox';

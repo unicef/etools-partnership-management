@@ -2,7 +2,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../../../redux/store';
 import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-listbox/paper-listbox';

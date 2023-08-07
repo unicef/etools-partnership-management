@@ -26,7 +26,7 @@ export class NewPartnerDialog extends LitElement {
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._handleDialogClosed}"
       >
-        <paper-input
+        <etools-input
           id="vendorNo"
           label="${translate('VISION_VENDOR_NUMBER')}"
           .value="${this.vendorNumber}"
@@ -41,7 +41,7 @@ export class NewPartnerDialog extends LitElement {
           allowed-pattern="[0-9]"
           char-counter
           maxlength="11"
-        ></paper-input>
+        ></etools-input>
       </etools-dialog>
     `;
   }

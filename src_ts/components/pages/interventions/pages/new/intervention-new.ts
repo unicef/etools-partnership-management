@@ -20,6 +20,7 @@ import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@unicef-polymer/etools-unicef/src/etools-input';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
