@@ -26,7 +26,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import '@unicef-polymer/etools-unicef/src/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
  * @polymer

@@ -1,12 +1,12 @@
 import {html, LitElement, property} from 'lit-element';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
