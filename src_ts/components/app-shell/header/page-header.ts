@@ -4,7 +4,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
 import '../header/organizations-dropdown';
