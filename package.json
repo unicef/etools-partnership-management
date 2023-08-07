@@ -149,5 +149,13 @@
     "wd": ">=1.14.0",
     "minimatch": ">=3.1.2",
     "relative-deps": "^1.0.7"
+<<<<<<< HEAD
   }
 }
+=======
+  },
+  "relativeDependencies": {
+    "@unicef-polymer/etools-dropdown": "../../etools-polymer/etools-dropdown"
+  }
+}
+>>>>>>> sl-dialog-tests
