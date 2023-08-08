@@ -77,7 +77,7 @@
     "@unicef-polymer/etools-date-time": "^3.1.4",
     "@unicef-polymer/etools-dexie-caching": "^1.1.0",
     "@unicef-polymer/etools-dialog": "^8.0.0-rc.7",
-    "@unicef-polymer/etools-dropdown": "^6.0.0-rc.3",
+    "@unicef-polymer/etools-dropdown": "^6.0.0-rc.5",
     "@unicef-polymer/etools-filters": "3.0.0-rc.3",
     "@unicef-polymer/etools-info-tooltip": "^5.0.0-rc.2",
     "@unicef-polymer/etools-loading": "^6.1.1",
@@ -100,6 +100,7 @@
     "leaflet": "^1.9.2",
     "leaflet.markercluster": "^1.5.3",
     "lit-element": "^2.5.1",
+    "lit-html": "^1.4.1",
     "lit-translate": "^1.2.1",
     "lodash-es": "^4.17.21",
     "pwa-helpers": "^0.9.1",
@@ -150,7 +151,5 @@
     "minimatch": ">=3.1.2",
     "relative-deps": "^1.0.7"
   },
-  "relativeDependencies": {
-    "@unicef-polymer/etools-dropdown": "../../etools-polymer/etools-dropdown"
-  }
+  "relativeDependencies": {}
 }

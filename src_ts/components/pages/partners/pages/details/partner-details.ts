@@ -2,7 +2,7 @@
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
-import '@unicef-polymer/etools-unicef/src/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
@@ -18,7 +18,7 @@ import {isEmptyObject, isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/e
 import {RootState, store} from '../../../../../redux/store';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '../../../../common/components/etools-form-element-wrapper';
 

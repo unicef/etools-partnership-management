@@ -1,8 +1,8 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import '@unicef-polymer/etools-unicef/src/etools-input';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import clone from 'lodash-es/clone';
