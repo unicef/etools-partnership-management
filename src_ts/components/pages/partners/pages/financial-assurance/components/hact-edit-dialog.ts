@@ -60,6 +60,18 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           text-align: center;
         }
 
+        etools-input {
+          max-width: 32px;
+        }
+
+        etools-input::part(input) {
+          text-align: center;
+        }
+
+        etools-input::part(form-control-label) {
+          text-align: center;
+        }
+
         .avoid-scroll {
           overflow: hidden;
         }
@@ -144,10 +156,12 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               <div class="heading">${translate('FOLLOW_UP_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
                 <etools-input
+                  always-float-label
                   .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
                   }}"
+                  .label=""
                   type="number"
                   allowed-pattern="[0-9]"
                 >
