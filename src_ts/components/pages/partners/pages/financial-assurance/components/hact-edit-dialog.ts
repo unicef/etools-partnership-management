@@ -160,7 +160,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
-                  }}"                  
+                  }}"
                   type="number"
                   allowed-pattern="[0-9]"
                 >
