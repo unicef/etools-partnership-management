@@ -87,7 +87,7 @@
     "@unicef-polymer/etools-table": "^2.0.1",
     "@unicef-polymer/etools-toasts": "^1.0.7",
     "@unicef-polymer/etools-types": "1.11.16",
-    "@unicef-polymer/etools-unicef": "0.0.23",
+    "@unicef-polymer/etools-unicef": "0.0.24",
     "@unicef-polymer/etools-upload": "^4.5.1",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.1",
     "@webcomponents/webcomponentsjs": "^2.8.0",
