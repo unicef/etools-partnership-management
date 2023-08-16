@@ -16,13 +16,13 @@ import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';

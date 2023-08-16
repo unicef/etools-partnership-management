@@ -9,7 +9,7 @@ import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
@@ -19,7 +19,7 @@ import {RootState, store} from '../../../../../redux/store';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '../../../../common/components/etools-form-element-wrapper';
 
 import '../../../../common/components/etools-error-messages-box.js';

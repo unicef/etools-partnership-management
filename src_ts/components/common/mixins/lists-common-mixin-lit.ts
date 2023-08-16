@@ -4,7 +4,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 import {ListFilterOption} from '../../../typings/filter.types';
 import get from 'lodash-es/get';
 import {LitElement, property} from 'lit-element';
-import {EtoolsDataTableRow} from '@unicef-polymer/etools-data-table/etools-data-table-row';
+import {EtoolsDataTableRow} from '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table-row';
 import {get as getTranslation} from 'lit-translate';
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
