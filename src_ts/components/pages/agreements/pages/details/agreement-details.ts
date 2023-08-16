@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';

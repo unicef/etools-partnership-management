@@ -1,4 +1,3 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
@@ -6,15 +5,16 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../redux/store';
 import {updateEnvFlags} from '../../../redux/actions/common-data';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import {EnvFlags} from '@unicef-polymer/etools-types';
+import {LitElement} from 'lit';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EnvironmentFlagsPolymerMixin2 extends connect(store)(EndpointsMixin(PolymerElement)) {
+class EnvironmentFlagsPolymerMixin2 extends connect(store)(EndpointsMixin(LitElement)) {
   @property({type: Object})
   envFlagsDefaultValue: EnvFlags = {
     prp_mode_off: true,

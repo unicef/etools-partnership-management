@@ -1,4 +1,5 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-label/iron-label';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';

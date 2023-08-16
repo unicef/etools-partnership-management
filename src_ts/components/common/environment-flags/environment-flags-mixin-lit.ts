@@ -1,5 +1,6 @@
 import {RootState} from '../../../redux/store';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {EnvFlags, Constructor} from '@unicef-polymer/etools-types';
 

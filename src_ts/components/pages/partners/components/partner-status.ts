@@ -5,7 +5,9 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 
 /**

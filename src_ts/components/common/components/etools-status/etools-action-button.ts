@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/paper-button/paper-button.js';

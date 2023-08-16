@@ -1,6 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig;
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';

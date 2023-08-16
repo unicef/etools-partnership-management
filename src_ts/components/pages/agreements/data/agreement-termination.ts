@@ -1,4 +1,5 @@
-import {LitElement, html, property, customElement} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
 import CommonMixinLit from '../../../common/mixins/common-mixin-lit';
 import pmpEndpoints from '../../../endpoints/endpoints';

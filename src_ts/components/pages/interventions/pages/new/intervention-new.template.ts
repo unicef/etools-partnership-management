@@ -1,6 +1,6 @@
 /* eslint no-invalid-this: 0 */
 import '@polymer/iron-media-query/iron-media-query';
-import {TemplateResult, html} from 'lit-element';
+import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';

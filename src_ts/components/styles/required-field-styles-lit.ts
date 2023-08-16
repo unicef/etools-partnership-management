@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 import {BASE_URL} from '../../config/config.js';
 
 // language=HTML

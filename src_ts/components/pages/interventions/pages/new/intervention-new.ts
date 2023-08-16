@@ -1,5 +1,6 @@
 /* eslint no-invalid-this: 0 */
-import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
+import {LitElement, CSSResultArray, TemplateResult} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';

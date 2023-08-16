@@ -1,4 +1,5 @@
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';

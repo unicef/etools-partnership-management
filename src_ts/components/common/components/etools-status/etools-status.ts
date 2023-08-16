@@ -1,4 +1,5 @@
-import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';

@@ -3,11 +3,11 @@ import {store, RootState} from '../../../redux/store';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
-import {customElement, LitElement, html, property, query} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, query, customElement} from 'lit/decorators.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsUser} from '@unicef-polymer/etools-types';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {get as getTranslation, translate} from 'lit-translate';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -15,13 +15,14 @@ import pmpEdpoints from '../../endpoints/endpoints.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @LitElement
  * @customElement
  */
 @customElement('organizations-dropdown')
-export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement))) {
+export class organizationsDropdown extends connect(store)(EndpointsLitMixin(LitElement)) {
   public render() {
     return html`
       ${headerDropdownStyles}
@@ -114,8 +115,8 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
 
   protected _handleResponse() {
     // clear Dexie and storage
-    this.refresh();
-    this.clearLocalStorage();
+    DexieRefresh.refresh();
+    DexieRefresh.clearLocalStorage();
 
     history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
   }

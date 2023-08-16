@@ -7,7 +7,8 @@ import {
   RESET_UPLOADS_IN_PROGRESS
 } from '../../../redux/actions/upload-status';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 

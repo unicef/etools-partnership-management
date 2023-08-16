@@ -81,13 +81,13 @@
     "@unicef-polymer/etools-filters": "3.0.0-rc.3",
     "@unicef-polymer/etools-info-tooltip": "^5.0.0-rc.2",
     "@unicef-polymer/etools-loading": "^6.1.1",
-    "@unicef-polymer/etools-modules-common": "4.0.0-rc.5",
+    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.1",
     "@unicef-polymer/etools-piwik-analytics": "^3.2.0",
     "@unicef-polymer/etools-profile-dropdown": "9.0.0-rc.2",
     "@unicef-polymer/etools-table": "^2.0.1",
     "@unicef-polymer/etools-toasts": "^1.0.7",
     "@unicef-polymer/etools-types": "1.11.16",
-    "@unicef-polymer/etools-unicef": "0.0.26",
+    "@unicef-polymer/etools-unicef": "1.0.0-rc.1",
     "@unicef-polymer/etools-upload": "^4.5.1",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.1",
     "@webcomponents/webcomponentsjs": "^2.8.0",
@@ -99,9 +99,8 @@
     "focus-visible": "^5.2.0",
     "leaflet": "^1.9.2",
     "leaflet.markercluster": "^1.5.3",
-    "lit-element": "^2.5.1",
-    "lit-html": "^1.4.1",
-    "lit-translate": "^1.2.1",
+    "lit": "^2.8.0",
+    "lit-translate": "^2.0.1",
     "lodash-es": "^4.17.21",
     "pwa-helpers": "^0.9.1",
     "redux": "^4.2.0",
@@ -151,5 +150,7 @@
     "minimatch": ">=3.1.2",
     "relative-deps": "^1.0.7"
   },
-  "relativeDependencies": {}
+  "relativeDependencies": {
+    "@unicef-polymer/etools-unicef": "../../etools-polymer/etools-unicef"
+  }
 }

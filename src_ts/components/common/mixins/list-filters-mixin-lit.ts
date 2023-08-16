@@ -4,7 +4,8 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdow
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import set from 'lodash-es/set';
 declare const dayjs: any;
 /**

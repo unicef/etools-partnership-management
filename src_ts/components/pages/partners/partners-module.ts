@@ -1,5 +1,7 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, property, PropertyValues, customElement} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';

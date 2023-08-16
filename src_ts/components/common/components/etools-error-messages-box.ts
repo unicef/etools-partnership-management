@@ -1,4 +1,5 @@
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';

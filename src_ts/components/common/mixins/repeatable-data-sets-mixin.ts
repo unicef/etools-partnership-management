@@ -4,7 +4,7 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
