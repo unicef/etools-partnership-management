@@ -33,7 +33,7 @@ import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
 import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelper} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';

@@ -2,7 +2,7 @@ import {html, LitElement, property} from 'lit-element';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
 import '@polymer/iron-media-query/iron-media-query.js';
 import '../../data/partners-list-data.js';
@@ -29,7 +29,7 @@ import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles
 
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
-import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';

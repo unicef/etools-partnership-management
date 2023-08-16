@@ -1,5 +1,5 @@
 import {LitElement, html, customElement, property} from 'lit-element';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-data-table/etools-data-table';
