@@ -122,7 +122,7 @@ export const sharedStyles = html`
     datepicker-lite[readonly],
     etools-dropdown[readonly],
     etools-dropdown-multi[readonly],
-    etools-currency-amount-input[readonly],
+    etools-currency[readonly],
     .form-field-wrapper {
       --paper-input-container-underline: {
         display: none;

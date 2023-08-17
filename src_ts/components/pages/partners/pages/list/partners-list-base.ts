@@ -2,7 +2,7 @@ import {html, LitElement, property} from 'lit-element';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
 import '@polymer/iron-media-query/iron-media-query.js';
 import '../../data/partners-list-data.js';
@@ -16,20 +16,20 @@ import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
-import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';

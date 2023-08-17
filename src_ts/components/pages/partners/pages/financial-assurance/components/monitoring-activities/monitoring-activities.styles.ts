@@ -1,5 +1,5 @@
 import {html} from 'lit-element';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 // language=HTML
 export const monitoringActivitiesStyles = html`<style>
   ${dataTableStylesLit} :host {
