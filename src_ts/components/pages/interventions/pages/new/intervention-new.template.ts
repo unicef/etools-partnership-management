@@ -6,9 +6,9 @@ import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from 'lit-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
-import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 
 export function template(this: InterventionNew): TemplateResult {
@@ -203,19 +203,21 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   UNPP CFEI Number   -->
         <div class="col-4">
-          <paper-input
+          <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
-            .value="${this.newIntervention.cfei_number}"
-            error-message="${this.windowWidthIsSmall
-              ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-              : translate('CFEI_EXPECTED_FORMAT')}"
+            .value="${this.newIntervention.cfei_number ? this.newIntervention.cfei_number : ''}"
+            error-message="${
+              this.windowWidthIsSmall
+                ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
+                : translate('CFEI_EXPECTED_FORMAT')
+            }"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-          ></paper-input>
+          ></etool-input>
         </div>
       </div>
 
@@ -230,6 +232,7 @@ export function template(this: InterventionNew): TemplateResult {
             required
             .options="${this.documentTypes}"
             .selected="${this.newIntervention.document_type}"
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
               this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
             trigger-value-change-event
@@ -277,7 +280,7 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="col-12" ?hidden="${!this.newIntervention.contingency_pd}">
-        <paper-input
+        <etools-input
           label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
           placeholder="&#8212;"
           ?required="${this.newIntervention.contingency_pd}"
@@ -287,7 +290,7 @@ export function template(this: InterventionNew): TemplateResult {
           @focus="${this.resetError}"
           @click="${this.resetError}"
         >
-        </paper-input>
+        </etools-input>
       </div>
 
       <div class="row">
@@ -360,7 +363,7 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <paper-input
+          <etools-input
             id="title"
             label=${translate('NEW_INTERVENTION.DOC_TITLE')}
             char-counter
@@ -368,11 +371,11 @@ export function template(this: InterventionNew): TemplateResult {
             placeholder="&#8212;"
             required
             error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
-            .value="${this.newIntervention?.title}"
+            .value="${this.newIntervention?.title ? this.newIntervention?.title : ''}"
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          ></paper-input>
+          ></etools-input>
         </div>
       </div>
 

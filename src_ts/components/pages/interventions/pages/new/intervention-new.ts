@@ -10,7 +10,7 @@ import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
 import '../../../../common/components/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -20,6 +20,7 @@ import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {

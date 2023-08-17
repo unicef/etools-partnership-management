@@ -2,7 +2,7 @@
 import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-input/paper-input.js';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -10,8 +10,8 @@ import '@polymer/paper-input/paper-input-container.js';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
 
 import {
@@ -45,12 +45,12 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {translate, get as getTranslation} from 'lit-translate';
-import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
@@ -182,7 +182,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
           <div class="col col-3">
             <!-- Reference Number -->
-            <paper-input
+            <etools-input
               label="${translate('AGREEMENT_REFERENCE_NUMBER')}"
               .value="${this.agreement.agreement_number}"
               .title="${this.agreement.agreement_number}"
@@ -190,7 +190,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               placeholder="&#8212;"
               readonly
             >
-            </paper-input>
+            </etools-input>
           </div>
           ${this._typeMatches(this.agreement.agreement_type, 'PCA')
             ? html` <div class="col col-3">
@@ -418,7 +418,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
               .title="${this.getAckowledgedBy()}"
@@ -426,7 +426,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               placeholder="&#8212;"
               readonly
             >
-            </paper-input>
+            </etools-input>
           </div>
         </div>
         <div class="row-h flex-c">

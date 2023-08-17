@@ -1,7 +1,7 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-item/paper-item.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
@@ -102,12 +102,12 @@ export class GeneratePcaDialog extends LitElement {
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [
-    {value: 'english', label: getTranslation('ENGLISH')}
-    // comment then until everything it's translated
-    // {value: 'french', label: getTranslation('FRENCH')},
-    // {value: 'portuguese', label: getTranslation('PORTUGUESE')},
-    // {value: 'russian', label: getTranslation('RUSSIAN')},
-    // {value: 'spanish', label: getTranslation('SPANISH')},
+    {value: 'english', label: getTranslation('ENGLISH')},
+    {value: 'french', label: getTranslation('FRENCH')},
+    {value: 'portuguese', label: getTranslation('PORTUGUESE')},
+    {value: 'russian', label: getTranslation('RUSSIAN')},
+    {value: 'spanish', label: getTranslation('SPANISH')}
+    // {value: 'arabic', label: getTranslation('ARABIC')} // Not working as expected on backend
     // {value: 'ifrc_english', label: getTranslation('IFRC_ENGLISH')},
     // {value: 'ifrc_french', label: getTranslation('IFRC_FRENCH')}
   ];

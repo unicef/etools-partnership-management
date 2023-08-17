@@ -1,6 +1,6 @@
 import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
@@ -41,13 +41,13 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         @close="${this._onClose}"
       >
         <div id="content-box">
-          <paper-input
+          <etools-input
             required
             label="Feedback/Comments"
             placeholder="&#8212;"
             .value="${this.comment}"
             @value-changed="${({detail}: CustomEvent) => (this.comment = detail.value)}"
-          ></paper-input>
+          ></etools-input>
         </div>
       </etools-dialog>
     `;

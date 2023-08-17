@@ -1,9 +1,9 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import {LitElement, html, customElement, property} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -51,7 +51,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         @confirm-btn-clicked="${this.save}"
       >
         <div id="container">
-          <paper-input
+          <etools-input
             id="ecnNo"
             label="${translate('ECN_NUMBER')}"
             @value-changed="${({detail}: CustomEvent) => {
@@ -62,8 +62,8 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             auto-validate
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
-          ></paper-input>
-          <paper-input
+          ></etools-input>
+          <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('UNPP_CFEI_DSR_REF_NUM')}
@@ -72,7 +72,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
-          ></paper-input>
+          ></etools-input>
           <etools-dropdown
             id="partnerDropdw"
             label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}

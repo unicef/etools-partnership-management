@@ -1,7 +1,7 @@
 import {html, LitElement, property, customElement} from 'lit-element';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -93,7 +93,7 @@ export class AddDisaggregationDialog extends connect(store)(
       >
         <div class="layout-horizontal flex-c row-padding-v extra-padd">
           <div class="col col-4">
-            <paper-input
+            <etools-input
               id="disaggregateByEl"
               label="${translate('DISAGGREGATION')}"
               .value="${this.disaggregation.name}"
@@ -106,7 +106,7 @@ export class AddDisaggregationDialog extends connect(store)(
               error-message="${translate('PLEASE_ADD_DISAGGREGATION')}"
               placeholder="&#8212;"
             >
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-8">
             <div class="layout-vertical">
@@ -114,10 +114,10 @@ export class AddDisaggregationDialog extends connect(store)(
               <div class="layout-horizontal groups">
                 ${(this.data || []).map(
                   (item: any, index) => html`
-                    <paper-input
+                    <etools-input
                       class="newGroup"
                       no-label-float
-                      label="${translate('NEW_GROUP')}"
+                      placeholder="${translate('NEW_GROUP')}"
                       .value="${item.value}"
                       required
                       error-message="${translate('REQUIRED')}"
@@ -127,7 +127,7 @@ export class AddDisaggregationDialog extends connect(store)(
                         this.requestUpdate();
                       }}"
                     >
-                    </paper-input>
+                    </etools-input>
                     <paper-icon-button
                       class="action delete no-padding"
                       icon="cancel"
