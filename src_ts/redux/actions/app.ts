@@ -70,19 +70,19 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
       )}-${subRouteName}.js`
     );
   }
-  if (['progress'].includes(subRouteName)) {
-    if (routeName == 'reports') {
-      import(
-        `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
-          0,
-          routeName.length - 1
-        )}-${subRouteName}.js`
-      );
-    } else {
-      import(
-        `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
-      );
-    }
+
+  if (['implementation-status', 'monitoring-activities', 'results-reported'].includes(subRouteName)) {
+    import(
+      `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js`
+    );
+  }
+  if (routeName == 'reports') {
+    import(
+      `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+        0,
+        routeName.length - 1
+      )}-${subRouteName}.js`
+    );
   }
   if (
     ['metadata', 'strategy', 'workplan', 'review', 'timing', 'attachments', 'workplan-editor'].includes(subRouteName)
