@@ -17,7 +17,6 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
@@ -43,6 +42,8 @@ import './pages/list/partners-list';
 import './pages/list/governments-list';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 
 /**
  * @polymer
@@ -82,6 +83,12 @@ export class PartnersModule extends connect(store)(
         section {
           background-color: #eeeeee;
         }
+        sl-tab-group {
+          --indicator-color: var(--primary-color);
+        }
+        sl-tab-group::part(active-tab-indicator) {
+          bottom: 0;
+        }
       </style>
 
       <page-content-header .withTabsVisible="${this.tabsActive}">
@@ -115,12 +122,14 @@ export class PartnersModule extends connect(store)(
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs-lit
-              slot="tabs"
-              .tabs="${this.partnerTabs}"
-              .activeTab="${this.reduxRouteDetails?.subRouteName}"
-              @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs-lit>`
+          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
+              ${this.partnerTabs?.map(
+                (t) =>
+                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
+                    >${t.tabLabel}</sl-tab
+                  >`
+              )}
+            </sl-tab-group>`
           : ''}
       </page-content-header>
 
@@ -506,7 +515,7 @@ export class PartnersModule extends connect(store)(
 
   public _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (!this.partner || newTabName == this.activePage) {
       return;
     }

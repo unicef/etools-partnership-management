@@ -98,7 +98,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
 
       <etools-loading ?active="${this.loading}"></etools-loading>
 
-      <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
+      <!-- TODO: Check if this can be replaced using sl-tab-group element (future task) -->
 
       ${!this.loading
         ? html`<paper-tabs
