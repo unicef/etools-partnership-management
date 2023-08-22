@@ -305,7 +305,10 @@ export class InterventionsModule extends connect(store)(
       'review',
       'progress',
       'reports',
-      'info'
+      'info',
+      'implementation-status',
+      'monitoring-activities',
+      'results-reported'
     ].includes(activePage);
   }
 

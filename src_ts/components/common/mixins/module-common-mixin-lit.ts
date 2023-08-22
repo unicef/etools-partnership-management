@@ -92,7 +92,7 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
     }
 
     _showTabChangeLoadingMsg(e: CustomEvent | null, loadingSource: string, tabPrefix: string, tab?: string) {
-      const clickedTabName = tab ? tab : e!.detail.item.getAttribute('name');
+      const clickedTabName = tab ? tab : e!.detail.name;
       const selector = tabPrefix + clickedTabName;
       const tabEl = this.shadowRoot!.querySelector(selector);
 
