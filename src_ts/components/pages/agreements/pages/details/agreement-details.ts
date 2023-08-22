@@ -9,7 +9,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input-container.js';
 
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';

@@ -6,7 +6,7 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/av-icons.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
