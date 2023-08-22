@@ -19,7 +19,7 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {isEmptyObject, isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {RootState, store} from '../../../../../redux/store';
 
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '../../../../common/components/etools-form-element-wrapper';
