@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
