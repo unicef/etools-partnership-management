@@ -4,7 +4,7 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';

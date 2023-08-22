@@ -1,7 +1,7 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
