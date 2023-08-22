@@ -7,7 +7,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import '@polymer/paper-icon-button';
 import '@polymer/paper-button';
