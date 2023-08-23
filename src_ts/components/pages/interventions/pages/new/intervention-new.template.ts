@@ -138,20 +138,23 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-8">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
             .value="${this.selectedPartner?.vendor_number}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-4">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
             label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
             .value="${this.authorizedOfficers}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
       </div>
 

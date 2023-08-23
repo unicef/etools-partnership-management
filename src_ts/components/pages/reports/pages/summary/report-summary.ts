@@ -5,8 +5,6 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
-import '../../../../common/components/etools-form-element-wrapper';
-
 import './sent-bk-comments.js';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -20,6 +18,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
  * @polymer
@@ -80,26 +79,32 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
       <div class="content-section paper-material elevation remove-padding" elevation="1">
         <div class="row-h b-border">
           <div class="col col-5">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('SUBMITTED_BY')}"
               .value="${this.getDisplayValue(this.report.submitted_by)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-2">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('SUBMISSION_DATE')}"
               .value="${this._displayOrDefault(this.report.submission_date)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-3 report-status" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('REPORT_STATUS')}"
               class="w-auto"
               .value="${this.getReportStatus(this.report.status, this.report.reviewed_by_name)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
             <iron-icon
               icon="speaker-notes"
               @click="${this._seeSentBackComments}"
@@ -107,183 +112,207 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
             ></iron-icon>
           </div>
           <div class="col col-2" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('DATE_OF_STATUS')}"
               .value="${this._displayOrDefault(this.report.review_date)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
 
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.partner_contribution_to_date)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getFinancialContributionText(this.report)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.challenges_in_the_reporting_period)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('PROPOSED_WAY_FORWARD')}"
               .value="${this.getDisplayValue(this.report.proposed_way_forward)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
 
         ${this.isFinalReport(this.report)
           ? html`<div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('RELEASE_CASH_IN_TIME')}"
                     .value="${this.getYesNoValue(this.report.final_review?.release_cash_in_time_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.release_cash_in_time_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('RELEASE_SUPPLIES_IN_TIME')}"
                     .value="${this.getYesNoValue(this.report.final_review?.release_supplies_in_time_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.release_supplies_in_time_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('FEEDBACK_FACE_FORM_IN_TIME')}"
                     .value="${this.getYesNoValue(this.report.final_review?.feedback_face_form_in_time_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.feedback_face_form_in_time_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('RESPOND_REQUESTS_IN_TIME')}"
                     .value="${this.getYesNoValue(this.report.final_review?.respond_requests_in_time_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.respond_requests_in_time_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('IMPLEMENTED_AS_PLANNED')}"
                     .value="${this.getYesNoValue(this.report.final_review?.implemented_as_planned_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.implemented_as_planned_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('ACTION_TO_ADDRESS')}"
                     .value="${this.getYesNoValue(this.report.final_review?.action_to_address_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.action_to_address_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pb-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     label="${translate('OVERALL_SATISFACTION')}"
                     .value="${this.getRatingValue(this.report.final_review?.overall_satisfaction_choice)}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>
               <div class="row-h pt-0">
                 <div class="col col-12">
-                  <etools-form-element-wrapper2
-                    .alwaysFloatLabel="${false}"
-                    .noLabelFloat="${true}"
+                  <etools-input
+                    readonly
+                    placeholder="—"
                     .value="${this.report.final_review?.overall_satisfaction_comment}"
                   >
-                  </etools-form-element-wrapper2>
+                  </etools-input>
                 </div>
               </div>`
           : ''}

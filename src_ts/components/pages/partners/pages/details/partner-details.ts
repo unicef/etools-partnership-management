@@ -22,7 +22,6 @@ import {RootState, store} from '../../../../../redux/store';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
-import '../../../../common/components/etools-form-element-wrapper';
 
 import '../../../../common/components/etools-error-messages-box.js';
 import '../../../../common/components/icons-actions';
@@ -101,16 +100,23 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
       <etools-content-panel class="content-section" panel-title="${translate('PARTNER_DETAILS')}">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('FULL_NAME')}"
               title="${this.partner.name}"
               .value="${this.partner.name}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('SHORT_NAME')}" .value="${this.partner.short_name}">
-            </etools-form-element-wrapper2>
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('SHORT_NAME')}"
+              .value="${this.partner.short_name}"
+            >
+            </etools-input>
           </div>
           <div class="col col-4">
             <etools-input
@@ -127,15 +133,22 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('VENDOR_NUMBER')}" .value="${this.partner.vendor_number}">
-            </etools-form-element-wrapper2>
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('VENDOR_NUMBER')}"
+              .value="${this.partner.vendor_number}"
+            >
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('PARTNER_TYPE')}"
               .value="${this._computePartnerType(this.partner)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
             <etools-dropdown-multi
@@ -153,80 +166,95 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         </div>
 
         <div class="row-h flex-c">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label="${translate('ADDRESS')}"
             title="${this.partner.address}"
             .value="${this.partner.address}"
           >
             <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('PHONE_NUMBER')}" .value="${this.partner.phone_number}">
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('PHONE_NUMBER')}"
+              .value="${this.partner.phone_number}"
+            >
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('EMAIL_ADDRESS')}"
               title="${this.partner.email}"
               .value="${this.partner.email}"
             >
               <iron-icon icon="communication:email" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4"></div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- HACT Risk rating -->
-            <etools-form-element-wrapper2 label="${translate('HACT_RISK_RATING')}" no-placeholder>
+            <etools-input readonly placeholder="—" label="${translate('HACT_RISK_RATING')}" no-placeholder>
               <span class="${this.getRiskRatingClass(this.partner.rating)}">
                 ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
               </span>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('TYPE_OF_ASSESSMENT')}"
               .value="${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('DATE_OF_REPORT')}"
               .value="${this.getDateDisplayValue(this.partner.last_assessment_date)}"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- PSEA risk rating -->
-            <etools-form-element-wrapper2 label="${translate('SEA_RISK_RATING')}" no-placeholder>
+            <etools-input readonly placeholder="—" label="${translate('SEA_RISK_RATING')}" no-placeholder>
               <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
                 ${translateValue(
                   this.getRiskRatingValue(this.partner.sea_risk_rating_name),
                   'COMMON_DATA.SEARISKRATINGS'
                 )}
               </span>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
 
           <div class="col col-4">
             <!--Last PSEA Assess. Date-->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
               .value="${this.getDateDisplayValue(this.partner.psea_assessment_date)}"
             >
               <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
         </div>
       </etools-content-panel>
