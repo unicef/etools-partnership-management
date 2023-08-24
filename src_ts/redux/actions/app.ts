@@ -76,7 +76,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
       `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js`
     );
   }
-  if (routeName == 'reports') {
+  if (routeName == 'reports' && subRouteName != 'list') {
     import(
       `${window.location.origin}/pmp/src/components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,

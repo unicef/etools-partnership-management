@@ -58,6 +58,9 @@ export class AddDisaggregationDialog extends connect(store)(
         .newGroup {
           width: 85px;
           padding-inline-end: 6px;
+        }
+
+        .newGroup:not(:first-of-type) {
           padding-inline-start: 10px;
         }
 
