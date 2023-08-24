@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
-import '../../../../common/components/etools-form-element-wrapper';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
@@ -29,11 +29,13 @@ export class SentBkComments extends LitElement {
         size="md"
         hide-confirm-btn
       >
-        <etools-form-element-wrapper2
+        <etools-input
+          readonly
+          placeholder="—"
           .label="${this._getHeading(this.report.review_date, this.report.reviewed_by_name)}"
           .value="${this.report.sent_back_feedback}"
         >
-        </etools-form-element-wrapper2>
+        </etools-input>
       </etools-dialog>
     `;
   }

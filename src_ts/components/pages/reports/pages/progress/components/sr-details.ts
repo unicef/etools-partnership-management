@@ -2,9 +2,6 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-
-import '../../../../../common/components/etools-form-element-wrapper';
-
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
@@ -37,8 +34,8 @@ export class SrDetails extends LitElement {
 
       <div class="paper-material elevation" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper2 label="${translate('NARRATIVE')}" .value="${this.report?.narrative}">
-          </etools-form-element-wrapper2>
+          <etools-input readonly placeholder="—" label="${translate('NARRATIVE')}" .value="${this.report?.narrative}">
+          </etools-input>
         </div>
         <div class="row-padding">
           ${(this.reportAttachments || []).map(
