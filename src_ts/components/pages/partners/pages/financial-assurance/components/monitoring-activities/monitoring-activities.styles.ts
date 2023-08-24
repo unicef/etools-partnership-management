@@ -24,7 +24,7 @@ export const monitoringActivitiesStyles = html`<style>
   }
 
   paper-button.save {
-    @apply --layout-horizontal;
+    display: flex;
     padding: 0;
     margin: 15px;
     margin-inline: 0 24px;

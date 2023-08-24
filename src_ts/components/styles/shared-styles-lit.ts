@@ -50,8 +50,9 @@ export const sharedStyles = html`
     }
 
     .tab-link {
-      @apply --layout-horizontal;
-      @apply --layout-center-center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     paper-item {
@@ -96,8 +97,8 @@ export const sharedStyles = html`
     }
 
     .dropdown-with-clear-btn {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      display: flex;
+      align-items: center;
     }
 
     paper-input {

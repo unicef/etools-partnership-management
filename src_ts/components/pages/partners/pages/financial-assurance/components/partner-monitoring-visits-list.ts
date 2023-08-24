@@ -34,7 +34,8 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
     return html`
       <style>
         ${sharedStyles} ${dataTableStylesLit} :host {
-          @apply --layout-flex;
+          flex: 1;
+          flex-basis: 0.000000001px;
         }
 
         .monitoring-visits-container {

@@ -55,8 +55,8 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         }
 
         .tab-header {
-          @apply --layout-horizontal;
-          @apply --layout-justified;
+          display: flex;
+          justify-content: space-between;
           padding: 10px 24px;
           border-bottom: 1px solid var(--dark-divider-color);
           background-color: var(--light-theme-background-color);
