@@ -151,6 +151,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-input
             readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
             .value="${this.authorizedOfficers}"
           >
