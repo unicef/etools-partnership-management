@@ -16,43 +16,23 @@ export function template(this: InterventionNew): TemplateResult {
     ${sharedStyles}
     <style>
       paper-button {
-        --paper-button: {
           color: var(--light-primary-text-color, #fff);
           font-weight: bold;
-          padding: 5px 10px;
-        }
       }
-      :host > * {
-        --required-star-style: {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 99% 20%/8px;
+     
+      label[required] {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
           max-width: 100%;
           right: auto;
           padding-inline-end: 15px;
-        }
-      }
-      :host-context([dir='rtl']) > * {
-        --required-star-style: {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
-          width: auto !important;
-          max-width: 100%;
-          right: auto;
-          padding-inline-end: 15px;
-        }
       }
 
-      paper-input[required][label],
-      paper-input-container[required] {
-        --paper-input-container-label: {
-          @apply --required-star-style;
-          color: var(--secondary-text-color, #737373);
-        }
-        --paper-input-container-label-floating: {
-          @apply --required-star-style;
-          color: var(--secondary-text-color, #737373);
-        }
+      :host-context([dir='rtl'])  label[required] {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;       
       }
 
+     
       etools-dropdown-multi[required]::part(esmm-label),
       etools-dropdown[required]::part(esmm-label) {
         @apply --required-star-style;
@@ -78,6 +58,8 @@ export function template(this: InterventionNew): TemplateResult {
       }
       info-icon-tooltip {
         --iit-font-size: 16px;
+        --iit-icon-size: 18px;
+        --iit-margin: 0 0 4px 4px;
         --iit-max-width: auto;
       }
     </style>
@@ -162,9 +144,15 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-8">
+        <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
+        <info-icon-tooltip
+              position="top"
+              offset="48"
+              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+            ></info-icon-tooltip>
           <etools-dropdown-multi
-            id="partnerFocalPoints"
-            label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
+            id="partnerFocalPoints"            
+            no-label-float
             placeholder="&#8212;"
             .readonly="${!this.partnerStaffMembers.length}"
             .options="${langChanged(() => this.formattedPartnerStaffMembers)}"
@@ -177,12 +165,7 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <info-icon-tooltip
-              slot="label-suffix"
-              position="top"
-              offset="48"
-              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
-            ></info-icon-tooltip>
+           
           </etools-dropdown-multi>
         </div>
         <div class="col-4">
@@ -228,10 +211,17 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Type   -->
         <div class="col-4">
+        <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
+        <info-icon-tooltip
+              position="top"
+              offset="48"
+              .tooltipText="${this.getDocTypeTooltip()}"
+            ></info-icon-tooltip>
+          
           <etools-dropdown
-            id="documentType"
-            label=${translate('NEW_INTERVENTION.DOC_TYPE')}
+            id="documentType"            
             placeholder="&#8212;"
+            no-label-float
             ?readonly="${!this.documentTypes.length}"
             required
             .options="${this.documentTypes}"
@@ -243,13 +233,7 @@ export function template(this: InterventionNew): TemplateResult {
             hide-search
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          >
-            <info-icon-tooltip
-              slot="label-suffix"
-              position="top"
-              offset="48"
-              .tooltipText="${this.getDocTypeTooltip()}"
-            ></info-icon-tooltip>
+          >          
           </etools-dropdown>
         </div>
         <div class="col-8">
