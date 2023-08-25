@@ -73,7 +73,6 @@ export class PartnersListBase extends CommonMixin(
         }
 
         .vendor-nr {
-          @apply --text-btn-style;
           text-transform: none;
         }
 
@@ -180,7 +179,7 @@ export class PartnersListBase extends CommonMixin(
             <div slot="row-data">
               <span class="col-data flex-c" data-col-header-label="${translate('VENDOR_NO')}">
                 <a
-                  class="vendor-nr truncate"
+                  class="text-btn-style vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
                   title="${this.getDisplayValue(partner.vendor_number, ',', false)}"
                   @click="${this._triggerPartnerLoadingMsg}"
