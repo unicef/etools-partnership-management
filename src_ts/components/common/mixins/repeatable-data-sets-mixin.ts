@@ -3,26 +3,26 @@ import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {PolymerElement} from '@polymer/polymer';
 import {property} from 'lit/decorators.js';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
+import {LitElement} from 'lit';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function RepeatableDataSetsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class RepeatableDataSetsClass extends EndpointsMixin(baseClass) {
-    @property({type: Array, notify: true})
+    @property({type: Array})
     dataItems!: any[];
 
     @property({type: Object})
     dataSetModel!: GenericObject | null;
 
-    @property({type: Boolean, reflectToAttribute: true})
+    @property({type: Boolean, reflect: true, attribute: 'edit-mode'})
     editMode!: boolean;
 
     @property({type: String})
@@ -97,7 +97,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       this._makeSureDataItemsAreValid();
 
       const newObj = this._getItemModelObject(addNull);
-      this.push('dataItems', newObj);
+      this.dataItems.push(newObj);
     }
 
     public _openDeleteConfirmation(event: any) {
@@ -186,7 +186,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
       const index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
-        this.splice('dataItems', index, 1);
+        this.dataItems.splice(index, 1);
 
         // To mke sure all req. observers are triggered
         this.dataItems = copy(this.dataItems);
@@ -228,7 +228,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     public _makeSureDataItemsAreValid(dataItems?: any) {
       const items = dataItems ? dataItems : this.dataItems;
       if (!Array.isArray(items)) {
-        this.set('dataItems', []);
+        this.dataItems = [];
       }
     }
   }
