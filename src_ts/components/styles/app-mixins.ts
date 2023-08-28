@@ -1,5 +1,5 @@
 import '@polymer/polymer/lib/elements/custom-style.js';
-import {css, html} from 'lit';
+import {css} from 'lit';
 
 export const pageTitle = css`
   margin: 0;

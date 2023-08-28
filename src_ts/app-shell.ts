@@ -48,7 +48,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
-import LoadingMixin from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
+import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
