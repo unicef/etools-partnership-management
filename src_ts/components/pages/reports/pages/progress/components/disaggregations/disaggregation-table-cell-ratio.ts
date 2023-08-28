@@ -43,8 +43,6 @@ export class DisaggregationTableCellRatio extends UtilsMixin(LitElement) {
         }
 
         .computed-value {
-          @apply --app-grid-expandible-item;
-
           color: var(--secondary-text-color);
         }
       </style>
@@ -56,7 +54,7 @@ export class DisaggregationTableCellRatio extends UtilsMixin(LitElement) {
         <div class="item">
           <span>${this._formatNumber(this.data?.d, '-', 0, ',')}</span>
         </div>
-        <div class="computed-value">
+        <div class="computed-value app-grid-expandible-item">
           <span>${this._formatNumber(this.data?.v, '-', 0, ',')}</span>
           /
           <span>${this._formatNumber(this.data?.d, '-', 0, ',')}</span>

@@ -37,7 +37,6 @@ class NotFound extends LitElement {
         }
 
         h1 {
-          @apply --page-title;
           margin-bottom: 24px;
         }
 

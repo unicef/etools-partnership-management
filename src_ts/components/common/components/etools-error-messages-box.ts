@@ -27,7 +27,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
           display: flex;
           flex-direction: row;
           flex: 1;
-          @apply --etools-error-messages-box;
         }
 
         :host([hidden]) {

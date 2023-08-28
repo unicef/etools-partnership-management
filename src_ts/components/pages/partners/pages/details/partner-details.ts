@@ -203,11 +203,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- HACT Risk rating -->
-            <etools-input readonly placeholder="—" label="${translate('HACT_RISK_RATING')}" no-placeholder>
-              <span class="${this.getRiskRatingClass(this.partner.rating)}">
+            <div>
+              <label class="paper-label">${translate('HACT_RISK_RATING')} </label>
+              <div class="${this.getRiskRatingClass(this.partner.rating)} input-label" ?empty="${!this.partner.rating}">
                 ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
-              </span>
-            </etools-input>
+              </div>
+            </div>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
@@ -235,14 +236,18 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- PSEA risk rating -->
-            <etools-input readonly placeholder="—" label="${translate('SEA_RISK_RATING')}" no-placeholder>
-              <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
+            <div>
+              <label class="paper-label">${translate('SEA_RISK_RATING')} </label>
+              <div
+                class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)} input-label"
+                ?empty="${!this.partner.sea_risk_rating_name}"
+              >
                 ${translateValue(
                   this.getRiskRatingValue(this.partner.sea_risk_rating_name),
                   'COMMON_DATA.SEARISKRATINGS'
                 )}
-              </span>
-            </etools-input>
+              </div>
+            </div>
           </div>
 
           <div class="col col-4">
