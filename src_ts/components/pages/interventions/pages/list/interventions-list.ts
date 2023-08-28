@@ -63,7 +63,6 @@ export class InterventionsList extends connect(store)(
         }
 
         .pd-ref {
-          @apply --text-btn-style;
           text-transform: none;
         }
 
@@ -172,7 +171,7 @@ export class InterventionsList extends connect(store)(
             <div slot="row-data" class="p-relative">
               <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
                 <a
-                  class="pd-ref truncate"
+                  class="text-btn-style pd-ref truncate"
                   href="interventions/${intervention.id}/metadata"
                   title="${this.getDisplayValue(intervention.number)}"
                 >

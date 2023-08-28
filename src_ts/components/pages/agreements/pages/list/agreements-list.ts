@@ -71,7 +71,6 @@ export class AgreementsList extends connect(store)(
       ${listFilterStyles}
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} .ag-ref {
-          @apply --text-btn-style;
           text-transform: none;
         }
         .page-content {
@@ -174,7 +173,7 @@ export class AgreementsList extends connect(store)(
             <div slot="row-data">
               <span class="col-data col-2" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
                 <a
-                  class="ag-ref truncate"
+                  class="text-btn-style ag-ref truncate"
                   href="agreements/${agreement.id}/details"
                   title="${this.getDisplayValue(agreement.agreement_number, ',', false)}"
                   @click="${this._triggerAgreementLoadingMsg}"

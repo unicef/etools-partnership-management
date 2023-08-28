@@ -9,9 +9,6 @@ export const monitoringActivitiesStyles = html`<style>
       -webkit-appearance: none;
       margin: 0;
     }
-    --engagements-row: {
-      padding: 0 24px;
-    }
   }
 
   etools-content-panel::part(ecp-content) {
