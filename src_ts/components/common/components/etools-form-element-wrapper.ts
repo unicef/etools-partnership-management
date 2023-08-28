@@ -37,8 +37,7 @@ class EtoolsFormElementWrapper extends LitElement {
           text-align: right;
         }
 
-        .paper-input-input {
-          @apply --layout-horizontal;
+        .paper-input-input {          
           display: inline-block;
           word-wrap: break-word;
         }

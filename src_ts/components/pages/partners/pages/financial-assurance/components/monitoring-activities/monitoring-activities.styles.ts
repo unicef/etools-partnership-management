@@ -9,9 +9,6 @@ export const monitoringActivitiesStyles = html`<style>
       -webkit-appearance: none;
       margin: 0;
     }
-    --engagements-row: {
-      padding: 0 24px;
-    }
   }
 
   etools-content-panel::part(ecp-content) {
@@ -24,7 +21,7 @@ export const monitoringActivitiesStyles = html`<style>
   }
 
   paper-button.save {
-    @apply --layout-horizontal;
+    display: flex;
     padding: 0;
     margin: 15px;
     margin-inline: 0 24px;

@@ -26,14 +26,12 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
           width: 100%;
           text-align: right;
           box-sizing: border-box;
-          @apply --indicator-report-target-row;
         }
 
         .target-row span:last-child {
           display: inline-block;
           width: 70px;
           margin-inline-start: 8px;
-          @apply --indicator-report-row-value;
         }
 
         :host([bold]) .target-row {

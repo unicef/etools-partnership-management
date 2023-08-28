@@ -3,7 +3,7 @@ import {html} from 'lit';
 // language=HTML
 export const etoolsCpHeaderActionsBarStyles = html` <style>
   .cp-header-actions-bar {
-    @apply --layout-horizontal;
+    display: flex;
     align-items: center;
   }
 

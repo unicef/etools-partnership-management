@@ -70,9 +70,6 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             -webkit-appearance: none;
             margin: 0;
           }
-          --engagements-row: {
-            padding: 0 24px;
-          }
         }
 
         /* overview panel styles */
@@ -124,7 +121,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .engagements-header {
           background-color: var(--light-theme-background-color);
-          @apply --engagements-row;
+          padding: 0 24px;
         }
 
         .panel-table-row {

@@ -1,19 +1,21 @@
 import '@polymer/polymer/lib/elements/custom-style.js';
+import {css, html} from 'lit';
+
+export const pageTitle = css`
+  margin: 0;
+  font-weight: normal;
+  text-transform: capitalize;
+  font-size: 24px;
+  line-height: 1.3;
+  min-height: 31px;
+`;
 
 const documentContainer = document.createElement('template');
 // language=HTML
 documentContainer.innerHTML = `
   <custom-style>
     <style>
-      html {
-        --page-title: {
-          margin: 0;
-          font-weight: normal;
-          text-transform: capitalize;
-          font-size: 24px;
-          line-height: 1.3;
-          min-height: 31px;
-        };
+      html {      
 
         --nested-content-panel-title: {
           color: var(--primary-color);
@@ -46,15 +48,7 @@ documentContainer.innerHTML = `
           padding-inline-end: 5px;
           font-size: 14px;
           font-weight: bold;
-        };
-
-        --text-btn-style: {
-          color: var(--primary-color);
-          text-transform: uppercase;
-          font-weight: 500;
-          text-decoration: none;
-          outline: inherit;
-        };
+        };       
 
         --partner-status-wrapper: {
           display: flex;

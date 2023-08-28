@@ -23,9 +23,7 @@ export const pageContentHeaderSlottedStyles = html` <style>
   }
 
   .content-header-actions paper-menu-button {
-    --paper-menu-button: {
-      padding: 0;
-    }
+    padding: 0;
   }
 
   .content-header-actions paper-button:not(.primary-btn) {
