@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {appGridStyles} from './styles/app-grid-styles';
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';

@@ -1,4 +1,5 @@
-import {LitElement, property, customElement, PropertyValues} from 'lit-element';
+import {LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';

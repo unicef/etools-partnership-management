@@ -1,4 +1,5 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -304,7 +305,10 @@ export class InterventionsModule extends connect(store)(
       'review',
       'progress',
       'reports',
-      'info'
+      'info',
+      'implementation-status',
+      'monitoring-activities',
+      'results-reported'
     ].includes(activePage);
   }
 

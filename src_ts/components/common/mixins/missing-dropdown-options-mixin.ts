@@ -1,14 +1,14 @@
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {PolymerElement} from '@polymer/polymer';
 import {Constructor} from '@unicef-polymer/etools-types';
+import {LitElement} from 'lit';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function MissingDropdownOptionsMixin<T extends Constructor<LitElement>>(baseClass: T) {
   class MissingDropdownOptionsClass extends EndpointsMixin(baseClass) {
     public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
       setTimeout(() => {

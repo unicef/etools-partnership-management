@@ -1,7 +1,7 @@
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {get as getTranslation} from 'lit-translate';
-import {EtoolsFilterTypes} from '@unicef-polymer/etools-filters/src/etools-filters';
-import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {EtoolsFilterTypes} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
+import {FiltersHelper} from '@unicef-polymer/etools-unicef/src/etools-filters/filters-helper.class';
 
 export enum InterventionFilterKeys {
   search = 'search',

@@ -1,4 +1,5 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -9,7 +10,6 @@ import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 
 import './components/report-status';
 import './components/report-rating-dialog';
@@ -39,6 +39,8 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 
 declare const dayjs: any;
 
@@ -179,12 +181,14 @@ export class ReportsModule extends connect(store)(
         </div>
 
         ${this.tabsActive
-          ? html` <etools-tabs-lit
-              slot="tabs"
-              .tabs="${this.reportTabs}"
-              .activeTab="${this.reduxRouteDetails?.subRouteName}"
-              @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs-lit>`
+          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
+              ${this.reportTabs?.map(
+                (t) =>
+                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
+                    >${t.tabLabel}</sl-tab
+                  >`
+              )}
+            </sl-tab-group>`
           : ''}
       </page-content-header>
 

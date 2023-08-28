@@ -1,7 +1,8 @@
 import '@polymer/paper-input/paper-input-container.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {requiredFieldStarredStyles} from '../../styles/required-field-styles-lit';
 
 /**

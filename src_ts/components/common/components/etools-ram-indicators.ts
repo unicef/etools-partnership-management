@@ -1,6 +1,7 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-label/iron-label';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';

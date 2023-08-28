@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import './disaggregation-table-cell-number.js';
 import './disaggregation-table-cell-percentage.js';
 import './disaggregation-table-cell-ratio.js';

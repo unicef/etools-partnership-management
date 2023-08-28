@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit-element';
+import {html, LitElement} from 'lit';
 import {BASE_URL} from '../../../config/config';
 
 /**

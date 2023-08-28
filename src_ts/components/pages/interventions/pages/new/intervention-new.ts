@@ -1,5 +1,6 @@
 /* eslint no-invalid-this: 0 */
-import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
+import {LitElement, CSSResultArray, TemplateResult} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
@@ -8,7 +9,6 @@ import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
-import '../../../../common/components/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-date-time/datepicker-lite';

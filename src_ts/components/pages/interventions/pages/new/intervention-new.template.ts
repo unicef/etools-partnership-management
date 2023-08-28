@@ -1,6 +1,6 @@
 /* eslint no-invalid-this: 0 */
 import '@polymer/iron-media-query/iron-media-query';
-import {TemplateResult, html} from 'lit-element';
+import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
@@ -138,20 +138,24 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-8">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
             .value="${this.selectedPartner?.vendor_number}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-4">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
             .value="${this.authorizedOfficers}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
       </div>
 
