@@ -32,6 +32,7 @@ import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 /**
  * @polymer
@@ -74,18 +75,23 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+            <sl-button
+              class="export"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Agreements export"
+            >
+              <iron-icon icon="file-download" slot="prefix"></iron-icon>
+              ${translate('EXPORT')}
+            </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
-            <paper-button class="primary-btn with-prefix" @click="${this._goToNewAgreementPage}">
-              <iron-icon icon="add"></iron-icon>
+            <sl-button class="primary-btn" variant="primary" @click="${this._goToNewAgreementPage}">
+              <iron-icon icon="add" slot="prefix"></iron-icon>
               ${translate('ADD_NEW_AGREEMENT')}
-            </paper-button>
+            </sl-button>
           </div>
         </div>
       </page-content-header>

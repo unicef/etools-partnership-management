@@ -41,6 +41,9 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 
 declare const dayjs: any;
 
@@ -72,9 +75,7 @@ export class ReportsModule extends connect(store)(
         h1[main-title] sup {
           font-size: 14px;
         }
-        iron-icon {
-          color: var(--dark-secondary-text-color);
-        }
+
         .tooltip-trigger {
           position: relative;
         }
@@ -130,20 +131,20 @@ export class ReportsModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" ?hidden="${!this.listActive}">
-            <paper-menu-button id="export" close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="focus-as-link">
-                <iron-icon icon="file-download"></iron-icon>
+            <sl-dropdown>
+              <sl-button slot="trigger" variant="text" class="export" caret>
+                <iron-icon icon="file-download" slot="prefix"></iron-icon>
                 ${translate('EXPORT')}
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
-                  >${translate('EXPORT_INDICATORS_PDF')}</paper-item
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
+                  >${translate('EXPORT_INDICATORS_PDF')}</sl-menu-item
                 >
-                <paper-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
-                  >${translate('EXPORT_INDICATORS_XLS')}</paper-item
+                <sl-menu-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
+                  >${translate('EXPORT_INDICATORS_XLS')}</sl-menu-item
                 >
-              </paper-listbox>
-            </paper-menu-button>
+              </sl-menu>
+            </sl-dropdown>
           </div>
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">

@@ -2,6 +2,23 @@ import {html} from 'lit';
 
 // language=HTML
 export const buttonsStyles = html` <style>
+  sl-button {
+    --sl-button-font-size-medium: 16px;
+    --sl-input-height-medium: 34px;
+  }
+
+  sl-button.export {
+    margin-inline-end: 15px;
+  }
+  sl-button.export::part(base) {
+    --sl-color-primary-600: var(--dark-secondary-text-color);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  sl-button.export::part(label) {
+    padding-inline-start: 5px;
+    padding-inline-end: 5px;
+  }
   .buttons-section {
     border-top: 1px solid var(--dark-divider-color);
     padding: 24px;
@@ -20,10 +37,8 @@ export const buttonsStyles = html` <style>
   }
 
   .primary-btn {
-    background-color: var(--primary-color);
+    --sl-color-primary-600: var(--primary-color);
     color: var(--light-primary-text-color, #fff);
-    font-weight: bold;
-    padding: 5px 10px;
   }
 
   .danger-btn {
@@ -40,9 +55,6 @@ export const buttonsStyles = html` <style>
 
   .primary-btn.with-prefix {
     color: var(--light-primary-text-color, #fff);
-    font-weight: bold;
-    padding: 5px;
-    padding-inline: 16px 10px;
   }
   paper-button .btn-label {
     display: flex;
