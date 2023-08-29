@@ -1,9 +1,6 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
@@ -25,7 +22,6 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -90,9 +86,6 @@ export class ReportsModule extends connect(store)(
           font-weight: bold;
           color: var(--primary-color);
         }
-        paper-button:focus {
-          ${elevation2}
-        }
       </style>
 
       <page-content-header ?withTabsVisible="${this.tabsActive}">
@@ -154,30 +147,30 @@ export class ReportsModule extends connect(store)(
               tabindex="-1"
             ></report-status>
 
-            <paper-menu-button
-              close-on-activate
-              class="no-right-padd"
+            <sl-dropdown
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
               tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
-              <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</paper-item>
-                <paper-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+              <sl-button variant="primary" slot="trigger" class="primary-btn"
+                >${translate('ACCEPT_SEND_BACK')}</sl-button
+              >
+              <sl-menu>
+                <sl-menu-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
 
-            <paper-menu-button close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="dropdown-trigger">
+            <sl-dropdown>
+              <sl-button slot="trigger" variant="text" class="dropdown-trigger">
                 <iron-icon icon="more-vert"></iron-icon>
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
-                <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
-                <paper-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</paper-item>
-                <paper-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
           </div>
         </div>
 

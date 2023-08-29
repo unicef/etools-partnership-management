@@ -7,6 +7,10 @@ export const buttonsStyles = html` <style>
     --sl-input-height-medium: 34px;
   }
 
+  sl-button.no-pad {
+    --sl-spacing-medium: 0;
+  }
+
   sl-button.export {
     margin-inline-end: 15px;
   }
@@ -18,6 +22,12 @@ export const buttonsStyles = html` <style>
   sl-button.export::part(label) {
     padding-inline-start: 5px;
     padding-inline-end: 5px;
+  }
+  sl-button[variant='text'].primary-btn {
+    --sl-color-primary-600: var(--primary-color);
+  }
+  sl-button[variant='text'].primary-btn::part(label) {
+    text-transform: uppercase;
   }
   .buttons-section {
     border-top: 1px solid var(--dark-divider-color);

@@ -1,9 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-icon-button/paper-icon-button';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
@@ -35,7 +33,6 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
-import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
@@ -115,10 +112,7 @@ export class InterventionsModule extends connect(store)(
           text-transform: uppercase;
           border-radius: 3px;
         }
-        paper-button paper-menu-button {
-          padding: 8px 2px;
-          margin-inline-start: 10px;
-        }
+
         .other-options {
           padding: 10px 24px;
           color: var(--primary-text-color);
@@ -331,17 +325,9 @@ export class InterventionsModule extends connect(store)(
   }
 
   openEcnImportDialog() {
-    this.closeEcnDropdown();
     openDialog({
       dialog: 'ecn-import-dialog'
     });
-  }
-
-  closeEcnDropdown() {
-    const element: PaperMenuButton | null = this.shadowRoot!.querySelector('paper-menu-button#importEcn');
-    if (element) {
-      element.close();
-    }
   }
 
   connectedCallback() {

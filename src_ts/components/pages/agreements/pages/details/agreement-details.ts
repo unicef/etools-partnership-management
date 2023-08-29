@@ -4,7 +4,6 @@ import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
-import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input-container.js';
@@ -111,13 +110,16 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         #generateMyPca {
           cursor: pointer;
         }
+        #generateMyPca::part(label) {
+          font-size: 14px;
+        }
 
         paper-toggle-button {
           font-size: 16px;
         }
 
-        #cancelAoEdit {
-          color: var(--error-color);
+        sl-button#cancelAoEdit {
+          --sl-color-primary-600: var(--error-color);
         }
         .padd-right {
           padding-inline-end: 16px;
@@ -404,24 +406,26 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             this.agreement.permissions?.edit.authorized_officers
           )}"
         >
-          <paper-button
+          <sl-button
             id="editAo"
-            class="secondary-btn"
+            variant="text"
+            class="primary-btn no-pad"
             @click="${this._enableAoEdit}"
             ?hidden="${this.allowAoEditForSSFA}"
           >
             <iron-icon icon="create"></iron-icon>
             <span>${translate('AMEND_PARTNER_AUTHORIZED_OFFICERS')}</span>
-          </paper-button>
-          <paper-button
+          </sl-button>
+          <sl-button
             id="cancelAoEdit"
-            class="secondary-btn"
+            variant="text"
+            class="primary-btn no-pad"
             @click="${this._cancelAoEdit}"
             ?hidden="${!this.allowAoEditForSSFA}"
           >
             <iron-icon icon="cancel"></iron-icon>
             <span>${translate('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')}</span>
-          </paper-button>
+          </sl-button>
         </div>
 
         <div class="row-h flex-c">
@@ -460,14 +464,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             <!-- Generate PCA -->
             <div style="display:flex;flex-direction:column;">
               <label class="paper-label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
-              <paper-button
-                class="paper-input-input secondary-btn"
+              <sl-button
+                variant="text"
+                class="primary-btn no-pad"
                 id="generateMyPca"
                 @click="${this._openGeneratePCADialog}"
               >
                 <iron-icon icon="refresh"></iron-icon>
                 ${translate('GENERATE')}
-              </paper-button>
+              </sl-button>
             </div>
           </div>
           <div

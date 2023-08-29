@@ -3,7 +3,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@polymer/iron-icons/iron-icons';
-import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
