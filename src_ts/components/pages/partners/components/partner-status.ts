@@ -21,7 +21,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       <style>
         :host {
           width: 100%;
-       
+
           --etools-status-label-style: {
             font-weight: normal;
             width: 120px;

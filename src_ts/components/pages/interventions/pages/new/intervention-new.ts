@@ -241,8 +241,10 @@ export class InterventionNew extends connect(store)(LitElement) {
   private validate(): boolean {
     let valid = true;
     this.shadowRoot!.querySelectorAll('*[required]').forEach((element: any) => {
-      const fieldValid: boolean = element.validate();
-      valid = valid && fieldValid;
+      if (element.validate) {
+        const fieldValid: boolean = element.validate();
+        valid = valid && fieldValid;
+      }
     });
     const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
     if (unppEL) {
