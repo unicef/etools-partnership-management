@@ -12,7 +12,6 @@ import '../../common/components/etools-error-messages-box.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {store, RootState} from '../../../redux/store';
@@ -38,6 +37,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 // @ts-ignore
 setStore(store);
@@ -63,9 +63,12 @@ export class InterventionsModule extends connect(store)(
     )
   )
 ) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: flex;

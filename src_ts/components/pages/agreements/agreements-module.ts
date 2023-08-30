@@ -17,7 +17,6 @@ import '../../common/components/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
@@ -32,6 +31,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -52,10 +52,13 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
  */
 @customElement('agreements-module')
 export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;

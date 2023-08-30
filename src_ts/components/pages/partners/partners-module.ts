@@ -23,7 +23,6 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import './data/partner-item-data.js';
@@ -44,6 +43,7 @@ import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/r
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -71,11 +71,14 @@ export class PartnersModule extends connect(store)(
   )
   // eslint-enable new-cap
 ) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // main template
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
