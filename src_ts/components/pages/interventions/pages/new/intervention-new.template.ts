@@ -10,6 +10,7 @@ import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip'
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -449,9 +450,9 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <paper-button @click="${this.cancel}">${translate('GENERAL.CANCEL')}</paper-button>
-        <paper-button class="primary-btn" @click="${() => this.createIntervention()}"
-          >${translate('GENERAL.CREATE')}</paper-button
+        <sl-button variant="primary" class="default" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</sl-button>
+        <sl-button variant="primary" class="primary-btn" @click="${() => this.createIntervention()}"
+          >${translate('GENERAL.CREATE')}</sl-button
         >
       </div>
     </div>

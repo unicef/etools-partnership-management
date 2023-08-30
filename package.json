@@ -142,6 +142,7 @@
     "relative-deps": "^1.0.7"
   },
   "relativeDependencies": {
-    "@unicef-polymer/etools-unicef": "../../etools-polymer/etools-unicef"
+    "@unicef-polymer/etools-unicef": "../../etools-polymer/etools-unicef",
+    "@unicef-polymer/etools-modules-common": "../../etools-polymer/etools-modules-common"
   }
 }

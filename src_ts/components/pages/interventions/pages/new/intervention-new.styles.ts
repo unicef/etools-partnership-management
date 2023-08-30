@@ -39,20 +39,15 @@ export const NewInterventionStyles: CSSResult = css`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 20px;
   }
 
   paper-toggle-button {
     margin-top: 25px;
   }
 
-  paper-button {
-    background-color: var(--light-disabled-text-color);
-    padding: 8px 20px;
+  sl-button {
     margin-inline-start: 24px;
-  }
-
-  .primary-btn {
-    background-color: var(--default-primary-color);
   }
 `;
