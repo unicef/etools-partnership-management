@@ -3,7 +3,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
@@ -54,9 +53,7 @@ export class EtoolsActionButton extends LitElement {
         iron-icon[icon='info-outline'] {
           padding-inline-start: 5px;
         }
-        .split-btn {
-          --sl-spacing-medium: 0;
-        }
+
         sl-dropdown.splitBtn::part(trigger) {
           display: inline-flex;
           vertical-align: middle;
@@ -65,6 +62,10 @@ export class EtoolsActionButton extends LitElement {
         sl-button[slot='trigger'] {
           width: 40px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
+          --sl-spacing-medium: 0;
+        }
+        sl-button#primary::part(label) {
+          padding-inline-end: 0px;
         }
       </style>
 
@@ -76,7 +77,7 @@ export class EtoolsActionButton extends LitElement {
             </div>
             ${(this.secondaryActions || []).length
               ? html` <sl-dropdown id="splitBtn">
-                  <sl-button slot="trigger" variant="primary" class="primary-btn">
+                  <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
                     <sl-icon name="chevron-down"></sl-icon
                   ></sl-button>
                   <sl-menu>

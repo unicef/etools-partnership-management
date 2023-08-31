@@ -9,7 +9,6 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
-import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';

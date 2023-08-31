@@ -409,7 +409,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           <sl-button
             id="editAo"
             variant="text"
-            class="primary-btn no-pad"
+            class="primary-btn no-pad no-marg"
             @click="${this._enableAoEdit}"
             ?hidden="${this.allowAoEditForSSFA}"
           >
@@ -419,7 +419,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           <sl-button
             id="cancelAoEdit"
             variant="text"
-            class="primary-btn no-pad"
+            class="primary-btn no-pad no-marg"
             @click="${this._cancelAoEdit}"
             ?hidden="${!this.allowAoEditForSSFA}"
           >

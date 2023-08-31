@@ -23,6 +23,7 @@ import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types'
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 /**
  * @polymer
@@ -143,12 +144,13 @@ export class AddDisaggregationDialog extends connect(store)(
                     </paper-icon-button>
                   `
                 )}
-                <paper-button
-                  class="secondary-btn"
+                <sl-button
+                  variant="text"
+                  class="primary-btn no-pad"
                   @click="${this._addNewGroup}"
                   title="${translate('ADD_DISAGGREGATION_GROUP')}"
                   >+${translate('GENERAL.ADD')}
-                </paper-button>
+                </sl-button>
               </div>
             </div>
           </div>

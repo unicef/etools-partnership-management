@@ -138,6 +138,9 @@ export class InterventionsModule extends connect(store)(
           padding: 9px 10px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
+        sl-menu-item {
+          --sl-font-weight-normal: bold;
+        }
       </style>
 
       <div ?hidden="${this.showNewPMP(this.activePage)}">
