@@ -4,8 +4,8 @@ import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-l
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -14,10 +14,12 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
  */
 /* eslint-disable new-cap */
 class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // language=HTML
     return html`
-      ${buttonsStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -83,7 +85,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn" @tap="${this._resetErrors}"> Ok </paper-button>
+          <sl-button variant="primary" class="primary-btn error" @click="${this._resetErrors}"> Ok </sl-button>
         </div>
       </etools-content-panel>
     `;
