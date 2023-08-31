@@ -5,7 +5,7 @@ import CommonMixinLit from '../../../common/mixins/common-mixin-lit';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-warn-message';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';

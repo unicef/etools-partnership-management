@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';

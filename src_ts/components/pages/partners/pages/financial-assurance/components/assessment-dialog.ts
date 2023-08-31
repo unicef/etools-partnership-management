@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-checkbox/paper-checkbox';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';

@@ -13,7 +13,7 @@ import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-pa
 import '@unicef-polymer/etools-upload/etools-upload.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 
 import {
   DECREASE_UPLOADS_IN_PROGRESS,
