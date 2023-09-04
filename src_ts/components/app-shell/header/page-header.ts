@@ -293,7 +293,7 @@ class PageHeader extends connect(store)(
             id="refresh"
             icon="refresh"
             tracker="hard refresh"
-            @tap="${this._onRefreshClick}"
+            @click="${this._onRefreshClick}"
           >
           </paper-icon-button>
         </div>

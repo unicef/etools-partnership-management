@@ -135,6 +135,12 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
   @property({type: String})
   page!: string | null;
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('close', () => {
+      (this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened = false;
+    });
+  }
   open() {
     if (!(this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened) {
       (this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened = true;
