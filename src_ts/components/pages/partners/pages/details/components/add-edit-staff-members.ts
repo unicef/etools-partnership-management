@@ -1,15 +1,17 @@
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-input/paper-input';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
-import '@unicef-polymer/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StaffMember} from '../../../../../../models/partners.models';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
@@ -54,13 +56,12 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         size="md"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._savePartnerContact}"
       >
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-9">
-            <paper-input
+            <etools-input
               id="title"
               label="${translate('POSITION')}"
               .value="${this.item.title}"
@@ -72,7 +73,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               required
               auto-validate
               .errorMessage="${translate('POSITION_IS_REQUIRED')}"
-            ></paper-input>
+            ></etools-input>
           </div>
           <div class="col col-3 right-align">
             <paper-checkbox
@@ -86,7 +87,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="firstName"
               label="${translate('FIRST_NAME')}"
               .value="${this.item.first_name}"
@@ -99,10 +100,10 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               auto-validate
               .errorMessage="${translate('FIRST_NAME_IS_REQUIRED')}"
             >
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="lastName"
               label="${translate('LAST_NAME')}"
               .value="${this.item.last_name}"
@@ -115,12 +116,12 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               auto-validate
               .errorMessage="${translate('LAST_NAME_IS_REQUIRED')}"
             >
-            </paper-input>
+            </etools-input>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="email"
               label="${translate('EMAIL_ADDRESS')}"
               .value="${this.item.email}"
@@ -136,10 +137,10 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               .errorMessage="${translate('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')}"
             >
               <iron-icon slot="prefix" icon="communication:email"></iron-icon>
-            </paper-input>
+            </etools-input>
           </div>
           <div class="col col-6">
-            <paper-input
+            <etools-input
               id="phone"
               label="${translate('PHONE_NUMBER')}"
               .value="${this.item.phone}"
@@ -151,7 +152,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               }}"
             >
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            </paper-input>
+            </etools-input>
           </div>
         </div>
       </etools-dialog>

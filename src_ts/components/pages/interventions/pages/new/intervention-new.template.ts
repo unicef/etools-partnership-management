@@ -1,58 +1,34 @@
 /* eslint no-invalid-this: 0 */
 import '@polymer/iron-media-query/iron-media-query';
-import {TemplateResult, html} from 'lit-element';
+import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from 'lit-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
-import '@unicef-polymer/etools-info-tooltip/info-icon-tooltip';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
     ${sharedStyles}
-    <style>
-      paper-button {
-        --paper-button: {
-          color: var(--light-primary-text-color, #fff);
-          font-weight: bold;
-          padding: 5px 10px;
-        }
-      }
-      :host > * {
-        --required-star-style: {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 99% 20%/8px;
+    <style>    
+      label[required] {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
           max-width: 100%;
           right: auto;
           padding-inline-end: 15px;
-        }
-      }
-      :host-context([dir='rtl']) > * {
-        --required-star-style: {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
-          width: auto !important;
-          max-width: 100%;
-          right: auto;
-          padding-inline-end: 15px;
-        }
       }
 
-      paper-input[required][label],
-      paper-input-container[required] {
-        --paper-input-container-label: {
-          @apply --required-star-style;
-          color: var(--secondary-text-color, #737373);
-        }
-        --paper-input-container-label-floating: {
-          @apply --required-star-style;
-          color: var(--secondary-text-color, #737373);
-        }
+      :host-context([dir='rtl'])  label[required] {
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;       
       }
 
+     
       etools-dropdown-multi[required]::part(esmm-label),
       etools-dropdown[required]::part(esmm-label) {
         @apply --required-star-style;
@@ -78,6 +54,9 @@ export function template(this: InterventionNew): TemplateResult {
       }
       info-icon-tooltip {
         --iit-font-size: 16px;
+        --iit-icon-size: 18px;
+        --iit-margin: 0 0 4px 4px;
+        --iit-max-width: auto;
       }
     </style>
 
@@ -137,29 +116,39 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-8">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
             .value="${this.selectedPartner?.vendor_number}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-4">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
             .value="${this.authorizedOfficers}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
       </div>
 
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-8">
+        <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
+        <info-icon-tooltip
+              position="top"
+              offset="48"
+              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+            ></info-icon-tooltip>
           <etools-dropdown-multi
-            id="partnerFocalPoints"
-            label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
+            id="partnerFocalPoints"            
+            no-label-float
             placeholder="&#8212;"
             .readonly="${!this.partnerStaffMembers.length}"
             .options="${langChanged(() => this.formattedPartnerStaffMembers)}"
@@ -172,12 +161,7 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-            <info-icon-tooltip
-              slot="label-suffix"
-              position="top"
-              offset="48"
-              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
-            ></info-icon-tooltip>
+           
           </etools-dropdown-multi>
         </div>
         <div class="col-4">
@@ -202,46 +186,50 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   UNPP CFEI Number   -->
         <div class="col-4">
-          <paper-input
+          <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('UNPP_CFEI_DSR_REF_NUM')}
             placeholder="CEF/___/____/___"
-            .value="${this.newIntervention.cfei_number}"
-            error-message="${this.windowWidthIsSmall
-              ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-              : translate('CFEI_EXPECTED_FORMAT')}"
+            .value="${this.newIntervention.cfei_number ? this.newIntervention.cfei_number : ''}"
+            error-message="${
+              this.windowWidthIsSmall
+                ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
+                : translate('CFEI_EXPECTED_FORMAT')
+            }"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-          ></paper-input>
+          ></etool-input>
         </div>
       </div>
 
       <div class="row">
         <!--   Document Type   -->
         <div class="col-4">
+        <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
+        <info-icon-tooltip
+              position="top"
+              offset="48"
+              .tooltipText="${this.getDocTypeTooltip()}"
+            ></info-icon-tooltip>
+          
           <etools-dropdown
-            id="documentType"
-            label=${translate('NEW_INTERVENTION.DOC_TYPE')}
+            id="documentType"            
             placeholder="&#8212;"
+            no-label-float
             ?readonly="${!this.documentTypes.length}"
             required
             .options="${this.documentTypes}"
             .selected="${this.newIntervention.document_type}"
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
               this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
             trigger-value-change-event
             hide-search
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          >
-            <info-icon-tooltip
-              slot="label-suffix"
-              position="top"
-              offset="48"
-              .tooltipText="${this.getDocTypeTooltip()}"
-            ></info-icon-tooltip>
+          >          
           </etools-dropdown>
         </div>
         <div class="col-8">
@@ -276,7 +264,7 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="col-12" ?hidden="${!this.newIntervention.contingency_pd}">
-        <paper-input
+        <etools-input
           label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
           placeholder="&#8212;"
           ?required="${this.newIntervention.contingency_pd}"
@@ -286,7 +274,7 @@ export function template(this: InterventionNew): TemplateResult {
           @focus="${this.resetError}"
           @click="${this.resetError}"
         >
-        </paper-input>
+        </etools-input>
       </div>
 
       <div class="row">
@@ -359,7 +347,7 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Document Title   -->
         <div class="col-12">
-          <paper-input
+          <etools-input
             id="title"
             label=${translate('NEW_INTERVENTION.DOC_TITLE')}
             char-counter
@@ -367,11 +355,11 @@ export function template(this: InterventionNew): TemplateResult {
             placeholder="&#8212;"
             required
             error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
-            .value="${this.newIntervention?.title}"
+            .value="${this.newIntervention?.title ? this.newIntervention?.title : ''}"
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          ></paper-input>
+          ></etools-input>
         </div>
       </div>
 
@@ -457,9 +445,9 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <paper-button @click="${this.cancel}">${translate('GENERAL.CANCEL')}</paper-button>
-        <paper-button class="primary-btn" @click="${() => this.createIntervention()}"
-          >${translate('GENERAL.CREATE')}</paper-button
+        <sl-button variant="primary" class="default" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</sl-button>
+        <sl-button variant="primary" class="primary-btn" @click="${() => this.createIntervention()}"
+          >${translate('GENERAL.CREATE')}</sl-button
         >
       </div>
     </div>

@@ -6,7 +6,9 @@ import {setPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {customElement, LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 
 /**

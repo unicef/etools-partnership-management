@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 import {BASE_URL} from '../../config/config.js';
 
 // language=HTML
@@ -27,7 +27,7 @@ export const requiredFieldStarredStyles = html` <style>
   paper-input-container[required],
   datepicker-lite[required],
   etools-upload[required],
-  etools-currency-amount-input[required] {
+  etools-currency[required] {
     --paper-input-container-label: {
       @apply --required-star-style;
       color: var(--secondary-text-color, #737373);

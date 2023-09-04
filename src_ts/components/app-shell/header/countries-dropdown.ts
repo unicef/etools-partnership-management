@@ -1,13 +1,14 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {headerDropdownStyles} from './header-dropdown-styles';
@@ -59,6 +60,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
+        transparent
         id="countrySelector"
         class="w100"
         .selected="${this.currentCountry?.id}"
@@ -92,11 +94,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
 
   public connectedCallback() {
     super.connectedCallback();
-
-    setTimeout(() => {
-      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      (this.shadowRoot?.querySelector('#countrySelector') as EtoolsDropdownEl).fitInto = fitInto;
-    }, 0);
   }
 
   public stateChanged(state: RootState) {

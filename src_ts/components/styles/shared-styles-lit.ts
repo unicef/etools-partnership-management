@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 export const sharedStyles = html`
   <style>
@@ -50,8 +50,9 @@ export const sharedStyles = html`
     }
 
     .tab-link {
-      @apply --layout-horizontal;
-      @apply --layout-center-center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     paper-item {
@@ -96,8 +97,8 @@ export const sharedStyles = html`
     }
 
     .dropdown-with-clear-btn {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      display: flex;
+      align-items: center;
     }
 
     paper-input {
@@ -122,7 +123,7 @@ export const sharedStyles = html`
     datepicker-lite[readonly],
     etools-dropdown[readonly],
     etools-dropdown-multi[readonly],
-    etools-currency-amount-input[readonly],
+    etools-currency[readonly],
     .form-field-wrapper {
       --paper-input-container-underline: {
         display: none;

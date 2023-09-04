@@ -1,7 +1,8 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 const globalMessage = 'An error occurred. Please try again later.';

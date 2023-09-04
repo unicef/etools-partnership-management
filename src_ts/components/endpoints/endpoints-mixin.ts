@@ -6,18 +6,17 @@ import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
 import get from 'lodash-es/get';
-import {LitElement} from 'lit-element';
+import {LitElement} from 'lit';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function EndpointsMixin<T extends Constructor<PolymerElement | LitElement>>(baseClass: T) {
-  class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
+function EndpointsMixin<T extends Constructor<LitElement>>(baseClass: T) {
+  class EndpointsMixinClass extends (baseClass as Constructor<LitElement>) {
     @property({type: Object})
     prpCountries!: GenericObject[];
 

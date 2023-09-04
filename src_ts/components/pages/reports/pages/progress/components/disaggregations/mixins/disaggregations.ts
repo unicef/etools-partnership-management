@@ -1,4 +1,4 @@
-import {LitElement} from 'lit-element';
+import {LitElement} from 'lit';
 import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';

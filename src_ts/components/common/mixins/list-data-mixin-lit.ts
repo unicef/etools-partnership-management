@@ -3,7 +3,8 @@ import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/et
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {LitElement, property, PropertyValues} from 'lit-element';
+import {LitElement, PropertyValues} from 'lit';
+import {property} from 'lit/decorators.js';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints';

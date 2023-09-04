@@ -48,7 +48,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
-import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
+import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
@@ -82,16 +82,19 @@ import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
-import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property} from 'lit/decorators.js';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
@@ -120,6 +123,7 @@ const translationConfig = registerTranslateConfig({
 });
 
 setRootPath(BASE_URL);
+setBasePath(BASE_URL);
 
 /**
  * @customElement
@@ -311,7 +315,7 @@ class AppShell extends connect(store)(
   currentLanguageIsSet!: boolean;
 
   @property({type: Object})
-  reduxRouteDetails?: RouteDetails;
+  reduxRouteDetails?: EtoolsRouteDetails;
 
   @property({type: Boolean})
   private translationFilesAreLoaded = false;

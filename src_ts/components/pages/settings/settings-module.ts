@@ -1,4 +1,5 @@
-import {LitElement, html, customElement} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {customElement} from 'lit/decorators.js';
 import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 

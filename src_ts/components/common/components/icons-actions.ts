@@ -1,18 +1,18 @@
-import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {LitElement, html} from 'lit';
 
 /**
  * @polymer
  * @customElement
  */
-class IconsActions extends PolymerElement {
-  static get template() {
+class IconsActions extends LitElement {
+  render() {
     return html`
       <style>
         [hidden] {

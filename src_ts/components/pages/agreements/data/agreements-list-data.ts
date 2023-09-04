@@ -1,4 +1,5 @@
-import {customElement, LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
 import {store} from '../../../../redux/store';
 

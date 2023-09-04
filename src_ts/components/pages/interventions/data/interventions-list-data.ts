@@ -3,7 +3,8 @@ import Dexie from 'dexie';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
-import {customElement, LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 
 /**

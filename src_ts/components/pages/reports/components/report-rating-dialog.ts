@@ -1,7 +1,8 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 declare const dayjs: any;
@@ -40,7 +41,6 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRatingDialog"
         size="md"
         keep-dialog-open
-        opened
         spinner-text="Sending rating..."
         ?disable-confirm-btn="${!this.selectedOverallStatus.length}"
         ok-btn-text="${this.okBtnText}"

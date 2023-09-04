@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const appGridStyles = html` <style>
@@ -12,7 +12,7 @@ export const appGridStyles = html` <style>
          * - columns: var(--app-grid-columns)
          * - itemColumn: var(--app-grid-expandible-item-columns)
          */
-    --app-grid-expandible-item: {
+    .app-grid-expandible-item {
       -webkit-flex-basis: calc(
         (100% - 0.1px) / var(--app-grid-columns, 1) * var(--app-grid-expandible-item-columns, 1) -
           var(--app-grid-gutter, 0px)

@@ -3,9 +3,8 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
-import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/dist/etools-app-selector';
 import '../header/countries-dropdown';
 import '../header/organizations-dropdown';
@@ -13,11 +12,11 @@ import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import {translate, use} from 'lit-translate';
 import {setActiveLanguage} from '../../../redux/actions/active-language.js';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
-import {html, LitElement, query} from 'lit-element';
+import {html, LitElement} from 'lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax';
 import pmpEdpoints from '../../endpoints/endpoints';
@@ -256,6 +255,7 @@ class PageHeader extends connect(store)(
         <div class="header__item header__right-group">
           <div class="dropdowns">
             <etools-dropdown
+              transparent
               id="languageSelector"
               .selected="${this.selectedLanguage}"
               .options="${appLanguages}"
@@ -346,16 +346,9 @@ class PageHeader extends connect(store)(
   @property({type: String})
   selectedLanguage = '';
 
-  @query('#languageSelector') private languageDropdown!: EtoolsDropdownEl;
-
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
-
-    setTimeout(() => {
-      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      this.languageDropdown.fitInto = fitInto;
-    }, 0);
   }
 
   public stateChanged(state: RootState) {

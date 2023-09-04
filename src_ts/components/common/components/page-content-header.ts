@@ -1,4 +1,5 @@
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 
 /**
  * @polymer
@@ -47,7 +48,12 @@ class PageContentHeader extends LitElement {
 
         .title-row h1 {
           flex: 1;
-          @apply --page-title;
+          margin: 0;
+          font-weight: normal;
+          text-transform: capitalize;
+          font-size: 24px;
+          line-height: 1.3;
+          min-height: 31px;
         }
 
         .tabs {

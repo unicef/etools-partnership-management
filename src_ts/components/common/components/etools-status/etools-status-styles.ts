@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 export const etoolsStatusStyles = html`
@@ -41,7 +41,8 @@ export const etoolsStatusStyles = html`
       display: flex;
       flex-direction: row;
       min-height: 24px;
-      @apply --etools-status-container;
+      height: auto;
+      min-height: 40px;
     }
 
     .status-icon,
@@ -137,7 +138,6 @@ export const etoolsStatusStyles = html`
     .custom .status {
       font-weight: bold;
       color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
-      @apply --etools-status-label-style;
     }
 
     .completed .icon-wrapper span {

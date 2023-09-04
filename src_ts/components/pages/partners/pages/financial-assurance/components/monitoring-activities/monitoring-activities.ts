@@ -1,14 +1,15 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-content-panel';
-import '@unicef-polymer/etools-loading';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import '@polymer/paper-icon-button';
-import '@polymer/paper-button';
 import '@polymer/iron-icons/editor-icons';
 import {getUniqueId} from '@unicef-polymer/etools-utils/dist/general.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -20,6 +21,8 @@ import {AnyObject} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../../endpoints/endpoints';
 import {translate} from 'lit-translate';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -39,7 +42,7 @@ enum DragAndDropClasses {
 @customElement('monitoring-activities')
 export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [gridLayoutStylesLit, buttonsStyles];
   }
   render() {
     return html`
@@ -109,8 +112,12 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
-          <paper-button @click="${this.cancelEdit}">${translate('GENERAL.CANCEL')}</paper-button>
-          <paper-button raised class="save" @click="${this.saveGroups}">${translate('GENERAL.SAVE')}</paper-button>
+          <sl-button variant="primary" class="default" @click="${this.cancelEdit}"
+            >${translate('GENERAL.CANCEL')}</sl-button
+          >
+          <sl-button variant="primary" class="primary-btn" raised @click="${this.saveGroups}"
+            >${translate('GENERAL.SAVE')}</sl-button
+          >
         </div>
       </etools-content-panel>
     `;

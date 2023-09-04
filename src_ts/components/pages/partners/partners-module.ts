@@ -1,7 +1,8 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, property, PropertyValues, customElement} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import '@polymer/iron-icons/iron-icons';
-import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -15,7 +16,6 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
@@ -23,7 +23,6 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import './data/partner-item-data.js';
@@ -41,6 +40,10 @@ import './pages/list/partners-list';
 import './pages/list/governments-list';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -68,17 +71,26 @@ export class PartnersModule extends connect(store)(
   )
   // eslint-enable new-cap
 ) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // main template
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
         }
         section {
           background-color: #eeeeee;
+        }
+        sl-tab-group {
+          --indicator-color: var(--primary-color);
+        }
+        sl-tab-group::part(active-tab-indicator) {
+          bottom: 0;
         }
       </style>
 
@@ -93,32 +105,40 @@ export class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" .href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Export Partners">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+            <sl-button
+              class="export"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Export Partners"
+            >
+              <iron-icon icon="file-download"></iron-icon>
+              ${translate('EXPORT')}
+            </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <paper-button
-              class="primary-btn with-prefix"
+            <sl-button
+              variant="primary"
+              class="primary-btn"
               tracker="Import Sync Partner"
               @click="${this._openNewPartnerDialog}"
             >
               <iron-icon icon="add"></iron-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
-            </paper-button>
+            </sl-button>
           </div>
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs-lit
-              slot="tabs"
-              .tabs="${this.partnerTabs}"
-              .activeTab="${this.reduxRouteDetails?.subRouteName}"
-              @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs-lit>`
+          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
+              ${this.partnerTabs?.map(
+                (t) =>
+                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
+                    >${t.tabLabel}</sl-tab
+                  >`
+              )}
+            </sl-tab-group>`
           : ''}
       </page-content-header>
 
@@ -504,7 +524,7 @@ export class PartnersModule extends connect(store)(
 
   public _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (!this.partner || newTabName == this.activePage) {
       return;
     }

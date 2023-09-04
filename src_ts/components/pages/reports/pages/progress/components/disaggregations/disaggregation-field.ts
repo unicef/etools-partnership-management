@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-input/paper-input.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {toNumericValues} from './mixins/disaggregation-field';
@@ -31,7 +32,7 @@ export class DisaggregationField extends LitElement {
         }
       </style>
 
-      <paper-input
+      <etools-input
         id="field"
         .value="${this.value}"
         type="number"
@@ -43,7 +44,7 @@ export class DisaggregationField extends LitElement {
         required
         auto-validate
       >
-      </paper-input>
+      </etools-input>
     `;
   }
 

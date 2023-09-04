@@ -1,5 +1,5 @@
-import {html} from 'lit-element';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {html} from 'lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 // language=HTML
 export const monitoringActivitiesStyles = html`<style>
   ${dataTableStylesLit} :host {
@@ -9,9 +9,6 @@ export const monitoringActivitiesStyles = html`<style>
       -webkit-appearance: none;
       margin: 0;
     }
-    --engagements-row: {
-      padding: 0 24px;
-    }
   }
 
   etools-content-panel::part(ecp-content) {
@@ -19,19 +16,6 @@ export const monitoringActivitiesStyles = html`<style>
     overflow: hidden;
   }
 
-  paper-button {
-    margin: 15px 24px;
-  }
-
-  paper-button.save {
-    @apply --layout-horizontal;
-    padding: 0;
-    margin: 15px;
-    margin-inline: 0 24px;
-    height: 36px;
-    background-color: var(--etools-action-button-main-color, #0099ff);
-    color: var(--etools-action-button-text-color, #fff);
-  }
   etools-data-table-column {
     font-weight: 500;
   }
@@ -149,6 +133,8 @@ export const monitoringActivitiesStyles = html`<style>
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-inline-end: 15px;
+    margin-bottom: 15px;
   }
   .cell:not(:last-of-type) {
     padding-inline-end: 16px;

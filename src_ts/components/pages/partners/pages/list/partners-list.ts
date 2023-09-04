@@ -1,4 +1,4 @@
-import {customElement} from 'lit-element';
+import {customElement} from 'lit/decorators.js';
 import {store, RootState} from '../../../../../redux/store';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';

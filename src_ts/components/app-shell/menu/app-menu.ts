@@ -13,7 +13,8 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {BASE_URL} from '../../../config/config';
 import {translate} from 'lit-translate';
 

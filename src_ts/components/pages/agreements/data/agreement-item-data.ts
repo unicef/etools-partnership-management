@@ -1,5 +1,6 @@
 import {store} from '../../../../redux/store';
-import {LitElement, property, customElement} from 'lit-element';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';

@@ -1,9 +1,10 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
-import '@unicef-polymer/etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import '@polymer/iron-media-query/iron-media-query.js';
-import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../components/report-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -12,7 +13,7 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
@@ -69,7 +70,11 @@ class ReportsList extends connect(store)(
 
         .pd-ref,
         .view-report {
-          @apply --text-btn-style;
+          color: var(--primary-color);
+          font-weight: 500;
+          text-decoration: none;
+          outline: inherit;
+          text-transform: uppercase;
         }
 
         .pd-ref {

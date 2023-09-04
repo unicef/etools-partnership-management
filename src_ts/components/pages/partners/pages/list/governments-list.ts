@@ -1,5 +1,5 @@
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {customElement} from 'lit-element';
+import {customElement} from 'lit/decorators.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
 import {getGovernmentFilters, GovernmentFiltersHelper} from './governments-filters';

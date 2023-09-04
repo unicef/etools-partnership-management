@@ -3,7 +3,7 @@ import {html} from '@polymer/polymer';
 // language=HTML
 export const etoolsCpHeaderActionsBarStyles = html` <style>
   .cp-header-actions-bar {
-    @apply --layout-horizontal;
+    display: flex;
   }
 
   .cp-header-actions-bar paper-icon-button[disabled] {

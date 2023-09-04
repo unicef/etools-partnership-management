@@ -1,14 +1,16 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -68,9 +70,6 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             -webkit-appearance: none;
             margin: 0;
           }
-          --engagements-row: {
-            padding: 0 24px;
-          }
         }
 
         /* overview panel styles */
@@ -122,7 +121,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .engagements-header {
           background-color: var(--light-theme-background-color);
-          @apply --engagements-row;
+          padding: 0 24px;
         }
 
         .panel-table-row {

@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import '../disaggregation-table-row';
 import {GenericObject} from '@unicef-polymer/etools-types';

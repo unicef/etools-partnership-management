@@ -1,5 +1,5 @@
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
-import {html} from 'lit-element';
+import {html} from 'lit';
 /* eslint-disable max-len */
 
 export const pmpMainIcons = html`

@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const headerDropdownStyles = html`
@@ -17,6 +17,10 @@ export const headerDropdownStyles = html`
 
     :host([dir='rtl']) etools-dropdown {
       --paper-input-container-shared-input-style_-_max-width: 75px;
+    }
+
+    etools-dropdown::part(display-input) {
+      text-align: end;
     }
 
     etools-dropdown {

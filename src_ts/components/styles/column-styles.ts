@@ -1,4 +1,4 @@
-import {css, CSSResult} from 'lit-element';
+import {css, CSSResult} from 'lit';
 // language=css
 export const ColumnStyles: CSSResult = css`
   .col-1 {

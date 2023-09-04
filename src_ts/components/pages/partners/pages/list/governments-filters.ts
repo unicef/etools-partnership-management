@@ -1,5 +1,5 @@
 import {PartnerFilterKeys, getPartnerFilters, selectedValueTypeByFilterKey} from './partners-filters';
-import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {FiltersHelper} from '@unicef-polymer/etools-unicef/src/etools-filters/filters-helper.class';
 
 export const GovernmentFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
 

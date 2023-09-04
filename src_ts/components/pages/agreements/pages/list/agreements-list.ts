@@ -1,19 +1,19 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../../../redux/store';
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-input/paper-input';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
-import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -26,11 +26,11 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
-import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../data/agreements-list-data.js';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -70,7 +70,6 @@ export class AgreementsList extends connect(store)(
       ${listFilterStyles}
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} .ag-ref {
-          @apply --text-btn-style;
           text-transform: none;
         }
         .page-content {
@@ -173,7 +172,7 @@ export class AgreementsList extends connect(store)(
             <div slot="row-data">
               <span class="col-data col-2" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
                 <a
-                  class="ag-ref truncate"
+                  class="text-btn-style ag-ref truncate"
                   href="agreements/${agreement.id}/details"
                   title="${this.getDisplayValue(agreement.agreement_number, ',', false)}"
                   @click="${this._triggerAgreementLoadingMsg}"

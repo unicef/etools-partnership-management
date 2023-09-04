@@ -1,5 +1,6 @@
 /* eslint no-invalid-this: 0 */
-import {LitElement, customElement, property, CSSResultArray, TemplateResult} from 'lit-element';
+import {LitElement, CSSResultArray, TemplateResult} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
@@ -8,10 +9,9 @@ import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
-import '../../../../common/components/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
@@ -20,6 +20,8 @@ import orderBy from 'lodash-es/orderBy';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -240,8 +242,10 @@ export class InterventionNew extends connect(store)(LitElement) {
   private validate(): boolean {
     let valid = true;
     this.shadowRoot!.querySelectorAll('*[required]').forEach((element: any) => {
-      const fieldValid: boolean = element.validate();
-      valid = valid && fieldValid;
+      if (element.validate) {
+        const fieldValid: boolean = element.validate();
+        valid = valid && fieldValid;
+      }
     });
     const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
     if (unppEL) {
@@ -251,7 +255,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [ColumnStyles, NewInterventionStyles];
+    return [ColumnStyles, NewInterventionStyles, buttonsStyles];
   }
 
   cancel() {
