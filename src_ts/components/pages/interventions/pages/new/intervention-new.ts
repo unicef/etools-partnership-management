@@ -11,7 +11,7 @@ import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
@@ -241,8 +241,10 @@ export class InterventionNew extends connect(store)(LitElement) {
   private validate(): boolean {
     let valid = true;
     this.shadowRoot!.querySelectorAll('*[required]').forEach((element: any) => {
-      const fieldValid: boolean = element.validate();
-      valid = valid && fieldValid;
+      if (element.validate) {
+        const fieldValid: boolean = element.validate();
+        valid = valid && fieldValid;
+      }
     });
     const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
     if (unppEL) {

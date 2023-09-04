@@ -2,7 +2,7 @@ import {ListFilterOption, ListOrSelectedFilterOption} from '../../../typings/fil
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
-import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
+import DatePickerLite from '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
