@@ -66,18 +66,6 @@ export const buttonsStyles = html` <style>
   .primary-btn.with-prefix {
     color: var(--light-primary-text-color, #fff);
   }
-  paper-button .btn-label {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    justify-content: center;
-  }
-
-  paper-button.w100 {
-    width: 100%;
-    margin-inline-end: 0;
-    margin-inline-start: 0;
-  }
 
   .secondary-btn-wrapper {
     width: 100%;
@@ -92,28 +80,8 @@ export const buttonsStyles = html` <style>
     }
   }
 
-  .secondary-btn {
-    --paper-button: {
-      width: auto;
-      margin: 0;
-      color: var(--primary-color);
-      padding: 0;
-      padding-inline-end: 5px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-  }
-
   .secondary-btn iron-icon {
     margin-inline-end: 5px;
-  }
-
-  .white-btn {
-    background-color: white;
-    --paper-button: {
-      color: var(--primary-color);
-    }
-    font-weight: bold;
   }
 
   /* responsive css rules */

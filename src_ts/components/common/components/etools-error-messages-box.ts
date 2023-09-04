@@ -3,7 +3,6 @@ import {property} from 'lit/decorators.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-button/paper-button.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
@@ -63,10 +62,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
           display: flex;
           flex-direction: row;
           justify-content: flex-end;
-        }
-
-        paper-button {
-          margin: 0;
         }
 
         .cancel-li-display {

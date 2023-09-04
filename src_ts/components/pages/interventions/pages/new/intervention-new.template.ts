@@ -15,12 +15,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 export function template(this: InterventionNew): TemplateResult {
   return html`
     ${sharedStyles}
-    <style>
-      paper-button {
-          color: var(--light-primary-text-color, #fff);
-          font-weight: bold;
-      }
-     
+    <style>    
       label[required] {
           background: url(${BASE_URL + '/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
