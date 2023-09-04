@@ -207,7 +207,7 @@ class ReportsList extends connect(store)(
                       ? html` <span class="col-data col-2" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                           <a
                             class="pd-ref truncate"
-                            href="interventions/${report.programme_document?.external_id}/progress/reports"
+                            href="interventions/${report.programme_document?.external_id}/reports"
                             title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
                           >
                             ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
