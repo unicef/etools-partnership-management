@@ -3,7 +3,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@polymer/iron-icons/iron-icons';
-import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -24,7 +23,6 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import './data/partner-item-data.js';
@@ -44,6 +42,8 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -71,11 +71,14 @@ export class PartnersModule extends connect(store)(
   )
   // eslint-enable new-cap
 ) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // main template
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
@@ -102,22 +105,28 @@ export class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" .href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Export Partners">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+            <sl-button
+              class="export"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Export Partners"
+            >
+              <iron-icon icon="file-download"></iron-icon>
+              ${translate('EXPORT')}
+            </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <paper-button
-              class="primary-btn with-prefix"
+            <sl-button
+              variant="primary"
+              class="primary-btn"
               tracker="Import Sync Partner"
               @click="${this._openNewPartnerDialog}"
             >
               <iron-icon icon="add"></iron-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
-            </paper-button>
+            </sl-button>
           </div>
         </div>
 

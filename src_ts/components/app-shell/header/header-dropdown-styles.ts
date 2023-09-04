@@ -20,7 +20,7 @@ export const headerDropdownStyles = html`
     }
 
     etools-dropdown::part(display-input) {
-      text-align: right;
+      text-align: end;
     }
 
     etools-dropdown {

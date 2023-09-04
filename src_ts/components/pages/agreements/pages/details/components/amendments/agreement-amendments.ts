@@ -2,7 +2,6 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-button/paper-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -74,10 +73,10 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           margin: 0;
           margin-inline-start: 24px;
           padding: 0;
+          --sl-input-height-medium: 24px;
         }
-
-        #download-template-a {
-          display: inherit;
+        #download-template-btn::part(label) {
+          font-size: 14px;
         }
 
         /* amendment template download section styles end */
@@ -109,12 +108,17 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
           </div>
           <!-- Download template btn -->
-          <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
-            <paper-button id="download-template-btn" class="secondary-btn">
-              <iron-icon icon="file-download"></iron-icon>
-              ${translate('DOWNLOAD_TEMPLATE')}
-            </paper-button>
-          </a>
+          <sl-button
+            id="download-template-btn"
+            variant="text"
+            target="_blank"
+            href="/static/agreements/amendment_template.docx"
+            download
+            class="primary-btn"
+          >
+            <iron-icon icon="file-download"></iron-icon>
+            ${translate('DOWNLOAD_TEMPLATE')}
+          </sl-button>
         </div>
 
         <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">

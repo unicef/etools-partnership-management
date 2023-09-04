@@ -1,9 +1,6 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
@@ -25,7 +22,6 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -41,6 +37,9 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 
 declare const dayjs: any;
 
@@ -72,9 +71,7 @@ export class ReportsModule extends connect(store)(
         h1[main-title] sup {
           font-size: 14px;
         }
-        iron-icon {
-          color: var(--dark-secondary-text-color);
-        }
+
         .tooltip-trigger {
           position: relative;
         }
@@ -88,9 +85,6 @@ export class ReportsModule extends connect(store)(
           font-size: 12px;
           font-weight: bold;
           color: var(--primary-color);
-        }
-        paper-button:focus {
-          ${elevation2}
         }
       </style>
 
@@ -130,20 +124,20 @@ export class ReportsModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" ?hidden="${!this.listActive}">
-            <paper-menu-button id="export" close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="focus-as-link">
-                <iron-icon icon="file-download"></iron-icon>
+            <sl-dropdown>
+              <sl-button slot="trigger" variant="text" class="export" caret>
+                <iron-icon icon="file-download" slot="prefix"></iron-icon>
                 ${translate('EXPORT')}
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
-                  >${translate('EXPORT_INDICATORS_PDF')}</paper-item
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
+                  >${translate('EXPORT_INDICATORS_PDF')}</sl-menu-item
                 >
-                <paper-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
-                  >${translate('EXPORT_INDICATORS_XLS')}</paper-item
+                <sl-menu-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
+                  >${translate('EXPORT_INDICATORS_XLS')}</sl-menu-item
                 >
-              </paper-listbox>
-            </paper-menu-button>
+              </sl-menu>
+            </sl-dropdown>
           </div>
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
@@ -153,30 +147,30 @@ export class ReportsModule extends connect(store)(
               tabindex="-1"
             ></report-status>
 
-            <paper-menu-button
-              close-on-activate
-              class="no-right-padd"
+            <sl-dropdown
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
               tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
-              <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</paper-item>
-                <paper-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+              <sl-button variant="primary" slot="trigger" class="primary-btn"
+                >${translate('ACCEPT_SEND_BACK')}</sl-button
+              >
+              <sl-menu>
+                <sl-menu-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
 
-            <paper-menu-button close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="dropdown-trigger">
+            <sl-dropdown>
+              <sl-button slot="trigger" variant="text" class="dropdown-trigger">
                 <iron-icon icon="more-vert"></iron-icon>
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
-                <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
-                <paper-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</paper-item>
-                <paper-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
           </div>
         </div>
 
