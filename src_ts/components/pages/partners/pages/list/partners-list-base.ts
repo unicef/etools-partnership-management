@@ -12,7 +12,6 @@ import '../../data/partners-list-data.js';
 import '@polymer/iron-icon/iron-icon';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-menu-button/paper-menu-button';
-import '@polymer/paper-button/paper-button';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';

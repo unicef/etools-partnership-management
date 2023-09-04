@@ -21,6 +21,7 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -254,7 +255,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [ColumnStyles, NewInterventionStyles];
+    return [ColumnStyles, NewInterventionStyles, buttonsStyles];
   }
 
   cancel() {

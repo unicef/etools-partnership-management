@@ -2,7 +2,6 @@ import {LitElement, html} from 'lit';
 import {property, query, customElement} from 'lit/decorators.js';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-button/paper-button.js';
 import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
@@ -18,7 +17,6 @@ import '../../common/components/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
@@ -32,6 +30,8 @@ import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @polymer
@@ -52,10 +52,13 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
  */
 @customElement('agreements-module')
 export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
@@ -74,18 +77,23 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+            <sl-button
+              class="export"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Agreements export"
+            >
+              <iron-icon icon="file-download" slot="prefix"></iron-icon>
+              ${translate('EXPORT')}
+            </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
-            <paper-button class="primary-btn with-prefix" @click="${this._goToNewAgreementPage}">
-              <iron-icon icon="add"></iron-icon>
+            <sl-button class="primary-btn" variant="primary" @click="${this._goToNewAgreementPage}">
+              <iron-icon icon="add" slot="prefix"></iron-icon>
               ${translate('ADD_NEW_AGREEMENT')}
-            </paper-button>
+            </sl-button>
           </div>
         </div>
       </page-content-header>

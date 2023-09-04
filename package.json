@@ -72,11 +72,11 @@
     "@unicef-polymer/etools-ajax": "^4.5.3",
     "@unicef-polymer/etools-app-selector": "^5.0.0",
     "@unicef-polymer/etools-dexie-caching": "^1.1.0",
-    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.5",
+    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.6",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.2",
     "@unicef-polymer/etools-toasts": "^1.0.7",
     "@unicef-polymer/etools-types": "1.11.16",
-    "@unicef-polymer/etools-unicef": "1.0.0-rc.4",
+    "@unicef-polymer/etools-unicef": "1.0.0-rc.5",
     "@unicef-polymer/etools-upload": "^4.5.1",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.1",
     "@webcomponents/webcomponentsjs": "^2.8.0",
@@ -141,6 +141,7 @@
     "relative-deps": "^1.0.7"
   },
   "relativeDependencies": {
-    "@unicef-polymer/etools-unicef": "../../etools-polymer/etools-unicef"
+    "@unicef-polymer/etools-unicef": "../../etools-polymer/etools-unicef",
+    "@unicef-polymer/etools-modules-common": "../../etools-polymer/etools-modules-common"
   }
 }

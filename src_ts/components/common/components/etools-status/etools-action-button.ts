@@ -3,14 +3,17 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import {buttonsStyles} from '../../../styles/buttons-styles-lit';
 
 /**
  * @polymer
@@ -20,23 +23,10 @@ import {StatusAction} from '../../../../typings/etools-status.types';
 export class EtoolsActionButton extends LitElement {
   render() {
     return html`
+      ${buttonsStyles}
       <style>
         :host {
-          display: block;
-        }
-
-        paper-button {
           display: flex;
-          flex-direction: row;
-          padding: 0;
-          margin: 0;
-          height: 36px;
-          background-color: var(--etools-action-button-main-color, #0099ff);
-          color: var(--etools-action-button-text-color, #fff);
-        }
-
-        paper-button.grey {
-          background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, 0.54));
         }
 
         paper-menu-button {
@@ -46,69 +36,61 @@ export class EtoolsActionButton extends LitElement {
         paper-icon-button {
           border-inline-start: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
         }
+        sl-button#primary {
+          flex: 1 1 0;
+        }
 
         .main-btn-part {
+          display: inline-block;
           flex: 1;
           text-align: center;
           font-weight: 500;
           line-height: 34px;
-        }
-
-        .list-wrapper {
-          position: relative;
-          outline: none;
-          z-index: 5;
-          width: 100%;
-          overflow-y: hidden;
-          background: var(--etools-action-button-text-color, #fff);
-          font-size: 0;
-        }
-
-        .list-wrapper::after {
-          display: none;
-        }
-
-        .list-wrapper paper-item {
-          padding: 0 16px;
-          cursor: pointer;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          box-sizing: border-box;
-          display: inline-block;
-          line-height: 47px;
-          background: var(--etools-action-button-text-color, #fff);
-          width: 100%;
-          min-width: 120px;
+          padding: 0 30px;
+          text-transform: uppercase;
         }
 
         iron-icon[icon='info-outline'] {
           padding-inline-start: 5px;
         }
+
+        sl-dropdown.splitBtn::part(trigger) {
+          display: inline-flex;
+          vertical-align: middle;
+        }
+
+        sl-button[slot='trigger'] {
+          width: 40px;
+          border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
+          --sl-spacing-medium: 0;
+        }
+        sl-button#primary::part(label) {
+          padding-inline-end: 0px;
+        }
       </style>
 
       ${this.primaryAction
-        ? html`<paper-button raised ?disabled="${this.disabled}">
+        ? html`<sl-button id="primary" variant="primary" ?disabled="${this.disabled}" class="primary-btn split-btn">
             <div @click="${this._handlePrimaryClick}" class="main-btn-part">
               <iron-icon icon="info-outline" ?hidden="${!this.showInfoIcon}"></iron-icon>
               ${this.primaryAction.label}
             </div>
             ${(this.secondaryActions || []).length
-              ? html` <paper-menu-button horizontal-align>
-                  <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
-                  <paper-listbox slot="dropdown-content">
-                    <div class="list-wrapper">
-                      ${this.secondaryActions.map(
-                        (item) =>
-                          html`<paper-item @click="${() => this._handleSecondaryClick(item)}">
-                            ${item.label}</paper-item
-                          >`
-                      )}
-                    </div>
-                  </paper-listbox>
-                </paper-menu-button>`
+              ? html` <sl-dropdown id="splitBtn">
+                  <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
+                    <sl-icon name="chevron-down"></sl-icon
+                  ></sl-button>
+                  <sl-menu>
+                    ${this.secondaryActions.map(
+                      (item) =>
+                        html`<sl-menu-item @click="${() => this._handleSecondaryClick(item)}">
+                          ${item.label}</sl-menu-item
+                        >`
+                    )}
+                  </sl-menu>
+                </sl-dropdown>`
               : ''}
-          </paper-button> `
+          </sl-button> `
         : ''}
     `;
   }
