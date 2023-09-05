@@ -191,7 +191,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                               <etools-collapse
                                 id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
                                 .opened="${indicatorReport.expanded}"
-                                @transitioning-changed="${this._indicatorDetailsTransitioningComplete}"
+                                @transitionend="${this._indicatorDetailsTransitioningComplete}"
                               >
                                 <indicator-details
                                   id="indicator-details-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
