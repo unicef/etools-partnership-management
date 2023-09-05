@@ -22,6 +22,7 @@ import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-butt
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import '@unicef-polymer/etools-unicef/src/etools-collapse/etools-collapse';
 
 /**
  * @polymer
@@ -187,7 +188,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                 </div>
                               </div>
 
-                              <iron-collapse
+                              <etools-collapse
                                 id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
                                 .opened="${indicatorReport.expanded}"
                                 @transitioning-changed="${this._indicatorDetailsTransitioningComplete}"
@@ -198,7 +199,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                   ?isClusterIndicator="${indicatorReport.is_cluster_indicator}"
                                 >
                                 </indicator-details>
-                              </iron-collapse>
+                              </etools-collapse>
                             </div>
                           `;
                         }
