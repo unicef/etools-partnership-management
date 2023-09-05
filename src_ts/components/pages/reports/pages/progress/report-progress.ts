@@ -190,7 +190,6 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
 
                               <etools-collapse
                                 id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                                .opened="${indicatorReport.expanded}"
                                 @transitionend="${this._indicatorDetailsTransitioningComplete}"
                               >
                                 <indicator-details
@@ -253,7 +252,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
     const indicatorCollapsibleContent = e.target as Element;
     const indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
-    if (indicatorDetails && !e.detail.value && (indicatorCollapsibleContent as any)!.opened) {
+    if (indicatorDetails && (indicatorCollapsibleContent as any)!.opened) {
       // trigger indicator details request
       // @ts-ignore
       indicatorDetails.getIndicatorDetails();
