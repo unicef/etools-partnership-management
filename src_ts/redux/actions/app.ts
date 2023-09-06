@@ -71,7 +71,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     );
   }
 
-  if (['implementation-status', 'monitoring-activities', 'results-reported'].includes(subRouteName)) {
+  if (['implementation-status', 'monitoring-activities', 'results-reported', 'reports'].includes(subRouteName)) {
     import(
       `${window.location.origin}/pmp/src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js`
     );

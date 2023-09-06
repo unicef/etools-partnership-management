@@ -322,7 +322,7 @@ export class ReportsModule extends connect(store)(
 
   _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (!this.report || !this.report.id || newTabName == this.activePage) {
       return;
     }
