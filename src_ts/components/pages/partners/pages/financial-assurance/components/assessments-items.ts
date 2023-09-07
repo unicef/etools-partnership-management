@@ -5,7 +5,6 @@ import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 
 import '../../../../../endpoints/endpoints.js';
@@ -24,6 +23,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
  * @customElement
@@ -70,11 +70,6 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           visibility: visible;
         }
 
-        paper-toggle-button#showArchived {
-          font-size: 16px;
-          --paper-toggle-button-label-color: var(--primary-text-color);
-          --paper-toggle-button-checked-bar-color: var(--primary-color);
-        }
         *[slot='row-data'] {
           margin-top: 12px;
           margin-bottom: 12px;
@@ -99,13 +94,9 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         class="content-section"
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button
-            id="showArchived"
-            ?checked="${this.showArchived}"
-            @iron-change="${this.showArchivedChange}"
-          >
+          <sl-switch id="showArchived" ?checked="${this.showArchived}" @sl-change="${this.showArchivedChange}">
             ${translate('SHOW_ARCHIVED')}
-          </paper-toggle-button>
+          </sl-switch>
           <div class="separator" ?hidden="${!this.editMode}"></div>
           <paper-icon-button
             icon="add-box"
@@ -253,7 +244,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
   }
 
   showArchivedChange(e: CustomEvent) {
-    if (!e.detail) {
+    if (!e.currentTarget) {
       return;
     }
     this.showArchived = (e.currentTarget as HTMLInputElement).checked;

@@ -5,7 +5,7 @@ import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
@@ -69,12 +69,6 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
         paper-input {
           width: 100%;
-        }
-
-        paper-toggle-button#showArchived {
-          font-size: 16px;
-          --paper-toggle-button-label-color: var(--primary-text-color);
-          --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
 
         icons-actions2 {
@@ -266,13 +260,13 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
       <etools-content-panel class="content-section" panel-title="${translate('CORE_VALUES_ASSESSMENTS')}">
         <div slot="panel-btns" id="show-archived">
-          <paper-toggle-button
+          <sl-switch
             id="showArchived"
             ?checked="${this.showArchivedAssessments}"
-            @iron-change="${this.showArchivedChange}"
+            @sl-change="${this.showArchivedChange}"
           >
             ${translate('SHOW_ARCHIVED')}
-          </paper-toggle-button>
+          </sl-switch>
         </div>
 
         <div ?hidden="${!this._shouldDisplayCVAList()}">
@@ -399,7 +393,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   showArchivedChange(e: CustomEvent) {
-    if (!e.detail) {
+    if (!e.currentTarget) {
       return;
     }
     this.showArchivedAssessments = (e.currentTarget as HTMLInputElement).checked;

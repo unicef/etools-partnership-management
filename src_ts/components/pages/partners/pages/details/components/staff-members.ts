@@ -1,7 +1,6 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
@@ -15,6 +14,7 @@ import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 import {User} from '@unicef-polymer/etools-types/dist/user.types';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
  * @polymer
@@ -57,12 +57,6 @@ export class StaffMembers extends LitElement {
           word-break: break-all;
           word-wrap: break-word;
         }
-
-        paper-toggle-button#showInactive {
-          font-size: 16px;
-          --paper-toggle-button-label-color: var(--primary-text-color);
-          --paper-toggle-button-checked-bar-color: var(--primary-color);
-        }
       </style>
       <etools-content-panel
         class="content-section"
@@ -70,13 +64,9 @@ export class StaffMembers extends LitElement {
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button
-            id="showInactive"
-            ?checked="${this.showInactive}"
-            @iron-change="${this.showInactiveChange}"
-          >
+          <sl-switch id="showInactive" ?checked="${this.showInactive}" @sl-change="${this.showInactiveChange}">
             ${translate('SHOW_INACTIVE')}
-          </paper-toggle-button>
+          </sl-switch>
           <div class="separator"></div>
           <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
             <iron-icon id="information-icon" icon="icons:open-in-new"></iron-icon>
@@ -160,7 +150,7 @@ export class StaffMembers extends LitElement {
   }
 
   showInactiveChange(e: CustomEvent) {
-    if (!e.detail) {
+    if (!e.currentTarget) {
       return;
     }
     this.showInactive = (e.currentTarget as HTMLInputElement).checked;

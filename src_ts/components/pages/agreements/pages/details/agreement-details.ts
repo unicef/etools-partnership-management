@@ -4,7 +4,6 @@ import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input-container.js';
 
@@ -53,6 +52,8 @@ import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-unicef/src/etools-dr
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
  * @polymer
@@ -112,10 +113,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         }
         #generateMyPca::part(label) {
           font-size: 14px;
-        }
-
-        paper-toggle-button {
-          font-size: 16px;
         }
 
         sl-button#cancelAoEdit {
@@ -442,14 +439,14 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </div>
         </div>
         <div class="row-h flex-c">
-          <paper-toggle-button
+          <sl-switch
             ?checked="${this.agreement.special_conditions_pca}"
-            @checked-changed="${this.onSpecialConditionsPCAChanged}"
+            @sl-change="${this.onSpecialConditionsPCAChanged}"
             ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'PCA')}"
             ?disabled="${!this.agreement.permissions?.edit.special_conditions_pca}"
           >
             ${translate('SPECIAL_CONDITIONS_PCA')}
-          </paper-toggle-button>
+          </sl-switch>
         </div>
         <div class="row-h flex-c ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
           <div
@@ -1029,7 +1026,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onSpecialConditionsPCAChanged(e: CustomEvent) {
-    this.agreement.special_conditions_pca = e.detail.value;
+    this.agreement.special_conditions_pca = (e.target! as SlSwitch).checked;
     this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
   }
 

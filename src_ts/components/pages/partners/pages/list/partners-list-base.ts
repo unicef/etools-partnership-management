@@ -15,7 +15,6 @@ import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';

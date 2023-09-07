@@ -11,13 +11,6 @@ export const etoolsCpHeaderActionsBarStyles = html` <style>
     visibility: hidden;
   }
 
-  .cp-header-actions-bar paper-toggle-button {
-    --paper-toggle-button-label-color: white;
-    --paper-toggle-button-checked-bar-color: white;
-    padding-inline-end: 10px;
-    font-size: 16px;
-  }
-
   .cp-header-actions-bar .separator {
     border-inline-start: solid 1px var(--light-secondary-text-color);
     padding-inline-end: 10px;

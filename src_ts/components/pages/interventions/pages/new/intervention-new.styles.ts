@@ -43,10 +43,6 @@ export const NewInterventionStyles: CSSResult = css`
     padding-bottom: 20px;
   }
 
-  paper-toggle-button {
-    margin-top: 25px;
-  }
-
   sl-button {
     margin-inline-start: 24px;
   }
