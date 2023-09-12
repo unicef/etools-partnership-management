@@ -14,7 +14,6 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {buttonsStyles} from '../../../styles/buttons-styles-lit';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 /**
  * @polymer
@@ -28,6 +27,9 @@ export class EtoolsActionButton extends LitElement {
       <style>
         :host {
           display: flex;
+        }
+        *[hidden] {
+          display: none;
         }
 
         paper-menu-button {
@@ -80,7 +82,7 @@ export class EtoolsActionButton extends LitElement {
             class="primary-btn split-btn"
           >
             <span class="main-btn-part">
-              <sl-icon icon="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
+              <sl-icon name="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
               ${this.primaryAction.label}
             </span>
             ${(this.secondaryActions || []).length
