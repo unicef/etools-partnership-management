@@ -48,7 +48,6 @@ export class EtoolsActionButton extends LitElement {
           text-align: center;
           font-weight: 500;
           line-height: 34px;
-          padding: 0 30px;
           text-transform: uppercase;
         }
 
