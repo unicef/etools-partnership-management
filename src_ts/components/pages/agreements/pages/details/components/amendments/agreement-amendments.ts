@@ -83,7 +83,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
         }
         sl-icon[name='cloud-arrow-down'] {
           font-size: 20px;
-          vertical-align: text-bottom;
+          vertical-align: middle;
           margin-inline-end: 5px;
         }
 
