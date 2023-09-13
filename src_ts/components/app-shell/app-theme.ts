@@ -137,8 +137,6 @@ documentContainer.innerHTML = `
         --paper-checkbox-unchecked-color: var(--secondary-text-color);
         --paper-radio-button-checked-color: var(--primary-color);
         --paper-radio-button-unchecked-color: var(--secondary-text-color);
-        --paper-toggle-button-checked-bar-color: var(--primary-color);
-        --paper-toggle-button-checked-button-color: var(--primary-color);
 
         /* etools-panel styles */
         --ecp-header-color: var(--primary-text-color);

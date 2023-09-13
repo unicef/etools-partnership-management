@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
@@ -19,7 +19,6 @@ import {patchDisaggregation} from '../../../../redux/actions/common-data';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '@unicef-polymer/etools-modules-common/dist/utils/user-permissions';
-import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
@@ -28,6 +27,7 @@ import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/p
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
  * @polymer
@@ -104,14 +104,14 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
                   <span class="col-data col-4">${item.name}</span>
                   <span class="col-data col-6">${this._displayGroups(item.disaggregation_values)}</span>
                   <span class="col-data col-2">
-                    <paper-toggle-button
+                    <sl-switch
                       data-id="${item.id}"
                       data-active="${item.active}"
                       ?disabled="${!userIsPme(this.currentUser)}"
                       ?checked="${item.active}"
-                      @checked-changed="${this._disaggregationChange}"
+                      @sl-change="${this._disaggregationChange}"
                     >
-                    </paper-toggle-button>
+                    </sl-switch>
                   </span>
                 </div>
               </etools-data-table-row>
@@ -207,7 +207,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
   }
 
   _disaggregationChange(e: any) {
-    const elDisaggregation = e.currentTarget as PaperToggleButtonElement;
+    const elDisaggregation = e.currentTarget as SlSwitch;
 
     // to avoid making calls when table is rendered, make sure property binded to checked and checked are different
     if (elDisaggregation.dataset.active === String(elDisaggregation.checked)) {

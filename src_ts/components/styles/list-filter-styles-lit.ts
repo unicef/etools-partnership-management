@@ -66,10 +66,6 @@ export const listFilterStyles = html` <style>
     font-size: 16px;
   }
 
-  #hiddenToggle paper-toggle-button {
-    margin-inline-start: 10px;
-  }
-
   .fixed-controls {
     display: flex;
     flex-direction: column;

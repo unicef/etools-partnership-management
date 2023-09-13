@@ -11,6 +11,8 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import {SlSwitch} from '@shoelace-style/shoelace';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -57,6 +59,9 @@ export function template(this: InterventionNew): TemplateResult {
         --iit-icon-size: 18px;
         --iit-margin: 0 0 4px 4px;
         --iit-max-width: auto;
+      }
+      etools-dropdown#documentType::part(form-control), etools-dropdown-multi#partnerFocalPoints::part(form-control) {
+        padding-top:0;
       }
     </style>
 
@@ -236,28 +241,28 @@ export function template(this: InterventionNew): TemplateResult {
           <div class="row">
             <!--   SPD is Humanitarian   -->
             <div ?hidden="${!this.isSPD}">
-              <paper-toggle-button
+              <sl-switch
                 ?checked="${this.newIntervention.humanitarian_flag}"
-                @checked-changed="${({detail}: CustomEvent) => {
+                @sl-change="${(e: CustomEvent) => {
                   this.setInterventionField('contingency_pd', false);
-                  this.setInterventionField('humanitarian_flag', detail.value);
+                  this.setInterventionField('humanitarian_flag', (e.target! as SlSwitch).checked);
                 }}"
               >
                 ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
-              </paper-toggle-button>
+              </sl-switch>
             </div>
 
             <!--   Contingency Document   -->
             <div ?hidden="${!this.newIntervention.humanitarian_flag}">
-              <paper-toggle-button
+              <sl-switch
                 ?checked="${this.newIntervention.contingency_pd}"
-                @checked-changed="${({detail}: CustomEvent) => {
-                  this.setInterventionField('contingency_pd', detail.value);
+                @sl-change="${(e: CustomEvent) => {
+                  this.setInterventionField('contingency_pd', (e.target! as SlSwitch).checked);
                   this.setInterventionField('activation_protocol', '');
                 }}"
               >
                 ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
-              </paper-toggle-button>
+              </sl-switch>
             </div>
           </div>
         </div>

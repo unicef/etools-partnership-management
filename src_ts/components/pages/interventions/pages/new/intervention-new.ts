@@ -9,7 +9,6 @@ import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewInterventionStyles} from './intervention-new.styles';
