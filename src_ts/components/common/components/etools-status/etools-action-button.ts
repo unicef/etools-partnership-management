@@ -14,6 +14,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {buttonsStyles} from '../../../styles/buttons-styles-lit';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 /**
  * @polymer
@@ -41,7 +42,6 @@ export class EtoolsActionButton extends LitElement {
         }
 
         .main-btn-part {
-          display: inline-block;
           flex: 1;
           text-align: center;
           font-weight: 500;
@@ -58,11 +58,13 @@ export class EtoolsActionButton extends LitElement {
           display: inline-flex;
           vertical-align: middle;
         }
+        sl-button {
+          --sl-spacing-medium: 0;
+        }
 
         sl-button[slot='trigger'] {
           width: 40px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
-          --sl-spacing-medium: 0;
         }
         sl-button#primary::part(label) {
           padding-inline-end: 0px;
@@ -70,13 +72,19 @@ export class EtoolsActionButton extends LitElement {
       </style>
 
       ${this.primaryAction
-        ? html`<sl-button id="primary" variant="primary" ?disabled="${this.disabled}" class="primary-btn split-btn">
-            <div @click="${this._handlePrimaryClick}" class="main-btn-part">
-              <iron-icon icon="info-outline" ?hidden="${!this.showInfoIcon}"></iron-icon>
+        ? html`<sl-button
+            id="primary"
+            variant="primary"
+            @click="${this._handlePrimaryClick}"
+            ?disabled="${this.disabled}"
+            class="primary-btn split-btn"
+          >
+            <span class="main-btn-part">
+              <sl-icon icon="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
               ${this.primaryAction.label}
-            </div>
+            </span>
             ${(this.secondaryActions || []).length
-              ? html` <sl-dropdown id="splitBtn">
+              ? html` <sl-dropdown id="splitBtn" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
                   <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
                     <sl-icon name="chevron-down"></sl-icon
                   ></sl-button>

@@ -190,7 +190,7 @@ export class InterventionsModule extends connect(store)(
                     slot="trigger"
                     name="chevron-down"
                     @click="${(event: MouseEvent) => {
-                      event.stopPropagation();
+                      event.stopImmediatePropagation();
                       (event.currentTarget!.parentElement as SlDropdown).show();
                     }}"
                   ></sl-icon>
