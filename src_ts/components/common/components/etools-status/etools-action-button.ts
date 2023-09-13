@@ -51,8 +51,8 @@ export class EtoolsActionButton extends LitElement {
           text-transform: uppercase;
         }
 
-        iron-icon[icon='info-outline'] {
-          padding-inline-start: 5px;
+        sl-icon[name='chevron-down'] {
+          padding-top: 8px;
         }
 
         sl-dropdown.splitBtn::part(trigger) {
@@ -68,7 +68,9 @@ export class EtoolsActionButton extends LitElement {
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
         sl-button#primary::part(label) {
+          display: flex;
           padding-inline-end: 0px;
+          width: 100%;
         }
       </style>
 
