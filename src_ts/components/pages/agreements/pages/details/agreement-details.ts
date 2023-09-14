@@ -112,6 +112,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           font-size: 14px;
           font-weight: 600;
         }
+
         #generateMyPca::part(base) {
           justify-content: flex-start !important;
         }
