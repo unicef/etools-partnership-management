@@ -89,6 +89,9 @@ export class PartnersModule extends connect(store)(
         sl-tab-group {
           --indicator-color: var(--primary-color);
         }
+        sl-tab-group::part(tabs) {
+          border-bottom: 0;
+        }
         sl-tab-group::part(active-tab-indicator) {
           bottom: 0;
         }
