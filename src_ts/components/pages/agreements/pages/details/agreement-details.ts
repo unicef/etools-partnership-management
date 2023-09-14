@@ -108,11 +108,13 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           padding-inline-start: 0;
         }
 
-        #generateMyPca {
-          cursor: pointer;
-        }
         #generateMyPca::part(label) {
           font-size: 14px;
+          font-weight: 600;
+        }
+
+        #generateMyPca::part(base) {
+          justify-content: flex-start !important;
         }
 
         sl-button#cancelAoEdit {
@@ -463,7 +465,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               <label class="paper-label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <sl-button
                 variant="text"
-                class="primary-btn no-pad"
+                class="primary-btn no-pad no-marg"
                 id="generateMyPca"
                 @click="${this._openGeneratePCADialog}"
               >

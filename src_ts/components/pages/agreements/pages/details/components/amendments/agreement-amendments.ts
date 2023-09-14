@@ -23,6 +23,8 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 /**
  * @polymer
@@ -77,6 +79,12 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
         }
         #download-template-btn::part(label) {
           font-size: 14px;
+          font-weight: 600;
+        }
+        sl-icon[name='cloud-arrow-down'] {
+          font-size: 20px;
+          vertical-align: middle;
+          margin-inline-end: 5px;
         }
 
         /* amendment template download section styles end */
@@ -116,7 +124,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             download
             class="primary-btn"
           >
-            <iron-icon icon="file-download"></iron-icon>
+            <sl-icon name="cloud-arrow-down"></sl-icon>
             ${translate('DOWNLOAD_TEMPLATE')}
           </sl-button>
         </div>

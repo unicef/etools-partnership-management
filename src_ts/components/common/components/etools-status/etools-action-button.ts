@@ -29,6 +29,9 @@ export class EtoolsActionButton extends LitElement {
         :host {
           display: flex;
         }
+        *[hidden] {
+          display: none;
+        }
 
         paper-menu-button {
           padding: 0 4px;
@@ -46,12 +49,11 @@ export class EtoolsActionButton extends LitElement {
           text-align: center;
           font-weight: 500;
           line-height: 34px;
-          padding: 0 30px;
           text-transform: uppercase;
         }
 
-        iron-icon[icon='info-outline'] {
-          padding-inline-start: 5px;
+        sl-icon[name='chevron-down'] {
+          padding-top: 8px;
         }
 
         sl-dropdown.splitBtn::part(trigger) {
@@ -67,7 +69,9 @@ export class EtoolsActionButton extends LitElement {
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
         sl-button#primary::part(label) {
+          display: flex;
           padding-inline-end: 0px;
+          width: 100%;
         }
       </style>
 
@@ -80,7 +84,7 @@ export class EtoolsActionButton extends LitElement {
             class="primary-btn split-btn"
           >
             <span class="main-btn-part">
-              <sl-icon icon="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
+              <sl-icon name="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
               ${this.primaryAction.label}
             </span>
             ${(this.secondaryActions || []).length
