@@ -1,5 +1,5 @@
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-
+import '@polymer/paper-icon-button/paper-icon-button';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
