@@ -3,11 +3,9 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 
@@ -64,13 +62,6 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     return html`
       ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
       <style>
-        :host {
-          --paper-input-container-input-webkit-spinner: {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-        }
-
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
@@ -194,11 +185,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           justify-content: center;
         }
 
-        paper-input {
-          text-align: center;
-          width: 35px;
-          font-size: 16px;
-          color: var(--primary-text-color);
+        sl-icon-button[name='box-arrow-up-right'] {
+          stroke: var(--primary-color);
         }
       </style>
 
@@ -301,8 +289,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
       <etools-content-panel panel-title="${translate('ASSURANCE_ACTIVITIES')}" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
-          </paper-icon-button>
+          <sl-icon-button name="pencil-fill" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
+          </sl-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
@@ -414,7 +402,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
               <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
               <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
-                <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
+                <sl-icon-button name="box-arrow-up-right"></sl-icon-button>
                 ${translate('VIEW_REPORT')}
               </a>
             </div>

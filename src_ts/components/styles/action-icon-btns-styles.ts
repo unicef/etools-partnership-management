@@ -10,6 +10,7 @@ export const actionIconBtnsStyles = html` <style>
 
   .action.delete {
     color: var(--icon-delete-color);
+    --sl-color-primary-600: var(--error-color);
   }
   .action.edit {
     color: var(--medium-icon-color);

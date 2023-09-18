@@ -1,6 +1,5 @@
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {property} from 'lit/decorators.js';
@@ -39,15 +38,11 @@ class IconsActions extends LitElement {
           right: unset;
           left: 0;
         }
-
-        paper-icon-button {
-          color: var(--dark-icon-color, #6f6f70);
-        }
       </style>
 
-      <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
-      <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
-      <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
+      <sl-icon-button hidden$="[[!showEdit]]" name="pencil-fill" on-tap="_onEdit"></sl-icon-button>
+      <sl-icon-button hidden$="[[!showDelete]]" name="trash-fill" on-tap="_onDelete"></sl-icon-button>
+      <sl-icon-button hidden$="[[!showDeactivate]]" name="slash-circle" on-tap="_onDeactivate"></sl-icon-button>
     `;
   }
 

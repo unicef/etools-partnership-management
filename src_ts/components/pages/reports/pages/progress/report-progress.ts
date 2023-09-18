@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 
 import '../../../../common/components/etools-ram-indicators';
@@ -140,12 +140,12 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                             <div class="indicator">
                               <div class="layout-horizontal">
                                 <div class="indicator-toggle ${this._getClusterIndicatorClass(indicatorReport)}">
-                                  <paper-icon-button
+                                  <sl-icon-button
                                     @click="${this._toggle}"
                                     toggles-ind-details="${uniqueKey}"
-                                    .icon="${this._computeIcon(this.toggleFlags[uniqueKey])}"
+                                    .name="${this._computeIcon(this.toggleFlags[uniqueKey])}"
                                   >
-                                  </paper-icon-button>
+                                  </sl-icon-button>
                                 </div>
 
                                 <div class="indicator-header layout-horizontal flex-c">
@@ -234,7 +234,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? 'icons:expand-less' : 'icons:expand-more';
+    return opened ? 'chevron-up' : 'chevron-down';
   }
 
   _toggle(e: CustomEvent) {

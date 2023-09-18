@@ -3,7 +3,7 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 
@@ -24,6 +24,7 @@ import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
 /**
  * @customElement
@@ -98,14 +99,14 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
             ${translate('SHOW_ARCHIVED')}
           </sl-switch>
           <div class="separator" ?hidden="${!this.editMode}"></div>
-          <paper-icon-button
-            icon="add-box"
+          <sl-icon-button
+            name="plus-square-fill"
             ?disabled="${!this.editMode}"
             ?hidden="${!this.editMode}"
             title="${translate('ADD_OTHER_ASSESSMENT')}"
             @click="${this._addAssessment}"
           >
-          </paper-icon-button>
+          </sl-icon-button>
         </div>
 
         <div ?hidden="${this._emptyList(this.dataItems?.length)}">

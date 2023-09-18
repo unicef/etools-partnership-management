@@ -6,7 +6,7 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
@@ -37,9 +37,6 @@ export class EtoolsActionButton extends LitElement {
           padding: 0 4px;
         }
 
-        paper-icon-button {
-          border-inline-start: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
-        }
         sl-button#primary {
           flex: 1 1 0;
         }

@@ -1,5 +1,5 @@
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
@@ -30,6 +30,7 @@ import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
 store.addReducers({
   activeLanguage
@@ -288,14 +289,14 @@ class PageHeader extends connect(store)(
             @sign-out="${this._signOut}"
           ></etools-profile-dropdown>
 
-          <paper-icon-button
+          <sl-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
-            icon="refresh"
+            name="arrow-clockwise"
             tracker="hard refresh"
             @click="${this._onRefreshClick}"
           >
-          </paper-icon-button>
+          </sl-icon-button>
         </div>
       </app-toolbar>
     `;
