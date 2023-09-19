@@ -3,9 +3,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/iron-icons/iron-icons.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
@@ -31,10 +28,6 @@ export class EtoolsActionButton extends LitElement {
         }
         *[hidden] {
           display: none;
-        }
-
-        paper-menu-button {
-          padding: 0 4px;
         }
 
         sl-button#primary {
