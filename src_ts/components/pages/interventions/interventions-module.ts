@@ -2,7 +2,6 @@ import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-icon-button/paper-icon-button';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';

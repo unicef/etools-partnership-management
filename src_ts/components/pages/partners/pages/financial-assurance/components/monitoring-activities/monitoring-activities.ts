@@ -9,7 +9,6 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
-import '@polymer/paper-icon-button';
 import '@polymer/iron-icons/editor-icons';
 import {getUniqueId} from '@unicef-polymer/etools-utils/dist/general.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -54,8 +53,8 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
       >
         ${this.showEditBtn(this.activities, this.isReadonly)
           ? html` <div slot="panel-btns">
-              <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
-              </paper-icon-button>
+              <sl-icon-button name="pencil-fill" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
+              </sl-icon-button>
             </div>`
           : html``}
 

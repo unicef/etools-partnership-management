@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
@@ -24,6 +24,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
 /**
  * @polymer
@@ -133,15 +134,15 @@ export class AddDisaggregationDialog extends connect(store)(
                       }}"
                     >
                     </etools-input>
-                    <paper-icon-button
-                      class="action delete no-padding"
-                      icon="cancel"
+                    <sl-icon-button
+                      class="action delete"
+                      name="x-circle-fill"
                       ?hidden="${index < 2}"
                       @click="${(event: CustomEvent) => this._openDeleteConfirmation(event, index)}"
                       ?data-args="${index}"
                       title="${translate('GENERAL.DELETE')}"
                     >
-                    </paper-icon-button>
+                    </sl-icon-button>
                   `
                 )}
                 <sl-button

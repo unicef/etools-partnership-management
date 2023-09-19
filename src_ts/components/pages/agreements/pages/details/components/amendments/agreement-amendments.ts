@@ -1,7 +1,6 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -25,6 +24,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
 /**
  * @polymer
@@ -100,14 +100,14 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
       <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
-          <paper-icon-button
-            icon="add-box"
+          <sl-icon-button
+            name="plus-square-fill"
             ?hidden="${!this.editMode}"
             ?disabled="${!this.editMode}"
             title="${translate('GENERAL.ADD')}"
             @click="${this._openAddAgAmendmentDialog}"
           >
-          </paper-icon-button>
+          </sl-icon-button>
         </div>
 
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">

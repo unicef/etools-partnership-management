@@ -28,6 +28,7 @@ import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
 /**
  * @polymer
@@ -80,13 +81,13 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
       </div>
 
       <etools-content-panel panel-title="${translate('DISAGGREGATIONS')}">
-        <paper-icon-button
+        <sl-icon-button
           slot="panel-btns"
           ?hidden="${!userIsPme(this.currentUser)}"
-          icon="add-box"
+          name="plus-square-fill"
           @click="${this._addDisaggregation}"
         >
-        </paper-icon-button>
+        </sl-icon-button>
         <div ?hidden="${this._emptyList(this.filteredDisaggregations)}">
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-4" field="name">${translate('NAME')}</etools-data-table-column>
