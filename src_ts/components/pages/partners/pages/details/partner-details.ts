@@ -39,6 +39,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 declare const dayjs: any;
 
@@ -81,6 +82,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
         iron-icon {
           color: var(--dark-secondary-text-color);
+        }
+
+        sl-icon {
+          margin-inline-end: 5px;
         }
 
         .cvs-file {
@@ -222,7 +227,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('DATE_OF_REPORT')}"
               .value="${this.getDateDisplayValue(this.partner.last_assessment_date)}"
             >
-              <iron-icon icon="date-range" slot="prefix"></iron-icon>
+              <sl-icon name="calendar-date" slot="prefix"></sl-icon>
             </etools-input>
           </div>
         </div>
@@ -252,7 +257,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
               .value="${this.getDateDisplayValue(this.partner.psea_assessment_date)}"
             >
-              <iron-icon icon="date-range" slot="prefix"></iron-icon>
+              <sl-icon name="calendar-date" slot="prefix"></sl-icon>
             </etools-input>
           </div>
         </div>
