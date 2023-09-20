@@ -186,7 +186,7 @@ export class InterventionsModule extends connect(store)(
                 <sl-dropdown id="importEcn">
                   <sl-icon
                     slot="trigger"
-                    name="chevron-down"
+                    name="expand-more"
                     @click="${(event: MouseEvent) => {
                       event.stopImmediatePropagation();
                       ((event.currentTarget as any)!.parentElement as SlDropdown).show();

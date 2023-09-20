@@ -136,7 +136,7 @@ export class AddDisaggregationDialog extends connect(store)(
                     </etools-input>
                     <sl-icon-button
                       class="action delete"
-                      name="x-circle-fill"
+                      name="cancel"
                       ?hidden="${index < 2}"
                       @click="${(event: CustomEvent) => this._openDeleteConfirmation(event, index)}"
                       ?data-args="${index}"

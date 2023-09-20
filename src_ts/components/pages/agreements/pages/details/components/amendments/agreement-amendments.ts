@@ -81,7 +81,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           font-size: 14px;
           font-weight: 600;
         }
-        sl-icon[name='cloud-arrow-down'] {
+        sl-icon[name='file-download'] {
           font-size: 20px;
           vertical-align: middle;
           margin-inline-end: 5px;
@@ -101,7 +101,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
       <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
           <sl-icon-button
-            name="plus-square-fill"
+            name="add-box"
             ?hidden="${!this.editMode}"
             ?disabled="${!this.editMode}"
             title="${translate('GENERAL.ADD')}"
@@ -124,7 +124,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             download
             class="primary-btn"
           >
-            <sl-icon name="cloud-arrow-down"></sl-icon>
+            <sl-icon name="file-download"></sl-icon>
             ${translate('DOWNLOAD_TEMPLATE')}
           </sl-button>
         </div>

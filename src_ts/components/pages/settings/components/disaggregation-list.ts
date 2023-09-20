@@ -84,7 +84,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
         <sl-icon-button
           slot="panel-btns"
           ?hidden="${!userIsPme(this.currentUser)}"
-          name="plus-square-fill"
+          name="add-box"
           @click="${this._addDisaggregation}"
         >
         </sl-icon-button>

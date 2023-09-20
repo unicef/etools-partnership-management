@@ -185,7 +185,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           justify-content: center;
         }
 
-        sl-icon-button[name='box-arrow-up-right'] {
+        sl-icon-button[name='icons:open-in-new'] {
           stroke: var(--primary-color);
         }
       </style>
@@ -289,7 +289,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
       <etools-content-panel panel-title="${translate('ASSURANCE_ACTIVITIES')}" class="content-section">
         <div slot="panel-btns">
-          <sl-icon-button name="pencil-fill" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
+          <sl-icon-button name="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
           </sl-icon-button>
         </div>
         <div class="planning-wrapper">
@@ -402,7 +402,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
               <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
               <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
-                <sl-icon-button name="box-arrow-up-right"></sl-icon-button>
+                <sl-icon-button name="icons:open-in-new"></sl-icon-button>
                 ${translate('VIEW_REPORT')}
               </a>
             </div>
