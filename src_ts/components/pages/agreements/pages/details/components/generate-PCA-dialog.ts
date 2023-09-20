@@ -7,7 +7,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
-import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 
 /**
@@ -34,6 +34,9 @@ export class GeneratePcaDialog extends LitElement {
           max-height: 40vh;
           margin-bottom: 25px;
         }
+        sl-checkbox[invalid]::part(control) {
+          border-color: red;
+        }
       </style>
       <etools-dialog
         id="etoolsDialog"
@@ -48,9 +51,9 @@ export class GeneratePcaDialog extends LitElement {
           <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
             <div class="col col-12">
-              <paper-checkbox
-                @checked-changed=${({detail}: CustomEvent) => {
-                  this.acknowledgedTC = detail.value;
+              <sl-checkbox
+                @sl-change=${(e: any) => {
+                  this.acknowledgedTC = e.target.checked;
                 }}
                 required
                 ?invalid="${this.errors.acknowledgedTC}"
@@ -58,7 +61,7 @@ export class GeneratePcaDialog extends LitElement {
                 @click="${() => this.resetFieldError('acknowledgedTC')}"
               >
                 ${translate('PCA_READ_AND_FOLLOWED_INSTRUCTIONS')}
-              </paper-checkbox>
+              </sl-checkbox>
             </div>
           </div>
           <div class="layout-horizontal row-padding-v  flex-c">

@@ -164,10 +164,6 @@ export const sharedStyles = html`
       padding: 8px 0;
     }
 
-    paper-checkbox {
-      --paper-checkbox-ink-size: 0;
-    }
-
     paper-radio-button {
       --paper-radio-button-ink-size: 0;
     }

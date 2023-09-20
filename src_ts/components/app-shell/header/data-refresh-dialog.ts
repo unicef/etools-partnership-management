@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
@@ -50,11 +50,6 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
           padding: 0 24px;
           font-size: 16px;
         }
-        paper-checkbox {
-          --paper-checkbox-label: {
-            font-size: 16px;
-          }
-        }
       </style>
       <etools-dialog
         id="refreshDialog"
@@ -70,45 +65,45 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
           <div class="title-indent">${translate('SELECT_DATA_TO_REFRESH')}</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox
+              <sl-checkbox
                 ?checked="${this.partnersSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.partnersSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.partnersSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PARTNERS_GOVERNMENT')}</paper-checkbox
+                >${translate('PARTNERS_GOVERNMENT')}</sl-checkbox
               >
             </div>
             <div class="col col-6">
-              <paper-checkbox
+              <sl-checkbox
                 ?checked="${this.interventionsSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.interventionsSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.interventionsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PD_SPD')}</paper-checkbox
+                >${translate('PD_SPD')}</sl-checkbox
               >
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox
+              <sl-checkbox
                 ?checked="${this.agreementsSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.agreementsSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.agreementsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('AGREEMENTS')}</paper-checkbox
+                >${translate('AGREEMENTS')}</sl-checkbox
               >
             </div>
             <div class="col col-6">
-              <paper-checkbox
+              <sl-checkbox
                 ?checked="${this.allSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.allSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.allSelected = e.target.checked;
                   this._allSelectedChanged();
                 }}"
-                >${translate('ALL')}</paper-checkbox
+                >${translate('ALL')}</sl-checkbox
               >
             </div>
           </div>
