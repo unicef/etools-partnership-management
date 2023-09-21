@@ -2,6 +2,9 @@ const pmpEdpoints = {
   changeCountry: {
     url: '/api/v3/users/changecountry/'
   },
+  changeOrganization: {
+    url: '/api/v3/users/changeorganization/'
+  },
   unicefUsers: {
     url: '/api/v3/users/?verbosity=minimal',
     exp: 60 * 60 * 1000, // 1h
@@ -59,7 +62,7 @@ const pmpEdpoints = {
     template: '/api/v2/partners/delete/<%=id%>/'
   },
   partnerStaffMembers: {
-    template: '/api/v2/partners/<%=id%>/staff-members/'
+    template: '/api/pmp/v3/partners/<%=id%>/staff-members/'
   },
   interventions: {
     url: '/api/pmp/v3/interventions/?show_amendments=true',

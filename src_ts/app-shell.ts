@@ -316,7 +316,7 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   private translationFilesAreLoaded = false;
 
-  public connectedCallback() {
+  public async connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
@@ -344,13 +344,15 @@ class AppShell extends connect(store)(
         loadingSource: 'main-page'
       });
     }
+
+    await this.requestUserData();
+    // trigger common data load requests
+    // @ts-ignore
+    await this.loadCommonData();
+    // Order of method calls matters
     installRouter((location) =>
       this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
-    this.requestUserData();
-    // trigger common data load requests
-    // @ts-ignore
-    this.loadCommonData();
 
     installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
     // @ts-ignore
