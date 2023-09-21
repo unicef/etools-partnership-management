@@ -3,7 +3,6 @@ import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
 import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
@@ -17,6 +16,7 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {BASE_URL} from '../../../config/config';
 import {translate} from 'lit-translate';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 /**
  * PMP main menu
@@ -40,17 +40,17 @@ class AppMenu extends connect(store)(
           Management
         </span>
 
-        <span class="ripple-wrapper main">
-          <iron-icon
-            id="menu-header-top-icon"
-            icon="pmp-main-icons:partnership-management"
-            @tap="${this._toggleSmallMenu}"
-          >
-          </iron-icon>
-          <paper-ripple class="circle" center></paper-ripple>
-        </span>
-
-        <paper-tooltip for="menu-header-top-icon" position="right">Partnership Management</paper-tooltip>
+        <sl-tooltip content="Partnership Management" placement="right">
+          <span class="ripple-wrapper main">
+            <iron-icon
+              id="menu-header-top-icon"
+              icon="pmp-main-icons:partnership-management"
+              @tap="${this._toggleSmallMenu}"
+            >
+            </iron-icon>
+            <paper-ripple class="circle" center></paper-ripple>
+          </span>
+        </sl-tooltip>
 
         <span class="chev-right">
           <iron-icon id="expand-menu" icon="chevron-right" @tap="${this._toggleSmallMenu}"></iron-icon>
@@ -72,25 +72,25 @@ class AppMenu extends connect(store)(
         >
           <a class="nav-menu-item" menu-name="partners" href="${BASE_URL}partners/list">
             <iron-icon id="partners-icon" icon="social:people"></iron-icon>
-            <paper-tooltip for="partners-icon" position="right">${translate('PARTNERS')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('PARTNERS')}"></sl-tooltip>
             <div class="name">${translate('PARTNERS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="agreements" href="${BASE_URL}agreements/list">
             <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
-            <paper-tooltip for="agreements-icon" position="right">${translate('AGREEMENTS')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('AGREEMENTS')}"></sl-tooltip>
             <div class="name">${translate('AGREEMENTS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
             <iron-icon id="interventions-icon" icon="description"></iron-icon>
-            <paper-tooltip for="interventions-icon" position="right">${translate('PD_SPD')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('PD_SPD')}"></sl-tooltip>
             <div class="name">${translate('PD_SPD')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
             <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
-            <paper-tooltip for="gov-icon" position="right">${translate('GOVERNMENT')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('GOVERNMENT')}"></sl-tooltip>
             <div class="name">${translate('GOVERNMENT')}</div>
           </a>
 
@@ -101,7 +101,7 @@ class AppMenu extends connect(store)(
             href="${BASE_URL}reports/list"
           >
             <iron-icon id="reports-icon" icon="assignment"></iron-icon>
-            <paper-tooltip for="reports-icon" position="right">${translate('REPORTS')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('REPORTS')}"></sl-tooltip>
             <div class="name">${translate('REPORTS')}</div>
           </a>
 
@@ -112,7 +112,7 @@ class AppMenu extends connect(store)(
             href="${BASE_URL}settings"
           >
             <iron-icon id="settings-icon" icon="settings"></iron-icon>
-            <paper-tooltip for="settings-icon" position="right">${translate('SETTINGS')}</paper-tooltip>
+            <sl-tooltip placement="right" content="${translate('SETTINGS')}"></sl-tooltip>
             <div class="name">${translate('SETTINGS')}</div>
           </a>
         </iron-selector>
@@ -127,9 +127,7 @@ class AppMenu extends connect(store)(
           target="_blank"
         >
           <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
-          <paper-tooltip for="power-bi-icon" position="right"
-            >${translate('IMPLEMENTATION_INTELLIGENCE')}</paper-tooltip
-          >
+          <sl-tooltip placement="right" content="${translate('IMPLEMENTATION_INTELLIGENCE')}"></sl-tooltip>
           <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
         </a>
 
@@ -141,7 +139,7 @@ class AppMenu extends connect(store)(
           tracker="Knowledge base"
         >
           <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
-          <paper-tooltip for="knoledge-icon" position="right">${translate('KNOWLEDGE_BASE')}</paper-tooltip>
+          <sl-tooltip placement="right" content="${translate('KNOWLEDGE_BASE')}"></sl-tooltip>
           <div class="name">${translate('KNOWLEDGE_BASE')}</div>
         </a>
 
@@ -153,7 +151,7 @@ class AppMenu extends connect(store)(
           tracker="Discussion"
         >
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
-          <paper-tooltip for="discussion-icon" position="right">${translate('DISCUSSION')}</paper-tooltip>
+          <sl-tooltip placement="right" content="${translate('DISCUSSION')}"></sl-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
         </a>
         <a
@@ -164,7 +162,7 @@ class AppMenu extends connect(store)(
           tracker="Information"
         >
           <iron-icon id="information-icon" icon="icons:info"></iron-icon>
-          <paper-tooltip for="information-icon" position="right">${translate('INFORMATION')}</paper-tooltip>
+          <sl-tooltip placement="right" content="${translate('INFORMATION')}"></sl-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
         </a>
       </div>
