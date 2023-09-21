@@ -1,7 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-listbox/paper-listbox.js';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
@@ -190,7 +189,7 @@ export class InterventionsModule extends connect(store)(
                     name="chevron-down"
                     @click="${(event: MouseEvent) => {
                       event.stopImmediatePropagation();
-                      (event.currentTarget!.parentElement as SlDropdown).show();
+                      ((event.currentTarget as any)!.parentElement as SlDropdown).show();
                     }}"
                   ></sl-icon>
                   <sl-menu>

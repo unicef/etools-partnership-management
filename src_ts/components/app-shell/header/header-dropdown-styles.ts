@@ -23,33 +23,6 @@ export const headerDropdownStyles = html`
       text-align: end;
     }
 
-    etools-dropdown {
-      --paper-listbox: {
-        max-height: 600px;
-      }
-
-      --esmm-icons: {
-        color: var(--light-secondary-text-color);
-        cursor: pointer;
-      }
-
-      --paper-input-container-underline: {
-        display: none;
-      }
-
-      --paper-input-container-underline-focus: {
-        display: none;
-      }
-
-      --paper-input-container-shared-input-style: {
-        color: var(--light-secondary-text-color);
-        cursor: pointer;
-        font-size: 16px;
-        text-align: right;
-        width: 100%;
-      }
-    }
-
     countries-dropdown[dir='rtl'] {
       margin-inline: 30px 20px;
     }
