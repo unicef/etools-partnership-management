@@ -68,14 +68,14 @@ export const etoolsStatusStyles = html`
       font-size: 12px;
     }
 
-    .icon-wrapper iron-icon {
-      --iron-icon-height: 16px;
-      --iron-icon-width: 16px;
+    .icon-wrapper sl-icon {
+      --sl-icon-height: 16px;
+      --sl-icon-width: 16px;
       color: white;
       display: none;
     }
 
-    .icon-wrapper iron-icon,
+    .icon-wrapper sl-icon,
     .icon-wrapper span {
       align-self: center;
     }
@@ -111,8 +111,8 @@ export const etoolsStatusStyles = html`
     }
 
     .custom .status-icon .icon-wrapper .custom-icon {
-      --iron-icon-height: 100%;
-      --iron-icon-width: 100%;
+      --sl-icon-height: 100%;
+      --sl-icon-width: 100%;
       width: 100%;
       height: 100%;
     }
@@ -144,7 +144,7 @@ export const etoolsStatusStyles = html`
       display: none;
     }
 
-    .completed .icon-wrapper iron-icon.done-icon {
+    .completed .icon-wrapper sl-icon.done-icon {
       display: block;
       width: 18px;
     }

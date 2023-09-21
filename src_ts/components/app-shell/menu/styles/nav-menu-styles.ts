@@ -162,22 +162,23 @@ export const navMenuStyles = html`
       color: var(--primary-text-color);
     }
 
-    .nav-menu-item iron-icon {
+    .nav-menu-item sl-icon {
       margin: 0 16px;
       color: var(--dark-icon-color);
+      font-size: 24px;
     }
 
-    :host([small-menu]) .nav-menu-item iron-icon {
+    :host([small-menu]) .nav-menu-item sl-icon {
       margin: 0;
     }
 
     .nav-menu-item.iron-selected .name,
-    .nav-menu-item.iron-selected iron-icon {
+    .nav-menu-item.iron-selected sl-icon {
       color: var(--primary-color);
     }
 
     .nav-menu-item.lighter-item .name,
-    .nav-menu-item.lighter-item iron-icon {
+    .nav-menu-item.lighter-item sl-icon {
       color: var(--secondary-text-color);
     }
 

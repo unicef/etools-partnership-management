@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
@@ -76,7 +76,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           }}"
           placeholder="${translate('GENERAL.SEARCH')}"
         >
-          <iron-icon icon="search" slot="prefix"></iron-icon>
+          <sl-icon name="search" slot="prefix"></sl-icon>
         </etools-input>
       </div>
 

@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icon/iron-icon.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
@@ -154,7 +154,7 @@ export class InterventionsModule extends connect(store)(
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <sl-dropdown id="pdExportMenuBtn" close-on-activate>
                 <sl-button slot="trigger" variant="text" class="export" caret>
-                  <iron-icon icon="file-download" slot="prefix"></iron-icon>
+                  <sl-icon name="file-download" slot="prefix"></sl-icon>
                   ${translate('EXPORT')}
                 </sl-button>
                 <sl-menu>
@@ -181,7 +181,7 @@ export class InterventionsModule extends connect(store)(
                 @click="${this._goToNewInterventionPage}"
                 ?hidden="${this.listLoadingActive}"
               >
-                <iron-icon icon="add" slot="prefix"></iron-icon>
+                <sl-icon name="add" slot="prefix"></sl-icon>
                 <span style="padding: 0 10px 0 0">${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
                 <sl-dropdown id="importEcn">
                   <sl-icon

@@ -65,12 +65,12 @@ export const sharedStyles = html`
       background-color: var(--primary-background-color);
     }
 
-    iron-icon.dark {
-      --iron-icon-fill-color: var(--dark-icon-color);
+    sl-icon.dark {
+      --sl-icon-fill-color: var(--dark-icon-color);
     }
 
-    iron-icon.light {
-      --iron-icon-fill-color: var(--light-icon-color);
+    sl-icon.light {
+      --sl-icon-fill-color: var(--light-icon-color);
     }
 
     paper-icon-button.dark {

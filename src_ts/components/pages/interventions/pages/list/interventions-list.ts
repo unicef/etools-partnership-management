@@ -210,7 +210,7 @@ export class InterventionsList extends connect(store)(
                   )}"
                 >
                   <span slot="field">${this.getDateDisplayValue(intervention.start)}</span>
-                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <sl-icon name="not-equal" slot="custom-icon"></sl-icon>
                   <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
@@ -226,7 +226,7 @@ export class InterventionsList extends connect(store)(
                   )}"
                 >
                   <span slot="field">${this.getDateDisplayValue(intervention.end)}</span>
-                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <sl-icon name="not-equal" slot="custom-icon"></sl-icon>
                   <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
@@ -265,10 +265,10 @@ export class InterventionsList extends connect(store)(
                     <span class="amount-currency">${intervention.budget_currency}</span>
                     <span>${displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
                   </span>
-                  <iron-icon
-                    icon="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
+                  <sl-icon
+                    name="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
                     slot="custom-icon"
-                  ></iron-icon>
+                  ></sl-icon>
                   <span slot="message">
                     <span
                       >${this.getIntListUnicefCashAmountTooltipMsg(

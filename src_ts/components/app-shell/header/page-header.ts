@@ -202,7 +202,7 @@ class PageHeader extends connect(store)(
 
       <app-toolbar sticky class="content-align header">
         <div class="header__item">
-          <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
+          <paper-icon-button id="menuButton" name="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />

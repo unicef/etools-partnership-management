@@ -1,7 +1,6 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/image-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {listenForLangChanged} from 'lit-translate';
 
@@ -19,32 +18,32 @@ export class ReportStatus extends LitElement {
           display: inline-block;
         }
 
-        iron-icon {
-          --iron-icon-width: 16px;
-          --iron-icon-height: 16px;
+        sl-icon {
+          --sl-icon-width: 16px;
+          --sl-icon-height: 16px;
           padding-inline-end: 4px;
           margin-top: -2px;
         }
 
-        :host([status-type='default']) iron-icon {
+        :host([status-type='default']) sl-icon {
           color: var(--primary-color);
         }
 
-        :host([status-type='submitted']) iron-icon,
-        :host([status-type='success']) iron-icon {
+        :host([status-type='submitted']) sl-icon,
+        :host([status-type='success']) sl-icon {
           color: var(--success-color);
         }
 
-        :host([status-type='no-status']) iron-icon,
-        :host([status-type='error']) iron-icon {
+        :host([status-type='no-status']) sl-icon,
+        :host([status-type='error']) sl-icon {
           color: var(--dark-error-color);
         }
 
-        :host([status-type='neutral']) iron-icon {
+        :host([status-type='neutral']) sl-icon {
           color: var(--secondary-text-color);
         }
 
-        :host([status-type='warning']) iron-icon {
+        :host([status-type='warning']) sl-icon {
           color: var(--warning-color);
         }
 
@@ -53,7 +52,7 @@ export class ReportStatus extends LitElement {
         }
       </style>
 
-      ${!this.noIcon ? html`<iron-icon icon="${this.icon}"></iron-icon>` : ''}
+      ${!this.noIcon ? html`<sl-icon name="${this.icon}"></sl-icon>` : ''}
       ${!this.noLabel ? html`<span id="label">${this.label}</span>` : ''}
       <slot></slot>
     `;

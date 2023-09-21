@@ -125,7 +125,7 @@ export const monitoringActivitiesStyles = html`<style>
   .activities .remove .description {
     left: 0;
   }
-  iron-icon {
+  sl-icon {
     margin-inline-end: 10px;
     cursor: pointer;
   }

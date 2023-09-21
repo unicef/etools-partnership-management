@@ -1,6 +1,5 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -149,7 +148,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
                   >
                   <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
                   <span class="col-data flex-c">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <sl-icon name="attachment" class="attachment"></sl-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
                       ${item.id

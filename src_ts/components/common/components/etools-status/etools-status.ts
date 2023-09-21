@@ -4,8 +4,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/av-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
@@ -30,8 +29,8 @@ export class EtoolsStatus extends connect(store)(LitElement) {
                 <div class="status-icon">
                   <span class="icon-wrapper" style="${status.iconContainerStyles}">
                     <span>${this._getTrueIndex(index)}</span>
-                    <iron-icon class="done-icon" icon="done"></iron-icon>
-                    <iron-icon class="custom-icon" icon="${status.icon}" style="${status.iconStyles}"></iron-icon>
+                    <sl-icon class="done-icon" name="done"></sl-icon>
+                    <sl-icon class="custom-icon" name="${status.icon}" style="${status.iconStyles}"></sl-icon>
                   </span>
                 </div>
                 <div class="status">

@@ -1,6 +1,6 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/av-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import EtoolsStatusCommonMixin from '../../../../common/components/etools-status/etools-status-common-mixin-lit';
 import '../../../../common/components/etools-status/etools-status';

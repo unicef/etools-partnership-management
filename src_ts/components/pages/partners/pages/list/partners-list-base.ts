@@ -9,7 +9,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.
 import '@polymer/iron-media-query/iron-media-query.js';
 import '../../data/partners-list-data.js';
 
-import '@polymer/iron-icon/iron-icon';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -186,14 +186,14 @@ export class PartnersListBase extends CommonMixin(
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
                   <etools-info-tooltip class="marked-for-deletion" custom-icon ?hidden="${!partner.deleted_flag}">
-                    <iron-icon icon="delete" slot="custom-icon"></iron-icon>
+                    <sl-icon name="delete" slot="custom-icon"></sl-icon>
                     <span slot="message">${translate('MARKED_FOR_DELETION')}</span>
                   </etools-info-tooltip>
                 </span>
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.blocked}">
                   <etools-info-tooltip class="blocked" custom-icon ?hidden="${!partner.blocked}">
-                    <iron-icon icon="block" slot="custom-icon"></iron-icon>
+                    <sl-icon name="block" slot="custom-icon"></sl-icon>
                     <span slot="message">${translate('BLOCKED')}</span>
                   </etools-info-tooltip>
                 </span>

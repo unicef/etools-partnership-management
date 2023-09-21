@@ -1,9 +1,6 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/communication-icons.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
@@ -80,7 +77,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           visibility: visible;
         }
 
-        iron-icon {
+        sl-icon {
           color: var(--dark-secondary-text-color);
         }
 
@@ -172,7 +169,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             title="${this.partner.address}"
             .value="${this.partner.address}"
           >
-            <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
+            <sl-icon slot="prefix" name="communication:location-on"></sl-icon>
           </etools-input>
         </div>
         <div class="row-h flex-c">
@@ -183,7 +180,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('PHONE_NUMBER')}"
               .value="${this.partner.phone_number}"
             >
-              <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
+              <sl-icon slot="prefix" name="communication:phone"></sl-icon>
             </etools-input>
           </div>
           <div class="col col-4">
@@ -194,7 +191,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               title="${this.partner.email}"
               .value="${this.partner.email}"
             >
-              <iron-icon icon="communication:email" slot="prefix"></iron-icon>
+              <sl-icon name="communication:email" slot="prefix"></sl-icon>
             </etools-input>
           </div>
           <div class="col col-4"></div>
@@ -296,7 +293,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                   <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
                 </span>
                 <span class="col-data col-6">
-                  <iron-icon icon="attachment" ?hidden="${!item.attachment}"></iron-icon>
+                  <sl-icon name="attachment" ?hidden="${!item.attachment}"></sl-icon>
                   <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
                   <a class="cvs-file" href="${item.attachment}" target="_blank" download
                     >${this.getFileNameFromURL(item.attachment)}</a
@@ -304,7 +301,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                 </span>
                 <span class="col-data col-2">
                   <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
-                  <iron-icon icon="check" ?hidden="${!item.archived}"></iron-icon>
+                  <sl-icon name="check" ?hidden="${!item.archived}"></sl-icon>
                 </span>
                 <icons-actions2
                   .item="${item}"

@@ -2,7 +2,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/iron-icons/iron-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
@@ -58,7 +58,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           padding-top: 0;
         }
 
-        iron-icon {
+        sl-icon {
           color: var(--dark-icon-color);
           margin-inline-end: 8px;
         }
@@ -130,7 +130,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                   </span>
                   <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date || '')} </span>
                   <span class="col-data col-5">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <sl-icon name="attachment" class="attachment"></sl-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
                       <a href="${item.report_attachment}" target="_blank" download>
@@ -140,7 +140,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                   </span>
                   <span class="col-data col-2 center-align">
                     <span ?hidden="${!item.active}" class="placeholder-style">&#8212;</span>
-                    <iron-icon icon="check" ?hidden="${item.active}"></iron-icon>
+                    <sl-icon name="check" ?hidden="${item.active}"></sl-icon>
                   </span>
                   <icons-actions2
                     item-id="${item.id}"

@@ -2,7 +2,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/iron-icons/iron-icons';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -116,7 +116,7 @@ export class PartnersModule extends connect(store)(
               @click="${this.trackAnalytics}"
               tracker="Export Partners"
             >
-              <iron-icon icon="file-download"></iron-icon>
+              <sl-icon name="file-download"></sl-icon>
               ${translate('EXPORT')}
             </sl-button>
           </div>
@@ -127,7 +127,7 @@ export class PartnersModule extends connect(store)(
               tracker="Import Sync Partner"
               @click="${this._openNewPartnerDialog}"
             >
-              <iron-icon icon="add"></iron-icon>
+              <sl-icon name="add"></sl-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
             </sl-button>
           </div>

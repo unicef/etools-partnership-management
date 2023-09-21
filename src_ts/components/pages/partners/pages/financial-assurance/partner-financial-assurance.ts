@@ -2,10 +2,10 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/iron-icons/iron-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
-import '@polymer/iron-icon/iron-icon';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 

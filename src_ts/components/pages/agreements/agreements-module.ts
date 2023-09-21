@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {property, query, customElement} from 'lit/decorators.js';
 import '@polymer/iron-pages/iron-pages';
-import '@polymer/iron-icon/iron-icon';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
@@ -85,13 +85,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
               @click="${this.trackAnalytics}"
               tracker="Agreements export"
             >
-              <iron-icon icon="file-download" slot="prefix"></iron-icon>
+              <sl-icon name="file-download" slot="prefix"></sl-icon>
               ${translate('EXPORT')}
             </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
             <sl-button class="primary-btn" variant="primary" @click="${this._goToNewAgreementPage}">
-              <iron-icon icon="add" slot="prefix"></iron-icon>
+              <sl-icon name="add" slot="prefix"></sl-icon>
               ${translate('ADD_NEW_AGREEMENT')}
             </sl-button>
           </div>

@@ -9,7 +9,7 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
-import '@polymer/iron-icons/editor-icons';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import {getUniqueId} from '@unicef-polymer/etools-utils/dist/general.util';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import clone from 'lodash-es/clone';
@@ -88,12 +88,12 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
                 data-activity-id="${activity.id}"
               >
                 <div class="flex-2 cell">
-                  <iron-icon
+                  <sl-icon
                     ?hidden="${!this.editMode}"
                     class="flex-none"
-                    icon="editor:drag-handle"
+                    name="editor:drag-handle"
                     @mousedown="${this.startDrag}"
-                  ></iron-icon>
+                  ></sl-icon>
                   ${this.editMode
                     ? html`${activity.reference_number}`
                     : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">

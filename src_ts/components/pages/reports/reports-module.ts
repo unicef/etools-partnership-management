@@ -1,7 +1,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@polymer/iron-icons/iron-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -126,7 +126,7 @@ export class ReportsModule extends connect(store)(
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
               <sl-button slot="trigger" variant="text" class="export" caret>
-                <iron-icon icon="file-download" slot="prefix"></iron-icon>
+                <sl-icon name="file-download" slot="prefix"></sl-icon>
                 ${translate('EXPORT')}
               </sl-button>
               <sl-menu>

@@ -1,4 +1,4 @@
-import '@polymer/iron-icons/iron-icons.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
