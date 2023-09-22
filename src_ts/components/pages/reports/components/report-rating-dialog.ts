@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-radio-button/paper-radio-button.js';
-import '@polymer/paper-radio-group/paper-radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio/radio.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -33,8 +33,13 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         [hidden] {
           display: none !important;
         }
-        paper-radio-group {
-          padding-bottom: 8px;
+        sl-radio {
+          display: inline-block;
+          margin-inline-end: 15px;
+        }
+        sl-radio-group {
+          margin-top: 10px;
+          margin-bottom: 10px;
         }
       </style>
       <etools-dialog
@@ -51,18 +56,18 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
           <p>Rate the overall progress of this PD/SPD in light of this report and monitoring visits.</p>
-          <paper-radio-group
+          <sl-radio-group
             id="overallStatus"
-            .selected="${this.selectedOverallStatus}"
-            @selected-changed="${({detail}: CustomEvent) => {
-              this.selectedOverallStatus = detail.value;
+            .value="${this.selectedOverallStatus}"
+            @sl-change="${(e: any) => {
+              this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <paper-radio-button name="Met"> Met</paper-radio-button>
-            <paper-radio-button name="OnT"> On track</paper-radio-button>
-            <paper-radio-button name="NoP"> No progress</paper-radio-button>
-            <paper-radio-button name="Con"> Constrained</paper-radio-button>
-          </paper-radio-group>
+            <sl-radio value="Met"> Met</sl-radio>
+            <sl-radio value="OnT"> On track</sl-radio>
+            <sl-radio value="NoP"> No progress</sl-radio>
+            <sl-radio value="Con"> Constrained</sl-radio>
+          </sl-radio-group>
         </div>
       </etools-dialog>
     `;
