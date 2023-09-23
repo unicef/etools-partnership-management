@@ -71,26 +71,30 @@ class AppMenu extends connect(store)(
           role="navigation"
         >
           <a class="nav-menu-item" menu-name="partners" href="${BASE_URL}partners/list">
-            <iron-icon id="partners-icon" icon="social:people"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('PARTNERS')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('PARTNERS')}">
+              <iron-icon id="partners-icon" icon="social:people"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('PARTNERS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="agreements" href="${BASE_URL}agreements/list">
-            <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('AGREEMENTS')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('AGREEMENTS')}">
+              <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('AGREEMENTS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
-            <iron-icon id="interventions-icon" icon="description"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('PD_SPD')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('PD_SPD')}">
+              <iron-icon id="interventions-icon" icon="description"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('PD_SPD')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
-            <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('GOVERNMENT')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('GOVERNMENT')}">
+              <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('GOVERNMENT')}</div>
           </a>
 
@@ -100,8 +104,9 @@ class AppMenu extends connect(store)(
             menu-name="reports"
             href="${BASE_URL}reports/list"
           >
-            <iron-icon id="reports-icon" icon="assignment"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('REPORTS')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('REPORTS')}">
+              <iron-icon id="reports-icon" icon="assignment"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('REPORTS')}</div>
           </a>
 
@@ -111,8 +116,9 @@ class AppMenu extends connect(store)(
             menu-name="settings"
             href="${BASE_URL}settings"
           >
-            <iron-icon id="settings-icon" icon="settings"></iron-icon>
-            <sl-tooltip placement="right" content="${translate('SETTINGS')}"></sl-tooltip>
+            <sl-tooltip placement="right" content="${translate('SETTINGS')}">
+              <iron-icon id="settings-icon" icon="settings"></iron-icon>
+            </sl-tooltip>
             <div class="name">${translate('SETTINGS')}</div>
           </a>
         </iron-selector>
@@ -126,8 +132,9 @@ class AppMenu extends connect(store)(
           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
           target="_blank"
         >
-          <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
-          <sl-tooltip placement="right" content="${translate('IMPLEMENTATION_INTELLIGENCE')}"></sl-tooltip>
+          <sl-tooltip placement="right" content="${translate('IMPLEMENTATION_INTELLIGENCE')}">
+            <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
+          </sl-tooltip>
           <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
         </a>
 
@@ -138,8 +145,9 @@ class AppMenu extends connect(store)(
           @tap="${this.trackAnalytics}"
           tracker="Knowledge base"
         >
-          <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
-          <sl-tooltip placement="right" content="${translate('KNOWLEDGE_BASE')}"></sl-tooltip>
+          <sl-tooltip placement="right" content="${translate('KNOWLEDGE_BASE')}">
+            <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
+          </sl-tooltip>
           <div class="name">${translate('KNOWLEDGE_BASE')}</div>
         </a>
 
@@ -150,8 +158,9 @@ class AppMenu extends connect(store)(
           @tap="${this.trackAnalytics}"
           tracker="Discussion"
         >
-          <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
-          <sl-tooltip placement="right" content="${translate('DISCUSSION')}"></sl-tooltip>
+          <sl-tooltip placement="right" content="${translate('DISCUSSION')}">
+            <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
+          </sl-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
         </a>
         <a
@@ -161,8 +170,9 @@ class AppMenu extends connect(store)(
           @tap="${this.trackAnalytics}"
           tracker="Information"
         >
-          <iron-icon id="information-icon" icon="icons:info"></iron-icon>
-          <sl-tooltip placement="right" content="${translate('INFORMATION')}"></sl-tooltip>
+          <sl-tooltip placement="right" content="${translate('INFORMATION')}">
+            <iron-icon id="information-icon" icon="icons:info"></iron-icon>
+          </sl-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
         </a>
       </div>
