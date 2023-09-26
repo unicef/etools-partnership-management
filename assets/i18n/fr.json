@@ -625,5 +625,11 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Numéro de fournisseur non valide pour le nouveau partenaire !",
   "IMPORTING_PARTNER_INFO": "Importation d'informations sur les partenaires...",
   "PLEASE_REFRESH_DATA": "Veuillez actualiser les données !",
-  "SUPPORT": "Soutien"
+  "SUPPORT": "Soutien",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Évaluez les progrès globaux de ce PD/SPD à la lumière de ce rapport et des visites de suivi.",
+  "MET": "Rencontré",
+  "ON_TRACK": "Sur la bonne voie",
+  "NO_PROGRESS": "Pas de progrès",
+  "CONSTRAINED": "Contraint",
+  "FEEDBACK_COMMENTS": "Feedback/Commentaires"
 }
