@@ -2,7 +2,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -116,7 +116,7 @@ export class PartnersModule extends connect(store)(
               @click="${this.trackAnalytics}"
               tracker="Export Partners"
             >
-              <sl-icon name="file-download"></sl-icon>
+              <etools-icon name="file-download"></etools-icon>
               ${translate('EXPORT')}
             </sl-button>
           </div>
@@ -127,7 +127,7 @@ export class PartnersModule extends connect(store)(
               tracker="Import Sync Partner"
               @click="${this._openNewPartnerDialog}"
             >
-              <sl-icon name="add"></sl-icon>
+              <etools-icon name="add"></etools-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
             </sl-button>
           </div>

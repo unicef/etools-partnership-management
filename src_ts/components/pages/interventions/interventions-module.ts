@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
@@ -33,7 +33,7 @@ import './pages/new/ecn-import-dialog';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
@@ -132,12 +132,9 @@ export class InterventionsModule extends connect(store)(
           vertical-align: middle;
         }
 
-        sl-icon[slot='trigger'] {
+        etools-icon[slot='trigger'] {
           padding: 9px 10px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
-        }
-        sl-menu-item {
-          --sl-font-weight-normal: bold;
         }
       </style>
 
@@ -154,7 +151,7 @@ export class InterventionsModule extends connect(store)(
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <sl-dropdown id="pdExportMenuBtn" close-on-activate>
                 <sl-button slot="trigger" variant="text" class="export" caret>
-                  <sl-icon name="file-download" slot="prefix"></sl-icon>
+                  <etools-icon name="file-download" slot="prefix"></etools-icon>
                   ${translate('EXPORT')}
                 </sl-button>
                 <sl-menu>
@@ -181,17 +178,17 @@ export class InterventionsModule extends connect(store)(
                 @click="${this._goToNewInterventionPage}"
                 ?hidden="${this.listLoadingActive}"
               >
-                <sl-icon name="add" slot="prefix"></sl-icon>
+                <etools-icon name="add" slot="prefix"></etools-icon>
                 <span style="padding: 0 10px 0 0">${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
                 <sl-dropdown id="importEcn">
-                  <sl-icon
+                  <etools-icon
                     slot="trigger"
                     name="expand-more"
                     @click="${(event: MouseEvent) => {
                       event.stopImmediatePropagation();
                       ((event.currentTarget as any)!.parentElement as SlDropdown).show();
                     }}"
-                  ></sl-icon>
+                  ></etools-icon>
                   <sl-menu>
                     <sl-menu-item
                       @click="${(e: CustomEvent) => {

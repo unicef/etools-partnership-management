@@ -1,4 +1,4 @@
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
@@ -37,24 +37,20 @@ class AppMenu extends connect(store)(
         </span>
 
         <span class="ripple-wrapper main">
-          <sl-icon
-            id="menu-header-top-icon"
-            name="partnership-management"
-            @click="${this._toggleSmallMenu}"
-          >
-          </sl-icon>
+          <etools-icon id="menu-header-top-icon" name="partnership-management" @click="${this._toggleSmallMenu}">
+          </etools-icon>
           <paper-ripple class="circle" center></paper-ripple>
         </span>
 
         <paper-tooltip for="menu-header-top-icon" position="right">Partnership Management</paper-tooltip>
 
         <span class="chev-right">
-          <sl-icon id="expand-menu" name="chevron-right" @click="${this._toggleSmallMenu}"></sl-icon>
+          <etools-icon id="expand-menu" name="chevron-right" @click="${this._toggleSmallMenu}"></etools-icon>
           <paper-ripple class="circle" center></paper-ripple>
         </span>
 
         <span class="ripple-wrapper">
-          <sl-icon id="minimize-menu" name="chevron-left" @click="${this._toggleSmallMenu}"></sl-icon>
+          <etools-icon id="minimize-menu" name="chevron-left" @click="${this._toggleSmallMenu}"></etools-icon>
           <paper-ripple class="circle" center></paper-ripple>
         </span>
       </div>
@@ -67,25 +63,25 @@ class AppMenu extends connect(store)(
           role="navigation"
         >
           <a class="nav-menu-item" menu-name="partners" href="${BASE_URL}partners/list">
-            <sl-icon id="partners-icon" name="social:people"></sl-icon>
+            <etools-icon id="partners-icon" name="social:people"></etools-icon>
             <paper-tooltip for="partners-icon" position="right">${translate('PARTNERS')}</paper-tooltip>
             <div class="name">${translate('PARTNERS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="agreements" href="${BASE_URL}agreements/list">
-            <sl-icon id="agreements-icon" name="av:playlist-add-check"></sl-icon>
+            <etools-icon id="agreements-icon" name="av:playlist-add-check"></etools-icon>
             <paper-tooltip for="agreements-icon" position="right">${translate('AGREEMENTS')}</paper-tooltip>
             <div class="name">${translate('AGREEMENTS')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
-            <sl-icon id="interventions-icon" name="description"></sl-icon>
+            <etools-icon id="interventions-icon" name="description"></etools-icon>
             <paper-tooltip for="interventions-icon" position="right">${translate('PD_SPD')}</paper-tooltip>
             <div class="name">${translate('PD_SPD')}</div>
           </a>
 
           <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
-            <sl-icon id="gov-icon" name="account-balance"></sl-icon>
+            <etools-icon id="gov-icon" name="account-balance"></etools-icon>
             <paper-tooltip for="gov-icon" position="right">${translate('GOVERNMENT')}</paper-tooltip>
             <div class="name">${translate('GOVERNMENT')}</div>
           </a>
@@ -96,7 +92,7 @@ class AppMenu extends connect(store)(
             menu-name="reports"
             href="${BASE_URL}reports/list"
           >
-            <sl-icon id="reports-icon" name="assignment"></sl-icon>
+            <etools-icon id="reports-icon" name="assignment"></etools-icon>
             <paper-tooltip for="reports-icon" position="right">${translate('REPORTS')}</paper-tooltip>
             <div class="name">${translate('REPORTS')}</div>
           </a>
@@ -107,7 +103,7 @@ class AppMenu extends connect(store)(
             menu-name="settings"
             href="${BASE_URL}settings"
           >
-            <sl-icon id="settings-icon" name="settings"></sl-icon>
+            <etools-icon id="settings-icon" name="settings"></etools-icon>
             <paper-tooltip for="settings-icon" position="right">${translate('SETTINGS')}</paper-tooltip>
             <div class="name">${translate('SETTINGS')}</div>
           </a>
@@ -122,7 +118,7 @@ class AppMenu extends connect(store)(
           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
           target="_blank"
         >
-          <sl-icon id="power-bi-icon" name="power-bi"></sl-icon>
+          <etools-icon id="power-bi-icon" name="power-bi"></etools-icon>
           <paper-tooltip for="power-bi-icon" position="right"
             >${translate('IMPLEMENTATION_INTELLIGENCE')}</paper-tooltip
           >
@@ -136,7 +132,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Knowledge base"
         >
-          <sl-icon id="knoledge-icon" name="maps:local-library"></sl-icon>
+          <etools-icon id="knoledge-icon" name="maps:local-library"></etools-icon>
           <paper-tooltip for="knoledge-icon" position="right">${translate('KNOWLEDGE_BASE')}</paper-tooltip>
           <div class="name">${translate('KNOWLEDGE_BASE')}</div>
         </a>
@@ -148,7 +144,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Discussion"
         >
-          <sl-icon id="discussion-icon" name="icons:question-answer"></sl-icon>
+          <etools-icon id="discussion-icon" name="icons:question-answer"></etools-icon>
           <paper-tooltip for="discussion-icon" position="right">${translate('DISCUSSION')}</paper-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
         </a>
@@ -159,7 +155,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Information"
         >
-          <sl-icon id="information-icon" name="icons:info"></sl-icon>
+          <etools-icon id="information-icon" name="icons:info"></etools-icon>
           <paper-tooltip for="information-icon" position="right">${translate('INFORMATION')}</paper-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
         </a>

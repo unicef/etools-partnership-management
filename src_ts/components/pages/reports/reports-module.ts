@@ -1,7 +1,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -126,7 +126,7 @@ export class ReportsModule extends connect(store)(
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
               <sl-button slot="trigger" variant="text" class="export" caret>
-                <sl-icon name="file-download" slot="prefix"></sl-icon>
+                <etools-icon name="file-download" slot="prefix"></etools-icon>
                 ${translate('EXPORT')}
               </sl-button>
               <sl-menu>
@@ -161,7 +161,7 @@ export class ReportsModule extends connect(store)(
             </sl-dropdown>
 
             <sl-dropdown>
-              <sl-icon-button slot="trigger" name="more-vert"> </sl-icon-button>
+              <etools-icon-button slot="trigger" name="more-vert"> </etools-icon-button>
               <sl-menu>
                 <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
                 <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>

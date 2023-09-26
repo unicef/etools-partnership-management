@@ -125,7 +125,7 @@ export const monitoringActivitiesStyles = html`<style>
   .activities .remove .description {
     left: 0;
   }
-  sl-icon {
+  etools-icon {
     margin-inline-end: 10px;
     cursor: pointer;
   }

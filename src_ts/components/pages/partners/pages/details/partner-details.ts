@@ -36,7 +36,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
 declare const dayjs: any;
 
@@ -77,11 +77,11 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           visibility: visible;
         }
 
-        sl-icon {
+        etools-icon {
           color: var(--dark-secondary-text-color);
         }
 
-        sl-icon {
+        etools-icon {
           margin-inline-end: 5px;
         }
 
@@ -169,7 +169,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             title="${this.partner.address}"
             .value="${this.partner.address}"
           >
-            <sl-icon slot="prefix" name="communication:location-on"></sl-icon>
+            <etools-icon slot="prefix" name="communication:location-on"></etools-icon>
           </etools-input>
         </div>
         <div class="row-h flex-c">
@@ -180,7 +180,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('PHONE_NUMBER')}"
               .value="${this.partner.phone_number}"
             >
-              <sl-icon slot="prefix" name="communication:phone"></sl-icon>
+              <etools-icon slot="prefix" name="communication:phone"></etools-icon>
             </etools-input>
           </div>
           <div class="col col-4">
@@ -191,7 +191,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               title="${this.partner.email}"
               .value="${this.partner.email}"
             >
-              <sl-icon name="communication:email" slot="prefix"></sl-icon>
+              <etools-icon name="communication:email" slot="prefix"></etools-icon>
             </etools-input>
           </div>
           <div class="col col-4"></div>
@@ -224,7 +224,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('DATE_OF_REPORT')}"
               .value="${this.getDateDisplayValue(this.partner.last_assessment_date)}"
             >
-              <sl-icon name="date-range" slot="prefix"></sl-icon>
+              <etools-icon name="date-range" slot="prefix"></etools-icon>
             </etools-input>
           </div>
         </div>
@@ -254,7 +254,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
               .value="${this.getDateDisplayValue(this.partner.psea_assessment_date)}"
             >
-              <sl-icon name="date-range" slot="prefix"></sl-icon>
+              <etools-icon name="date-range" slot="prefix"></etools-icon>
             </etools-input>
           </div>
         </div>
@@ -293,7 +293,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                   <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
                 </span>
                 <span class="col-data col-6">
-                  <sl-icon name="attachment" ?hidden="${!item.attachment}"></sl-icon>
+                  <etools-icon name="attachment" ?hidden="${!item.attachment}"></etools-icon>
                   <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
                   <a class="cvs-file" href="${item.attachment}" target="_blank" download
                     >${this.getFileNameFromURL(item.attachment)}</a
@@ -301,7 +301,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                 </span>
                 <span class="col-data col-2">
                   <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
-                  <sl-icon name="check" ?hidden="${!item.archived}"></sl-icon>
+                  <etools-icon name="check" ?hidden="${!item.archived}"></etools-icon>
                 </span>
                 <icons-actions2
                   .item="${item}"

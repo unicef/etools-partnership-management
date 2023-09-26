@@ -65,34 +65,33 @@ export const sharedStyles = html`
       background-color: var(--primary-background-color);
     }
 
-    sl-icon.dark {
-      --sl-icon-fill-color: var(--dark-icon-color);
+    etools-icon.dark {
+      --etools-icon-fill-color: var(--dark-icon-color);
     }
 
-    sl-icon.light {
-      --sl-icon-fill-color: var(--light-icon-color);
+    etools-icon.light {
+      --etools-icon-fill-color: var(--light-icon-color);
     }
 
-    paper-icon-button.dark {
+    etools-icon-button.dark {
       color: var(--dark-icon-color);
-      --paper-icon-button-ink-color: var(--dark-ink-color);
+      --etools-icon-button-ink-color: var(--dark-ink-color);
     }
 
-    paper-icon-button.light {
+    etools-icon-button.light {
       color: var(--light-icon-color);
-      --paper-icon-button-ink-color: var(--light-ink-color);
+      --etools-icon-button-ink-color: var(--light-ink-color);
     }
 
-    .dropdown-with-clear-btn paper-icon-button.clear,
-    .dropdown-with-clear-btn paper-icon-button.remove,
-    paper-icon-button.remove-field.remove {
-      width: 35px;
-      height: 35px;
+    .dropdown-with-clear-btn etools-icon-button.clear,
+    .dropdown-with-clear-btn etools-icon-button.remove,
+    etools-icon-button.remove-field.remove {
+      --etools-icon-font-size: 35px;
       top: 10px;
     }
 
-    .dropdown-with-clear-btn paper-icon-button.remove,
-    paper-icon-button.remove-field.remove {
+    .dropdown-with-clear-btn etools-icon-button.remove,
+    etools-icon-button.remove-field.remove {
       color: var(--icon-delete-color);
     }
 

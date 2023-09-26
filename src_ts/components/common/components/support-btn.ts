@@ -1,7 +1,7 @@
 /* eslint-disable lit/attribute-value-entities */
 import {css, CSSResult, html, LitElement, TemplateResult} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {translate} from 'lit-translate';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 /* eslint-disable max-len */
@@ -25,7 +25,7 @@ export class SupportBtn extends MatomoMixin(LitElement) {
         font-size: 16px;
       }
 
-      sl-icon {
+      etools-icon {
         margin-right: 4px;
         color: var(--light-secondary-text-color);
       }
@@ -47,7 +47,7 @@ export class SupportBtn extends MatomoMixin(LitElement) {
         tracker="Support"
         @tap="${this.trackAnalytics}"
       >
-        <sl-icon name="communication:textsms"></sl-icon>
+        <etools-icon name="communication:textsms"></etools-icon>
         <span class="support-text">${translate('SUPPORT')}</span>
       </a>
     `;

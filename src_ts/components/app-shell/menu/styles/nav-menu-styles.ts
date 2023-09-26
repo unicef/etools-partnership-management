@@ -85,12 +85,9 @@ export const navMenuStyles = html`
       display: block;
     }
 
-    .menu-header paper-icon-button {
-      --paper-icon-button: {
-        width: 24px;
-        height: 24px;
-        padding: 0;
-      }
+    .menu-header etools-icon-button {
+      --etools-icon-font-size: 24px;
+      padding: 0;
     }
 
     #menu-header-top-icon,
@@ -100,8 +97,7 @@ export const navMenuStyles = html`
     }
 
     #menu-header-top-icon {
-      width: 36px;
-      height: 36px;
+      --etools-icon-font-size: 36px;
     }
 
     .divider {
@@ -162,23 +158,23 @@ export const navMenuStyles = html`
       color: var(--primary-text-color);
     }
 
-    .nav-menu-item sl-icon {
+    .nav-menu-item etools-icon {
       margin: 0 16px;
       color: var(--dark-icon-color);
-      font-size: 24px;
+      --etools-icon-font-size: 24px;
     }
 
-    :host([small-menu]) .nav-menu-item sl-icon {
+    :host([small-menu]) .nav-menu-item etools-icon {
       margin: 0;
     }
 
     .nav-menu-item.iron-selected .name,
-    .nav-menu-item.iron-selected sl-icon {
+    .nav-menu-item.iron-selected etools-icon {
       color: var(--primary-color);
     }
 
     .nav-menu-item.lighter-item .name,
-    .nav-menu-item.lighter-item sl-icon {
+    .nav-menu-item.lighter-item etools-icon {
       color: var(--secondary-text-color);
     }
 

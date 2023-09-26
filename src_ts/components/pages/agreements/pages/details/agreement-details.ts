@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-input/paper-input-container.js';
@@ -411,7 +411,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             @click="${this._enableAoEdit}"
             ?hidden="${this.allowAoEditForSSFA}"
           >
-            <sl-icon name="create"></sl-icon>
+            <etools-icon name="create"></etools-icon>
             <span>${translate('AMEND_PARTNER_AUTHORIZED_OFFICERS')}</span>
           </sl-button>
           <sl-button
@@ -421,7 +421,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             @click="${this._cancelAoEdit}"
             ?hidden="${!this.allowAoEditForSSFA}"
           >
-            <sl-icon name="cancel"></sl-icon>
+            <etools-icon name="cancel"></etools-icon>
             <span>${translate('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')}</span>
           </sl-button>
         </div>
@@ -468,7 +468,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                 id="generateMyPca"
                 @click="${this._openGeneratePCADialog}"
               >
-                <sl-icon name="refresh"></sl-icon>
+                <etools-icon name="refresh"></etools-icon>
                 ${translate('GENERATE')}
               </sl-button>
             </div>

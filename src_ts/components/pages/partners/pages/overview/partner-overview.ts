@@ -216,7 +216,7 @@ export class PartnerOverview extends PaginationMixin(
                           )}"
                         >
                           <span slot="field">${this.getDateDisplayValue(partnership.start)}</span>
-                          <sl-icon name="not-equal" slot="custom-icon"></sl-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                         </etools-info-tooltip>
                         <etools-info-tooltip
@@ -229,7 +229,7 @@ export class PartnerOverview extends PaginationMixin(
                           )}"
                         >
                           <span slot="field">${this.getDateDisplayValue(partnership.end)}</span>
-                          <sl-icon name="not-equal" slot="custom-icon"></sl-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
                         </etools-info-tooltip>
                       </div>
@@ -263,10 +263,10 @@ export class PartnerOverview extends PaginationMixin(
                               )}</span
                             >
                           </span>
-                          <sl-icon
+                          <etools-icon
                             name="${this.getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)}"
                             slot="custom-icon"
-                          ></sl-icon>
+                          ></etools-icon>
                           <span slot="message">
                             <span
                               >${this.getIntListUnicefCashAmountTooltipMsg(
@@ -293,7 +293,7 @@ export class PartnerOverview extends PaginationMixin(
                               >${this.getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, true)}</span
                             >
                           </span>
-                          <sl-icon name="not-equal" slot="custom-icon"></sl-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">
                             <span>${this.getFrsMultiCurrFlagErrTooltipMsg()}</span>
                           </span>

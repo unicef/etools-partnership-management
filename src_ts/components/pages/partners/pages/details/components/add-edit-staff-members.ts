@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@polymer/paper-checkbox/paper-checkbox';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
@@ -136,7 +136,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               auto-validate
               .errorMessage="${translate('A_VALID_UNUSED_EMAIL_ADDRESS_IS_REQUIRED')}"
             >
-              <sl-icon slot="prefix" name="communication:email"></sl-icon>
+              <etools-icon slot="prefix" name="communication:email"></etools-icon>
             </etools-input>
           </div>
           <div class="col col-6">
@@ -151,7 +151,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
                 this.item.phone = detail.value;
               }}"
             >
-              <sl-icon slot="prefix" name="communication:phone"></sl-icon>
+              <etools-icon slot="prefix" name="communication:phone"></etools-icon>
             </etools-input>
           </div>
         </div>
