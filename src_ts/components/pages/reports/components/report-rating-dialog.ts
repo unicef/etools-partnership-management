@@ -13,6 +13,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {translate} from 'lit-translate';
 
 /*
   status: 'accepted'/'sent back'
@@ -50,7 +51,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         @close="${this._onClose}"
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
-          <p>Rate the overall progress of this PD/SPD in light of this report and monitoring visits.</p>
+          <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
           <paper-radio-group
             id="overallStatus"
             .selected="${this.selectedOverallStatus}"
@@ -58,10 +59,10 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
               this.selectedOverallStatus = detail.value;
             }}"
           >
-            <paper-radio-button name="Met"> Met</paper-radio-button>
-            <paper-radio-button name="OnT"> On track</paper-radio-button>
-            <paper-radio-button name="NoP"> No progress</paper-radio-button>
-            <paper-radio-button name="Con"> Constrained</paper-radio-button>
+            <paper-radio-button name="Met"> ${translate('MET')}</paper-radio-button>
+            <paper-radio-button name="OnT"> ${translate('ON_TRACK')}</paper-radio-button>
+            <paper-radio-button name="NoP"> ${translate('NO_PROGRESS')}</paper-radio-button>
+            <paper-radio-button name="Con"> ${translate('CONSTRAINED')}</paper-radio-button>
           </paper-radio-group>
         </div>
       </etools-dialog>

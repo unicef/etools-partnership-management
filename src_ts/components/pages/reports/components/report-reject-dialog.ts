@@ -12,6 +12,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {translate} from 'lit-translate';
 
 /**
  * @polymer
@@ -44,7 +45,7 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         <div id="content-box">
           <etools-input
             required
-            label="Feedback/Comments"
+            label="${translate('FEEDBACK_COMMENTS')}"
             placeholder="&#8212;"
             .value="${this.comment}"
             @value-changed="${({detail}: CustomEvent) => (this.comment = detail.value)}"

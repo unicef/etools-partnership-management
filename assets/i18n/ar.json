@@ -625,5 +625,11 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "!رقم البائع غير صالح لشريك جديد",
   "IMPORTING_PARTNER_INFO": "... جاري استيراد معلومات الشريك",
   "PLEASE_REFRESH_DATA": "يرجى تحديث البيانات!",
-  "SUPPORT": "يدعم"
+  "SUPPORT": "يدعم",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "قم بتقييم التقدم الإجمالي لـ PD/SPD في ضوء هذا التقرير وزيارات المراقبة.",
+  "MET": "التقى",
+  "ON_TRACK": "على الطريق",
+  "NO_PROGRESS": "لا تقدم",
+  "CONSTRAINED": "مقيدة",
+  "FEEDBACK_COMMENTS": "ردود الفعل / التعليقات"
 }

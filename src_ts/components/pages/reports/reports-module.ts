@@ -222,11 +222,13 @@ export class ReportsModule extends connect(store)(
     {
       tab: 'progress',
       tabLabel: getTranslation('RESULTS_REPORTED'),
+      translationKey: 'RESULTS_REPORTED',
       hidden: false
     },
     {
       tab: 'summary',
       tabLabel: getTranslation('OTHER_INFO'),
+      translationKey: 'OTHER_INFO',
       hidden: false
     }
   ];
@@ -246,6 +248,9 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   _page = '';
 
+  @property({type: String})
+  currentLanguage!: string;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
     if (!state.app?.routeDetails?.routeName) {
@@ -258,6 +263,27 @@ export class ReportsModule extends connect(store)(
       this.tabsActive = !this.listActive;
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
+      if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+        if (this.currentLanguage) {
+          // language was already set, this is language change
+          this.reportTabs = this.applyTabsTitleTranslation(this.reportTabs);
+        }
+        this.currentLanguage = String(state.activeLanguage?.activeLanguage);
+      }
+    }
+  }
+
+  applyTabsTitleTranslation(pageTabs: any[]): any[] {
+    try {
+      return pageTabs.map((item) => {
+        return {
+          ...item,
+          tabLabel: getTranslation(item.translationKey)
+        };
+      });
+    } catch (ex) {
+      console.log(ex);
+      return this.reportTabs;
     }
   }
 
