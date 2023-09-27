@@ -14,6 +14,7 @@ import {StaffMember} from '../../../../../../models/partners.models';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 import {User} from '@unicef-polymer/etools-types/dist/user.types';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 /**
  * @polymer
@@ -68,8 +69,9 @@ export class StaffMembers extends LitElement {
           </sl-switch>
           <div class="separator"></div>
           <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
-            <etools-icon id="information-icon" name="icons:open-in-new"></etools-icon>
-            <paper-tooltip for="information-icon" position="top">Access Management Portal</paper-tooltip>
+            <sl-tooltip placement="top" content="Access Management Portal">
+              <etools-icon id="information-icon" name="icons:open-in-new"></etools-icon>
+            </sl-tooltip>
           </a>
         </div>
 
