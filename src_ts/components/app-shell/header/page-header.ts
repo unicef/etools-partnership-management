@@ -1,5 +1,4 @@
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/paper-icon-button/paper-icon-button';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
@@ -30,7 +29,7 @@ import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 store.addReducers({
   activeLanguage
@@ -66,43 +65,6 @@ class PageHeader extends connect(store)(
 
         countries-dropdown {
           --countries-dropdown-color: var(--light-secondary-text-color);
-        }
-
-        etools-dropdown {
-          --paper-listbox: {
-            max-height: 600px;
-          }
-
-          --esmm-icons: {
-            color: var(--light-secondary-text-color);
-            cursor: pointer;
-          }
-
-          --paper-input-container-underline: {
-            display: none;
-          }
-
-          --paper-input-container-underline-focus: {
-            display: none;
-          }
-
-          --paper-input-container-shared-input-style: {
-            color: var(--light-secondary-text-color);
-            cursor: pointer;
-            font-size: 16px;
-            text-align: right;
-            width: 100px;
-          }
-        }
-
-        :host-context([dir='rtl']) etools-dropdown {
-          --paper-input-container-shared-input-style: {
-            color: var(--light-secondary-text-color);
-            cursor: pointer;
-            font-size: 16px;
-            text-align: left;
-            width: 100px;
-          }
         }
 
         etools-profile-dropdown,
@@ -239,7 +201,7 @@ class PageHeader extends connect(store)(
 
       <app-toolbar sticky class="content-align header">
         <div class="header__item">
-          <paper-icon-button id="menuButton" icon="menu" @tap="${this.menuBtnClicked}"></paper-icon-button>
+          <etools-icon-button id="menuButton" name="menu" @click="${this.menuBtnClicked}"></etools-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
@@ -289,14 +251,14 @@ class PageHeader extends connect(store)(
             @sign-out="${this._signOut}"
           ></etools-profile-dropdown>
 
-          <sl-icon-button
+          <etools-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
-            name="arrow-clockwise"
+            name="refresh"
             tracker="hard refresh"
             @click="${this._onRefreshClick}"
           >
-          </sl-icon-button>
+          </etools-icon-button>
         </div>
       </app-toolbar>
     `;

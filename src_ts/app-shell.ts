@@ -95,6 +95,8 @@ import ScrollControlMixinLit from './components/common/mixins/scroll-control-mix
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {EtoolsIconSet, initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
+import {pmpIcons} from './components/pages/interventions/pages/intervention-tab-pages/intervention-progress/styles/pmp-icons';
 
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
@@ -124,6 +126,18 @@ const translationConfig = registerTranslateConfig({
 
 setRootPath(BASE_URL);
 setBasePath(BASE_URL);
+initializeIcons(
+  [
+    EtoolsIconSet.communication,
+    EtoolsIconSet.icons,
+    EtoolsIconSet.device,
+    EtoolsIconSet.social,
+    EtoolsIconSet.av,
+    EtoolsIconSet.image,
+    EtoolsIconSet.maps
+  ],
+  pmpIcons
+);
 
 /**
  * @customElement

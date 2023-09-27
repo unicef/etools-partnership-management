@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
@@ -28,7 +28,7 @@ import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
  * @polymer
@@ -76,18 +76,18 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           }}"
           placeholder="${translate('GENERAL.SEARCH')}"
         >
-          <iron-icon icon="search" slot="prefix"></iron-icon>
+          <etools-icon name="search" slot="prefix"></etools-icon>
         </etools-input>
       </div>
 
       <etools-content-panel panel-title="${translate('DISAGGREGATIONS')}">
-        <sl-icon-button
+        <etools-icon-button
           slot="panel-btns"
           ?hidden="${!userIsPme(this.currentUser)}"
-          name="plus-square-fill"
+          name="add-box"
           @click="${this._addDisaggregation}"
         >
-        </sl-icon-button>
+        </etools-icon-button>
         <div ?hidden="${this._emptyList(this.filteredDisaggregations)}">
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-4" field="name">${translate('NAME')}</etools-data-table-column>

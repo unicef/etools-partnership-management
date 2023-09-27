@@ -1,6 +1,5 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-item/paper-item.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -23,11 +22,6 @@ export class GeneratePcaDialog extends LitElement {
     return html`
       ${sharedStyles}
       <style>
-        paper-dropdown-menu,
-        paper-listbox {
-          width: 250px;
-        }
-
         .terms_wrapper {
           overflow-y: auto;
           overflow-x: hidden;

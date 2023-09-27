@@ -2,11 +2,11 @@ import {html} from '@polymer/polymer/polymer-element.js';
 
 export const frWarningsStyles = html`
   <style>
-    etools-info-tooltip.fr-nr-warn iron-icon {
+    etools-info-tooltip.fr-nr-warn etools-icon {
       color: var(--error-color);
     }
 
-    etools-info-tooltip.currency-mismatch iron-icon {
+    etools-info-tooltip.currency-mismatch etools-icon {
       color: var(--primary-color);
     }
 

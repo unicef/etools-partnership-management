@@ -3,16 +3,13 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/iron-icons/iron-icons.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {buttonsStyles} from '../../../styles/buttons-styles-lit';
 
 /**
@@ -32,10 +29,6 @@ export class EtoolsActionButton extends LitElement {
           display: none;
         }
 
-        paper-menu-button {
-          padding: 0 4px;
-        }
-
         sl-button#primary {
           flex: 1 1 0;
         }
@@ -46,10 +39,6 @@ export class EtoolsActionButton extends LitElement {
           font-weight: 500;
           line-height: 34px;
           text-transform: uppercase;
-        }
-
-        sl-icon[name='chevron-down'] {
-          padding-top: 8px;
         }
 
         sl-dropdown.splitBtn::part(trigger) {
@@ -80,13 +69,13 @@ export class EtoolsActionButton extends LitElement {
             class="primary-btn split-btn"
           >
             <span class="main-btn-part">
-              <sl-icon name="info-circle" ?hidden="${!this.showInfoIcon}"></sl-icon>
+              <etools-icon name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
               ${this.primaryAction.label}
             </span>
             ${(this.secondaryActions || []).length
               ? html` <sl-dropdown id="splitBtn" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
                   <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
-                    <sl-icon name="chevron-down"></sl-icon
+                    <etools-icon name="expand-more"></etools-icon
                   ></sl-button>
                   <sl-menu>
                     ${this.secondaryActions.map(

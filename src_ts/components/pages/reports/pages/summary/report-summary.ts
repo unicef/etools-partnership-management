@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icon/iron-icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
@@ -43,7 +43,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         .remove-padding {
           padding: 0 !important;
         }
-        iron-icon[icon='speaker-notes'] {
+        etools-icon[name='speaker-notes'] {
           color: var(--primary-color);
           padding-top: 26px;
           padding-inline-start: 8px;
@@ -105,11 +105,11 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
               .value="${this.getReportStatus(this.report.status, this.report.reviewed_by_name)}"
             >
             </etools-input>
-            <iron-icon
-              icon="speaker-notes"
+            <etools-icon
+              name="speaker-notes"
               @click="${this._seeSentBackComments}"
               ?hidden="${!this.statusIs(this.report.status, 'Sen')}"
-            ></iron-icon>
+            ></etools-icon>
           </div>
           <div class="col col-2" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
             <etools-input
