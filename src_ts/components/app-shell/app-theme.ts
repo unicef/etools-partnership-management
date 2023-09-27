@@ -132,9 +132,7 @@ documentContainer.innerHTML = `
 
         /* custom etools polymer elements general customization */
 
-        /* paper-checkbox, radio btns style */
-        --paper-checkbox-checked-color: var(--primary-color);
-        --paper-checkbox-unchecked-color: var(--secondary-text-color);
+        /*radio btns style */
         --paper-radio-button-checked-color: var(--primary-color);
         --paper-radio-button-unchecked-color: var(--secondary-text-color);
 
