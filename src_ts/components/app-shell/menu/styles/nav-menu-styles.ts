@@ -25,7 +25,7 @@ export const navMenuStyles = html`
     }
 
     @media (max-height: 600px) {
-      paper-tooltip {
+      sl-tooltip {
         display: none;
       }
 
@@ -72,7 +72,7 @@ export const navMenuStyles = html`
     :host([small-menu]) #app-name,
     :host #menu-header-top-icon,
     :host([small-menu]) .nav-menu-item .name,
-    :host(:not([small-menu])) paper-tooltip,
+    :host(:not([small-menu])) sl-tooltip,
     :host(:not([small-menu])) #expand-menu,
     :host([small-menu]) .section-title span,
     :host([small-menu]) #minimize-menu,
