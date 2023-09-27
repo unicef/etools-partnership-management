@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-radio-button/paper-radio-button.js';
-import '@polymer/paper-radio-group/paper-radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio/radio.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -34,8 +34,13 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         [hidden] {
           display: none !important;
         }
-        paper-radio-group {
-          padding-bottom: 8px;
+        sl-radio {
+          display: inline-block;
+          margin-inline-end: 15px;
+        }
+        sl-radio-group {
+          margin-top: 10px;
+          margin-bottom: 10px;
         }
       </style>
       <etools-dialog
@@ -52,18 +57,18 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
           <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
-          <paper-radio-group
+          <sl-radio-group
             id="overallStatus"
-            .selected="${this.selectedOverallStatus}"
-            @selected-changed="${({detail}: CustomEvent) => {
-              this.selectedOverallStatus = detail.value;
+            .value="${this.selectedOverallStatus}"
+            @sl-change="${(e: any) => {
+              this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <paper-radio-button name="Met"> ${translate('MET')}</paper-radio-button>
-            <paper-radio-button name="OnT"> ${translate('ON_TRACK')}</paper-radio-button>
-            <paper-radio-button name="NoP"> ${translate('NO_PROGRESS')}</paper-radio-button>
-            <paper-radio-button name="Con"> ${translate('CONSTRAINED')}</paper-radio-button>
-          </paper-radio-group>
+            <sl-radio value="Met"> ${translate('MET')}</sl-radio>
+            <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
+            <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
+            <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+          </sl-radio-group>
         </div>
       </etools-dialog>
     `;
