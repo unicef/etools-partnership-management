@@ -21,8 +21,4 @@ export const pageContentHeaderSlottedStyles = html` <style>
     flex-direction: row;
     align-items: flex-end;
   }
-
-  .content-header-actions paper-menu-button {
-    padding: 0;
-  }
 </style>`;

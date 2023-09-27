@@ -625,5 +625,11 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Número de Vendedor Inválido para novo parceiro!",
   "IMPORTING_PARTNER_INFO": "Importar informação do parceiro...",
   "PLEASE_REFRESH_DATA": "Por favor, actualize os dados!",
-  "SUPPORT": "Apoiar"
+  "SUPPORT": "Apoiar",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Avalie o progresso geral deste PD/SPD à luz deste relatório e das visitas de monitorização.",
+  "MET": "Conheceu",
+  "ON_TRACK": "No caminho certo",
+  "NO_PROGRESS": "Sem progresso",
+  "CONSTRAINED": "Restrito",
+  "FEEDBACK_COMMENTS": "Feedback/Comentários"
 }

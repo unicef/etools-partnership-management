@@ -7,7 +7,7 @@ export const etoolsCpHeaderActionsBarStyles = html` <style>
     align-items: center;
   }
 
-  .cp-header-actions-bar paper-icon-button[disabled] {
+  .cp-header-actions-bar etools-icon-button[disabled] {
     visibility: hidden;
   }
 

@@ -2,7 +2,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/iron-icons/iron-icons.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
@@ -24,7 +24,7 @@ import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
  * @customElement
@@ -58,7 +58,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           padding-top: 0;
         }
 
-        iron-icon {
+        etools-icon {
           color: var(--dark-icon-color);
           margin-inline-end: 8px;
         }
@@ -99,14 +99,14 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
             ${translate('SHOW_ARCHIVED')}
           </sl-switch>
           <div class="separator" ?hidden="${!this.editMode}"></div>
-          <sl-icon-button
-            name="plus-square-fill"
+          <etools-icon-button
+            name="add-box"
             ?disabled="${!this.editMode}"
             ?hidden="${!this.editMode}"
             title="${translate('ADD_OTHER_ASSESSMENT')}"
             @click="${this._addAssessment}"
           >
-          </sl-icon-button>
+          </etools-icon-button>
         </div>
 
         <div ?hidden="${this._emptyList(this.dataItems?.length)}">
@@ -130,7 +130,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                   </span>
                   <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date || '')} </span>
                   <span class="col-data col-5">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <etools-icon name="attachment" class="attachment"></etools-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
                       <a href="${item.report_attachment}" target="_blank" download>
@@ -140,7 +140,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                   </span>
                   <span class="col-data col-2 center-align">
                     <span ?hidden="${!item.active}" class="placeholder-style">&#8212;</span>
-                    <iron-icon icon="check" ?hidden="${item.active}"></iron-icon>
+                    <etools-icon name="check" ?hidden="${item.active}"></etools-icon>
                   </span>
                   <icons-actions2
                     item-id="${item.id}"

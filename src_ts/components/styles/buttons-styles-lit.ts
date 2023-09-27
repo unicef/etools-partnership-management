@@ -80,7 +80,7 @@ export const buttonsStyles = html` <style>
     }
   }
 
-  .secondary-btn iron-icon {
+  .secondary-btn etools-icon {
     margin-inline-end: 5px;
   }
 

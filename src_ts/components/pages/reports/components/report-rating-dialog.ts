@@ -13,6 +13,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {translate} from 'lit-translate';
 
 /*
   status: 'accepted'/'sent back'
@@ -55,7 +56,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         @close="${this._onClose}"
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
-          <p>Rate the overall progress of this PD/SPD in light of this report and monitoring visits.</p>
+          <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
           <sl-radio-group
             id="overallStatus"
             .value="${this.selectedOverallStatus}"
@@ -63,10 +64,10 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
               this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <sl-radio value="Met"> Met</sl-radio>
-            <sl-radio value="OnT"> On track</sl-radio>
-            <sl-radio value="NoP"> No progress</sl-radio>
-            <sl-radio value="Con"> Constrained</sl-radio>
+            <sl-radio value="Met"> ${translate('MET')}</sl-radio>
+            <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
+            <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
+            <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
           </sl-radio-group>
         </div>
       </etools-dialog>

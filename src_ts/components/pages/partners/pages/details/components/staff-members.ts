@@ -49,7 +49,7 @@ export class StaffMembers extends LitElement {
           visibility: visible;
         }
 
-        iron-icon {
+        etools-icon {
           color: var(--dark-secondary-text-color);
         }
         span.col-data {
@@ -68,7 +68,7 @@ export class StaffMembers extends LitElement {
           </sl-switch>
           <div class="separator"></div>
           <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
-            <iron-icon id="information-icon" icon="icons:open-in-new"></iron-icon>
+            <etools-icon id="information-icon" name="icons:open-in-new"></etools-icon>
             <paper-tooltip for="information-icon" position="top">Access Management Portal</paper-tooltip>
           </a>
         </div>
@@ -103,7 +103,7 @@ export class StaffMembers extends LitElement {
                       ? translate('NO_ACCESS')
                       : ''}</span
                   >
-                  <iron-icon icon="check" ?hidden="${!item.has_active_realm}"></iron-icon>
+                  <etools-icon name="check" ?hidden="${!item.has_active_realm}"></etools-icon>
                 </span>
               </div>
             </etools-data-table-row>`

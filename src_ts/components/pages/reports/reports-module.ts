@@ -1,7 +1,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@polymer/iron-icons/iron-icons.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -126,7 +126,7 @@ export class ReportsModule extends connect(store)(
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
               <sl-button slot="trigger" variant="text" class="export" caret>
-                <iron-icon icon="file-download" slot="prefix"></iron-icon>
+                <etools-icon name="file-download" slot="prefix"></etools-icon>
                 ${translate('EXPORT')}
               </sl-button>
               <sl-menu>
@@ -161,7 +161,7 @@ export class ReportsModule extends connect(store)(
             </sl-dropdown>
 
             <sl-dropdown>
-              <sl-icon-button slot="trigger" name="three-dots-vertical"> </sl-icon-button>
+              <etools-icon-button slot="trigger" name="more-vert"> </etools-icon-button>
               <sl-menu>
                 <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
                 <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>
@@ -222,11 +222,13 @@ export class ReportsModule extends connect(store)(
     {
       tab: 'progress',
       tabLabel: getTranslation('RESULTS_REPORTED'),
+      translationKey: 'RESULTS_REPORTED',
       hidden: false
     },
     {
       tab: 'summary',
       tabLabel: getTranslation('OTHER_INFO'),
+      translationKey: 'OTHER_INFO',
       hidden: false
     }
   ];
@@ -246,6 +248,9 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   _page = '';
 
+  @property({type: String})
+  currentLanguage!: string;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
     if (!state.app?.routeDetails?.routeName) {
@@ -258,6 +263,27 @@ export class ReportsModule extends connect(store)(
       this.tabsActive = !this.listActive;
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
+      if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+        if (this.currentLanguage) {
+          // language was already set, this is language change
+          this.reportTabs = this.applyTabsTitleTranslation(this.reportTabs);
+        }
+        this.currentLanguage = String(state.activeLanguage?.activeLanguage);
+      }
+    }
+  }
+
+  applyTabsTitleTranslation(pageTabs: any[]): any[] {
+    try {
+      return pageTabs.map((item) => {
+        return {
+          ...item,
+          tabLabel: getTranslation(item.translationKey)
+        };
+      });
+    } catch (ex) {
+      console.log(ex);
+      return this.reportTabs;
     }
   }
 
