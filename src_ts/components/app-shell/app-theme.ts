@@ -220,7 +220,6 @@ documentContainer.innerHTML = `
           padding-inline-end: 15px;
         }
       }
-
     </style>
   </custom-style>
   `;

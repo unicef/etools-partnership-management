@@ -100,7 +100,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           </sl-switch>
           <div class="separator" ?hidden="${!this.editMode}"></div>
           <sl-icon-button
-            name="plus-square-fill"
+            name="add-box"
             ?disabled="${!this.editMode}"
             ?hidden="${!this.editMode}"
             title="${translate('ADD_OTHER_ASSESSMENT')}"

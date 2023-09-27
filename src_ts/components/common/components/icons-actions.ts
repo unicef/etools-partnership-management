@@ -40,9 +40,9 @@ class IconsActions extends LitElement {
         }
       </style>
 
-      <sl-icon-button hidden$="[[!showEdit]]" name="pencil-fill" on-tap="_onEdit"></sl-icon-button>
-      <sl-icon-button hidden$="[[!showDelete]]" name="trash-fill" on-tap="_onDelete"></sl-icon-button>
-      <sl-icon-button hidden$="[[!showDeactivate]]" name="slash-circle" on-tap="_onDeactivate"></sl-icon-button>
+      <sl-icon-button hidden$="[[!showEdit]]" name="create" on-tap="_onEdit"></sl-icon-button>
+      <sl-icon-button hidden$="[[!showDelete]]" name="delete" on-tap="_onDelete"></sl-icon-button>
+      <sl-icon-button hidden$="[[!showDeactivate]]" name="block" on-tap="_onDeactivate"></sl-icon-button>
     `;
   }
 

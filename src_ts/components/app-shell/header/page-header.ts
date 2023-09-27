@@ -255,7 +255,7 @@ class PageHeader extends connect(store)(
           <sl-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
-            name="arrow-clockwise"
+            name="refresh"
             tracker="hard refresh"
             @click="${this._onRefreshClick}"
           >

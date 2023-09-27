@@ -53,7 +53,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
       >
         ${this.showEditBtn(this.activities, this.isReadonly)
           ? html` <div slot="panel-btns">
-              <sl-icon-button name="pencil-fill" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
+              <sl-icon-button name="create" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
               </sl-icon-button>
             </div>`
           : html``}

@@ -227,7 +227,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('DATE_OF_REPORT')}"
               .value="${this.getDateDisplayValue(this.partner.last_assessment_date)}"
             >
-              <sl-icon name="calendar-date" slot="prefix"></sl-icon>
+              <sl-icon name="date-range" slot="prefix"></sl-icon>
             </etools-input>
           </div>
         </div>
@@ -257,7 +257,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
               .value="${this.getDateDisplayValue(this.partner.psea_assessment_date)}"
             >
-              <sl-icon name="calendar-date" slot="prefix"></sl-icon>
+              <sl-icon name="date-range" slot="prefix"></sl-icon>
             </etools-input>
           </div>
         </div>

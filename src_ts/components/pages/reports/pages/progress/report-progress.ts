@@ -234,7 +234,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? 'chevron-up' : 'chevron-down';
+    return opened ? 'chevron-up' : 'expand-more';
   }
 
   _toggle(e: CustomEvent) {

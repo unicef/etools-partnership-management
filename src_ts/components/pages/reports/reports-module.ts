@@ -161,7 +161,7 @@ export class ReportsModule extends connect(store)(
             </sl-dropdown>
 
             <sl-dropdown>
-              <sl-icon-button slot="trigger" name="three-dots-vertical"> </sl-icon-button>
+              <sl-icon-button slot="trigger" name="more-vert"> </sl-icon-button>
               <sl-menu>
                 <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
                 <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>
