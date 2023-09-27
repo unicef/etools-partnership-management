@@ -1,4 +1,4 @@
-import '@polymer/iron-icons/iron-icons.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -40,9 +40,9 @@ class IconsActions extends LitElement {
         }
       </style>
 
-      <sl-icon-button hidden$="[[!showEdit]]" name="create" on-tap="_onEdit"></sl-icon-button>
-      <sl-icon-button hidden$="[[!showDelete]]" name="delete" on-tap="_onDelete"></sl-icon-button>
-      <sl-icon-button hidden$="[[!showDeactivate]]" name="block" on-tap="_onDeactivate"></sl-icon-button>
+      <etools-icon-button hidden$="[[!showEdit]]" name="create" on-tap="_onEdit"></etools-icon-button>
+      <etools-icon-button hidden$="[[!showDelete]]" name="delete" on-tap="_onDelete"></etools-icon-button>
+      <etools-icon-button hidden$="[[!showDeactivate]]" name="block" on-tap="_onDeactivate"></etools-icon-button>
     `;
   }
 

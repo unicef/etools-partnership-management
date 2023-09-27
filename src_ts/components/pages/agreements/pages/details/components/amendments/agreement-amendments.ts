@@ -1,6 +1,5 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-icons/iron-icons.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -23,8 +22,8 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
  * @polymer
@@ -81,8 +80,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           font-size: 14px;
           font-weight: 600;
         }
-        sl-icon[name='file-download'] {
-          font-size: 20px;
+        etools-icon[name='file-download'] {
+          --etools-icon-font-size: 20px;
           vertical-align: middle;
           margin-inline-end: 5px;
         }
@@ -100,14 +99,14 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
       <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
-          <sl-icon-button
+          <etools-icon-button
             name="add-box"
             ?hidden="${!this.editMode}"
             ?disabled="${!this.editMode}"
             title="${translate('GENERAL.ADD')}"
             @click="${this._openAddAgAmendmentDialog}"
           >
-          </sl-icon-button>
+          </etools-icon-button>
         </div>
 
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
@@ -124,7 +123,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             download
             class="primary-btn"
           >
-            <sl-icon name="file-download"></sl-icon>
+            <etools-icon name="file-download"></etools-icon>
             ${translate('DOWNLOAD_TEMPLATE')}
           </sl-button>
         </div>
@@ -149,7 +148,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
                   >
                   <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
                   <span class="col-data flex-c">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <etools-icon name="attachment" class="attachment"></etools-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
                       ${item.id

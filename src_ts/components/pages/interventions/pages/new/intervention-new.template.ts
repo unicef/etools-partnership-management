@@ -46,10 +46,6 @@ export function template(this: InterventionNew): TemplateResult {
         --paper-input-container_-_width: 100%;
       }
       etools-dropdown-multi::part(esmm-label-container) {
-        --iron-icon: {
-          margin-inline-start: 10px;
-          color: var(--primary-color);
-        }
         --paper-tooltip: {
           font-size: 16px !important;
         }

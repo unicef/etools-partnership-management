@@ -137,7 +137,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.NOTSYNCED'),
         icon: 'info',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
         completed: false
@@ -145,7 +145,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION'),
         icon: 'autorenew',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
         completed: false
@@ -153,7 +153,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.BLOCKEDINVISION'),
         icon: 'block',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
         completed: false

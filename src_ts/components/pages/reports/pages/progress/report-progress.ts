@@ -18,12 +18,12 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@unicef-polymer/etools-unicef/src/etools-collapse/etools-collapse';
-
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 /**
  * @polymer
  * @customElement
@@ -63,9 +63,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           border-inline-end: 1px solid var(--primary-background-color);
         }
 
-        .indicator-toggle paper-icon-button {
-          width: 24px;
-          height: 24px;
+        .indicator-toggle etools-icon-button {
+          --etools-icon-font-size: 24px;
           padding: 0;
         }
 
@@ -140,12 +139,12 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                             <div class="indicator">
                               <div class="layout-horizontal">
                                 <div class="indicator-toggle ${this._getClusterIndicatorClass(indicatorReport)}">
-                                  <sl-icon-button
+                                  <etools-icon-button
                                     @click="${this._toggle}"
                                     toggles-ind-details="${uniqueKey}"
                                     .name="${this._computeIcon(this.toggleFlags[uniqueKey])}"
                                   >
-                                  </sl-icon-button>
+                                  </etools-icon-button>
                                 </div>
 
                                 <div class="indicator-header layout-horizontal flex-c">
@@ -238,7 +237,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _toggle(e: CustomEvent) {
-    const toggleInd = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
+    const toggleInd = (e.target as EtoolsIconButton).getAttribute('toggles-ind-details');
     const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggleInd) as any & {
       toggle(): void;
     };

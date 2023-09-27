@@ -28,21 +28,20 @@ export const partnerStatusStyles = html` <style>
     background-color: var(--status-not-synced-color);
   }
 
-  .synced iron-icon,
-  .blocked iron-icon,
-  .not-synced iron-icon {
-    --iron-icon-height: 16px;
-    --iron-icon-width: 16px;
+  .synced etools-icon,
+  .blocked etools-icon,
+  .not-synced etools-icon {
+    --etools-icon-font-size: 16px;
     color: var(--light-primary-text-color);
     align-self: center;
   }
 
-  .marked-for-deletion iron-icon {
+  .marked-for-deletion etools-icon {
     position: relative;
     color: var(--icon-delete-color);
   }
 
-  .marked-for-deletion iron-icon:after {
+  .marked-for-deletion etools-icon:after {
     content: '\\00d7';
     color: var(--light-primary-text-color);
     position: absolute;
@@ -66,15 +65,14 @@ export const partnerStatusStyles = html` <style>
     justify-content: center;
   }
 
-  .sm-status-wrapper .marked-for-deletion iron-icon:after {
+  .sm-status-wrapper .marked-for-deletion etools-icon:after {
     bottom: 8px;
   }
 
-  .sm-status-wrapper .synced iron-icon,
-  .sm-status-wrapper .blocked iron-icon,
-  .sm-status-wrapper .not-synced iron-icon {
-    --iron-icon-height: 14px;
-    --iron-icon-width: 14px;
+  .sm-status-wrapper .synced etools-icon,
+  .sm-status-wrapper .blocked etools-icon,
+  .sm-status-wrapper .not-synced etools-icon {
+    --etools-icon-font-size: 14px;
   }
 
   .sm-status-wrapper .synced,

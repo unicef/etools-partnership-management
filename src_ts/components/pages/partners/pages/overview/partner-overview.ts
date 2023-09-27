@@ -11,7 +11,6 @@ import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
-import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -40,7 +39,7 @@ export class PartnerOverview extends PaginationMixin(
     if (!this.partner) return;
 
     return html`
-      ${pmpCustomIcons} ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
+      ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
       <style>
         :host {
           display: flex;
@@ -217,7 +216,7 @@ export class PartnerOverview extends PaginationMixin(
                           )}"
                         >
                           <span slot="field">${this.getDateDisplayValue(partnership.start)}</span>
-                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                         </etools-info-tooltip>
                         <etools-info-tooltip
@@ -230,7 +229,7 @@ export class PartnerOverview extends PaginationMixin(
                           )}"
                         >
                           <span slot="field">${this.getDateDisplayValue(partnership.end)}</span>
-                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
                         </etools-info-tooltip>
                       </div>
@@ -264,10 +263,10 @@ export class PartnerOverview extends PaginationMixin(
                               )}</span
                             >
                           </span>
-                          <iron-icon
-                            icon="${this.getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)}"
+                          <etools-icon
+                            name="${this.getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)}"
                             slot="custom-icon"
-                          ></iron-icon>
+                          ></etools-icon>
                           <span slot="message">
                             <span
                               >${this.getIntListUnicefCashAmountTooltipMsg(
@@ -294,7 +293,7 @@ export class PartnerOverview extends PaginationMixin(
                               >${this.getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, true)}</span
                             >
                           </span>
-                          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                          <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                           <span slot="message">
                             <span>${this.getFrsMultiCurrFlagErrTooltipMsg()}</span>
                           </span>

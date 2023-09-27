@@ -24,7 +24,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
  * @polymer
@@ -134,7 +134,7 @@ export class AddDisaggregationDialog extends connect(store)(
                       }}"
                     >
                     </etools-input>
-                    <sl-icon-button
+                    <etools-icon-button
                       class="action delete"
                       name="cancel"
                       ?hidden="${index < 2}"
@@ -142,7 +142,7 @@ export class AddDisaggregationDialog extends connect(store)(
                       ?data-args="${index}"
                       title="${translate('GENERAL.DELETE')}"
                     >
-                    </sl-icon-button>
+                    </etools-icon-button>
                   `
                 )}
                 <sl-button

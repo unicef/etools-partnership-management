@@ -9,7 +9,7 @@ import {StatusAction} from '../../../../typings/etools-status.types';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {buttonsStyles} from '../../../styles/buttons-styles-lit';
 
 /**
@@ -41,10 +41,6 @@ export class EtoolsActionButton extends LitElement {
           text-transform: uppercase;
         }
 
-        sl-icon[name='expand-more'] {
-          padding-top: 8px;
-        }
-
         sl-dropdown.splitBtn::part(trigger) {
           display: inline-flex;
           vertical-align: middle;
@@ -73,13 +69,13 @@ export class EtoolsActionButton extends LitElement {
             class="primary-btn split-btn"
           >
             <span class="main-btn-part">
-              <sl-icon name="info-outline" ?hidden="${!this.showInfoIcon}"></sl-icon>
+              <etools-icon name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
               ${this.primaryAction.label}
             </span>
             ${(this.secondaryActions || []).length
               ? html` <sl-dropdown id="splitBtn" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
                   <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
-                    <sl-icon name="expand-more"></sl-icon
+                    <etools-icon name="expand-more"></etools-icon
                   ></sl-button>
                   <sl-menu>
                     ${this.secondaryActions.map(
