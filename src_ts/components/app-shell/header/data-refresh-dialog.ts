@@ -2,7 +2,6 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
-import '@polymer/iron-label/iron-label.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';

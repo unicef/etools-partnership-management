@@ -120,7 +120,6 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                 <etools-content-panel class="content-section" panel-title="${translate('CP_OUTPUT')}: ${result.title}">
                   <!-- RAM indicators display -->
                   <etools-ram-indicators-common
-                    class="row-h"
                     .interventionId="${this.report.programme_document.external_id}"
                     .cpId="${result.external_cp_output_id}"
                   ></etools-ram-indicators-common>

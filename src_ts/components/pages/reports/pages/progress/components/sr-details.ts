@@ -21,7 +21,7 @@ export class SrDetails extends LitElement {
           display: block;
           background-color: var(--primary-background-color);
         }
-        iron-label {
+        label {
           display: block;
           font-size: 12px;
           color: var(--secondary-text-color);
@@ -41,7 +41,7 @@ export class SrDetails extends LitElement {
           ${(this.reportAttachments || []).map(
             (item: AnyObject, index: number) => html`
               <div class="att">
-                <iron-label for="file_${index}">${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')}</iron-label>
+                <label for="file_${index}">${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')}</label>
                 <a class="primary" id="file_${index}" href="${item.path}" target="_blank">${item.file_name}</a>
               </div>
             `
