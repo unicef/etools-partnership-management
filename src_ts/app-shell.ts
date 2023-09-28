@@ -96,6 +96,7 @@ import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/uti
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import {EtoolsIconSet, initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
+// eslint-disable-next-line
 import {pmpIcons} from './components/pages/interventions/pages/intervention-tab-pages/intervention-progress/styles/pmp-icons';
 
 declare const dayjs: any;
