@@ -55,8 +55,7 @@
     "node_modules/dayjs/plugin/isBetween.js",
     "node_modules/dayjs/plugin/isSameOrBefore.js",
     "node_modules/dayjs/plugin/isSameOrAfter.js",
-    "node_modules/focus-visible/dist/focus-visible.min.js",
-    "node_modules/@unicef-polymer/etools-unicef/src/etools-icons/icons/**"
+    "node_modules/focus-visible/dist/focus-visible.min.js"
   ],
   "lint": {
     "rules": ["polymer-3"],
