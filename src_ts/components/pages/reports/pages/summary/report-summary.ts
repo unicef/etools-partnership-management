@@ -2,7 +2,6 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
 import './sent-bk-comments.js';
@@ -57,7 +56,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         .w-auto {
           width: auto;
         }
-        iron-label {
+        label {
           display: block;
           font-size: 12px;
           color: var(--secondary-text-color);
@@ -320,7 +319,7 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
           ${(this.reportAttachments || []).map(
             (item: any, index: number) => html`
               <div class="att">
-                <iron-label for="file_${index}"> ${translateValue(item.type, 'COMMON_DATA.FILETYPES')} </iron-label>
+                <label for="file_${index}"> ${translateValue(item.type, 'COMMON_DATA.FILETYPES')} </label>
                 <a class="primary" id="file_${index}" href="${item.path}" target="_blank"> ${item.file_name} </a>
               </div>
             `
