@@ -92,4 +92,3 @@ workflows:
                 - staging
                 - develop
                 - sl-dialog-tests
-                - fix-icons-build
