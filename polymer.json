@@ -29,8 +29,13 @@
     "src/components/pages/settings/settings-module.js",
     "src/components/pages/not-found/not-found.js"
   ],
-  "sources": ["src/**/*", "images/**/*", "assets/**",  "package.json",
-    "src/components/pages/interventions/pages/intervention-tab-pages/assets/**"],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "assets/**",
+    "package.json",
+    "src/components/pages/interventions/pages/intervention-tab-pages/assets/**"
+  ],
   "extraDependencies": [
     "manifest.json",
     "version.json",
@@ -50,7 +55,8 @@
     "node_modules/dayjs/plugin/isBetween.js",
     "node_modules/dayjs/plugin/isSameOrBefore.js",
     "node_modules/dayjs/plugin/isSameOrAfter.js",
-    "node_modules/focus-visible/dist/focus-visible.min.js"
+    "node_modules/focus-visible/dist/focus-visible.min.js",
+    "node_modules/@unicef-polymer/etools-unicef/src/etools-icons/icons/**"
   ],
   "lint": {
     "rules": ["polymer-3"],

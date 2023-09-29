@@ -130,7 +130,6 @@ setBasePath(BASE_URL);
 initializeIcons(
   [
     EtoolsIconSet.communication,
-    EtoolsIconSet.icons,
     EtoolsIconSet.device,
     EtoolsIconSet.social,
     EtoolsIconSet.av,
