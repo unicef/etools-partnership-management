@@ -152,7 +152,7 @@ class AppMenu extends connect(store)(
           tracker="Discussion"
         >
           <sl-tooltip placement="right" content="${translate('DISCUSSION')}">
-            <etools-icon id="discussion-icon" name="icons:question-answer"></etools-icon>
+            <etools-icon id="discussion-icon" name="question-answer"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
         </a>
@@ -164,7 +164,7 @@ class AppMenu extends connect(store)(
           tracker="Information"
         >
           <sl-tooltip placement="right" content="${translate('INFORMATION')}">
-            <etools-icon id="information-icon" name="icons:info"></etools-icon>
+            <etools-icon id="information-icon" name="info"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
         </a>
