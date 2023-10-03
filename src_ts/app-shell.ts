@@ -52,7 +52,7 @@ import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/eto
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
-import '@unicef-polymer/etools-toasts';
+import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts.js';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
 import './components/app-shell/menu/app-menu.js';
