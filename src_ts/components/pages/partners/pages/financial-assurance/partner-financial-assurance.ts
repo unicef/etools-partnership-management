@@ -185,7 +185,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           justify-content: center;
         }
 
-        etools-icon-button[name='icons:open-in-new'] {
+        etools-icon-button[name='open-in-new'] {
           color: var(--primary-color);
         }
       </style>
@@ -402,7 +402,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
               <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
               <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
-                <etools-icon-button name="icons:open-in-new"></etools-icon-button>
+                <etools-icon-button name="open-in-new"></etools-icon-button>
                 ${translate('VIEW_REPORT')}
               </a>
             </div>

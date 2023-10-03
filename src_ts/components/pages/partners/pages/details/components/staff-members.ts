@@ -70,7 +70,7 @@ export class StaffMembers extends LitElement {
           <div class="separator"></div>
           <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
             <sl-tooltip placement="top" content="Access Management Portal">
-              <etools-icon id="information-icon" name="icons:open-in-new"></etools-icon>
+              <etools-icon id="information-icon" name="open-in-new"></etools-icon>
             </sl-tooltip>
           </a>
         </div>

@@ -193,12 +193,12 @@ export class ReportStatus extends LitElement {
   _computeIcon(type: string) {
     switch (type) {
       case 'success':
-        return 'icons:check-circle';
+        return 'check-circle';
       case 'submitted':
-        return 'icons:assignment-turned-in';
+        return 'assignment-turned-in';
       case 'error':
       case 'warning':
-        return 'icons:error';
+        return 'error';
       default:
         return 'image:lens';
     }
