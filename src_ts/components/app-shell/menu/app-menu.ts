@@ -1,6 +1,5 @@
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/paper-ripple/paper-ripple.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -40,18 +39,15 @@ class AppMenu extends connect(store)(
           <span class="ripple-wrapper main">
             <etools-icon id="menu-header-top-icon" name="partnership-management" @click="${this._toggleSmallMenu}">
             </etools-icon>
-            <paper-ripple class="circle" center></paper-ripple>
           </span>
         </sl-tooltip>
 
         <span class="chev-right">
           <etools-icon id="expand-menu" name="chevron-right" @click="${this._toggleSmallMenu}"></etools-icon>
-          <paper-ripple class="circle" center></paper-ripple>
         </span>
 
         <span class="ripple-wrapper">
           <etools-icon id="minimize-menu" name="chevron-left" @click="${this._toggleSmallMenu}"></etools-icon>
-          <paper-ripple class="circle" center></paper-ripple>
         </span>
       </div>
 

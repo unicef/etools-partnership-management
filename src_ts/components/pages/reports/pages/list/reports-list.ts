@@ -1,9 +1,9 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import '@polymer/iron-media-query/iron-media-query.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../components/report-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -169,29 +169,26 @@ class ReportsList extends connect(store)(
                 (report: any) => html` <etools-data-table-row .lowResolutionLayout="${this.lowResolutionLayout}">
                   <div slot="row-data">
                     <span class="col-data col-2" data-col-header-label="${translate('REPORT_NUM')}">
-                      <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
-                        <a
-                          class="view-report"
-                          href="reports/${report.id}/progress"
-                          ?hidden="${!this._canViewReport(report.status)}"
-                        >
-                          ${this._getReportTitle(report)}
-                        </a>
-                        <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
-                        ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
-                      </span>
-                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right">
-                        ${report.programme_document.title}
-                      </paper-tooltip>
+                      <sl-tooltip content="${report.programme_document.title}" placement="right">
+                        <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
+                          <a
+                            class="view-report"
+                            href="reports/${report.id}/progress"
+                            ?hidden="${!this._canViewReport(report.status)}"
+                          >
+                            ${this._getReportTitle(report)}
+                          </a>
+                          <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
+                          ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
+                        </span>
+                      </sl-tooltip>
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('PARTNER')}">
-                      <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
-                        ${this._displayOrDefault(report.partner_name)}
-                      </span>
-
-                      <paper-tooltip for="tooltip-partner-${report.id}" position="right" fit-to-visible-bounds>
-                        ${report.partner_vendor_number}
-                      </paper-tooltip>
+                      <sl-tooltip content="${report.partner_vendor_number}" placement="right">
+                        <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
+                          ${this._displayOrDefault(report.partner_name)}
+                        </span>
+                      </sl-tooltip>
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORT_STATUS')}">
                       <report-status .status="${report.status}"></report-status>

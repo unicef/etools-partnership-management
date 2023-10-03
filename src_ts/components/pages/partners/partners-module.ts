@@ -3,7 +3,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import '@polymer/iron-pages/iron-pages';
 
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';

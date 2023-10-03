@@ -12,7 +12,6 @@ import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin EndpointsMixin
- * @appliesMixin ListFiltersMixins
  * @appliesMixin CommonMixin
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin

@@ -1,7 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
@@ -18,13 +17,13 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../redux/store';
 import {addDisaggregation} from '../../../../redux/actions/common-data';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
  * @polymer
@@ -261,15 +260,15 @@ export class AddDisaggregationDialog extends connect(store)(
   }
 
   validate() {
-    const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
+    const validName = (this.shadowRoot!.querySelector('#disaggregateByEl') as EtoolsInput).validate();
     let validGroups = true;
-    const groupsElems = this.shadowRoot!.querySelectorAll('.newGroup') as unknown as PaperInputElement[];
-    groupsElems.forEach((g: PaperInputElement) => (validGroups = g.validate() && validGroups));
+    const groupsElems = this.shadowRoot!.querySelectorAll('.newGroup') as unknown as EtoolsInput[];
+    groupsElems.forEach((g: EtoolsInput) => (validGroups = g.validate() && validGroups));
     return validName && validGroups;
   }
 
   resetValidations() {
-    (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).invalid = false;
+    (this.shadowRoot!.querySelector('#disaggregateByEl') as EtoolsInput).invalid = false;
   }
 }
 

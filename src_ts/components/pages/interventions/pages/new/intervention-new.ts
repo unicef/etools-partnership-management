@@ -16,11 +16,11 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
-import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -232,9 +232,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   validateCFEI(e?: CustomEvent) {
-    const elem = e
-      ? (e.currentTarget as PaperInputElement)
-      : this.shadowRoot?.querySelector<PaperInputElement>('#unppNumber')!;
+    const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
     elem.validate();
   }
 
@@ -246,7 +244,7 @@ export class InterventionNew extends connect(store)(LitElement) {
         valid = valid && fieldValid;
       }
     });
-    const unppEL = this.shadowRoot!.querySelector<PaperInputElement>('#unppNumber');
+    const unppEL = this.shadowRoot!.querySelector<EtoolsInput>('#unppNumber');
     if (unppEL) {
       valid = valid && unppEL.validate();
     }

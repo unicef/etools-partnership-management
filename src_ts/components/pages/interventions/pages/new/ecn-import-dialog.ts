@@ -1,7 +1,6 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
@@ -18,7 +17,7 @@ import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
  * @polymer
@@ -200,9 +199,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   }
 
   validateCFEI(e?: CustomEvent) {
-    const elem = e
-      ? (e.currentTarget as PaperInputElement)
-      : this.shadowRoot?.querySelector<PaperInputElement>('#unppNumber')!;
+    const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
     return elem.validate();
   }
 
