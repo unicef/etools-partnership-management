@@ -1,6 +1,5 @@
 import {LitElement, html} from 'lit';
 import {property, query, customElement} from 'lit/decorators.js';
-import '@polymer/iron-pages/iron-pages';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {RootState, store} from '../../../redux/store';
 

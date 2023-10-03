@@ -1,6 +1,5 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 

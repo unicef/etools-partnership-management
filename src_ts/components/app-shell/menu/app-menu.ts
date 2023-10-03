@@ -1,6 +1,5 @@
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/paper-ripple/paper-ripple.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
