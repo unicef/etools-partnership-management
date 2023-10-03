@@ -123,7 +123,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         : ''}
       ${(this.locationData || []).map(
         (topLevelLocation: any, index: number) => html`
-          <div ?hidden="${!this.isActiveTab(this.selectedTab, `tab_${index}`)}">
+          <div name="tab_${index}" ?hidden="${!this.isActiveTab(this.selectedTab, `tab_${index}`)}">
             ${topLevelLocation.byEntity.map(
               (location: any) => html`
                 <div>
