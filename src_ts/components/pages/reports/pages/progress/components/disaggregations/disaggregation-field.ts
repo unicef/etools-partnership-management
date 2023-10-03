@@ -1,10 +1,9 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-input/paper-input.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {toNumericValues} from './mixins/disaggregation-field';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
  * @polymer
@@ -80,7 +79,7 @@ export class DisaggregationField extends LitElement {
   }
 
   validate() {
-    return (this.shadowRoot?.querySelector('#field') as PaperInputElement).validate();
+    return (this.shadowRoot?.querySelector('#field') as EtoolsInput).validate();
   }
 
   getField() {

@@ -4,7 +4,6 @@ import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
-import '@polymer/paper-input/paper-input-container.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-upload/etools-upload.js';

@@ -1,7 +1,7 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';

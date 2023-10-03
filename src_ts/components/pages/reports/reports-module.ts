@@ -2,8 +2,6 @@ import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import '@polymer/paper-tooltip/paper-tooltip.js';
-import '@polymer/iron-pages/iron-pages.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
@@ -40,6 +38,7 @@ import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 declare const dayjs: any;
 
@@ -99,25 +98,18 @@ export class ReportsModule extends connect(store)(
                   </a>
                 </div>
 
-                <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
-                  <a class="primary" href="${this._getTitleLink(this.report)}">
-                    ${this.report?.programme_document?.reference_number}
-                  </a>
-                </span>
+                <sl-tooltip content="${this.report?.programme_document?.title}" placement="bottom">
+                  <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
+                    <a class="primary" href="${this._getTitleLink(this.report)}">
+                      ${this.report?.programme_document?.reference_number}
+                    </a>
+                  </span>
+                </sl-tooltip>
 
                 <span>: ${this.report?.report_type}${this.report?.report_number} ${this.report?.reporting_period}</span>
                 <!-- <sup>
                   <report-status .status="report.status"></report-status>
                 </sup> -->
-                <paper-tooltip
-                  for="tooltip-trigger-pdtitle"
-                  position="bottom"
-                  fit-to-visible-bounds
-                  animation-delay="0"
-                  offset="0"
-                >
-                  ${this.report?.programme_document?.title}
-                </paper-tooltip>
               `
             : ''}
         </div>
