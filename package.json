@@ -141,7 +141,7 @@
     "qs": ">=6.5.3",
     "decode-uri-component": ">=0.2.2",
     "engine.io": ">=3.6.1",
-    "socket.io": ">=2.5.0",
+    "socket.io": ">=4.6.1",
     "socket.io-parser": ">=3.3.3",
     "async": ">=2.6.4",
     "wd": ">=1.14.0",
