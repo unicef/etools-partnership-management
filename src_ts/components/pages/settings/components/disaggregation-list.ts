@@ -2,7 +2,6 @@ import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
-import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';

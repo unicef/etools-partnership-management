@@ -11,7 +11,6 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
-import {customIcons} from '@unicef-polymer/etools-modules-common/dist/styles/custom-icons';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
@@ -54,7 +53,7 @@ export class InterventionsList extends connect(store)(
 
   render() {
     return html`
-      ${customIcons} ${listFilterStyles}
+      ${listFilterStyles}
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} :host {
           box-sizing: border-box;
