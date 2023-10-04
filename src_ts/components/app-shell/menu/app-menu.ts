@@ -1,5 +1,4 @@
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import '@polymer/iron-selector/iron-selector.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -52,27 +51,34 @@ class AppMenu extends connect(store)(
       </div>
 
       <div class="nav-menu">
-        <iron-selector
-          .selected="${this.selectedOption}"
-          attr-for-selected="menu-name"
-          selectable="a"
-          role="navigation"
-        >
-          <a class="nav-menu-item" menu-name="partners" href="${BASE_URL}partners/list">
+        <div class="menu-selector" role="navigation">
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'partners')}"
+            menu-name="partners"
+            href="${BASE_URL}partners/list"
+          >
             <sl-tooltip placement="right" content="${translate('PARTNERS')}">
               <etools-icon id="partners-icon" name="social:people"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('PARTNERS')}</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="agreements" href="${BASE_URL}agreements/list">
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'agreements')}"
+            menu-name="agreements"
+            href="${BASE_URL}agreements/list"
+          >
             <sl-tooltip placement="right" content="${translate('AGREEMENTS')}">
               <etools-icon id="agreements-icon" name="av:playlist-add-check"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('AGREEMENTS')}</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="interventions" href="${BASE_URL}interventions/list">
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'interventions')}"
+            menu-name="interventions"
+            href="${BASE_URL}interventions/list"
+          >
             <sl-tooltip placement="right" content="${translate('PD_SPD')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
             </sl-tooltip>
@@ -80,7 +86,11 @@ class AppMenu extends connect(store)(
             <div class="name">${translate('PD_SPD')}</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="government-partners" href="${BASE_URL}government-partners/list">
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"
+            menu-name="government-partners"
+            href="${BASE_URL}government-partners/list"
+          >
             <sl-tooltip placement="right" content="${translate('GOVERNMENT')}">
               <etools-icon id="gov-icon" name="account-balance"></etools-icon>
             </sl-tooltip>
@@ -88,7 +98,7 @@ class AppMenu extends connect(store)(
           </a>
 
           <a
-            class="nav-menu-item"
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'reports')}"
             ?hidden="${this.environmentFlags?.prp_mode_off}"
             menu-name="reports"
             href="${BASE_URL}reports/list"
@@ -100,7 +110,7 @@ class AppMenu extends connect(store)(
           </a>
 
           <a
-            class="nav-menu-item"
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'settings')}"
             ?hidden="${this.environmentFlags?.prp_mode_off}"
             menu-name="settings"
             href="${BASE_URL}settings"
@@ -110,8 +120,7 @@ class AppMenu extends connect(store)(
             </sl-tooltip>
             <div class="name">${translate('SETTINGS')}</div>
           </a>
-        </iron-selector>
-
+        </div>
         <div class="nav-menu-item section-title">
           <span>${translate('ETOOLS_COMMUNITY_CHANNELS')}</span>
         </div>
@@ -148,7 +157,7 @@ class AppMenu extends connect(store)(
           tracker="Discussion"
         >
           <sl-tooltip placement="right" content="${translate('DISCUSSION')}">
-            <etools-icon id="discussion-icon" name="question-answer"></etools-icon>
+            <etools-icon id="discussion-icon" name="icons:question-answer"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
         </a>
@@ -160,7 +169,7 @@ class AppMenu extends connect(store)(
           tracker="Information"
         >
           <sl-tooltip placement="right" content="${translate('INFORMATION')}">
-            <etools-icon id="information-icon" name="info"></etools-icon>
+            <etools-icon id="information-icon" name="icons:info"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
         </a>
@@ -194,6 +203,10 @@ class AppMenu extends connect(store)(
     if (newVal !== oldVal) {
       setTimeout(() => fireEvent(this, 'resize-main-layout'));
     }
+  }
+
+  getItemClass(selectedValue: string, itemValue: string) {
+    return selectedValue === itemValue ? 'selected' : '';
   }
 
   _toggleSmallMenu(e: Event): void {

@@ -109,7 +109,7 @@ export const navMenuStyles = html`
     }
 
     .nav-menu,
-    .nav-menu iron-selector[role='navigation'] {
+    .nav-menu .menu-selector[role='navigation'] {
       flex: 1;
     }
 
@@ -140,11 +140,11 @@ export const navMenuStyles = html`
       height: 0;
     }
 
-    .nav-menu-item.iron-selected {
+    .nav-menu-item.selected {
       background-color: var(--secondary-background-color);
     }
 
-    .nav-menu-item.iron-selected:active {
+    .nav-menu-item.selected:active {
       background-color: var(--dark-divider-color);
     }
 
@@ -163,8 +163,8 @@ export const navMenuStyles = html`
       margin: 0;
     }
 
-    .nav-menu-item.iron-selected .name,
-    .nav-menu-item.iron-selected etools-icon {
+    .nav-menu-item.selected .name,
+    .nav-menu-item.selected etools-icon {
       color: var(--primary-color);
     }
 
