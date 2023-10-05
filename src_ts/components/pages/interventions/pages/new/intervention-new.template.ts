@@ -1,5 +1,5 @@
 /* eslint no-invalid-this: 0 */
-import '@polymer/iron-media-query/iron-media-query';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
@@ -17,7 +17,7 @@ import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 export function template(this: InterventionNew): TemplateResult {
   return html`
     ${sharedStyles}
-    <style>    
+    <style>
       label[required] {
           background: url(${BASE_URL + '/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
@@ -27,10 +27,10 @@ export function template(this: InterventionNew): TemplateResult {
       }
 
       :host-context([dir='rtl'])  label[required] {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;       
+          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
-     
+
       etools-dropdown-multi[required]::part(esmm-label),
       etools-dropdown[required]::part(esmm-label) {
         @apply --required-star-style;
@@ -61,10 +61,10 @@ export function template(this: InterventionNew): TemplateResult {
       }
     </style>
 
-    <iron-media-query
+    <etools-media-query
       query="(max-width: 767px)"
       @query-matches-changed="${(e: any) => (this.windowWidthIsSmall = e.detail.value)}"
-    ></iron-media-query>
+    ></etools-media-query>
 
     <!--   Header   -->
     <div class="title">${translate('NEW_INTERVENTION.INITIAL_DETAILS')}</div>
@@ -148,7 +148,7 @@ export function template(this: InterventionNew): TemplateResult {
               .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
             ></info-icon-tooltip>
           <etools-dropdown-multi
-            id="partnerFocalPoints"            
+            id="partnerFocalPoints"
             no-label-float
             placeholder="&#8212;"
             .readonly="${!this.partnerStaffMembers.length}"
@@ -162,7 +162,7 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-           
+
           </etools-dropdown-multi>
         </div>
         <div class="col-4">
@@ -214,9 +214,9 @@ export function template(this: InterventionNew): TemplateResult {
               offset="48"
               .tooltipText="${this.getDocTypeTooltip()}"
             ></info-icon-tooltip>
-          
+
           <etools-dropdown
-            id="documentType"            
+            id="documentType"
             placeholder="&#8212;"
             no-label-float
             ?readonly="${!this.documentTypes.length}"
@@ -230,7 +230,7 @@ export function template(this: InterventionNew): TemplateResult {
             hide-search
             @focus="${this.resetError}"
             @click="${this.resetError}"
-          >          
+          >
           </etools-dropdown>
         </div>
         <div class="col-8">

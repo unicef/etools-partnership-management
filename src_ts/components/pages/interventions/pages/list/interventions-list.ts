@@ -96,13 +96,13 @@ export class InterventionsList extends connect(store)(
         }
       </style>
 
-      <iron-media-query
+      <etools-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
-      ></iron-media-query>
+      ></etools-media-query>
       <interventions-list-data
         id="interventions"
         @filtered-interventions-changed="${(e: CustomEvent) => {

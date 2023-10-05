@@ -6,7 +6,7 @@ import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
-import '@polymer/iron-media-query/iron-media-query.js';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import '../../data/partners-list-data.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
@@ -99,13 +99,13 @@ export class PartnersListBase extends CommonMixin(
         }
       </style>
 
-      <iron-media-query
+      <etools-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
-      ></iron-media-query>
+      ></etools-media-query>
 
       <partners-list-data
         id="partners-${this.localName}"
