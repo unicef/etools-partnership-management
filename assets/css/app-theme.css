@@ -1,18 +1,12 @@
-import '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/custom-style';
-const documentContainer = document.createElement('template');
-documentContainer.innerHTML = `
-  <custom-style>
-    <style>
-      html {
+ :root,
+ :host {
         --primary-color: #0099ff;
         --secondary-color: #0061e9; /* TODO: unused color, remove? */
         --ternary-color: #009a54;
-        --sl-color-neutral-0: #0099ff;
 
         --primary-background-color: #FFFFFF;
         --secondary-background-color: #eeeeee;
-        --light-theme-background-color: var(--paper-grey-50);
+        --light-theme-background-color: var(--sl-color-gray-100);
         --medium-theme-background-color: #eeeeee;
         --dark-theme-background-color: #233944;
 
@@ -129,9 +123,13 @@ documentContainer.innerHTML = `
 
         /* custom etools polymer elements general customization */
 
-        /*radio btns style */
+        /* paper-checkbox, radio btns style */
+        --paper-checkbox-checked-color: var(--primary-color);
+        --paper-checkbox-unchecked-color: var(--secondary-text-color);
         --paper-radio-button-checked-color: var(--primary-color);
         --paper-radio-button-unchecked-color: var(--secondary-text-color);
+        --paper-toggle-button-checked-bar-color: var(--primary-color);
+        --paper-toggle-button-checked-button-color: var(--primary-color);
 
         /* etools-panel styles */
         --ecp-header-color: var(--primary-text-color);
@@ -171,7 +169,9 @@ documentContainer.innerHTML = `
           color: var(--secondary-text-color, #737373);
         };
 
-    
+        --paper-button_-_padding-inline-start: 0.57em;
+        --paper-button_-_padding-inline-end: 0.57em;
+
         /* In Edge, paper-input's internal value is not updated
            when it's cleared by click on x btn, so we're hiding the btn
         */
@@ -181,7 +181,7 @@ documentContainer.innerHTML = `
           height:0;
         };
 
-        *:focus:not(etools-icon-button):not(paper-radio-button):not(comments-panels) {
+        *:focus:not(paper-icon-button):not(paper-radio-button):not(comments-panels) {
           outline: 0;
           box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12),
            0 3px 5px -1px rgba(0, 0, 0, 0.4);
@@ -208,6 +208,55 @@ documentContainer.innerHTML = `
           right: auto;
           padding-inline-end: 15px;
         }
+
+		 --nested-content-panel-title: {
+          color: var(--primary-color);
+          text-align: left;
+          font-size: 16px;
+          font-weight: bold;
+        };
+
+        --nested-content-panel-collapse-btn: {
+          color: var(--dark-icon-color);
+          width: 28px;
+          height: 28px;
+          padding: 0;
+          margin-inline-end: 15px;
+        };
+
+        --paper-fab-btn-green: {
+          width: 58px;
+          height: 58px;
+          background: var(--add-button-color);
+          z-index: 51;
+        };
+
+        --basic-btn-style: {
+          width: auto;
+          margin: 0;
+          color: var(--primary-color);
+          padding: 0;
+          padding-inline-end: 5px;
+          font-size: 14px;
+          font-weight: bold;
+        };
+
+        --partner-status-wrapper: {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          -webkit-border-radius: 50%;
+          -moz-border-radius: 50%;
+          border-radius: 50%;
+        };
+
+        --pmp-paper-dialog-content: {
+          padding: 8px 24px;
+          overflow-x: hidden;
+          overflow-y: auto;
+        };
       }
 
       html[dir="rtl"] {
@@ -217,9 +266,3 @@ documentContainer.innerHTML = `
           padding-inline-end: 15px;
         }
       }
-    </style>
-  </custom-style>
-  `;
-
-// @ts-ignore
-document.head.appendChild(documentContainer.content);

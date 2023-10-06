@@ -65,8 +65,6 @@ import './components/common/environment-flags/environment-flags';
 import './components/pages/partners/data/partners-list-data.js';
 import './components/pages/agreements/data/agreements-list-data.js';
 
-import './components/app-shell/app-theme.js';
-import './components/styles/app-mixins.js';
 import UtilsMixin from './components/common/mixins/utils-mixin.js';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 

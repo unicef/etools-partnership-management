@@ -102,7 +102,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .green {
-          color: var(--paper-green-500);
+          color: var(--sl-color-green-500);
         }
 
         .hact-values {

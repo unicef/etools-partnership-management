@@ -1,5 +1,4 @@
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {property} from 'lit/decorators.js';

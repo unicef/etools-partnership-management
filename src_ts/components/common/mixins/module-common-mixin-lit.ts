@@ -2,7 +2,6 @@
 import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig;
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
@@ -97,7 +96,7 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
       const tabEl = this.shadowRoot!.querySelector(selector);
 
       if (tabEl) {
-        if (tabEl instanceof PolymerElement || tabEl instanceof LitElement) {
+        if (tabEl instanceof LitElement) {
           // tab element already loaded, no need for loading messages
           return;
         }
@@ -124,7 +123,7 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
     _reloadListData(e: CustomEvent) {
       e.stopImmediatePropagation();
       try {
-        const listElem = this.shadowRoot!.querySelector('#list') as PolymerElement & {
+        const listElem = this.shadowRoot!.querySelector('#list') as LitElement & {
           _filterListData(forceNoLoading: boolean): void;
         };
         if (listElem && listElem._filterListData) {

@@ -96,7 +96,7 @@ export class PartnerOverview extends PaginationMixin(
         }
 
         .green {
-          color: var(--paper-green-500);
+          color: var(--sl-color-green-500);
         }
 
         .partnership-status {

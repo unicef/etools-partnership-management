@@ -1,4 +1,3 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
@@ -12,7 +11,6 @@ import {property} from 'lit/decorators.js';
 import CommonMixinLit from '../mixins/common-mixin-lit';
 import {get as getTranslation} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {PolymerElement} from '@polymer/polymer';
 
 /**
  * @polymer
@@ -205,7 +203,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement & {
+    return this.shadowRoot!.querySelector('#cpStructure') as LitElement & {
       resetInvalidState(): void;
       validate(): boolean;
     };

@@ -3,7 +3,6 @@ import {prettyDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {LitElement} from 'lit';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation, translate} from 'lit-translate';
-import {PolymerElement} from '@polymer/polymer';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
@@ -103,7 +102,7 @@ function CommonMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
       if (!useValidate) {
         useValidate = false;
       }
-      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {
+      const field = this.shadowRoot!.querySelector(selector) as LitElement & {
         validate(): boolean;
         invalid: boolean;
       };

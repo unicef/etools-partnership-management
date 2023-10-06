@@ -15,7 +15,7 @@ export class SrDetails extends LitElement {
   render() {
     return html`
       ${sharedStyles}
-      <style include="paper-material-styles">
+      <style>
         :host {
           display: block;
           background-color: var(--primary-background-color);
