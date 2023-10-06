@@ -631,5 +631,9 @@
   "ON_TRACK": "No caminho certo",
   "NO_PROGRESS": "Sem progresso",
   "CONSTRAINED": "Restrito",
-  "FEEDBACK_COMMENTS": "Feedback/Comentários"
+  "FEEDBACK_COMMENTS": "Feedback/Comentários",
+  "REPORT_FOR": "Relatório para",
+  "RATE_ACCEPT_REPORT": "Avaliar e aceitar relatório",
+  "SENDING_RATING": "Enviando avaliação...",
+  "NO_REPORTING_PERIOD": "Sem período de relatório"
 }

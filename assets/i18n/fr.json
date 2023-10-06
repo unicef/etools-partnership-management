@@ -631,5 +631,9 @@
   "ON_TRACK": "Sur la bonne voie",
   "NO_PROGRESS": "Pas de progrès",
   "CONSTRAINED": "Contraint",
-  "FEEDBACK_COMMENTS": "Feedback/Commentaires"
+  "FEEDBACK_COMMENTS": "Feedback/Commentaires",
+  "REPORT_FOR": "Rapport pour",
+  "RATE_ACCEPT_REPORT": "Noter et accepter le rapport",
+  "SENDING_RATING": "Envoi de la notation...",
+  "NO_REPORTING_PERIOD": "Pas de période de déclaration"
 }
