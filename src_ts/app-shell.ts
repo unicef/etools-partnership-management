@@ -620,7 +620,7 @@ class AppShell extends connect(store)(
         bubbles: true,
         composed: true
       });
-      this.shadowRoot!.querySelector('app-menu')!.shadowRoot!.querySelector('iron-selector')!.select(this.module);
+      (this.shadowRoot!.querySelector('app-menu') as any).selectedOption = this.module;
       return true;
     }
   }
