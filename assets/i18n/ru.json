@@ -631,5 +631,9 @@
   "ON_TRACK": "На ходу",
   "NO_PROGRESS": "Нет прогресса",
   "CONSTRAINED": "Ограниченный",
-  "FEEDBACK_COMMENTS": "Обратная связь/Комментарии"
+  "FEEDBACK_COMMENTS": "Обратная связь/Комментарии",
+  "REPORT_FOR": "Отчет для",
+  "RATE_ACCEPT_REPORT": "Оценить и принять отчет",
+  "SENDING_RATING": "Отправка оценки...",
+  "NO_REPORTING_PERIOD": "Нет периода отчетности"
 }
