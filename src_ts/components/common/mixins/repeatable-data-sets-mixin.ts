@@ -1,6 +1,6 @@
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-unicef/src/etools-dialog/dynamic-dialog';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {property} from 'lit/decorators.js';

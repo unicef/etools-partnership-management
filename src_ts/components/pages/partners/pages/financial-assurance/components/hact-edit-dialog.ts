@@ -8,8 +8,8 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi'
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import clone from 'lodash-es/clone';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';

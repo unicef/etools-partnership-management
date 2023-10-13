@@ -7,10 +7,10 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi'
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {sendRequest} from '@unicef-polymer/etools-ajax';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
