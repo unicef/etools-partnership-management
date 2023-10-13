@@ -1,14 +1,14 @@
 import {LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {RequestError} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request-mixin';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {store} from '../../../../redux/store';
 import {deletePartner, setShouldReloadPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner} from '../../../../models/partners.models';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {formatServerErrorAsText} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
@@ -154,7 +154,7 @@ export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(Lit
   }
 
   public _handleErrorResponse(response: any, ajaxMethod: any) {
-    if (response instanceof EtoolsRequestError === false) {
+    if (!(response instanceof RequestError)) {
       EtoolsLogger.error('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {

@@ -1,5 +1,5 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor} from '@unicef-polymer/etools-types';
@@ -19,7 +19,7 @@ function ListDataMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
   class ListDataClass extends EndpointsLitMixin(AjaxServerErrorsMixin(baseClass)) {
     @property({type: Object})
     options: {
-      endpoint: EtoolsRequestEndpoint;
+      endpoint: RequestEndpoint;
       csrf: boolean;
     } = {
       endpoint: {url: ''},

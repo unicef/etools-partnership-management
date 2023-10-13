@@ -1,5 +1,5 @@
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../redux/store';

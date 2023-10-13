@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
-import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
