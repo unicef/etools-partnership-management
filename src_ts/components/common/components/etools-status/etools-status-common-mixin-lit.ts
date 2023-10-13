@@ -1,6 +1,4 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import ScrollControlMixinLit from '../../mixins/scroll-control-mixin-lit';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {LitElement, PropertyValues} from 'lit';
@@ -16,7 +14,7 @@ declare const ShadyCSS: any;
 
 /**
  * Common functionality for etools status element
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin ScrollControlMixin
  **/
@@ -53,8 +51,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
       return '';
     }
 
-    private _resetStatusActionsDebouncer!: Debouncer;
-    private _statusActiveChangeDebouncer!: Debouncer;
+    connectedCallback(): void {
+      super.connectedCallback();
+
+      this._forceScollPositionRecalculation = debounce(this._forceScollPositionRecalculation.bind(this), 20) as any;
+      this._computeAvailableStatuses = debounce(this._computeAvailableStatuses.bind(this), 50) as any;
+      this._computeAvailableActions = debounce(this._computeAvailableActions.bind(this), 50) as any;
+    }
 
     updated(changedProperties: PropertyValues) {
       if (changedProperties.has('status')) {
@@ -75,13 +78,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
 
     _activeFlagChanged(active: boolean) {
       if (active) {
-        this._statusActiveChangeDebouncer = Debouncer.debounce(
-          this._statusActiveChangeDebouncer,
-          timeOut.after(20),
-          () => {
-            this._forceScollPositionRecalculation.bind(this);
-          }
-        );
+        this._forceScollPositionRecalculation();
       }
     }
 
@@ -211,14 +208,8 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
       if (typeof status === 'undefined') {
         return;
       }
-      this._resetStatusActionsDebouncer = Debouncer.debounce(
-        this._resetStatusActionsDebouncer,
-        timeOut.after(50),
-        () => {
-          this._computeAvailableStatuses(status);
-          this._computeAvailableActions(status);
-        }
-      );
+      this._computeAvailableStatuses(status);
+      this._computeAvailableActions(status);
     }
 
     _statusChangeConfirmationCallback(_event: CustomEvent) {

@@ -33,7 +33,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
@@ -45,7 +45,7 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
 );
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */

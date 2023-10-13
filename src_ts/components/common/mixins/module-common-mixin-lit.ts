@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig;
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
@@ -9,7 +8,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * Module main elements common functionality
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElement>>(baseClass: T) {

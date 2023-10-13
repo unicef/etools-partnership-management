@@ -26,7 +26,7 @@ import {translate} from 'lit-translate';
 import {SlCheckbox} from '@shoelace-style/shoelace';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */

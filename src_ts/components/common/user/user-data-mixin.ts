@@ -13,7 +13,7 @@ import {languageIsAvailableInApp} from '../../utils/language';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixinLit
  * @appliesMixin EndpointsMixin

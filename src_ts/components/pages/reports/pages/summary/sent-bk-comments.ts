@@ -8,7 +8,7 @@ import {translate} from 'lit-translate';
 
 /*
  * @customElement
- * @polymer
+ * @LitElement
  */
 @customElement('sent-bk-comments')
 export class SentBkComments extends LitElement {

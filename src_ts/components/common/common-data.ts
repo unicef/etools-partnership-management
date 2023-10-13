@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
@@ -16,7 +15,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {translateLabelAndValueArray} from '../utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {

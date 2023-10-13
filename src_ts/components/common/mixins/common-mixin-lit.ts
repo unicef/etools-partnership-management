@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {prettyDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {LitElement} from 'lit';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
@@ -6,7 +5,7 @@ import {get as getTranslation, translate} from 'lit-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function CommonMixinLit<T extends Constructor<LitElement>>(baseClass: T) {

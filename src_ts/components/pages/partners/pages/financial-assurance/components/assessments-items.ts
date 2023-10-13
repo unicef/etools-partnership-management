@@ -28,7 +28,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 
 /**
  * @customElement
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin CommonMixin
  */

@@ -5,7 +5,7 @@ import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {EnvFlags, Constructor} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function EnvironmentFlagsMixinLit<T extends Constructor<LitElement>>(baseClass: T) {

@@ -1,14 +1,8 @@
 /**
 @license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Copyright (c) 2018 The eTools Project Authors. All rights reserved.
 */
 
-import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
@@ -40,17 +34,16 @@ store.addReducers({
 });
 
 // These are the elements needed by this element.
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-import '@polymer/app-layout/app-drawer/app-drawer.js';
-import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '@polymer/app-layout/app-header/app-header.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer-layout';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header-layout';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
 import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
-import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
 import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts';
 import UserDataMixin from './components/common/user/user-data-mixin';
@@ -71,15 +64,11 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 // import global config and dexie db config
 import './config/config.js';
 import './components/utils/routes';
-// Gesture events like tap and track generated from touch will not be
-// preventable, allowing for better scrolling performance.
-setPassiveTouchGestures(true);
 
 import {BASE_URL} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
@@ -123,7 +112,6 @@ const translationConfig = registerTranslateConfig({
   loader: (lang: string) => fetchLangFiles(lang)
 });
 
-setRootPath(BASE_URL);
 setBasePath(BASE_URL);
 initializeIcons(
   [
@@ -139,8 +127,7 @@ initializeIcons(
 
 /**
  * @customElement
- * @polymer
- * @appliesMixin AppMenuMixin
+ * @LitElement
  * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
  * @appliesMixin ScrollControlMixin
@@ -152,7 +139,7 @@ initializeIcons(
 class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
-    AppMenuMixin(ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement))))))
+    ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement)))))
   )
 ) {
   render() {
@@ -516,6 +503,7 @@ class AppShell extends connect(store)(
     // Event trigerred by the app-drawer component
     this.addEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.addEventListener('change-drawer-state', this.changeDrawerState);
+    this.addEventListener('toggle-small-menu', this.toggleMenu as any);
   }
 
   private _removeListeners() {
@@ -525,6 +513,7 @@ class AppShell extends connect(store)(
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
     this.removeEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.removeEventListener('change-drawer-state', this.changeDrawerState);
+    this.removeEventListener('toggle-small-menu', this.toggleMenu as any);
   }
 
   public disconnectedCallback() {
@@ -533,11 +522,15 @@ class AppShell extends connect(store)(
   }
 
   public syncWithDrawerState() {
-    this._drawerOpened = Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened);
+    this._drawerOpened = Boolean((this.shadowRoot?.querySelector('#drawer') as any).opened);
   }
 
   public changeDrawerState() {
     this._drawerOpened = !this._drawerOpened;
+  }
+
+  public toggleMenu(e: CustomEvent) {
+    this.smallMenu = e.detail.value;
   }
 
   private async _showConfirmNewVersionDialog() {

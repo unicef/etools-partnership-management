@@ -20,7 +20,7 @@ import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('ecn-import-dialog')

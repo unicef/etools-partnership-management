@@ -10,7 +10,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 import {LitElement} from 'lit';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */

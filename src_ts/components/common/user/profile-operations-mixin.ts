@@ -13,7 +13,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
 import {get as getTranslation} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin

@@ -6,7 +6,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('zero-disaggregations')

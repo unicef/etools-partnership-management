@@ -10,7 +10,7 @@ import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('generate-pca-dialog')

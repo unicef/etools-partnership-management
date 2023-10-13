@@ -14,7 +14,7 @@ import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 /**
  * PMP main menu
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin GestureEventListeners
  */

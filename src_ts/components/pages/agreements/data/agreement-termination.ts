@@ -18,7 +18,7 @@ import CONSTANTS from '../../../../config/app-constants';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */

@@ -10,7 +10,7 @@ import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */

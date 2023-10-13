@@ -5,7 +5,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin GestureEventListeners
  */

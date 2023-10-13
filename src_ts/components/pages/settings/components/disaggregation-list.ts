@@ -30,7 +30,7 @@ import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js'
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
