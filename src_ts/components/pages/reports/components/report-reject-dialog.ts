@@ -13,6 +13,7 @@ import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {translate} from 'lit-translate';
+import {get as getTranslation} from 'lit-translate/util';
 
 /**
  * @polymer
@@ -34,10 +35,11 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRejectDialog"
         size="md"
         keep-dialog-open
-        spinner-text="Sending rating..."
+        spinner-text="${translate('SENDING_RATING')}"
         ?disable-confirm-btn="${!this.comment.length}"
-        ok-btn-text="Send Back to Partner"
-        dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
+        ok-btn-text="${translate('SEND_BACK_TO_PARTNER')}"
+        dialog-title="${translate('REPORT_FOR')} ${this.report.programme_document
+          .reference_number}: ${this.translateReportingPeriodText(this.report.reporting_period)}"
         ?show-spinner="${this.showSpinner}"
         @confirm-btn-clicked="${this.saveStatus}"
         @close="${this._onClose}"
@@ -83,7 +85,12 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
   getCurrentDate() {
     return dayjs(new Date()).format('D-MMM-YYYY');
   }
-
+  translateReportingPeriodText(periodText: string) {
+    if (periodText === 'No reporting period') {
+      return getTranslation('NO_REPORTING_PERIOD');
+    }
+    return periodText;
+  }
   saveStatus() {
     const requestBody = {
       status: 'Sen',
