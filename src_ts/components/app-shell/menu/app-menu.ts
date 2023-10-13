@@ -8,7 +8,7 @@ import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mi
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import {BASE_URL} from '../../../config/config';
+import {BASE_URL, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from 'lit-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
@@ -183,35 +183,22 @@ class AppMenu extends connect(store)(
   @property({type: String})
   rootPath = BASE_URL;
 
-  private _smallMenu = false;
-  @property({
-    type: Boolean
-  })
-  get smallMenu() {
-    return this._smallMenu;
-  }
-  set smallMenu(val: boolean) {
-    this._menuSizeChange(val, this._smallMenu);
-    this._smallMenu = val;
-  }
+  @property({type: Boolean, attribute: 'small-menu'})
+  smallMenu = false;
 
   stateChanged(state: RootState) {
     this.envFlagsStateChanged(state);
-  }
-
-  _menuSizeChange(newVal: boolean, oldVal: boolean): void {
-    if (newVal !== oldVal) {
-      setTimeout(() => fireEvent(this, 'resize-main-layout'));
-    }
   }
 
   getItemClass(selectedValue: string, itemValue: string) {
     return selectedValue === itemValue ? 'selected' : '';
   }
 
-  _toggleSmallMenu(e: Event): void {
-    e.stopImmediatePropagation();
-    fireEvent(this, 'toggle-small-menu');
+  _toggleSmallMenu(): void {
+    this.smallMenu = !this.smallMenu;
+    const localStorageVal: number = this.smallMenu ? 1 : 0;
+    localStorage.setItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY, String(localStorageVal));
+    fireEvent(this, 'toggle-small-menu', {value: this.smallMenu});
   }
 }
 

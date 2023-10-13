@@ -65,7 +65,7 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import './config/config.js';
 import './components/utils/routes';
 
-import {BASE_URL} from './config/config';
+import {BASE_URL, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -77,7 +77,7 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
-import {property} from 'lit/decorators.js';
+import {property, query} from 'lit/decorators.js';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
@@ -170,7 +170,8 @@ class AppShell extends connect(store)(
           id="drawer"
           slot="drawer"
           transition-duration="350"
-          ?opened="${this._drawerOpened}"
+          @app-drawer-transitioned="${this.onDrawerToggle}"
+          ?opened="${this.drawerOpened}"
           ?swipe-open="${this.narrow}"
           ?small-menu="${this.smallMenu}"
         >
@@ -243,7 +244,10 @@ class AppShell extends connect(store)(
   }
 
   @property({type: Boolean})
-  _drawerOpened = false;
+  drawerOpened = false;
+
+  @property({type: Boolean})
+  public smallMenu = false;
 
   @property({type: String})
   _page?: string | null;
@@ -319,14 +323,26 @@ class AppShell extends connect(store)(
   @property({type: Boolean})
   private translationFilesAreLoaded = false;
 
+  @query('#drawer') private drawer!: LitElement;
+
+  constructor() {
+    super();
+
+    const menuTypeStoredVal: string | null = localStorage.getItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY);
+    if (!menuTypeStoredVal) {
+      this.smallMenu = false;
+    } else {
+      this.smallMenu = !!parseInt(menuTypeStoredVal, 10);
+    }
+  }
+
   public async connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
-    if (this.shadowRoot?.querySelector('#appHeadLayout')) {
-      window.EtoolsEsmmFitIntoEl = this.shadowRoot
-        ?.querySelector('#appHeadLayout')!
-        .shadowRoot!.querySelector('#contentContainer');
+    const appHeaderLayout = this.shadowRoot?.querySelector('#appHeadLayout');
+    if (appHeaderLayout) {
+      window.EtoolsEsmmFitIntoEl = appHeaderLayout.shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
 
@@ -501,7 +517,6 @@ class AppShell extends connect(store)(
     this.addEventListener('forbidden', this._onForbidden);
     this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
     // Event trigerred by the app-drawer component
-    this.addEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.addEventListener('change-drawer-state', this.changeDrawerState);
     this.addEventListener('toggle-small-menu', this.toggleMenu as any);
   }
@@ -511,7 +526,6 @@ class AppShell extends connect(store)(
     this.removeEventListener('update-main-path', this._updateMainPath as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
-    this.removeEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.removeEventListener('change-drawer-state', this.changeDrawerState);
     this.removeEventListener('toggle-small-menu', this.toggleMenu as any);
   }
@@ -521,12 +535,15 @@ class AppShell extends connect(store)(
     this._removeListeners();
   }
 
-  public syncWithDrawerState() {
-    this._drawerOpened = Boolean((this.shadowRoot?.querySelector('#drawer') as any).opened);
+  public changeDrawerState() {
+    this.drawerOpened = !this.drawerOpened;
   }
 
-  public changeDrawerState() {
-    this._drawerOpened = !this._drawerOpened;
+  public onDrawerToggle() {
+    const drawerOpened = (this.drawer as any).opened;
+    if (this.drawerOpened !== drawerOpened) {
+      this.drawerOpened = drawerOpened;
+    }
   }
 
   public toggleMenu(e: CustomEvent) {
