@@ -52,7 +52,7 @@ import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/eto
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
-import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts.js';
+import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
 import './components/app-shell/menu/app-menu.js';
@@ -343,7 +343,7 @@ class AppShell extends connect(store)(
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
 
-    // Override ajax error parser inside @unicef-polymer/etools-ajax
+    // Override ajax error parser inside @unicef-polymer/etools-utils/dist/etools-ajax
     // for string translation using lit-translate
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);

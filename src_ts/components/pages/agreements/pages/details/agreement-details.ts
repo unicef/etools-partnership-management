@@ -5,7 +5,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
-import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';

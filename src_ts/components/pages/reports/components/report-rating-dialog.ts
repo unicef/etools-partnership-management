@@ -7,13 +7,13 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 declare const dayjs: any;
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../redux/store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {translate} from 'lit-translate';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /*
   status: 'accepted'/'sent back'
@@ -47,10 +47,11 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRatingDialog"
         size="md"
         keep-dialog-open
-        spinner-text="Sending rating..."
+        spinner-text="${translate('SENDING_RATING')}"
         ?disable-confirm-btn="${!this.selectedOverallStatus.length}"
         ok-btn-text="${this.okBtnText}"
-        dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
+        dialog-title="${translate('REPORT_FOR')} ${this.report.programme_document
+          .reference_number}: ${this.translateReportingPeriodText(this.report.reporting_period)}"
         ?show-spinner="${this.showSpinner}"
         @confirm-btn-clicked="${this.saveStatus}"
         @close="${this._onClose}"
@@ -102,7 +103,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   init() {
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
     this.selectedOverallStatus = this.isSRReport ? 'Met' : '';
-    this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
+    this.okBtnText = this.isSRReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
   }
 
   _onClose(): void {
@@ -112,7 +113,12 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   getCurrentDate() {
     return dayjs(new Date()).format('D-MMM-YYYY');
   }
-
+  translateReportingPeriodText(periodText: string) {
+    if (periodText === 'No reporting period') {
+      return getTranslation('NO_REPORTING_PERIOD');
+    }
+    return periodText;
+  }
   saveStatus() {
     const requestBody = {
       status: 'Acc',

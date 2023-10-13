@@ -2,7 +2,7 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
-import '@unicef-polymer/etools-upload/etools-upload';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -10,7 +10,7 @@ import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
-import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
+import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
 /**
  * @polymer

@@ -5,8 +5,8 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement, setShouldReloadAgreements} from '../../../../redux/actions/agreements';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {RequestError} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
@@ -74,7 +74,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         return resp;
       })
       .catch((error: any) => {
-        if (error instanceof EtoolsRequestError === false) {
+        if (!(error instanceof RequestError)) {
           EtoolsLogger.error('handleErrorResponse', 'agreement-item-data', error);
         }
         this.handleErrorResponse(error, ajaxMethod, true);

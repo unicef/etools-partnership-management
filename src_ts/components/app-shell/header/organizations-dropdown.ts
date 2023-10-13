@@ -12,7 +12,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import {get as getTranslation, translate} from 'lit-translate';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../endpoints/endpoints.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';

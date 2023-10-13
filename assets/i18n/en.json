@@ -631,5 +631,9 @@
   "ON_TRACK": "On Track",
   "NO_PROGRESS": "No Progress",
   "CONSTRAINED": "Constrained",
-  "FEEDBACK_COMMENTS": "Feedback/Comments"
+  "FEEDBACK_COMMENTS": "Feedback/Comments",
+  "REPORT_FOR": "Report for",
+  "RATE_ACCEPT_REPORT": "Rate & Accept Report",
+  "SENDING_RATING": "Sending rating...",
+  "NO_REPORTING_PERIOD": "No reporting period"
 }
