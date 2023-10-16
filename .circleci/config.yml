@@ -31,10 +31,10 @@ jobs:
       #     name: Remove opt.chaining and null coalescing op.
       #     command: npm install -g @babel/core @babel/cli
       #       npm run transpileNullCoalescingOp-OptionalChaining
-      - run:
-          name: Polymer3 Build
-          command: npm run build
-          no_output_timeout: 25m
+      # - run:
+      #     name: Polymer3 Build
+      #     command: npm run build
+      #     no_output_timeout: 25m
 
   build_and_deploy:
     working_directory: ~/code
@@ -92,3 +92,4 @@ workflows:
                 - staging
                 - develop
                 - sl-dialog-tests
+                - rollup-build-test
