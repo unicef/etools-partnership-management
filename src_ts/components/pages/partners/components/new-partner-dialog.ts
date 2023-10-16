@@ -8,7 +8,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('new-partner-dialog')

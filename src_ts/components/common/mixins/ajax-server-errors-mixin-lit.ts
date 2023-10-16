@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {LitElement} from 'lit';
@@ -8,7 +7,7 @@ import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 const globalMessage = 'An error occurred. Please try again later.';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function AjaxServerErrorsMixin<T extends Constructor<LitElement>>(baseClass: T) {

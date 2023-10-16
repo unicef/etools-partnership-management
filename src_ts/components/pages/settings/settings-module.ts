@@ -8,7 +8,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 

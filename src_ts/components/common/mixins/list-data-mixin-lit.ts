@@ -1,4 +1,3 @@
-// import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
@@ -10,7 +9,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import pmpEdpoints from '../../endpoints/endpoints';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors

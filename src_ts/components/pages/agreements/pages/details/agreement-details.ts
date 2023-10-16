@@ -53,7 +53,7 @@ import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin StaffMembersDataMixin

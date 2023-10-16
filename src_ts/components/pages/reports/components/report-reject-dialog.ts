@@ -16,7 +16,7 @@ import {translate} from 'lit-translate';
 import {get as getTranslation} from 'lit-translate/util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */

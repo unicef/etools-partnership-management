@@ -1,4 +1,4 @@
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
@@ -36,7 +36,7 @@ store.addReducers({
 });
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ProfileOperationsMixin

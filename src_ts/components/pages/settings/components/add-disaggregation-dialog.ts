@@ -26,7 +26,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin

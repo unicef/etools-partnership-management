@@ -5,7 +5,7 @@ import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/uti
 import {listenForLangChanged} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @extends {Polymer.Element}
  */

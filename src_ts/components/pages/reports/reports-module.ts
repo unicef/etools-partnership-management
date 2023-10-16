@@ -43,7 +43,7 @@ import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 declare const dayjs: any;
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ModuleMainElCommonFunctionalityMixin

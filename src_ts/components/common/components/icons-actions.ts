@@ -6,7 +6,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {LitElement, html} from 'lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 class IconsActions extends LitElement {

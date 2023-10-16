@@ -7,7 +7,7 @@ import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */

@@ -1,8 +1,7 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
@@ -13,7 +12,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {buttonsStyles} from '../../../styles/buttons-styles-lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('etools-action-button')
@@ -107,7 +106,11 @@ export class EtoolsActionButton extends LitElement {
   @property({type: Boolean})
   showInfoIcon = false;
 
-  private _actionsChangedDebouncer!: Debouncer;
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    this._handleActionsChanged = debounce(this._handleActionsChanged.bind(this), 50) as any;
+  }
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('actions')) {
@@ -119,9 +122,7 @@ export class EtoolsActionButton extends LitElement {
     if (typeof actions === 'undefined') {
       return;
     }
-    this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer, timeOut.after(10), () => {
-      this._handleActionsChanged();
-    });
+    this._handleActionsChanged();
   }
 
   _handleActionsChanged() {

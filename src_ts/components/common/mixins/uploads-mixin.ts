@@ -13,7 +13,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function UploadsMixin<T extends Constructor<LitElement>>(baseClass: T) {

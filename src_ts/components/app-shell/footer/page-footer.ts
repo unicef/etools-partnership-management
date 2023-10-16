@@ -3,7 +3,7 @@ import {BASE_URL} from '../../../config/config';
 
 /**
  * page footer element
- * @polymer
+ * @LitElement
  * @customElement
  */
 class PageFooter extends LitElement {

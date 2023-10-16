@@ -13,7 +13,7 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ListDataMixin

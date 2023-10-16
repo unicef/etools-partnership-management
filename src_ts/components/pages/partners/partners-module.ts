@@ -6,7 +6,6 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
@@ -45,10 +44,9 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
- * @appliesMixin GestureEventListeners
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -59,12 +57,10 @@ import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/b
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   MatomoMixin(
-    GestureEventListeners(
-      CommonMixinLit(
-        // eslint-disable-next-line new-cap
-        ScrollControlMixinLit(
-          ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
-        )
+    CommonMixinLit(
+      // eslint-disable-next-line new-cap
+      ScrollControlMixinLit(
+        ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
       )
     )
   )

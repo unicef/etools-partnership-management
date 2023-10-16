@@ -42,7 +42,7 @@ import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {setShouldReloadAgreements} from '../../../../../redux/actions/agreements';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin CommonMixin

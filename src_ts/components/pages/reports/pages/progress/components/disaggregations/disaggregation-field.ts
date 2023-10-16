@@ -6,7 +6,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('disaggregation-field')

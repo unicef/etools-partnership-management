@@ -3,7 +3,7 @@ import {property} from 'lit/decorators.js';
 import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) {

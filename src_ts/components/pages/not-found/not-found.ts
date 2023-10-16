@@ -6,7 +6,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 class NotFound extends LitElement {

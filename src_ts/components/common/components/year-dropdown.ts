@@ -5,7 +5,7 @@ import {property} from 'lit/decorators.js';
 
 /**
  *
- * @polymer
+ * @LitElement
  * @customElement
  */
 class YearDropdown extends LitElement {

@@ -12,7 +12,7 @@ import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */

@@ -19,7 +19,7 @@ import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('add-ag-amendment-dialog')

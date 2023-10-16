@@ -19,7 +19,7 @@ import {translate, get as getTranslation} from 'lit-translate';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin

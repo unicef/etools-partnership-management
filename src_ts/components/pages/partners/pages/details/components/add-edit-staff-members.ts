@@ -20,7 +20,7 @@ import pmpEdpoints from '../../../../../endpoints/endpoints';
 
 /**
  * @customElement
- * @polymer
+ * @LitElement
  * @appliesMixin EndpointsMixin
  */
 @customElement('add-edit-staff-members')

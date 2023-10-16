@@ -7,7 +7,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency

@@ -13,7 +13,7 @@ import {translate} from 'lit-translate';
 import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  */

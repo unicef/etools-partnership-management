@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {RootState} from '../../redux/store';
 
 import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
@@ -12,7 +11,7 @@ import get from 'lodash-es/get';
 import {LitElement} from 'lit';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function EndpointsMixin<T extends Constructor<LitElement>>(baseClass: T) {
