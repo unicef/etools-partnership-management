@@ -60,7 +60,47 @@ const config = {
     dir: 'build/src',
     format: 'es'
   },
-  plugins: [dynamicImportVars({}), minifyHTML(), copy(copyConfig), resolve()],
+  plugins: [
+    dynamicImportVars({
+      include: [
+        'src/components/pages/partners/partners-module.js',
+        'src/components/pages/partners/pages/list/partners-list.js',
+        'src/components/pages/partners/pages/list/governments-list.js',
+        'src/components/pages/partners/pages/overview/partner-overview.js',
+        'src/components/pages/partners/pages/details/partner-details.js',
+        'src/components/pages/partners/pages/financial-assurance/partner-financial-assurance.js',
+        'src/components/pages/agreements/agreements-module.js',
+        'src/components/pages/agreements/pages/list/agreements-list.js',
+        'src/components/pages/agreements/pages/details/agreement-details.js',
+        'src/components/pages/interventions/interventions-module.js',
+        'src/components/pages/interventions/pages/list/interventions-list.js',
+        'src/components/pages/interventions/pages/new/intervention-new.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js',
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js',
+        // eslint-disable-next-line max-len
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js',
+        'src/components/pages/interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js',
+        'src/components/pages/reports/reports-module.js',
+        'src/components/pages/reports/pages/list/reports-list.js',
+        'src/components/pages/reports/pages/progress/report-progress.js',
+        'src/components/pages/reports/pages/summary/report-summary.js',
+        'src/components/pages/settings/settings-module.js',
+        'src/components/pages/not-found/not-found.js'
+      ]
+    }),
+    minifyHTML(),
+    copy(copyConfig),
+    resolve()
+  ],
   preserveEntrySignatures: false
 };
 
