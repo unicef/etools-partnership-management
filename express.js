@@ -11,7 +11,7 @@ function getSourcesPath(request, filePath = '') {
   const browserName = new UAParser(userAgent).getBrowser().name || '';
   // skip Edge because browser-capabilities library is outdated
   const needToUpgrade = !clientCapabilities.has('modules') && browserName !== 'Edge';
-  return needToUpgrade ? `${basedir}esm-bundled/upgrade-browser.html` : `${basedir}esm-bundled/${filePath}`;
+  return needToUpgrade ? `${basedir}upgrade-browser.html` : `${basedir}${filePath}`;
 }
 
 app.use('/pmp/', (req, res, next) => {
