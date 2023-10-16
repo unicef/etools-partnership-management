@@ -21,7 +21,7 @@
     "start:cors": "node cors-anywhere/index.js",
     "initialbuild": "tsc && npm run build:prpl-server && npm run build:static",
     "build:static": "polymer build",
-    "build:rollup": "npm run tsToJsOrTrue && rollup -c rollup.config.js",
+    "build:rollup": "npm run tsToJs && rollup -c rollup.config.js",
     "serve:prpl-server": "prpl-server --root server/build",
     "serve:static": "polymer serve --port 5000 build/es6-bundled",
     "test": "npm run test:unit && npm run test:integration",
