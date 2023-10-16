@@ -60,7 +60,7 @@ const config = {
     format: 'es'
   },
   plugins: [minifyHTML(), copy(copyConfig), resolve()],
-  preserveEntrySignatures: 'strict'
+  preserveEntrySignatures: false
 };
 
 if (process.env.NODE_ENV !== 'development') {

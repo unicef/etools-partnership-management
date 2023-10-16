@@ -55,14 +55,14 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     return;
   }
   if (['list'].includes(subRouteName)) {
-    import(`../../components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`);
+    import(`./../../components/pages/${routeName}/pages/${subRouteName}/${routeName}-${subRouteName}.js`);
   }
   if (['new'].includes(subRouteName)) {
-    import(`../../components/pages/interventions/pages/new/intervention-new.js`);
+    import(`./../../components/pages/interventions/pages/new/intervention-new.js`);
   }
   if (['details', 'financial-assurance', 'overview', 'summary'].includes(subRouteName)) {
     import(
-      `../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+      `./../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,
         routeName.length - 1
       )}-${subRouteName}.js`
@@ -71,12 +71,12 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
 
   if (['implementation-status', 'monitoring-activities', 'results-reported', 'reports'].includes(subRouteName)) {
     import(
-      `../../components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js`
+      `./../../components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js`
     );
   }
   if (routeName == 'reports' && subRouteName != 'list') {
     import(
-      `../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
+      `./../../components/pages/${routeName}/pages/${subRouteName}/${routeName.substring(
         0,
         routeName.length - 1
       )}-${subRouteName}.js`
@@ -86,7 +86,7 @@ const importSubRoutes = (routeName: string, subRouteName: string | null) => {
     ['metadata', 'strategy', 'workplan', 'review', 'timing', 'attachments', 'workplan-editor'].includes(subRouteName)
   ) {
     import(
-      `../../components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
+      `./../../components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.js`
     );
   }
 };
@@ -104,17 +104,17 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
     )
   ) {
     if ('government-partners' == routeDetails.routeName) {
-      import(`../../components/pages/partners/partners-module.js`)
+      import(`./../../components/pages/partners/partners-module.js`)
         .then(() => importSubRoutes('partners', routeDetails.subRouteName))
         .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
     } else {
-      import(`../../components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`)
+      import(`./../../components/pages/${routeDetails.routeName}/${routeDetails.routeName}-module.js`)
         .then(() => importSubRoutes(routeDetails.routeName, routeDetails.subRouteName))
         .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
     }
   }
   if (routeDetails.routeName == 'not-found') {
-    import(`../../components/pages/not-found/not-found.js`);
+    import(`./../../components/pages/not-found/not-found.js`);
   }
 };
 
