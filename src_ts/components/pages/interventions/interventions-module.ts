@@ -133,7 +133,7 @@ export class InterventionsModule extends connect(store)(
         }
 
         etools-icon[slot='trigger'] {
-          padding: 9px 10px;
+          padding: 4px 10px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
       </style>
