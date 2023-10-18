@@ -63,6 +63,7 @@ export class PartnersListBase extends CommonMixin(
         :host {
           box-sizing: border-box;
           background-color: #eeeeee;
+          position: relative;
         }
 
         .vendor-nr {
@@ -73,11 +74,12 @@ export class PartnersListBase extends CommonMixin(
           margin: 0 0 24px 0;
         }
         #list {
-          position: relative;
+          position: inherit;
         }
 
         section.page-content.filters {
           padding: 8px 24px;
+          z-index: 56;
         }
 
         .filters {
