@@ -72,7 +72,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this._countrySelected}"
-        .shownOptionsLimit="${250}"
+        .shownOptionsLimit="${280}"
         hide-search
         auto-width
       ></etools-dropdown>
