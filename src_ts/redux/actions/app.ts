@@ -137,9 +137,11 @@ export const handleUrlChange = (path: string) => (dispatch: any, getState: any) 
     EtoolsRouter.updateAppLocation(redirectPath);
     return;
   }
+
   // handle leave page dialog
   // if (Number(getState().uploadStatus.uploadsInProgress) > 0 || Number(getState().uploadStatus.unsavedUploads) > 0) {
   // }
+
   // handle can Access
   const currentRouteDetails = getState().app.routeDetails;
   const routeDetails = EtoolsRouter.getRouteDetails(path);
