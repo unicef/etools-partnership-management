@@ -20,7 +20,7 @@ import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin EtoolsCurrency

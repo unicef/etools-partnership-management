@@ -39,7 +39,7 @@ import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/ut
 declare const dayjs: any;
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin

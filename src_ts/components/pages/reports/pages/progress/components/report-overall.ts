@@ -6,7 +6,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('report-overall')

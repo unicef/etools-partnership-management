@@ -2,7 +2,7 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 class PageContentHeader extends LitElement {

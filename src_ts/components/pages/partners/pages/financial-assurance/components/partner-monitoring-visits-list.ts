@@ -18,7 +18,7 @@ import {translate} from 'lit-translate';
 declare const dayjs: any;
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin

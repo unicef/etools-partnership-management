@@ -25,7 +25,7 @@ import '@unicef-polymer/etools-unicef/src/etools-collapse/etools-collapse';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin

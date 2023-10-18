@@ -20,7 +20,7 @@ import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dis
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency

@@ -10,7 +10,7 @@ import {EnvFlags} from '@unicef-polymer/etools-types';
 import {LitElement} from 'lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */

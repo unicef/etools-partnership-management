@@ -13,7 +13,7 @@ import {get as getTranslation} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)) {

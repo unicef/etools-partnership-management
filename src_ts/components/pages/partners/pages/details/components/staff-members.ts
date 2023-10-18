@@ -17,7 +17,7 @@ import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('staff-members')

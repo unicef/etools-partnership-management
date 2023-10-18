@@ -40,6 +40,7 @@ const getBasePath = () => {
   return document.getElementsByTagName('base')[0].href;
 };
 
+export const SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY = 'etoolsAppSmallMenuIsActive';
 export const BASE_URL = '/' + getBasePath().replace(window.location.origin, '').slice(1, -1) + '/';
 
 const PROD_DOMAIN = 'etools.unicef.org';

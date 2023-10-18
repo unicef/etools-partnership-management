@@ -41,7 +41,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 declare const dayjs: any;
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin CommonMixin

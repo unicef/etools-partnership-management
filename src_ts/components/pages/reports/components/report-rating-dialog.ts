@@ -21,7 +21,7 @@ import {translate, get as getTranslation} from 'lit-translate';
   comment: required when sending a report back
 */
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */

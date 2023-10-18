@@ -41,7 +41,7 @@ import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/b
 setStore(store);
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin EndpointsMixin

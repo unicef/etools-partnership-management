@@ -11,7 +11,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {translate, get as getTranslation} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin

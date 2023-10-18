@@ -28,7 +28,7 @@ import {get as getTranslation} from 'lit-translate';
 import {setShouldReGetList} from '../pages/intervention-tab-pages/common/actions/interventions';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin

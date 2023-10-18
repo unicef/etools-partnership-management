@@ -8,7 +8,7 @@ import {property, customElement} from 'lit/decorators.js';
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin ListDataMixin
  */

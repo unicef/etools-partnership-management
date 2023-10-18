@@ -39,7 +39,7 @@ import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency

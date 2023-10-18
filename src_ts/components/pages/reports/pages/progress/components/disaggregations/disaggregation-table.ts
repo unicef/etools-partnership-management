@@ -16,7 +16,7 @@ import {translate} from 'lit-translate';
  * We do not need `disaggregation-switches` element here (for now) and there is no editable data.
  * Minimal changes were made here so we minimize the issues if we update from PRP.
  *
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */

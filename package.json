@@ -37,17 +37,13 @@
     "rd:init": "relative-deps init",
     "rd:add": "relative-deps add",
     "rd:reload": "relative-deps",
-    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent",
-    "prepare": "relative-deps"
+    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent"
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
-    "@polymer/app-layout": "^3.1.0",
-    "@polymer/polymer": "^3.5.1",
     "@shoelace-style/shoelace": "^2.5.2",
     "@types/leaflet": "^1.7.11",
     "@types/lodash-es": "^4.17.6",
-    "@unicef-polymer/etools-dexie-caching": "^1.1.0",
     "@unicef-polymer/etools-modules-common": "^5.0.0-rc.17",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.2",
     "@unicef-polymer/etools-types": "1.11.16",
@@ -77,7 +73,6 @@
     "@babel/core": "^7.20.2",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
-    "@polymer/test-fixture": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "@typescript-eslint/typescript-estree": "^5.7.0",
