@@ -43,12 +43,19 @@ export const headerDropdownStyles = html`
       width: 100%;
     }
 
-    etools-dropdown.warning {
-      --paper-input-container: {
-        padding-left: 3px;
-        box-sizing: border-box;
-        box-shadow: inset 0px 0px 0px 1.5px red;
-      }
+    etools-dropdown.warning::part(combobox) {
+      outline: 1.5px solid red !important;
+      padding: 4px;
+    }
+
+    etools-dropdown::part(display-input)::placeholder {
+      color: var(--sl-input-color);
+      opacity: 1;
+    }
+
+    etools-dropdown::part(display-input)::-ms-input-placeholder {
+      /* Edge 12-18 */
+      color: var(--sl-input-color);
     }
 
     @media (max-width: 768px) {

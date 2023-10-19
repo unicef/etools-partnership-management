@@ -57,7 +57,7 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .newGroup {
-          width: 85px;
+          width: 90px;
           padding-inline-end: 6px;
         }
 
@@ -82,6 +82,9 @@ export class AddDisaggregationDialog extends connect(store)(
 
         .group-label {
           padding-top: 9px !important;
+        }
+        #disaggregateByEl {
+          padding-top: 6px;
         }
       </style>
 
@@ -122,6 +125,7 @@ export class AddDisaggregationDialog extends connect(store)(
                     <etools-input
                       class="newGroup"
                       no-label-float
+                      required-placeholder
                       placeholder="${translate('NEW_GROUP')}"
                       .value="${item.value}"
                       required
