@@ -10,8 +10,6 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
-declare const ShadyCSS: any;
-
 /**
  * Common functionality for etools status element
  * @LitElement
@@ -242,11 +240,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
     }
 
     getComputedStyleValue(varName: string) {
-      if (ShadyCSS) {
-        return ShadyCSS.getComputedStyleValue(this, varName);
-      } else {
-        return getComputedStyle(this as any).getPropertyValue(varName);
-      }
+      return getComputedStyle(this as any).getPropertyValue(varName);
     }
 
     async _openDeleteConfirmation() {
