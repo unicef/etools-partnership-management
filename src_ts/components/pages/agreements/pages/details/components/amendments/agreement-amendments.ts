@@ -10,7 +10,7 @@ import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -33,11 +33,11 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 @customElement('agreement-amendments')
 export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [buttonsStyles, gridLayoutStylesLit];
   }
   render() {
     return html`
-      ${sharedStyles} ${buttonsStyles}
+      ${sharedStyles}
       <style>
         ${dataTableStylesLit} [hidden] {
           display: none !important;
