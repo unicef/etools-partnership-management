@@ -340,6 +340,8 @@ class AppShell extends connect(store)(
     super.connectedCallback();
 
     this._initListeners();
+    installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
+
     const appHeaderLayout = this.shadowRoot?.querySelector('#appHeadLayout');
     if (appHeaderLayout) {
       window.EtoolsEsmmFitIntoEl = appHeaderLayout.shadowRoot!.querySelector('#contentContainer');
@@ -373,7 +375,6 @@ class AppShell extends connect(store)(
       this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
 
-    installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
   }

@@ -9,7 +9,7 @@ import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import {buttonsStyles} from '../../../styles/buttons-styles-lit';
+import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
 
 /**
  * @LitElement
@@ -17,9 +17,11 @@ import {buttonsStyles} from '../../../styles/buttons-styles-lit';
  */
 @customElement('etools-action-button')
 export class EtoolsActionButton extends LitElement {
+  static get styles() {
+    return [buttonsStyles];
+  }
   render() {
     return html`
-      ${buttonsStyles}
       <style>
         :host {
           display: flex;
