@@ -1,5 +1,8 @@
 :root,
 :host {
+  --sl-font-mono: Roboto, Noto, sans-serif;
+  --sl-font-sans: Roboto, Noto, sans-serif;
+  --sl-font-serif: Roboto, Noto, sans-serif;
   --primary-color: #0099ff;
   --secondary-color: #0061e9; /* TODO: unused color, remove? */
   --ternary-color: #009a54;
@@ -9,6 +12,7 @@
   --light-theme-background-color: var(--sl-color-gray-100);
   --medium-theme-background-color: #eeeeee;
   --dark-theme-background-color: #233944;
+  --default-btn-bg-color: rgba(0, 0, 0, 0.45);
 
   --primary-text-color: rgba(0, 0, 0, 0.87);
   --dark-primary-text-color: var(--primary-text-color);
@@ -17,6 +21,7 @@
 
   --sl-color-primary-600: var(--primary-color);
   --sl-color-success-600: var(--ternary-color);
+  --sl-color-neutral-600: var(--default-btn-bg-color);
 
   --expand-icon-color: #4d4d4d;
 
