@@ -22,24 +22,4 @@ export const requiredFieldStarredStyles = html` <style>
       padding-inline-end: 15px;
     }
   }
-
-  paper-input[required][label],
-  paper-input-container[required],
-  datepicker-lite[required],
-  etools-upload[required],
-  etools-currency[required] {
-    --paper-input-container-label: {
-      @apply --required-star-style;
-      color: var(--secondary-text-color, #737373);
-    }
-    --paper-input-container-label-floating: {
-      @apply --required-star-style;
-      color: var(--secondary-text-color, #737373);
-    }
-  }
-
-  etools-dropdown-multi[required]::part(esmm-label),
-  etools-dropdown[required]::part(esmm-label) {
-    @apply --required-star-style;
-  }
 </style>`;
