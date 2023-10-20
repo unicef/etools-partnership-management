@@ -39,9 +39,13 @@ class IconsActions extends LitElement {
         }
       </style>
 
-      <etools-icon-button hidden$="[[!showEdit]]" name="create" on-tap="_onEdit"></etools-icon-button>
-      <etools-icon-button hidden$="[[!showDelete]]" name="delete" on-tap="_onDelete"></etools-icon-button>
-      <etools-icon-button hidden$="[[!showDeactivate]]" name="block" on-tap="_onDeactivate"></etools-icon-button>
+      <etools-icon-button ?hidden="${!this.showEdit}" name="create" @click="${this._onEdit}"></etools-icon-button>
+      <etools-icon-button ?hidden="${!this.showDelete}" name="delete" @click="${this._onDelete}"></etools-icon-button>
+      <etools-icon-button
+        ?hidden="${!this.showDeactivate}"
+        name="block"
+        @click="${this._onDeactivate}"
+      ></etools-icon-button>
     `;
   }
 

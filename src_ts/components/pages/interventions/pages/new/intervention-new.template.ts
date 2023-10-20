@@ -30,12 +30,6 @@ export function template(this: InterventionNew): TemplateResult {
           background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
-
-      etools-dropdown-multi[required]::part(esmm-label),
-      etools-dropdown[required]::part(esmm-label) {
-        @apply --required-star-style;
-      }
-
       paper-input#unppNumber {
         --paper-input-error: {
           white-space: nowrap;
