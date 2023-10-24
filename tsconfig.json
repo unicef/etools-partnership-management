@@ -11,6 +11,8 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "outDir": "src",
     "skipLibCheck": true,
     "resolveJsonModule": true
