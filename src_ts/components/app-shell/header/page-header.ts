@@ -101,6 +101,7 @@ class PageHeader extends connect(store)(
         }
 
         .dropdowns {
+          padding-top: 3px;
           display: flex;
           margin-inline-end: 5px;
         }
