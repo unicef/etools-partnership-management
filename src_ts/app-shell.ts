@@ -429,6 +429,10 @@ class AppShell extends connect(store)(
         this.reduxRouteDetails?.subRouteName != currentRouteDetails?.subRouteName ||
         this.reduxRouteDetails?.subSubRouteName != currentRouteDetails?.subSubRouteName
       ) {
+        fireEvent(this, 'clear-loading-messages', {
+          bubbles: true,
+          composed: true
+        });
         if (await this.stayingOnPage()) {
           return;
         }
