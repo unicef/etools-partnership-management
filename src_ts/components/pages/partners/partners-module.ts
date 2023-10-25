@@ -104,12 +104,13 @@ export class PartnersModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-button
-              class="export"
+              class="neutral"
               variant="text"
               target="_blank"
               href="${this.csvDownloadUrl}"
               @click="${this.trackAnalytics}"
               tracker="Export Partners"
+              hidden
             >
               <etools-icon name="file-download"></etools-icon>
               ${translate('EXPORT')}
@@ -118,7 +119,6 @@ export class PartnersModule extends connect(store)(
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
             <sl-button
               variant="primary"
-              class="primary-btn"
               tracker="Import Sync Partner"
               @click="${this._openNewPartnerDialog}"
             >

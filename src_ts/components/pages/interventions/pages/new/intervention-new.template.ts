@@ -440,8 +440,8 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <sl-button variant="primary" class="default" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</sl-button>
-        <sl-button variant="primary" class="primary-btn" @click="${() => this.createIntervention()}"
+        <sl-button variant="neutral" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</sl-button>
+        <sl-button variant="primary" @click="${() => this.createIntervention()}"
           >${translate('GENERAL.CREATE')}</sl-button
         >
       </div>

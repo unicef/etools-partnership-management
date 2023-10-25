@@ -121,7 +121,6 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             target="_blank"
             href="/static/agreements/amendment_template.docx"
             download
-            class="primary-btn"
           >
             <etools-icon name="file-download"></etools-icon>
             ${translate('DOWNLOAD_TEMPLATE')}

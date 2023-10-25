@@ -77,7 +77,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-button
-              class="export"
+              class="neutral"
               variant="text"
               target="_blank"
               href="${this.csvDownloadUrl}"
@@ -89,7 +89,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
             </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
-            <sl-button class="primary-btn" variant="primary" @click="${this._goToNewAgreementPage}">
+            <sl-button variant="primary" @click="${this._goToNewAgreementPage}">
               <etools-icon name="add" slot="prefix"></etools-icon>
               ${translate('ADD_NEW_AGREEMENT')}
             </sl-button>

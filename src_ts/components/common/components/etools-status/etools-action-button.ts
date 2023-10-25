@@ -29,20 +29,18 @@ export class EtoolsActionButton extends LitElement {
         *[hidden] {
           display: none;
         }
-
         sl-button#primary {
           flex: 1 1 0;
         }
-
         .main-btn-part {
           flex: 1;
           text-align: center;
           font-weight: 500;
           line-height: 34px;
+          padding-top: 2px;
           text-transform: uppercase;
         }
-
-        sl-dropdown.splitBtn::part(trigger) {
+        sl-dropdown #splitBtn::part(trigger) {
           display: inline-flex;
           vertical-align: middle;
         }
@@ -52,6 +50,7 @@ export class EtoolsActionButton extends LitElement {
 
         sl-button[slot='trigger'] {
           width: 40px;
+          min-width: 40px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
         sl-button#primary::part(label) {
@@ -67,7 +66,7 @@ export class EtoolsActionButton extends LitElement {
             variant="primary"
             @click="${this._handlePrimaryClick}"
             ?disabled="${this.disabled}"
-            class="primary-btn split-btn"
+            class="split-btn"
           >
             <span class="main-btn-part">
               <etools-icon name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
@@ -75,7 +74,7 @@ export class EtoolsActionButton extends LitElement {
             </span>
             ${(this.secondaryActions || []).length
               ? html` <sl-dropdown id="splitBtn" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
-                  <sl-button slot="trigger" variant="primary" class="primary-btn no-marg">
+                  <sl-button slot="trigger" variant="primary" class="no-marg">
                     <etools-icon name="expand-more"></etools-icon
                   ></sl-button>
                   <sl-menu>
