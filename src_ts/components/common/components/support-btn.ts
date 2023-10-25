@@ -45,7 +45,7 @@ export class SupportBtn extends MatomoMixin(LitElement) {
         href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=c8e43760db622450f65a2aea4b9619ad&sysparm_category=99c51053db0a6f40f65a2aea4b9619af"
         target="_blank"
         tracker="Support"
-        @tap="${this.trackAnalytics}"
+        @click="${this.trackAnalytics}"
       >
         <etools-icon name="communication:textsms"></etools-icon>
         <span class="support-text">${translate('SUPPORT')}</span>
