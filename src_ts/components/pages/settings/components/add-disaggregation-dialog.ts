@@ -150,7 +150,7 @@ export class AddDisaggregationDialog extends connect(store)(
                 )}
                 <sl-button
                   variant="text"
-                  class="primary-btn no-pad"
+                  class="no-pad"
                   @click="${this._addNewGroup}"
                   title="${translate('ADD_DISAGGREGATION_GROUP')}"
                   >+${translate('GENERAL.ADD')}

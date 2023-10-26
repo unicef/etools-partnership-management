@@ -150,7 +150,7 @@ export class InterventionsModule extends connect(store)(
           <div slot="title-row-actions" class="content-header-actions export-options">
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <sl-dropdown id="pdExportMenuBtn" close-on-activate>
-                <sl-button slot="trigger" variant="text" class="export" caret>
+                <sl-button slot="trigger" variant="text" class="neutral" caret>
                   <etools-icon name="file-download" slot="prefix"></etools-icon>
                   ${translate('EXPORT')}
                 </sl-button>
@@ -174,7 +174,7 @@ export class InterventionsModule extends connect(store)(
             >
               <sl-button
                 variant="primary"
-                class="primary-btn split-btn"
+                class="split-btn"
                 @click="${this._goToNewInterventionPage}"
                 ?hidden="${this.listLoadingActive}"
               >

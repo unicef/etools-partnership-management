@@ -405,7 +405,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           <sl-button
             id="editAo"
             variant="text"
-            class="primary-btn no-pad no-marg"
+            class="no-pad no-marg"
             @click="${this._enableAoEdit}"
             ?hidden="${this.allowAoEditForSSFA}"
           >
@@ -415,7 +415,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           <sl-button
             id="cancelAoEdit"
             variant="text"
-            class="primary-btn no-pad no-marg"
+            class="no-pad no-marg"
             @click="${this._cancelAoEdit}"
             ?hidden="${!this.allowAoEditForSSFA}"
           >
@@ -462,7 +462,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               <label class="paper-label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
               <sl-button
                 variant="text"
-                class="primary-btn no-pad no-marg"
+                class="no-pad no-marg"
                 id="generateMyPca"
                 @click="${this._openGeneratePCADialog}"
               >

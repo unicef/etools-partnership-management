@@ -47,6 +47,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           flex: 1;
           color: var(--secondary-text-color);
           font-weight: 500;
+          font-size: 14px;
         }
 
         .partner-name {
