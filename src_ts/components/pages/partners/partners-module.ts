@@ -117,11 +117,7 @@ export class PartnersModule extends connect(store)(
             </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <sl-button
-              variant="primary"
-              tracker="Import Sync Partner"
-              @click="${this._openNewPartnerDialog}"
-            >
+            <sl-button variant="primary" tracker="Import Sync Partner" @click="${this._openNewPartnerDialog}">
               <etools-icon name="add"></etools-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
             </sl-button>

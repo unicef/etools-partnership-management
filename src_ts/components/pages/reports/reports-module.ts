@@ -146,9 +146,7 @@ export class ReportsModule extends connect(store)(
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
               tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
-              <sl-button variant="primary" slot="trigger"
-                >${translate('ACCEPT_SEND_BACK')}</sl-button
-              >
+              <sl-button variant="primary" slot="trigger">${translate('ACCEPT_SEND_BACK')}</sl-button>
               <sl-menu>
                 <sl-menu-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</sl-menu-item>
                 <sl-menu-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</sl-menu-item>

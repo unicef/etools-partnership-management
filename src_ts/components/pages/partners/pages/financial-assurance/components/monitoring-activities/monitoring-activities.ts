@@ -114,9 +114,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
           <sl-button variant="primary" class="default" @click="${this.cancelEdit}"
             >${translate('GENERAL.CANCEL')}</sl-button
           >
-          <sl-button variant="primary" raised @click="${this.saveGroups}"
-            >${translate('GENERAL.SAVE')}</sl-button
-          >
+          <sl-button variant="primary" raised @click="${this.saveGroups}">${translate('GENERAL.SAVE')}</sl-button>
         </div>
       </etools-content-panel>
     `;
