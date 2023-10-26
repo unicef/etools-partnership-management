@@ -70,11 +70,13 @@
   --light-info-color: #fff176;
   --lightest-info-color: #fef9cd;
   --primary-color-hover: #027ac9;
+  --default-btn-bg-hover-color: rgba(0, 0, 0, 0.55);
 
   --sl-color-primary-600: var(--primary-color);
   --sl-color-primary-500: var(--primary-color-hover);
   --sl-color-success-600: var(--ternary-color);
   --sl-color-neutral-600: var(--default-btn-bg-color);
+  --sl-color-neutral-500: var(--default-btn-bg-hover-color);
   --sl-color-danger-600: var(--error-color);
 
   --error-box-heading-color: var(--error-color);

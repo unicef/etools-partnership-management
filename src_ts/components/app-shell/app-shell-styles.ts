@@ -2,7 +2,7 @@ import {appDrawerStyles} from './menu/styles/app-drawer-styles';
 import {html} from 'lit';
 import {pageLayoutStyles} from '../styles/page-layout-styles-lit';
 import {sharedStyles} from '../styles/shared-styles-lit';
-import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 // language=HTML
 export const AppShellStyles = html`

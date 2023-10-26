@@ -7,9 +7,10 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/button-group/button-group.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 /**
  * @LitElement
@@ -32,25 +33,20 @@ export class EtoolsActionButton extends LitElement {
         sl-button#primary {
           flex: 1 1 0;
         }
-        .main-btn-part {
-          flex: 1;
-          text-align: center;
-          font-weight: 500;
-          line-height: 34px;
-          padding-top: 2px;
-          text-transform: uppercase;
-        }
-        sl-dropdown #splitBtn::part(trigger) {
-          display: inline-flex;
-          vertical-align: middle;
-        }
         sl-button {
+          margin-inline: 0px !important;
           --sl-spacing-medium: 0;
         }
-
+        sl-button#primary::part(suffix) {
+          width: 12px;
+        }
+        sl-button-group {
+          display: flex;
+          background-color: var(--sl-color-primary-600);
+        }
         sl-button[slot='trigger'] {
-          width: 40px;
-          min-width: 40px;
+          width: 45px;
+          min-width: 45px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
         sl-button#primary::part(label) {
@@ -61,22 +57,18 @@ export class EtoolsActionButton extends LitElement {
       </style>
 
       ${this.primaryAction
-        ? html`<sl-button
-            id="primary"
-            variant="primary"
-            @click="${this._handlePrimaryClick}"
-            ?disabled="${this.disabled}"
-            class="split-btn"
-          >
-            <span class="main-btn-part">
-              <etools-icon name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
+        ? html`<sl-button-group>
+            <sl-button id="primary" variant="primary" @click="${this._handlePrimaryClick}" ?disabled="${this.disabled}">
+              <etools-icon slot="prefix" name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
               ${this.primaryAction.label}
-            </span>
+            </sl-button>
             ${(this.secondaryActions || []).length
-              ? html` <sl-dropdown id="splitBtn" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
-                  <sl-button slot="trigger" variant="primary" class="no-marg">
-                    <etools-icon name="expand-more"></etools-icon
-                  ></sl-button>
+              ? html` <sl-dropdown
+                  id="splitBtn"
+                  placement="bottom-end"
+                  @click="${(event: MouseEvent) => event.stopImmediatePropagation()}"
+                >
+                  <sl-button slot="trigger" variant="primary" caret></sl-button>
                   <sl-menu>
                     ${this.secondaryActions.map(
                       (item) =>
@@ -87,7 +79,7 @@ export class EtoolsActionButton extends LitElement {
                   </sl-menu>
                 </sl-dropdown>`
               : ''}
-          </sl-button> `
+          </sl-button-group> `
         : ''}
     `;
   }
