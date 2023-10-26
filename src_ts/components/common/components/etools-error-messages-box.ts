@@ -2,7 +2,7 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 /**
  * @LitElement
