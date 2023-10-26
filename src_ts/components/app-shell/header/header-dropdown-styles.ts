@@ -9,6 +9,7 @@ export const headerDropdownStyles = html`
 
     :host {
       display: block;
+      --sl-spacing-small: 0;
     }
 
     :host(:hover) {
@@ -28,7 +29,7 @@ export const headerDropdownStyles = html`
     }
 
     organizations-dropdown {
-      width: 165px;
+      width: 180px;
     }
 
     countries-dropdown {
