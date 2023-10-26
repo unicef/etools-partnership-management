@@ -481,7 +481,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
             <span class="type-warning">${this.generatePCAMessage}</span>
           </div>
-          <div class="col col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+          <div class="col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
             <etools-upload
               label=" ${translate('SIGNED_AGREEMENT')}"
               .fileUrl="${this.agreement.attachment}"
