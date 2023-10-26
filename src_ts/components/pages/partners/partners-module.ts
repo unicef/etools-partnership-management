@@ -90,6 +90,10 @@ export class PartnersModule extends connect(store)(
         sl-tab-group::part(active-tab-indicator) {
           bottom: 0;
         }
+        sl-tab::part(base) {
+          color: var(--secondary-text-color);
+          text-transform: uppercase;
+        }
       </style>
 
       <page-content-header .withTabsVisible="${this.tabsActive}">
