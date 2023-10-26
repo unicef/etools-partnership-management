@@ -19,10 +19,6 @@
   --medium-primary-text-color: #9d9d9d;
   --light-primary-text-color: rgba(255, 255, 255, 1);
 
-  --sl-color-primary-600: var(--primary-color);
-  --sl-color-success-600: var(--ternary-color);
-  --sl-color-neutral-600: var(--default-btn-bg-color);
-
   --expand-icon-color: #4d4d4d;
 
   --secondary-text-color: rgba(0, 0, 0, 0.54);
@@ -73,6 +69,13 @@
   --info-color: #cebc06;
   --light-info-color: #fff176;
   --lightest-info-color: #fef9cd;
+  --primary-color-hover: #027ac9;
+
+  --sl-color-primary-600: var(--primary-color);
+  --sl-color-primary-500: var(--primary-color-hover);
+  --sl-color-success-600: var(--ternary-color);
+  --sl-color-neutral-600: var(--default-btn-bg-color);
+  --sl-color-danger-600: var(--error-color);
 
   --error-box-heading-color: var(--error-color);
   --error-box-bg-color: #f2dede;

@@ -90,6 +90,10 @@ export class PartnersModule extends connect(store)(
         sl-tab-group::part(active-tab-indicator) {
           bottom: 0;
         }
+        sl-tab::part(base) {
+          color: var(--secondary-text-color);
+          text-transform: uppercase;
+        }
       </style>
 
       <page-content-header .withTabsVisible="${this.tabsActive}">
@@ -104,24 +108,20 @@ export class PartnersModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-button
-              class="export"
+              class="neutral"
               variant="text"
               target="_blank"
               href="${this.csvDownloadUrl}"
               @click="${this.trackAnalytics}"
               tracker="Export Partners"
+              hidden
             >
               <etools-icon name="file-download"></etools-icon>
               ${translate('EXPORT')}
             </sl-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <sl-button
-              variant="primary"
-              class="primary-btn"
-              tracker="Import Sync Partner"
-              @click="${this._openNewPartnerDialog}"
-            >
+            <sl-button variant="primary" tracker="Import Sync Partner" @click="${this._openNewPartnerDialog}">
               <etools-icon name="add"></etools-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
             </sl-button>

@@ -78,7 +78,7 @@ class EtoolsErrorMessagesBox extends LitElement {
         </ul>
 
         <div class="errors-box-actions">
-          <sl-button variant="primary" class="primary-btn error" @click="${this._resetErrors}"> Ok </sl-button>
+          <sl-button variant="danger" @click="${this._resetErrors}"> Ok </sl-button>
         </div>
       </etools-content-panel>
     `;

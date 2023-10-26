@@ -37,7 +37,7 @@
     "@shoelace-style/shoelace": "^2.10.0",
     "@types/leaflet": "^1.9.3",
     "@types/lodash-es": "^4.17.7",
-    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.20",
+    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.21",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.3",
     "@unicef-polymer/etools-types": "1.11.16",
     "@unicef-polymer/etools-unicef": "^1.0.0-rc.27",
