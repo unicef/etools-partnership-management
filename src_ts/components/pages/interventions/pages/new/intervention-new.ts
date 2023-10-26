@@ -194,7 +194,9 @@ export class InterventionNew extends connect(store)(LitElement) {
       return;
     }
     // @ts-ignore
-    this.newIntervention.planned_budget?.currency = value;
+    if (this.newIntervention.planned_budget) {
+      this.newIntervention.planned_budget.currency = value;
+    }
     this.requestUpdate();
   }
 

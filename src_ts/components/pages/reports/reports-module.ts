@@ -88,6 +88,9 @@ export class ReportsModule extends connect(store)(
           font-weight: bold;
           color: var(--primary-color);
         }
+        sl-tab::part(base) {
+          text-transform: uppercase;
+        }
       </style>
 
       <page-content-header ?withTabsVisible="${this.tabsActive}">
