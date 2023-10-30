@@ -8,7 +8,6 @@ export const workboxConfig = {
     'images/**/*'
   ],
   swDest: "src/service-worker.js",
-  exclude: ['version.json'],
   runtimeCaching: [
     {
       urlPattern: /\/@webcomponents\/webcomponentsjs\//,
