@@ -34,7 +34,7 @@ const config = {
     chunkFileNames: '[name].js',
   },
   watch: {
-    include: 'src_ts/**'
+    include: ['src_ts/**', 'node_modules/**']
   },
   plugins: [
     ...defaultConfig.plugins,
@@ -48,7 +48,7 @@ const config = {
       port: liveReloadPort,
       verbose: true,
       delay: 1000,
-      watch: 'src',
+      watch: ['src'],
     }),
   ]
 }
