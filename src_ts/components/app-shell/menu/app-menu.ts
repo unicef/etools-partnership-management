@@ -57,7 +57,7 @@ class AppMenu extends connect(store)(
             menu-name="partners"
             href="${BASE_URL}partners/list"
           >
-            <sl-tooltip placement="right" content="${translate('PARTNERS')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('PARTNERS')}">
               <etools-icon id="partners-icon" name="social:people"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('PARTNERS')}</div>
@@ -68,7 +68,7 @@ class AppMenu extends connect(store)(
             menu-name="agreements"
             href="${BASE_URL}agreements/list"
           >
-            <sl-tooltip placement="right" content="${translate('AGREEMENTS')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('AGREEMENTS')}">
               <etools-icon id="agreements-icon" name="av:playlist-add-check"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('AGREEMENTS')}</div>
@@ -79,7 +79,7 @@ class AppMenu extends connect(store)(
             menu-name="interventions"
             href="${BASE_URL}interventions/list"
           >
-            <sl-tooltip placement="right" content="${translate('PD_SPD')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('PD_SPD')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
             </sl-tooltip>
 
@@ -91,7 +91,7 @@ class AppMenu extends connect(store)(
             menu-name="government-partners"
             href="${BASE_URL}government-partners/list"
           >
-            <sl-tooltip placement="right" content="${translate('GOVERNMENT')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GOVERNMENT')}">
               <etools-icon id="gov-icon" name="account-balance"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('GOVERNMENT')}</div>
@@ -103,7 +103,7 @@ class AppMenu extends connect(store)(
             menu-name="reports"
             href="${BASE_URL}reports/list"
           >
-            <sl-tooltip placement="right" content="${translate('REPORTS')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('REPORTS')}">
               <etools-icon id="reports-icon" name="assignment"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('REPORTS')}</div>
@@ -115,7 +115,7 @@ class AppMenu extends connect(store)(
             menu-name="settings"
             href="${BASE_URL}settings"
           >
-            <sl-tooltip placement="right" content="${translate('SETTINGS')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('SETTINGS')}">
               <etools-icon id="settings-icon" name="settings"></etools-icon>
             </sl-tooltip>
             <div class="name">${translate('SETTINGS')}</div>
@@ -130,7 +130,11 @@ class AppMenu extends connect(store)(
           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
           target="_blank"
         >
-          <sl-tooltip placement="right" content="${translate('IMPLEMENTATION_INTELLIGENCE')}">
+          <sl-tooltip
+            placement="right"
+            ?disabled="${!this.smallMenu}"
+            content="${translate('IMPLEMENTATION_INTELLIGENCE')}"
+          >
             <etools-icon id="power-bi-icon" name="power-bi"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
@@ -143,7 +147,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Knowledge base"
         >
-          <sl-tooltip placement="right" content="${translate('KNOWLEDGE_BASE')}">
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('KNOWLEDGE_BASE')}">
             <etools-icon id="knoledge-icon" name="maps:local-library"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('KNOWLEDGE_BASE')}</div>
@@ -156,7 +160,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Discussion"
         >
-          <sl-tooltip placement="right" content="${translate('DISCUSSION')}">
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('DISCUSSION')}">
             <etools-icon id="discussion-icon" name="question-answer"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('DISCUSSION')}</div>
@@ -168,7 +172,7 @@ class AppMenu extends connect(store)(
           @click="${this.trackAnalytics}"
           tracker="Information"
         >
-          <sl-tooltip placement="right" content="${translate('INFORMATION')}">
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('INFORMATION')}">
             <etools-icon id="information-icon" name="info"></etools-icon>
           </sl-tooltip>
           <div class="name">${translate('INFORMATION')}</div>
