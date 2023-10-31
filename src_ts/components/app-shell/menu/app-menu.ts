@@ -200,7 +200,6 @@ class AppMenu extends connect(store)(
 
   _toggleSmallMenu(): void {
     this.smallMenu = !this.smallMenu;
-    console.log(this.smallMenu);
     const localStorageVal: number = this.smallMenu ? 1 : 0;
     localStorage.setItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY, String(localStorageVal));
     fireEvent(this, 'toggle-small-menu', {value: this.smallMenu});
