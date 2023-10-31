@@ -86,10 +86,6 @@ export class PartnersListBase extends CommonMixin(
           position: relative;
           z-index: 1;
         }
-        .no-overflow {
-          overflow-wrap: anywhere;
-          background: yellow;
-        }
 
         @media (max-width: 576px) {
           section.page-content.filters {
