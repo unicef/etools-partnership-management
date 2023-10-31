@@ -77,7 +77,9 @@ export class InterventionsList extends connect(store)(
         #list {
           position: relative;
         }
-
+        .break-word {
+          word-break: break-all;
+        }
         section.page-content.filters {
           padding: 8px 24px;
         }
@@ -191,7 +193,7 @@ export class InterventionsList extends connect(store)(
                 <div>${this.getStatusCellText(intervention)}</div>
               </div>
               <span
-                class="col-data col-2"
+                class="col-data col-2 break-word"
                 data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
                 title="${this.getDisplayValue(intervention.title)}"
               >
