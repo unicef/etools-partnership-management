@@ -91,6 +91,7 @@ export function template(this: InterventionNew): TemplateResult {
             id="agreements"
             label=${translate('AGREEMENT')}
             placeholder="&#8212;"
+            .readonly="${!this.newIntervention?.partner}"
             .options="${this.filteredAgreements}"
             option-value="id"
             option-label="agreement_number_status"
