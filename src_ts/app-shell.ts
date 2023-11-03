@@ -459,6 +459,8 @@ class AppShell extends connect(store)(
           console.log('version.json', version.revision);
           console.log('buildRevNo ', document.getElementById('buildRevNo')!.innerText);
           this._showConfirmNewVersionDialog();
+        } else {
+          console.log('Version did not change: ', version.revision, document.getElementById('buildRevNo')!.innerText);
         }
       });
   }
