@@ -1,5 +1,8 @@
 export const workboxConfig = {
   globDirectory: "src/",
+  globIgnores: [
+    'index.html',
+  ],
   globPatterns: [
     'manifest.json',
     'version.json',
