@@ -48,6 +48,7 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         size="md"
         ?hidden="${this.warningOpened}"
         .okBtnText="${translate('TERMINATE')}"
+        confirmBtnVariant="danger"
         dialog-title="${translate('TERMINATE_AGREEMENT')}"
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._triggerAgreementTermination}"

@@ -210,6 +210,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         }
       }
     }
+    this.possibleActions = [...this.possibleActions];
   }
   _computeAvailableStatuses() {
     let activeStatus;
