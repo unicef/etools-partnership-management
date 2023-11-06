@@ -58,11 +58,6 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           color: var(--primary-color);
         }
 
-        paper-input {
-          max-width: 32px;
-          text-align: center;
-        }
-
         etools-input {
           max-width: 32px;
         }
@@ -70,11 +65,12 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         etools-input::part(input) {
           text-align: center;
         }
-
         etools-input::part(form-control-label) {
           text-align: center;
         }
-
+        etools-input::part(prefix) {
+          margin-inline-end: unset;
+        }
         .avoid-scroll {
           overflow: hidden;
         }
@@ -109,7 +105,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   <div class="layout-horizontal space-around">
                     <etools-input
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      no-spin-buttons
+                      min="0"
                       auto-validate
                       error-message="${translate('INVALID')}"
                       .value="${this.editableValues.planned_visits.programmatic_q1}"
@@ -124,7 +122,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q2 = detail.value;
                       }}"
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q2"
@@ -135,14 +135,18 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q3 = detail.value;
                       }}"
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q3"
                     ></etools-input>
                     <etools-input
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       .value="${this.editableValues.planned_visits.programmatic_q4}"
@@ -165,7 +169,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                     this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
                   }}"
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                 >
                 </etools-input>
               </div>
@@ -176,7 +182,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               <div class="layout-horizontal space-around">
                 <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q1}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q1 = detail.value;
@@ -185,7 +193,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                 ></etools-input>
                 <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q2}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q2 = detail.value;
@@ -194,7 +204,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                 ></etools-input>
                 <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q3}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q3 = detail.value;
@@ -203,7 +215,9 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                 ></etools-input>
                 <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q4}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q4 = detail.value;

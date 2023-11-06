@@ -232,7 +232,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? 'chevron-up' : 'expand-more';
+    return opened ? 'expand-less' : 'expand-more';
   }
 
   _toggle(e: CustomEvent) {
