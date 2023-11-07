@@ -4,6 +4,7 @@ import '../../../components/report-status.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 
 /**
  * @LitElement
@@ -18,13 +19,13 @@ export class ReportOverall extends LitElement {
     return html`
       <div class="row-h">
         <div class="col col-5">
-          <etools-input
+          <etools-textarea
             readonly
             placeholder="—"
             label="${translate('PD_SPD_OUTPUT_EXPECTED_RESULT')}"
             .value="${this.lowerResultTitle}"
           >
-          </etools-input>
+          </etools-textarea>
         </div>
         <div class="col col-2">
           <etools-input readonly placeholder="—" label="${translate('OVERALL_STATUS')}" no-placeholder>
@@ -32,13 +33,13 @@ export class ReportOverall extends LitElement {
           </etools-input>
         </div>
         <div class="col col-5">
-          <etools-input
+          <etools-textarea
             readonly
             placeholder="—"
             label="${translate('NARRATIVE_ASSESSMENT')}"
             .value="${this.latestIndicator.narrative_assessment}"
           >
-          </etools-input>
+          </etools-textarea>
         </div>
       </div>
     `;

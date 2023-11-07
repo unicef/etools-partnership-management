@@ -18,6 +18,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation} from 'lit-translate';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 
 /**
  * @LitElement
@@ -123,46 +124,46 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
 
         <div class="row-h">
           <div class="col col-12">
-            <etools-input
+            <etools-textarea
               readonly
               placeholder="—"
               label="${translate('NON-FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.partner_contribution_to_date)}"
             >
-            </etools-input>
+            </etools-textarea>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-input
+            <etools-textarea
               readonly
               placeholder="—"
               label="${translate('FINANCIAL_CONTRIBUTION_DURING_REPORTING_PERIOD')}"
               .value="${this.getFinancialContributionText(this.report)}"
             >
-            </etools-input>
+            </etools-textarea>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-input
+            <etools-textarea
               readonly
               placeholder="—"
               label="${translate('CHALLENGES/BOTTLENECKS_IN_THE_REPORTING_PERIOD')}"
               .value="${this.getDisplayValue(this.report.challenges_in_the_reporting_period)}"
             >
-            </etools-input>
+            </etools-textarea>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-input
+            <etools-textarea
               readonly
               placeholder="—"
               label="${translate('PROPOSED_WAY_FORWARD')}"
               .value="${this.getDisplayValue(this.report.proposed_way_forward)}"
             >
-            </etools-input>
+            </etools-textarea>
           </div>
         </div>
 
