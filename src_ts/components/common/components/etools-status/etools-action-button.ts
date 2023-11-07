@@ -30,29 +30,34 @@ export class EtoolsActionButton extends LitElement {
         *[hidden] {
           display: none;
         }
-        sl-button#primary {
-          flex: 1 1 0;
-        }
         sl-button {
           margin-inline: 0px !important;
           --sl-spacing-medium: 0;
         }
-        sl-button#primary::part(suffix) {
-          width: 12px;
-        }
         sl-button-group {
           display: flex;
           background-color: var(--sl-color-primary-600);
+          flex: 1;
+        }
+        sl-button-group::part(base) {
+          width: 100%;
         }
         sl-button[slot='trigger'] {
           width: 45px;
           min-width: 45px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
+        sl-button#primary {
+          flex: 1;
+        }
         sl-button#primary::part(label) {
           display: flex;
-          padding-inline-end: 0px;
           width: 100%;
+          justify-content: center;
+        }
+        sl-button::part(base) {
+          padding-inline-start: 0px;
+          padding-inline-end: 0px;
         }
       </style>
 
