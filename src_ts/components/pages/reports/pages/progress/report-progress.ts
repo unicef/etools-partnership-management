@@ -90,6 +90,9 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         #no-report-data {
           background-color: var(--primary-background-color);
         }
+        etools-icon-button::part(base) {
+          color: var(--primary-background-color);
+        }
 
         .calculation-formula {
           color: var(--secondary-text-color);
@@ -232,7 +235,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? 'chevron-up' : 'expand-more';
+    return opened ? 'expand-less' : 'expand-more';
   }
 
   _toggle(e: CustomEvent) {

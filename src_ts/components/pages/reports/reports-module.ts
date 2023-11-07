@@ -410,7 +410,7 @@ export class ReportsModule extends connect(store)(
   }
 
   _getTitleLink(report: any) {
-    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/progress/reports`;
+    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/reports`;
   }
 
   _exportIndicatorsPDF(e: CustomEvent) {
