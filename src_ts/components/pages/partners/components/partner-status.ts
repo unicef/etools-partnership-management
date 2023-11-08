@@ -161,7 +161,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION'),
         icon: 'delete-forever',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles: '--etools-icon-font-size: 29px; color: ' + this.getComputedStyleValue('--error-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
         completed: false

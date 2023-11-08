@@ -93,6 +93,12 @@ export class PartnersModule extends connect(store)(
         sl-tab::part(base) {
           color: var(--secondary-text-color);
           text-transform: uppercase;
+          opacity: 0.8;
+        }
+        sl-tab::part(base):focus-visible {
+          outline: 0;
+          opacity: 1;
+          font-weight: 700;
         }
       </style>
 

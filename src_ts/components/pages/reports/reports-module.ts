@@ -90,6 +90,12 @@ export class ReportsModule extends connect(store)(
         }
         sl-tab::part(base) {
           text-transform: uppercase;
+          opacity: 0.8;
+        }
+        sl-tab::part(base):focus-visible {
+          outline: 0;
+          opacity: 1;
+          font-weight: 700;
         }
       </style>
 
