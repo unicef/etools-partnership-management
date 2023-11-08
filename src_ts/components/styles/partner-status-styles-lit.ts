@@ -11,6 +11,8 @@ export const partnerStatusStyles = html` <style>
     justify-content: center;
     width: 24px;
     height: 24px;
+    --etools-icon-font-size: 24px;
+    font-size: 14px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -46,6 +48,7 @@ export const partnerStatusStyles = html` <style>
     color: var(--light-primary-text-color);
     position: absolute;
     z-index: 1;
+    font-size: 13px;
     bottom: 6px;
     width: 14px;
     height: 14px;
@@ -66,7 +69,7 @@ export const partnerStatusStyles = html` <style>
   }
 
   .sm-status-wrapper .marked-for-deletion etools-icon:after {
-    bottom: 8px;
+    bottom: 4px;
   }
 
   .sm-status-wrapper .synced etools-icon,

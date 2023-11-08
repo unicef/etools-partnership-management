@@ -12,7 +12,14 @@ import {translate} from 'lit-translate';
 @customElement('report-overall')
 export class ReportOverall extends LitElement {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [
+      gridLayoutStylesLit,
+      ` 
+        .status-column etools-input::part(input) {
+          width: 0;
+        }
+      `
+    ];
   }
   render() {
     return html`
@@ -26,8 +33,8 @@ export class ReportOverall extends LitElement {
           >
           </etools-input>
         </div>
-        <div class="col col-2">
-          <etools-input readonly placeholder="—" label="${translate('OVERALL_STATUS')}" no-placeholder>
+        <div class="col col-2 status-column">
+          <etools-input readonly placeholder="" label="${translate('OVERALL_STATUS')}">
             <report-status .status="${this.latestIndicator.overall_status}" slot="prefix"></report-status>
           </etools-input>
         </div>

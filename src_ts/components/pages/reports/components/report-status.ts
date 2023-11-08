@@ -67,13 +67,13 @@ export class ReportStatus extends LitElement {
   noIcon = false;
 
   @property({type: String, reflect: true, attribute: 'status-type'})
-  statusType!: string;
+  statusType = 'no-status';
 
   @property({type: String})
-  label!: string;
+  label = 'No Status';
 
   @property({type: String})
-  icon!: string;
+  icon = 'image:lens';
 
   @property({type: Boolean})
   final = false;

@@ -55,16 +55,16 @@ export class EtoolsActionButton extends LitElement {
           width: 100%;
           justify-content: center;
         }
-        sl-button::part(base) {
-          padding-inline-start: 0px;
-          padding-inline-end: 0px;
+
+        sl-menu-item {
+          text-transform: uppercase;
         }
       </style>
 
       ${this.primaryAction
         ? html`<sl-button-group>
             <sl-button id="primary" variant="primary" @click="${this._handlePrimaryClick}" ?disabled="${this.disabled}">
-              <etools-icon slot="prefix" name="info-outline" ?hidden="${!this.showInfoIcon}"></etools-icon>
+              ${this.showInfoIcon ? html`<etools-icon slot="prefix" name="info-outline"></etools-icon>` : html``}
               ${this.primaryAction.label}
             </sl-button>
             ${(this.secondaryActions || []).length
