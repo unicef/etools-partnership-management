@@ -161,6 +161,9 @@
   }
   --esmm-delete-icon-color: var(--error-color);
 
+  /* sl-tooltip styles */
+  --sl-tooltip-background-color: rgba(97, 97, 97, 0.9);
+
   /* etools-dialog styles */
   --etools-dialog-primary-color: #ffffff;
   --etools-dialog-contrast-text-color: var(--primary-text-color);
