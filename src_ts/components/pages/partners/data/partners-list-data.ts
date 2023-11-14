@@ -128,11 +128,11 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
         if (searchString && searchString.length) {
           let vnMatch = true;
           if (partner.vendor_number) {
-            vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
+            vnMatch = partner?.vendor_number?.toString().toLowerCase().indexOf(searchString) < 0;
           }
           if (
-            partner.name.toLowerCase().indexOf(searchString) < 0 &&
-            partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+            partner?.name?.toLowerCase().indexOf(searchString) < 0 &&
+            partner?.short_name?.toLowerCase().indexOf(searchString) < 0 &&
             vnMatch
           ) {
             return false;
