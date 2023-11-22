@@ -31,11 +31,10 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 // @ts-ignore
 setStore(store);
@@ -61,9 +60,6 @@ export class InterventionsModule extends connect(store)(
     )
   )
 ) {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     return html`
       ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
@@ -150,10 +146,10 @@ export class InterventionsModule extends connect(store)(
           <div slot="title-row-actions" class="content-header-actions export-options">
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
               <sl-dropdown id="pdExportMenuBtn" close-on-activate>
-                <sl-button slot="trigger" variant="text" class="neutral" caret>
+                <etools-button slot="trigger" variant="text" class="neutral" caret>
                   <etools-icon name="file-download" slot="prefix"></etools-icon>
                   ${translate('EXPORT')}
-                </sl-button>
+                </etools-button>
                 <sl-menu>
                   <sl-menu-item @click="${this._exportPdBudget}" tracker="Export PD Budget"
                     >${translate('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</sl-menu-item
@@ -172,7 +168,7 @@ export class InterventionsModule extends connect(store)(
               class="action"
               ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.userPermissions)}"
             >
-              <sl-button
+              <etools-button
                 variant="primary"
                 class="split-btn"
                 @click="${this._goToNewInterventionPage}"
@@ -200,7 +196,7 @@ export class InterventionsModule extends connect(store)(
                     </sl-menu-item>
                   </sl-menu>
                 </sl-dropdown>
-              </sl-button>
+              </etools-button>
             </div>
           </div>
         </page-content-header>

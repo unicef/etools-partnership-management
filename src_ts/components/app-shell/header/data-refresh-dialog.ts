@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
@@ -64,45 +64,45 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
           <div class="title-indent">${translate('SELECT_DATA_TO_REFRESH')}</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <sl-checkbox
+              <etools-checkbox
                 ?checked="${this.partnersSelected}"
                 @sl-change="${(e: any) => {
                   this.partnersSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PARTNERS_GOVERNMENT')}</sl-checkbox
+                >${translate('PARTNERS_GOVERNMENT')}</etools-checkbox
               >
             </div>
             <div class="col col-6">
-              <sl-checkbox
+              <etools-checkbox
                 ?checked="${this.interventionsSelected}"
                 @sl-change="${(e: any) => {
                   this.interventionsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PD_SPD')}</sl-checkbox
+                >${translate('PD_SPD')}</etools-checkbox
               >
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <sl-checkbox
+              <etools-checkbox
                 ?checked="${this.agreementsSelected}"
                 @sl-change="${(e: any) => {
                   this.agreementsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('AGREEMENTS')}</sl-checkbox
+                >${translate('AGREEMENTS')}</etools-checkbox
               >
             </div>
             <div class="col col-6">
-              <sl-checkbox
+              <etools-checkbox
                 ?checked="${this.allSelected}"
                 @sl-change="${(e: any) => {
                   this.allSelected = e.target.checked;
                   this._allSelectedChanged();
                 }}"
-                >${translate('ALL')}</sl-checkbox
+                >${translate('ALL')}</etools-checkbox
               >
             </div>
           </div>

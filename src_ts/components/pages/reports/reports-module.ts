@@ -31,12 +31,12 @@ import {translate, get as getTranslation} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
+
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
@@ -59,9 +59,6 @@ export class ReportsModule extends connect(store)(
     )
   )
 ) {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     return html`
       ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
@@ -129,10 +126,10 @@ export class ReportsModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
-              <sl-button slot="trigger" variant="text" class="neutral" caret>
+              <etools-button slot="trigger" variant="text" class="neutral" caret>
                 <etools-icon name="file-download" slot="prefix"></etools-icon>
                 ${translate('EXPORT')}
-              </sl-button>
+              </etools-button>
               <sl-menu>
                 <sl-menu-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
                   >${translate('EXPORT_INDICATORS_PDF')}</sl-menu-item
@@ -155,7 +152,7 @@ export class ReportsModule extends connect(store)(
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
               tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
-              <sl-button variant="primary" slot="trigger">${translate('ACCEPT_SEND_BACK')}</sl-button>
+              <etools-button variant="primary" slot="trigger">${translate('ACCEPT_SEND_BACK')}</etools-button>
               <sl-menu>
                 <sl-menu-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</sl-menu-item>
                 <sl-menu-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</sl-menu-item>

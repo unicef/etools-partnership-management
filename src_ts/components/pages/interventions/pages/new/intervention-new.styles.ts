@@ -43,7 +43,7 @@ export const NewInterventionStyles: CSSResult = css`
     padding-bottom: 20px;
   }
 
-  sl-button {
+  etools-button {
     margin-inline-start: 24px;
   }
 `;

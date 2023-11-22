@@ -2,7 +2,6 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 /**
  * @LitElement
@@ -11,9 +10,6 @@ import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-sty
  */
 /* eslint-disable new-cap */
 class EtoolsErrorMessagesBox extends LitElement {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     // language=HTML
     return html`
@@ -78,7 +74,7 @@ class EtoolsErrorMessagesBox extends LitElement {
         </ul>
 
         <div class="errors-box-actions">
-          <sl-button variant="danger" @click="${this._resetErrors}"> Ok </sl-button>
+          <etools-button variant="danger" @click="${this._resetErrors}"> Ok </etools-button>
         </div>
       </etools-content-panel>
     `;

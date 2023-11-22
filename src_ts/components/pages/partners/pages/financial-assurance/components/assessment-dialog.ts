@@ -1,6 +1,6 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
@@ -115,8 +115,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           </etools-upload>
         </div>
         <div class="row-h">
-          <sl-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
-            >${translate('ARCHIVED')}</sl-checkbox
+          <etools-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
+            >${translate('ARCHIVED')}</etools-checkbox
           >
         </div>
       </etools-dialog>

@@ -4,7 +4,7 @@ import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
-import '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -75,12 +75,12 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
             ></etools-input>
           </div>
           <div class="col col-3 right-align">
-            <sl-checkbox
+            <etools-checkbox
               ?checked="${this.item.active}"
               @sl-changed="${({target}: CustomEvent) => (this.item.active = Boolean((target as any).checked))}"
             >
               ${translate('ACTIVE_STAFF')}
-            </sl-checkbox>
+            </etools-checkbox>
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
