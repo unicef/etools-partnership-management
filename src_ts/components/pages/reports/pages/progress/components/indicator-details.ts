@@ -101,8 +101,10 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         sl-tab-group::part(active-tab-indicator) {
           bottom: 0;
         }
-        sl-tab::part(base) {
+        sl-tab:not([active])::part(base) {
           color: var(--secondary-text-color);
+        }
+        sl-tab::part(base) {
           text-transform: uppercase;
           opacity: 0.8;
         }
