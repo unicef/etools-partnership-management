@@ -20,8 +20,8 @@ import {AnyObject} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../../endpoints/endpoints';
 import {translate} from 'lit-translate';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -41,7 +41,7 @@ enum DragAndDropClasses {
 @customElement('monitoring-activities')
 export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit, buttonsStyles];
+    return [gridLayoutStylesLit];
   }
   render() {
     return html`
@@ -111,10 +111,12 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
-          <sl-button variant="primary" class="default" @click="${this.cancelEdit}"
-            >${translate('GENERAL.CANCEL')}</sl-button
+          <etools-button variant="primary" class="default" @click="${this.cancelEdit}"
+            >${translate('GENERAL.CANCEL')}</etools-button
           >
-          <sl-button variant="primary" raised @click="${this.saveGroups}">${translate('GENERAL.SAVE')}</sl-button>
+          <etools-button variant="primary" raised @click="${this.saveGroups}"
+            >${translate('GENERAL.SAVE')}</etools-button
+          >
         </div>
       </etools-content-panel>
     `;

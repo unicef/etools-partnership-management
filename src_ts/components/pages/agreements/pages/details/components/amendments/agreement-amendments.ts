@@ -10,7 +10,6 @@ import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -21,7 +20,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
@@ -33,7 +32,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 @customElement('agreement-amendments')
 export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElement)) {
   static get styles() {
-    return [buttonsStyles, gridLayoutStylesLit];
+    return [gridLayoutStylesLit];
   }
   render() {
     return html`
@@ -115,7 +114,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
           </div>
           <!-- Download template btn -->
-          <sl-button
+          <etools-button
             id="download-template-btn"
             variant="text"
             target="_blank"
@@ -124,7 +123,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           >
             <etools-icon name="file-download"></etools-icon>
             ${translate('DOWNLOAD_TEMPLATE')}
-          </sl-button>
+          </etools-button>
         </div>
 
         <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">

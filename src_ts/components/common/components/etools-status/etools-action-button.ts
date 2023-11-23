@@ -6,11 +6,10 @@ import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction} from '../../../../typings/etools-status.types';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/button-group/button-group.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button-group';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
 
 /**
  * @LitElement
@@ -18,9 +17,6 @@ import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-sty
  */
 @customElement('etools-action-button')
 export class EtoolsActionButton extends LitElement {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     return html`
       <style>
@@ -30,27 +26,22 @@ export class EtoolsActionButton extends LitElement {
         *[hidden] {
           display: none;
         }
-        sl-button {
+        etools-button {
           margin-inline: 0px !important;
           --sl-spacing-medium: 0;
         }
-        sl-button-group {
-          display: flex;
-          background-color: var(--sl-color-primary-600);
-          flex: 1;
+        etools-button-group {
+          --etools-button-group-color: var(--sl-color-primary-600);
         }
-        sl-button-group::part(base) {
-          width: 100%;
-        }
-        sl-button[slot='trigger'] {
+        etools-button[slot='trigger'] {
           width: 45px;
           min-width: 45px;
           border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
-        sl-button#primary {
+        etools-button#primary {
           flex: 1;
         }
-        sl-button#primary::part(label) {
+        etools-button#primary::part(label) {
           display: flex;
           width: 100%;
           justify-content: center;
@@ -62,18 +53,23 @@ export class EtoolsActionButton extends LitElement {
       </style>
 
       ${this.primaryAction
-        ? html`<sl-button-group>
-            <sl-button id="primary" variant="primary" @click="${this._handlePrimaryClick}" ?disabled="${this.disabled}">
+        ? html`<etools-button-group>
+            <etools-button
+              id="primary"
+              variant="primary"
+              @click="${this._handlePrimaryClick}"
+              ?disabled="${this.disabled}"
+            >
               ${this.showInfoIcon ? html`<etools-icon slot="prefix" name="info-outline"></etools-icon>` : html``}
               ${this.primaryAction.label}
-            </sl-button>
+            </etools-button>
             ${(this.secondaryActions || []).length
               ? html` <sl-dropdown
                   id="splitBtn"
                   placement="bottom-end"
                   @click="${(event: MouseEvent) => event.stopImmediatePropagation()}"
                 >
-                  <sl-button slot="trigger" variant="primary" caret></sl-button>
+                  <etools-button slot="trigger" variant="primary" caret></etools-button>
                   <sl-menu>
                     ${this.secondaryActions.map(
                       (item) =>
@@ -84,7 +80,7 @@ export class EtoolsActionButton extends LitElement {
                   </sl-menu>
                 </sl-dropdown>`
               : ''}
-          </sl-button-group> `
+          </etools-button-group> `
         : ''}
     `;
   }

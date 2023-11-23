@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
+import '@unicef-polymer/etools-unicef/src/etools-radio/etools-radio-group';
 import '@shoelace-style/shoelace/dist/components/radio/radio.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -34,14 +34,6 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         [hidden] {
           display: none !important;
         }
-        sl-radio {
-          display: inline-block;
-          margin-inline-end: 15px;
-        }
-        sl-radio-group {
-          margin-top: 10px;
-          margin-bottom: 10px;
-        }
       </style>
       <etools-dialog
         id="reportRatingDialog"
@@ -58,7 +50,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
           <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
-          <sl-radio-group
+          <etools-radio-group
             id="overallStatus"
             .value="${this.selectedOverallStatus}"
             @sl-change="${(e: any) => {
@@ -69,7 +61,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
             <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
             <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
             <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
-          </sl-radio-group>
+          </etools-radio-group>
         </div>
       </etools-dialog>
     `;

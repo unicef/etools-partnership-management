@@ -10,7 +10,7 @@ import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip'
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import {SlSwitch} from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
@@ -440,9 +440,9 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <sl-button variant="neutral" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</sl-button>
-        <sl-button variant="primary" @click="${() => this.createIntervention()}"
-          >${translate('GENERAL.CREATE')}</sl-button
+        <etools-button variant="neutral" @click="${this.cancel}">${translate('GENERAL.CANCEL')}</etools-button>
+        <etools-button variant="primary" @click="${() => this.createIntervention()}"
+          >${translate('GENERAL.CREATE')}</etools-button
         >
       </div>
     </div>

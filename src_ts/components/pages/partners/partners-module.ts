@@ -40,8 +40,7 @@ import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/confi
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 /**
  * @LitElement
@@ -66,9 +65,6 @@ export class PartnersModule extends connect(store)(
   )
   // eslint-enable new-cap
 ) {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     // main template
     // language=HTML
@@ -113,7 +109,7 @@ export class PartnersModule extends connect(store)(
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <sl-button
+            <etools-button
               class="neutral"
               variant="text"
               target="_blank"
@@ -124,13 +120,13 @@ export class PartnersModule extends connect(store)(
             >
               <etools-icon name="file-download"></etools-icon>
               ${translate('EXPORT')}
-            </sl-button>
+            </etools-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <sl-button variant="primary" tracker="Import Sync Partner" @click="${this._openNewPartnerDialog}">
+            <etools-button variant="primary" tracker="Import Sync Partner" @click="${this._openNewPartnerDialog}">
               <etools-icon name="add"></etools-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
-            </sl-button>
+            </etools-button>
           </div>
         </div>
 

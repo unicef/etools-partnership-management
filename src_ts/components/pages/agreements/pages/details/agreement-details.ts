@@ -29,7 +29,7 @@ import '../../../../endpoints/endpoints.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
+
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -63,7 +63,7 @@ import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js'
 @customElement('agreement-details')
 export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit, buttonsStyles];
+    return [gridLayoutStylesLit];
   }
 
   render() {
@@ -114,7 +114,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           justify-content: flex-start !important;
         }
 
-        sl-button#cancelAoEdit {
+        etools-button#cancelAoEdit {
           --sl-color-primary-600: var(--error-color);
         }
         .padd-right {
@@ -402,7 +402,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             this.agreement.permissions?.edit.authorized_officers
           )}"
         >
-          <sl-button
+          <etools-button
             id="editAo"
             variant="text"
             class="no-pad no-marg"
@@ -411,8 +411,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
             <etools-icon name="create"></etools-icon>
             <span>${translate('AMEND_PARTNER_AUTHORIZED_OFFICERS')}</span>
-          </sl-button>
-          <sl-button
+          </etools-button>
+          <etools-button
             id="cancelAoEdit"
             variant="text"
             class="no-pad no-marg"
@@ -421,7 +421,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
             <etools-icon name="cancel"></etools-icon>
             <span>${translate('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')}</span>
-          </sl-button>
+          </etools-button>
         </div>
 
         <div class="row-h flex-c">
@@ -460,7 +460,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             <!-- Generate PCA -->
             <div style="display:flex;flex-direction:column;">
               <label class="paper-label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
-              <sl-button
+              <etools-button
                 variant="text"
                 class="no-pad no-marg"
                 id="generateMyPca"
@@ -468,7 +468,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               >
                 <etools-icon name="refresh"></etools-icon>
                 ${translate('GENERATE')}
-              </sl-button>
+              </etools-button>
             </div>
           </div>
           <div

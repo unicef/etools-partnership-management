@@ -10,7 +10,7 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
+
 import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
 
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -21,7 +21,7 @@ import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types'
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
@@ -38,7 +38,7 @@ export class AddDisaggregationDialog extends connect(store)(
   CommonMixin(RepeatableDataSetsMixin(EndpointsLitMixin(LitElement)))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit, buttonsStyles];
+    return [gridLayoutStylesLit];
   }
 
   render() {
@@ -148,13 +148,13 @@ export class AddDisaggregationDialog extends connect(store)(
                     </etools-icon-button>
                   `
                 )}
-                <sl-button
+                <etools-button
                   variant="text"
                   class="no-pad"
                   @click="${this._addNewGroup}"
                   title="${translate('ADD_DISAGGREGATION_GROUP')}"
                   >+${translate('GENERAL.ADD')}
-                </sl-button>
+                </etools-button>
               </div>
             </div>
           </div>

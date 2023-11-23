@@ -29,8 +29,7 @@ import {AgreementDetails} from './pages/details/agreement-details';
 import {connect} from 'pwa-helpers/connect-mixin';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import {buttonsStyles} from '@unicef-polymer/etools-unicef/src/styles/button-styles';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 /**
  * @LitElement
@@ -51,9 +50,6 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
  */
 @customElement('agreements-module')
 export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
-  static get styles() {
-    return [buttonsStyles];
-  }
   render() {
     // language=HTML
     return html`
@@ -76,7 +72,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <sl-button
+            <etools-button
               class="neutral"
               variant="text"
               target="_blank"
@@ -86,13 +82,13 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
             >
               <etools-icon name="file-download" slot="prefix"></etools-icon>
               ${translate('EXPORT')}
-            </sl-button>
+            </etools-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
-            <sl-button variant="primary" @click="${this._goToNewAgreementPage}">
+            <etools-button variant="primary" @click="${this._goToNewAgreementPage}">
               <etools-icon name="add" slot="prefix"></etools-icon>
               ${translate('ADD_NEW_AGREEMENT')}
-            </sl-button>
+            </etools-button>
           </div>
         </div>
       </page-content-header>
