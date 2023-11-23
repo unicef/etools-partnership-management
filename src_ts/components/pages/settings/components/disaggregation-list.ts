@@ -59,6 +59,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
 
         .qFilter {
           max-width: 200px;
+          display: flex;
         }
       </style>
 
@@ -67,6 +68,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           id="query"
           class="qFilter"
           type="search"
+          clearable
           autocomplete="off"
           .value="${this.q}"
           @value-changed="${({detail}: CustomEvent) => {
