@@ -39,8 +39,7 @@ import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
-
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
  * @LitElement

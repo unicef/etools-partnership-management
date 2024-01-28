@@ -37,8 +37,7 @@ import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixin
 import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
  * @LitElement

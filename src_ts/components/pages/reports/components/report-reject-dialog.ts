@@ -7,7 +7,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';

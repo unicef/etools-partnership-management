@@ -5,7 +5,7 @@ import '@shoelace-style/shoelace/dist/components/radio/radio.js';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../redux/store';

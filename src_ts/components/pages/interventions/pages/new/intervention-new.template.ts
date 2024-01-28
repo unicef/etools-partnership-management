@@ -19,7 +19,7 @@ export function template(this: InterventionNew): TemplateResult {
     ${sharedStyles}
     <style>
       label[required] {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 95% 45%/4px;
+          background: url(${BASE_URL + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
           max-width: 100%;
           right: auto;
@@ -27,7 +27,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
 
       :host-context([dir='rtl'])  label[required] {
-          background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0% 45%/4px;
+          background: url(${BASE_URL + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
       paper-input#unppNumber {

@@ -5,7 +5,7 @@ import {BASE_URL} from '../../config/config.js';
 export const requiredFieldStarredStyles = html` <style>
   :host > * {
     --required-star-style: {
-      background: url(${BASE_URL}'/images/required.svg') no-repeat 99% 20%/8px;
+      background: url(${BASE_URL}'/assets/images/required.svg') no-repeat 99% 20%/8px;
       width: auto !important;
       max-width: 100%;
       right: auto;
@@ -15,7 +15,7 @@ export const requiredFieldStarredStyles = html` <style>
 
   :host-context([dir='rtl']) > * {
     --required-star-style: {
-      background: url(${BASE_URL + '/images/required.svg'}) no-repeat 0 20%/8px;
+      background: url(${BASE_URL + '/assets/images/required.svg'}) no-repeat 0 20%/8px;
       width: auto !important;
       max-width: 100%;
       right: auto;

@@ -1,4 +1,3 @@
-declare const dayjs: any;
 import Dexie from 'dexie';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
@@ -6,7 +5,11 @@ import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types'
 import {LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
-
+import dayjs from 'dayjs';
+import dayJsUtc from 'dayjs/plugin/utc';
+import dayJisSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+dayjs.extend(dayJsUtc);
+dayjs.extend(dayJisSameOrAfter);
 /**
  * @LitElement
  * @customElement

@@ -36,7 +36,7 @@ import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
  * @LitElement
