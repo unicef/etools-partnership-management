@@ -82,20 +82,7 @@ import ScrollControlMixinLit from './components/common/mixins/scroll-control-mix
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
-import {EtoolsIconSet, initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
-// eslint-disable-next-line
-import {pmpIcons} from './components/pages/interventions/pages/intervention-tab-pages/intervention-progress/styles/pmp-icons';
-
-declare const dayjs: any;
-declare const dayjs_plugin_utc: any;
-declare const dayjs_plugin_isSameOrBefore: any;
-declare const dayjs_plugin_isSameOrAfter: any;
-declare const dayjs_plugin_isBetween: any;
-
-dayjs.extend(dayjs_plugin_utc);
-dayjs.extend(dayjs_plugin_isSameOrAfter);
-dayjs.extend(dayjs_plugin_isSameOrBefore);
-dayjs.extend(dayjs_plugin_isBetween);
+import {initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
 
 function fetchLangFiles(lang: string) {
   return Promise.allSettled([
@@ -113,17 +100,7 @@ const translationConfig = registerTranslateConfig({
 });
 
 setBasePath(BASE_URL);
-initializeIcons(
-  [
-    EtoolsIconSet.communication,
-    EtoolsIconSet.device,
-    EtoolsIconSet.social,
-    EtoolsIconSet.av,
-    EtoolsIconSet.image,
-    EtoolsIconSet.maps
-  ],
-  pmpIcons
-);
+initializeIcons();
 
 /**
  * @customElement

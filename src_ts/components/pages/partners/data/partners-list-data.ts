@@ -1,4 +1,3 @@
-declare const dayjs: any;
 import Dexie from 'dexie';
 import {store} from '../../../../redux/store';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -10,7 +9,9 @@ import {LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
-
+import dayjs from 'dayjs';
+import dayJsUtc from 'dayjs/plugin/utc';
+dayjs.extend(dayJsUtc);
 /**
  * @LitElement
  * @customElement

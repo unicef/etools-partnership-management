@@ -8,15 +8,10 @@ export const workboxConfig = {
     'version.json',
     'src/**/*',
     'node_modules/**/*',
-    'assets/**/*',
-    'images/**/*'
+    'assets/**/*'
   ],
   swDest: "src/service-worker.js",
   runtimeCaching: [
-    {
-      urlPattern: /\/@webcomponents\/webcomponentsjs\//,
-      handler: 'StaleWhileRevalidate'
-    },
     {
       urlPattern: /^https:\/\/fonts\.gstatic\.com/,
       handler: 'StaleWhileRevalidate'

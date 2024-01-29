@@ -30,6 +30,7 @@ import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import dayjs from 'dayjs';
 
 store.addReducers({
   activeLanguage
@@ -205,7 +206,7 @@ class PageHeader extends connect(store)(
           <etools-icon-button id="menuButton" name="menu" @click="${this.menuBtnClicked}"></etools-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
-            <img id="app-logo" alt="" src="${BASE_URL}images/etools-logo-color-white.svg" />
+            <img id="app-logo" alt="" src="${BASE_URL}assets/images/etools-logo-color-white.svg" />
             ${this.isStaging
               ? html`
             <div class="envWarning" ?hidden="${!this.environment}">
@@ -255,6 +256,7 @@ class PageHeader extends connect(store)(
           <etools-icon-button
             title="${translate('GENERAL.REFRESH')}"
             id="refresh"
+            label="refresh"
             name="refresh"
             tracker="hard refresh"
             @click="${this._onRefreshClick}"
@@ -404,7 +406,7 @@ class PageHeader extends connect(store)(
 
     const newLanguage = e.detail.selectedItem.value;
     if (newLanguage) {
-      window.dayjs.locale(newLanguage);
+      dayjs.locale(newLanguage);
       // Event caught by self translating npm packages
       fireEvent(this, 'language-changed', {language: newLanguage});
     }

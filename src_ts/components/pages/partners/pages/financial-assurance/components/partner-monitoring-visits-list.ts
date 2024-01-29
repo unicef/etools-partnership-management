@@ -15,7 +15,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import pmpEndpoints from '../../../../../endpoints/endpoints';
 import {repeat} from 'lit/directives/repeat.js';
 import {translate} from 'lit-translate';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
  * @LitElement

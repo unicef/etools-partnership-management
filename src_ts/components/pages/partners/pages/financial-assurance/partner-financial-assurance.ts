@@ -21,7 +21,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
-declare const dayjs: any;
+import dayjs from 'dayjs';
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
@@ -620,7 +620,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     }
     let engagements = cloneDeep(this.allEngagements);
     engagements = engagements
-      .sort((a: any, b: any) => dayjs(b.status_date) - dayjs(a.status_date))
+      .sort((a: any, b: any) => dayjs(b.status_date).unix() - dayjs(a.status_date).unix())
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.paginatedEngagements = engagements;
   }
