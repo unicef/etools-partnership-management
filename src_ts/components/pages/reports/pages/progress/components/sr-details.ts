@@ -23,7 +23,7 @@ export class SrDetails extends LitElement {
         }
         label {
           display: block;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           color: var(--secondary-text-color);
         }
 

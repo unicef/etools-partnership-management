@@ -19,7 +19,7 @@ export class ReportStatus extends LitElement {
         }
 
         etools-icon {
-          --etools-icon-font-size: 16px;
+          --etools-icon-font-size: var(--etools-font-size-16, 16px);
           padding-inline-end: 4px;
           margin-top: -2px;
         }

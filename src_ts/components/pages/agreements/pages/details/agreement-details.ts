@@ -106,7 +106,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         }
 
         #generateMyPca::part(label) {
-          font-size: 14px;
+          font-size: var(--etools-font-size-14, 14px);
           font-weight: 600;
         }
 
@@ -128,7 +128,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           display: block;
         }
         .ssfa-value {
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           color: var(--primary-text-color);
           margin-top: -6px;
         }

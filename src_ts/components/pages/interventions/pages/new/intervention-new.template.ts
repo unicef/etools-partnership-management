@@ -39,13 +39,8 @@ export function template(this: InterventionNew): TemplateResult {
       datepicker-lite {
         --paper-input-container_-_width: 100%;
       }
-      etools-dropdown-multi::part(esmm-label-container) {
-        --paper-tooltip: {
-          font-size: 16px !important;
-        }
-      }
       info-icon-tooltip {
-        --iit-font-size: 16px;
+        --iit-font-size: var(--etools-font-size-16, 16px);
         --iit-icon-size: 18px;
         --iit-margin: 0 0 4px 4px;
         --iit-max-width: auto;

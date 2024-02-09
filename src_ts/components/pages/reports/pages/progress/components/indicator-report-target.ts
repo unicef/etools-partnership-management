@@ -15,7 +15,7 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
     return html`
       <style>
         :host {
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
         }
 
         .target-row {

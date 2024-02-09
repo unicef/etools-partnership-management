@@ -46,7 +46,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
           --paper-input-container-shared-input-style: {
             color: var(--light-secondary-text-color);
             cursor: pointer;
-            font-size: 16px;
+            font-size: var(--etools-font-size-16, 16px);
             text-align: left;
             width: 100px;
           }

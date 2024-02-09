@@ -7,7 +7,7 @@ export const sharedStyles = html`
     }
 
     h1 {
-      font-size: 25px;
+      font-size: var(--etools-font-size-24, 24px);
       margin: 16px 0;
       color: var(--primary-text-color);
     }
@@ -36,7 +36,7 @@ export const sharedStyles = html`
     paper-tabs {
       color: var(--light-primary-text-color);
       --paper-tabs: {
-        font-size: 14px;
+        font-size: var(--etools-font-size-14, 14px);
         font-weight: 500;
         text-transform: uppercase;
       }
@@ -56,7 +56,7 @@ export const sharedStyles = html`
     }
 
     paper-item {
-      font-size: 15px;
+      font-size: var(--etools-font-size-15, 15px);
       white-space: nowrap;
     }
 
@@ -86,7 +86,7 @@ export const sharedStyles = html`
     .dropdown-with-clear-btn etools-icon-button.clear,
     .dropdown-with-clear-btn etools-icon-button.remove,
     etools-icon-button.remove-field.remove {
-      --etools-icon-font-size: 35px;
+      --etools-icon-font-size: var(--etools-font-size-35, 35px);
       top: 10px;
     }
 
@@ -174,7 +174,7 @@ export const sharedStyles = html`
     }
 
     .paper-label {
-      font-size: 12px;
+      font-size: var(--etools-font-size-12, 12px);
       color: var(--secondary-text-color);
       padding-top: 8px;
     }
@@ -191,7 +191,7 @@ export const sharedStyles = html`
     }
     .placeholder-style {
       color: var(--secondary-text-color);
-      font-size: 16px;
+      font-size: var(--etools-font-size-16, 16px);
     }
 
     /* responsive css rules */
@@ -201,7 +201,7 @@ export const sharedStyles = html`
       width: 100%;
     }
     .header-text {
-      font-size: 12px;
+      font-size: var(--etools-font-size-12, 12px);
       color: var(--list-secondary-text-color, #757575);
       font-weight: bold;
       -webkit-user-select: none;
@@ -225,7 +225,7 @@ export const sharedStyles = html`
     }
 
     etools-content-panel::part(ecp-header-title) {
-      font-size: 18px;
+      font-size: var(--etools-font-size-18, 18px);
       font-weight: 500;
       text-align: left;
     }

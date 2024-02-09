@@ -38,10 +38,10 @@
     "@shoelace-style/shoelace": "^2.10.0",
     "@types/leaflet": "^1.9.3",
     "@types/lodash-es": "^4.17.7",
-    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.42",
+    "@unicef-polymer/etools-modules-common": "^5.0.0-rc.46",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.3",
     "@unicef-polymer/etools-types": "^1.11.17",
-    "@unicef-polymer/etools-unicef": "^1.0.0-rc.56",
+    "@unicef-polymer/etools-unicef": "^1.0.0-rc.64",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.6",
     "chokidar-cli": "^3.0.0",
     "dayjs": "^1.11.10",
@@ -105,13 +105,13 @@
     "shelljs": ">=0.8.5",
     "socket.io": ">=2.5.0",
     "socket.io-parser": ">=3.3.3",
+    "svg-sprite": "^2.0.2",
     "terser": ">=5.14.2",
     "thenify": ">=3.3.1",
     "typescript": "^4.5.4",
     "ua-parser-js": ">=1.0.33",
     "urijs": ">=1.19.11",
-    "wd": ">=1.14.0",
-    "svg-sprite": "^2.0.2"
+    "wd": ">=1.14.0"
   },
   "relativeDependencies": {}
 }

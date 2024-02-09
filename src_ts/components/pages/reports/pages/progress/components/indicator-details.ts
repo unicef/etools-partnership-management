@@ -62,7 +62,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
 
         .tab-header dl {
           margin: 0;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           color: var(--primary-text-color);
         }
 
@@ -75,7 +75,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         .tab-header dt:first-of-type,
         .tab-header dd:first-of-type {
           font-weight: bold;
-          font-size: 13px;
+          font-size: var(--etools-font-size-13, 13px);
         }
 
         .tab-header dt:last-of-type,

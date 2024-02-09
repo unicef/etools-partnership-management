@@ -22,7 +22,7 @@ export class DisaggregationField extends LitElement {
           }
 
           --paper-input-container-input: {
-            font-size: 13px;
+            font-size: var(--etools-font-size-13, 13px);
           }
 
           --paper-input-container-input-webkit-spinner: {

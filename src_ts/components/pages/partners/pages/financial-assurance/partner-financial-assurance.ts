@@ -81,7 +81,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           align-items: center;
           position: relative;
           /*width: 66.66667%;*/
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           border: 2px solid rgba(0, 97, 233, 0.38);
           height: 56px;
           margin-inline-start: -24px;
@@ -93,7 +93,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         .from-vision {
           position: absolute;
           color: var(--secondary-color);
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           font-weight: 500;
           padding: 0 8px;
           top: -9px;
@@ -106,7 +106,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .hact-values {
-          font-size: 19px;
+          font-size: var(--etools-font-size-18, 18px);
         }
 
         .engagements-header {
@@ -135,7 +135,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .assessment-row {
           height: 48px;
-          font-size: 13px;
+          font-size: var(--etools-font-size-13, 13px);
           color: var(--list-text-color, #2b2b2b);
           padding: 0 24px;
         }
@@ -157,7 +157,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .planning-wrapper {
           padding: 24px;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
         }
 
         .no-r-padd .row-h {
@@ -173,7 +173,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           height: 56px;
           margin-top: -16px;
           margin-bottom: -15px;
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           color: var(--primary-text-color);
           align-items: center;
           justify-content: center;

@@ -64,7 +64,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         }
 
         .indicator-toggle etools-icon-button {
-          --etools-icon-font-size: 24px;
+          --etools-icon-font-size: var(--etools-font-size-24, 24px);
           padding: 0;
         }
 
@@ -84,7 +84,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
 
         .indicator-header-title h3 {
           margin: 0;
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
         }
 
         #no-report-data {

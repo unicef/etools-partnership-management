@@ -65,11 +65,11 @@ export const etoolsStatusStyles = html`
       -moz-border-radius: 50%;
       border-radius: 50%;
       color: var(--etools-status-icon-text-color, #ffffff);
-      font-size: 12px;
+      font-size: var(--etools-font-size-12, 12px);
     }
 
     .icon-wrapper etools-icon {
-      --etools-icon-font-size: 16px;
+      --etools-icon-font-size: var(--etools-font-size-16, 16px);
       color: white;
       display: none;
     }

@@ -67,7 +67,7 @@ export class ReportsModule extends connect(store)(
         }
 
         h1[main-title] sup {
-          font-size: 14px;
+          font-size: var(--etools-font-size-14, 14px);
         }
 
         .tooltip-trigger {
@@ -80,7 +80,7 @@ export class ReportsModule extends connect(store)(
           margin-inline-end: -20px;
         }
         .secondary-title {
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           font-weight: bold;
           color: var(--primary-color);
         }

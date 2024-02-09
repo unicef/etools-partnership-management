@@ -141,14 +141,18 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED'),
         icon: 'av:pause-circle-filled',
-        iconStyles: '--etools-icon-font-size: 29px; color: ' + this.getComputedStyleValue('--warning-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-29, 29px); color: ' +
+          this.getComputedStyleValue('--warning-color'),
         hidden: false,
         completed: false
       },
       {
         label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.TERMINATED'),
         icon: 'report-problem',
-        iconStyles: '--etools-icon-font-size: 29px; color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-29, 29px); color: ' +
+          this.getComputedStyleValue('--error-color'),
         hidden: false,
         completed: false
       },
