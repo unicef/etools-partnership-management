@@ -30,7 +30,7 @@ export const monitoringActivitiesStyles = html`<style>
   }
   .row {
     height: 48px;
-    font-size: 13px;
+    font-size: var(--etools-font-size-13, 13px);
     color: var(--list-text-color, #2b2b2b);
     padding: 0 35px;
     border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
@@ -94,7 +94,7 @@ export const monitoringActivitiesStyles = html`<style>
     position: relative;
     left: calc(-50% - 8px);
     transform: rotate(-90deg);
-    font-size: 11px;
+    font-size: var(--etools-font-size-11, 11px);
   }
   .activities .remove {
     left: 0;

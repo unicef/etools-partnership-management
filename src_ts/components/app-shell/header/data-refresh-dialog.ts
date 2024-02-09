@@ -47,7 +47,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
         }
         .title-indent {
           padding: 0 24px;
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
         }
       </style>
       <etools-dialog

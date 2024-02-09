@@ -15,7 +15,7 @@ export const NewInterventionStyles: CSSResult = css`
     padding: 0 35px;
     border-bottom: 1px solid var(--dark-divider-color);
     font-weight: 500;
-    font-size: 18px;
+    font-size: var(--etools-font-size-18, 18px);
     line-height: 50px;
     color: var(--dark-primary-text-color);
   }

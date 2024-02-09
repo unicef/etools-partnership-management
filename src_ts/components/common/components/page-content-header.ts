@@ -51,7 +51,7 @@ class PageContentHeader extends LitElement {
           margin: 0;
           font-weight: normal;
           text-transform: capitalize;
-          font-size: 24px;
+          font-size: var(--etools-font-size-24, 24px);
           line-height: 1.3;
           min-height: 31px;
         }
@@ -69,7 +69,7 @@ class PageContentHeader extends LitElement {
           }
 
           .title-row h1 {
-            font-size: 18px;
+            font-size: var(--etools-font-size-18, 18px);
           }
         }
 

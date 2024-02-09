@@ -76,11 +76,11 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           --sl-input-height-medium: 24px;
         }
         #download-template-btn::part(label) {
-          font-size: 14px;
+          font-size: var(--etools-font-size-14, 14px);
           font-weight: 600;
         }
         etools-icon[name='file-download'] {
-          --etools-icon-font-size: 20px;
+          --etools-icon-font-size: var(--etools-font-size-20, 20px);
           vertical-align: middle;
           margin-inline-end: 5px;
         }

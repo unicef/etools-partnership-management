@@ -30,6 +30,7 @@ import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import '@unicef-polymer/etools-unicef/src/etools-accesibility/etools-accesibility';
 import dayjs from 'dayjs';
 
 store.addReducers({
@@ -80,7 +81,7 @@ class PageHeader extends connect(store)(
 
         .titlebar {
           flex: 1;
-          font-size: 28px;
+          font-size: var(--etools-font-size-28, 28px);
           font-weight: 300;
         }
 
@@ -129,7 +130,7 @@ class PageHeader extends connect(store)(
         .envWarning {
           color: var(--nonprod-text-warn-color);
           font-weight: 700;
-          font-size: 18px;
+          font-size: var(--etools-font-size-18, 18px);
           line-height: 20px;
         }
 
@@ -152,7 +153,7 @@ class PageHeader extends connect(store)(
         }
         @media (max-width: 920px) {
           .envWarning {
-            font-size: 14px;
+            font-size: var(--etools-font-size-14, 14px);
             line-height: 16px;
           }
           .titlebar img {
@@ -188,7 +189,7 @@ class PageHeader extends connect(store)(
             display: none;
           }
           .envWarning {
-            font-size: 10px;
+            font-size: var(--etools-font-size-10, 10px);
             margin-inline-start: 2px;
           }
           #refresh {
@@ -262,6 +263,8 @@ class PageHeader extends connect(store)(
             @click="${this._onRefreshClick}"
           >
           </etools-icon-button>
+
+          <etools-accesibility></etools-accesibility>
         </div>
       </app-toolbar>
     `;

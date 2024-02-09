@@ -63,7 +63,7 @@ class ReportsList extends connect(store)(
           --paper-tooltip: {
             text-align: center;
             line-height: 1.4;
-            font-size: 12px;
+            font-size: var(--etools-font-size-12, 12px);
           }
         }
 
@@ -84,7 +84,7 @@ class ReportsList extends connect(store)(
           display: inline-block;
           border-radius: 1px;
           padding: 1px 6px;
-          font-size: 10px;
+          font-size: var(--etools-font-size-10, 10px);
           text-transform: uppercase;
           background-color: var(--sl-color-gray-200);
           margin-inline-start: 5px;

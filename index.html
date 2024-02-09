@@ -99,13 +99,13 @@ Can be accessed at ./LICENSE.txt
     <style>
       body {
         margin: 0;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        font-size: 14px;
+        font-family: var(--sl-font-sans, 'Roboto, Noto, sans-serif');
+        font-size: var(--etools-font-size-14, 14px);
         font-weight: 400;
         line-height: 1.5;
         min-height: 100vh;
-        background-color: #eeeeee;
-        color: rgba(0, 0, 0, 0.87);
+        background-color: var(--secondary-background-color);
+        color: var(--primary-text-color);
         -webkit-font-smoothing: antialiased;
       }
       * {
@@ -117,15 +117,6 @@ Can be accessed at ./LICENSE.txt
       #launcher {
         z-index: 99 !important;
         opacity: 0.99 !important;
-      }
-
-      :root {
-        --sl-input-background-color-disabled: inherit;
-        --sl-input-background-color-focus: inherit;
-        --sl-input-height-small: 26px;
-        --sl-font-sans: 'Roboto', 'Noto', sans-serif;
-        --sl-input-color: rgba(0, 0, 0, 0.87);
-        --sl-input-label-font-size-small: 12px;
       }
     </style>
   </head>

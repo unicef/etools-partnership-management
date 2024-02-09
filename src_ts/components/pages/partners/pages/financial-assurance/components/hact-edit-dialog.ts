@@ -29,7 +29,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         :host {
           display: block;
           --paper-input-container-label: {
-            font-size: 12px;
+            font-size: var(--etools-font-size-12, 12px);
             text-align: center;
           }
           --paper-input-container-input-webkit-spinner: {
@@ -47,14 +47,14 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           flex: 1;
           color: var(--secondary-text-color);
           font-weight: 500;
-          font-size: 14px;
+          font-size: var(--etools-font-size-14, 14px);
         }
 
         .partner-name {
           height: 48px;
           line-height: 48px;
           text-transform: uppercase;
-          font-size: 20px;
+          font-size: var(--etools-font-size-20, 20px);
           color: var(--primary-color);
         }
 

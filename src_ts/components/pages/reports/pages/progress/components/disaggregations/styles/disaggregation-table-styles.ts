@@ -16,7 +16,7 @@ export const disaggregationTableStyles = html` <style>
 
   table {
     text-align: center;
-    font-size: 13px;
+    font-size: var(--etools-font-size-13, 13px);
   }
 
   /*  Text above the table  */

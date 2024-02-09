@@ -11,8 +11,8 @@ export const partnerStatusStyles = html` <style>
     justify-content: center;
     width: 24px;
     height: 24px;
-    --etools-icon-font-size: 24px;
-    font-size: 14px;
+    --etools-icon-font-size: var(--etools-font-size-24, 24px);
+    font-size: var(--etools-font-size-14, 14px);
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -33,7 +33,7 @@ export const partnerStatusStyles = html` <style>
   .synced etools-icon,
   .blocked etools-icon,
   .not-synced etools-icon {
-    --etools-icon-font-size: 16px;
+    --etools-icon-font-size: var(--etools-font-size-16, 16px);
     color: var(--light-primary-text-color);
     align-self: center;
   }
@@ -48,7 +48,7 @@ export const partnerStatusStyles = html` <style>
     color: var(--light-primary-text-color);
     position: absolute;
     z-index: 1;
-    font-size: 13px;
+    font-size: var(--etools-font-size-13, 13px);
     bottom: 6px;
     width: 14px;
     height: 14px;
@@ -75,7 +75,7 @@ export const partnerStatusStyles = html` <style>
   .sm-status-wrapper .synced etools-icon,
   .sm-status-wrapper .blocked etools-icon,
   .sm-status-wrapper .not-synced etools-icon {
-    --etools-icon-font-size: 14px;
+    --etools-icon-font-size: var(--etools-font-size-14, 14px);
   }
 
   .sm-status-wrapper .synced,

@@ -137,7 +137,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.NOTSYNCED'),
         icon: 'info',
-        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
         completed: false
@@ -145,7 +147,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION'),
         icon: 'autorenew',
-        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
         completed: false
@@ -153,7 +157,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.BLOCKEDINVISION'),
         icon: 'block',
-        iconStyles: '--etools-icon-font-size: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
         completed: false
@@ -161,7 +167,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION'),
         icon: 'delete-forever',
-        iconStyles: '--etools-icon-font-size: 29px; color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-28, 28px); color: ' +
+          this.getComputedStyleValue('--error-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
         completed: false

@@ -63,7 +63,7 @@ export const listFilterStyles = html` <style>
     align-items: center;
     cursor: pointer;
     font-weight: normal;
-    font-size: 16px;
+    font-size: var(--etools-font-size-16, 16px);
   }
 
   .fixed-controls {
