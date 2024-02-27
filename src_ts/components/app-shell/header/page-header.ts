@@ -30,7 +30,6 @@ import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import '../../common/components/support-btn';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
-import '@unicef-polymer/etools-unicef/src/etools-accesibility/etools-accesibility';
 import dayjs from 'dayjs';
 
 store.addReducers({
@@ -263,8 +262,6 @@ class PageHeader extends connect(store)(
             @click="${this._onRefreshClick}"
           >
           </etools-icon-button>
-
-          <etools-accesibility></etools-accesibility>
         </div>
       </app-toolbar>
     `;
