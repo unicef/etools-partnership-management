@@ -27,6 +27,9 @@ app.get(/.*service-worker\.js/, (req, res) => {
 
 app.use((req, res) => {
   // handles app access using a different state path than index (otherwise it will not return any file)
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
   res.sendFile(getSourcesPath(req, 'index.html'));
 });
 
