@@ -1,4 +1,4 @@
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import orderBy from 'lodash-es/orderBy';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../../redux/store';

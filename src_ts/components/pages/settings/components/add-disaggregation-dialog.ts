@@ -13,7 +13,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
 
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store} from '../../../../redux/store';
 import {addDisaggregation} from '../../../../redux/actions/common-data';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';

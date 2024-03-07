@@ -4,7 +4,7 @@ import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-re
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {

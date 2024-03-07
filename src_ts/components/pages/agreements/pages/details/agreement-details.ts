@@ -16,7 +16,7 @@ import {
   INCREASE_UNSAVED_UPLOADS
 } from '../../../../../redux/actions/upload-status';
 import {store, RootState} from '../../../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';

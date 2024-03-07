@@ -16,7 +16,7 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';

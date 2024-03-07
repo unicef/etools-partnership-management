@@ -8,7 +8,7 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import dayjs from 'dayjs';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';

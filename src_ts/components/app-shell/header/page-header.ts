@@ -1,5 +1,5 @@
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
 import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
 import '@unicef-polymer/etools-unicef/src/etools-profile-dropdown/etools-profile-dropdown';

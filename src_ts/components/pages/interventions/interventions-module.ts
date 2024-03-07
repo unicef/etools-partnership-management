@@ -13,7 +13,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {store, RootState} from '../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import InterventionItemData from './data/intervention-item-data.js';
 import './pages/intervention-tab-pages/intervention-tabs';

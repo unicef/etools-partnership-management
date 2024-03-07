@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';

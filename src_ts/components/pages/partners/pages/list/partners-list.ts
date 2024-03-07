@@ -3,7 +3,7 @@ import {store, RootState} from '../../../../../redux/store';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PartnersListBase} from './partners-list-base';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
 
 /**
