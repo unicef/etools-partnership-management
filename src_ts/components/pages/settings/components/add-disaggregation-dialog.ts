@@ -8,7 +8,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import RepeatableDataSetsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/repeatable-data-sets-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
@@ -38,7 +38,7 @@ export class AddDisaggregationDialog extends connect(store)(
   CommonMixin(RepeatableDataSetsMixin(EndpointsLitMixin(LitElement)))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {

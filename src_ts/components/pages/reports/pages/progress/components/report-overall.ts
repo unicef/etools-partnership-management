@@ -1,7 +1,7 @@
 import {css, html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '../../../components/report-status.js';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
@@ -14,7 +14,7 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 export class ReportOverall extends LitElement {
   static get styles() {
     return [
-      gridLayoutStylesLit,
+      layoutStyles,
       css`
         .status-column etools-input::part(input) {
           width: 0;

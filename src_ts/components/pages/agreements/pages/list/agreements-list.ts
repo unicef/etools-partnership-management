@@ -18,7 +18,7 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
@@ -55,7 +55,7 @@ export class AgreementsList extends connect(store)(
   CommonMixin(ListsCommonMixin(PaginationMixin(EndpointsLitMixin(LitElement))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {

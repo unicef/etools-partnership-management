@@ -7,7 +7,7 @@ import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
@@ -19,6 +19,7 @@ import {RootState, store} from '../../../../../redux/store';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 
 import '../../../../common/components/etools-error-messages-box.js';
 import '../../../../common/components/icons-actions';
@@ -50,12 +51,11 @@ import dayjs from 'dayjs';
 @customElement('partner-details')
 export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
     if (!this.partner) return;
-
     return html`
       <style>
         ${pageCommonStyles} ${sharedStyles} ${dataTableStylesLit} ${riskRatingStyles} :host {
@@ -90,11 +90,21 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           margin-inline-start: 8px;
           word-break: break-all;
         }
+        .row {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          padding: 16px 9px;
+        }
       </style>
-
+      <etools-media-query
+        query="(max-width: 767px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel class="content-section" panel-title="${translate('PARTNER_DETAILS')}">
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -104,7 +114,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             >
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -113,7 +123,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             >
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <etools-input
               label="${translate('ALTERNATE_NAME')}"
               .value="${this.partner.alternate_name}"
@@ -126,8 +136,8 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           </div>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -136,7 +146,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             >
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -145,7 +155,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             >
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <etools-dropdown-multi
               label="${translate('SHARED_PARTNER')}"
               .options="${this.sharedPartenerValues}"
@@ -160,8 +170,9 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           </div>
         </div>
 
-        <div class="row-h flex-c">
+        <div class="row">
           <etools-input
+            class="col-12 col-md-4"
             readonly
             placeholder="—"
             label="${translate('ADDRESS')}"
@@ -171,8 +182,8 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             <etools-icon slot="prefix" name="communication:location-on"></etools-icon>
           </etools-input>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -182,7 +193,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               <etools-icon slot="prefix" name="communication:phone"></etools-icon>
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <etools-input
               readonly
               placeholder="—"
@@ -193,10 +204,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               <etools-icon name="communication:email" slot="prefix"></etools-icon>
             </etools-input>
           </div>
-          <div class="col col-4"></div>
+          <div class="col-12 col-md-4"></div>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col-12 col-md-4">
             <!-- HACT Risk rating -->
             <div>
               <label class="paper-label">${translate('HACT_RISK_RATING')} </label>
@@ -205,7 +216,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               </div>
             </div>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <!-- Type of assessment -->
             <etools-input
               readonly
@@ -215,7 +226,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             >
             </etools-input>
           </div>
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <!--Date last assessed-->
             <etools-input
               readonly
@@ -228,8 +239,8 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           </div>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col-12 col-md-4">
             <!-- PSEA risk rating -->
             <div>
               <label class="paper-label">${translate('SEA_RISK_RATING')} </label>
@@ -245,7 +256,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             </div>
           </div>
 
-          <div class="col col-4">
+          <div class="col-12 col-md-4">
             <!--Last PSEA Assess. Date-->
             <etools-input
               readonly
@@ -271,7 +282,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         </div>
 
         <div ?hidden="${!this._shouldDisplayCVAList()}">
-          <etools-data-table-header no-title no-collapse>
+          <etools-data-table-header no-title no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
             <etools-data-table-column class="col-4">
               <div>${translate('DATE_LAST_ASSESSED')}</div>
               <div>(${translate('FROM_VISION')})</div>
@@ -285,20 +296,24 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               no-collapse
               ?secondary-bg-on-hover="${this._canEditCVA(item.attachment, item.archived)}"
               ?hidden="${!this._shouldShowCVA(item.archived, this.showArchivedAssessments)}"
+              .lowResolutionLayout="${this.lowResolutionLayout}"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-4">
+                <span
+                  class="col-data col-4"
+                  data-col-header-label="${translate('DATE_LAST_ASSESSED')} ${translate('FROM_VISION')}"
+                >
                   <span ?hidden="${this._isEmptyDate(item.date)}">${this.getDateDisplayValue(item.date)}</span>
                   <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
                 </span>
-                <span class="col-data col-6">
+                <span class="col-data col-6" data-col-header-label="${translate('CORE_VALUES_ASSESSMENTS')}">
                   <etools-icon name="attachment" ?hidden="${!item.attachment}"></etools-icon>
                   <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
                   <a class="cvs-file" href="${item.attachment}" target="_blank" download
                     >${this.getFileNameFromURL(item.attachment)}</a
                   >
                 </span>
-                <span class="col-data col-2">
+                <span class="col-data col-2" data-col-header-label="${translate('ARCHIVED')}">
                   <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
                   <etools-icon name="check" ?hidden="${!item.archived}"></etools-icon>
                 </span>
@@ -313,9 +328,11 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             </etools-data-table-row>`
           )}
         </div>
-        <div class="row-h" ?hidden="${this._shouldDisplayCVAList()}">
-          ${translate('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')}
-        </div>
+        <etools-data-table-row no-collapse ?hidden="${this._shouldDisplayCVAList()}">
+          <div slot="row-data" class="p-relative">
+            <div class="col-data col-12">${translate('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')}</div>
+          </div>
+        </etools-data-table-row>
       </etools-content-panel>
 
       <staff-members
@@ -354,6 +371,9 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
 
   @property({type: Boolean})
   showDelete = false;
+
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {

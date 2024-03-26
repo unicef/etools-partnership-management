@@ -28,6 +28,7 @@ import 'dayjs/locale/ar.js';
 import 'dayjs/locale/es.js';
 import {appLanguages} from '../../../config/app-constants';
 import {headerDropdownStyles} from './header-dropdown-styles';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import '../../common/components/support-btn';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import dayjs from 'dayjs';
@@ -47,6 +48,9 @@ class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
   MatomoMixin(ProfileOperationsMixin(LitElement))
 ) {
+  static get styles() {
+    return [layoutStyles];
+  }
   render() {
     // main template
     // language=HTML
@@ -102,9 +106,9 @@ class PageHeader extends connect(store)(
         }
 
         .dropdowns {
-          padding-top: 3px;
+          /*padding-top: 3px;*/
           display: flex;
-          margin-inline-end: 5px;
+          /*margin-inline-end: 5px;*/
         }
 
         .header {
@@ -138,10 +142,7 @@ class PageHeader extends connect(store)(
         }
 
         support-btn {
-          color: var(--header-color);
-        }
-
-        support-btn {
+          margin-inline-start: auto;
           color: var(--header-color);
         }
 
@@ -201,8 +202,8 @@ class PageHeader extends connect(store)(
         }
       </style>
 
-      <app-toolbar sticky class="content-align header">
-        <div class="header__item">
+      <app-toolbar sticky class="content-align header row">
+        <div class="layout-horizontal align-items-center col-lg-4 col-4">
           <etools-icon-button id="menuButton" name="menu" @click="${this.menuBtnClicked}"></etools-icon-button>
           <div class="titlebar content-align">
             <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
@@ -217,31 +218,27 @@ class PageHeader extends connect(store)(
           </div>
         </div>
 
-        <div class="header__item header__right-group">
-          <div class="dropdowns">
-            <etools-dropdown
-              transparent
-              id="languageSelector"
-              .selected="${this.selectedLanguage}"
-              .options="${appLanguages}"
-              option-label="display_name"
-              option-value="value"
-              @etools-selected-item-changed="${this.languageChanged}"
-              trigger-value-change-event
-              hide-search
-              allow-outside-scroll
-              no-label-float
-              auto-width
-            ></etools-dropdown>
+        <div class="dropdowns layout-horizontal align-items-center col-lg-6 col-12">
+          <etools-dropdown
+            transparent
+            id="languageSelector"
+            .selected="${this.selectedLanguage}"
+            .options="${appLanguages}"
+            option-label="display_name"
+            option-value="value"
+            @etools-selected-item-changed="${this.languageChanged}"
+            trigger-value-change-event
+            hide-search
+            allow-outside-scroll
+            no-label-float
+            auto-width
+          ></etools-dropdown>
 
-            <countries-dropdown
-              id="countries"
-              .countries="${this.countries}"
-              .currentCountry="${this.profile?.country}"
-            >
-            </countries-dropdown>
-            <organizations-dropdown></organizations-dropdown>
-          </div>
+          <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${this.profile?.country}">
+          </countries-dropdown>
+          <organizations-dropdown></organizations-dropdown>
+        </div>
+        <div class="layout-horizontal align-items-center col-lg-2 col-8">
           <support-btn title="${translate('SUPPORT')}"></support-btn>
           <etools-profile-dropdown
             title="${translate('PROFILE_AND_SIGNOUT')}"

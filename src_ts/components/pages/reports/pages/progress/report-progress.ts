@@ -14,7 +14,7 @@ import './components/sr-details';
 import UtilsMixin from '../../../../common/mixins/utils-mixin';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -33,7 +33,7 @@ import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-bu
 @customElement('report-progress')
 export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {

@@ -61,7 +61,7 @@ export function template(this: InterventionNew): TemplateResult {
     <div class="form">
       <div class="row">
         <!--   Partner Organization   -->
-        <div class="col-8">
+        <div class="col-md-6 col-lg-8 col-12">
           <etools-dropdown
             id="partner"
             label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
@@ -81,7 +81,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Agreement   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="agreements"
             label=${translate('AGREEMENT')}
@@ -105,7 +105,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Vendor Number   -->
-        <div class="col-8">
+        <div class="col-md-6 col-lg-8 col-12">
           <etools-input
             readonly
             placeholder="—"
@@ -116,7 +116,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Agreement Authorized Officers   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-input
             readonly
             placeholder="—"
@@ -129,7 +129,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Focal Points   -->
-        <div class="col-8">
+        <div class="col-md-6 col-lg-8 col-12">
         <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
         <info-icon-tooltip
               position="top"
@@ -154,7 +154,7 @@ export function template(this: InterventionNew): TemplateResult {
 
           </etools-dropdown-multi>
         </div>
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown-multi
             label=${translate('NEW_INTERVENTION.CP_STRUCTURES')}
             placeholder="&#8212;"
@@ -175,7 +175,7 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
       <div class="row">
         <!--   UNPP CFEI Number   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
@@ -196,7 +196,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Document Type   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
         <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
         <info-icon-tooltip
               position="top"
@@ -222,7 +222,7 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
-        <div class="col-8">
+        <div class="col-md-6 col-lg-8 col-12">
           <div class="row">
             <!--   SPD is Humanitarian   -->
             <div ?hidden="${!this.isSPD}">
@@ -269,7 +269,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!-- Start Date -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <datepicker-lite
             id="startDate"
             label=${translate('NEW_INTERVENTION.START_DATE_ESTIMATED')}
@@ -282,7 +282,7 @@ export function template(this: InterventionNew): TemplateResult {
           </datepicker-lite>
         </div>
         <!-- End Date -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <datepicker-lite
             id="endDate"
             label=${translate('NEW_INTERVENTION.END_DATE_ESTIMATED')}
@@ -298,7 +298,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Reference Number Year   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="yearSelector"
             label=${translate('NEW_INTERVENTION.REF_NUM_YEAR')}
@@ -317,7 +317,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Document Currency   -->
-        <div class="col-4">
+        <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="currency"
             label=${translate('NEW_INTERVENTION.DOCUMENT_CURRENCY')}
@@ -355,7 +355,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Office(s)   -->
-        <div class="col-6">
+        <div class="col-md-6 col-lg-6 col-12">
           <etools-dropdown-multi
             id="unicefOffices"
             label=${translate('NEW_INTERVENTION.UNICEF_OFFICES')}
@@ -375,7 +375,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Sections   -->
-        <div class="col-6">
+        <div class="col-md-6 col-lg-6 col-12">
           <etools-dropdown-multi
             id="unicefSections"
             label=${translate('NEW_INTERVENTION.UNICEF_SECTIONS')}
@@ -397,7 +397,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Focal Points   -->
-        <div class="col-6">
+        <div class="col-md-6 col-lg-6 col-12">
           <etools-dropdown-multi
             id="unicefFocalPoints"
             label=${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}
@@ -417,7 +417,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Budget Owner   -->
-        <div class="col-6">
+        <div class="col-md-6 col-lg-6 col-12">
           <etools-dropdown
             id="unicefBudgetOwner"
             label=${translate('NEW_INTERVENTION.UNICEF_BUDGET_OWNER')}

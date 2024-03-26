@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
@@ -25,7 +25,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 @customElement('add-ag-amendment-dialog')
 export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`

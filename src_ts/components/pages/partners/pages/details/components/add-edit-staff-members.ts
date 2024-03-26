@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StaffMember} from '../../../../../../models/partners.models';
@@ -26,7 +26,7 @@ import pmpEdpoints from '../../../../../endpoints/endpoints';
 @customElement('add-edit-staff-members')
 export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     // language=HTML
@@ -84,7 +84,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
-          <div class="col col-6">
+          <div class="col-12 col-md-6">
             <etools-input
               id="firstName"
               label="${translate('FIRST_NAME')}"
@@ -100,7 +100,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
             >
             </etools-input>
           </div>
-          <div class="col col-6">
+          <div class="col-12 col-md-6">
             <etools-input
               id="lastName"
               label="${translate('LAST_NAME')}"
@@ -118,7 +118,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
           </div>
         </div>
         <div class="layout-horizontal row-padding-v flex-c">
-          <div class="col col-6">
+          <div class="col-12 col-md-6">
             <etools-input
               id="email"
               label="${translate('EMAIL_ADDRESS')}"
@@ -137,7 +137,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
               <etools-icon slot="prefix" name="communication:email"></etools-icon>
             </etools-input>
           </div>
-          <div class="col col-6">
+          <div class="col-12 col-md-6">
             <etools-input
               id="phone"
               label="${translate('PHONE_NUMBER')}"

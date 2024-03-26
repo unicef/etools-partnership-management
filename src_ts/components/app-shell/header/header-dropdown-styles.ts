@@ -38,6 +38,7 @@ export const headerDropdownStyles = html`
 
     #languageSelector {
       width: 120px;
+      margin-inline-start: auto;
     }
 
     .w100 {
@@ -61,8 +62,38 @@ export const headerDropdownStyles = html`
 
     @media (max-width: 768px) {
       etools-dropdown {
-        min-width: 130px;
+        min-width: 110px;
         width: 130px;
+      }
+      organizations-dropdown {
+        width: 110px;
+      }
+
+      countries-dropdown {
+        width: 110px;
+      }
+    }
+    @media (max-width: 1024px) {
+      .envWarning {
+        display: none;
+      }
+      .envLong {
+        display: none;
+      }
+      etools-profile-dropdown {
+        width: 40px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .dropdowns {
+        order: 1;
+        margin-top: 0;
+      }
+      app-toolbar {
+        height: auto;
+        padding-inline-end: 0px;
+        margin: 0 !important;
       }
     }
   </style>

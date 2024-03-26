@@ -11,7 +11,7 @@ import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/p
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -51,7 +51,7 @@ class ReportsList extends connect(store)(
   ListsCommonMixin(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`

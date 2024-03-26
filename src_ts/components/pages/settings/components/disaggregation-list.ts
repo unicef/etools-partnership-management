@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-pa
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -40,7 +40,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 @customElement('disaggregation-list')
 export class DisaggregationList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit, elevationStyles];
+    return [layoutStyles, elevationStyles];
   }
   render() {
     // language=HTML

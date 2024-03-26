@@ -15,7 +15,7 @@ import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit';
@@ -49,7 +49,7 @@ export class PartnersListBase extends CommonMixin(
   ListsCommonMixin(PaginationMixin(EndpointsLitMixin(EtoolsCurrency(LitElement))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {

@@ -5,7 +5,7 @@ import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/p
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../redux/store';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
@@ -48,7 +48,7 @@ export class InterventionsList extends connect(store)(
   ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit, frWarningsStyles];
+    return [layoutStyles, frWarningsStyles];
   }
 
   render() {

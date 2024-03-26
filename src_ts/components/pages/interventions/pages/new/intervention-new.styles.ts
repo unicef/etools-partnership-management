@@ -24,16 +24,16 @@ export const NewInterventionStyles: CSSResult = css`
     padding: 0 40px;
   }
 
-  .row {
-    position: relative;
-    display: flex;
-    padding: 3px 0;
-  }
+  /*.row {*/
+  /*  position: relative;*/
+  /*  display: flex;*/
+  /*  padding: 3px 0;*/
+  /*}*/
 
-  .row > *:not(:first-child) {
-    padding-inline-start: 40px;
-    box-sizing: border-box;
-  }
+  /*.row > *:not(:first-child) {*/
+  /*  padding-inline-start: 40px;*/
+  /*  box-sizing: border-box;*/
+  /*}*/
 
   .buttons {
     display: flex;

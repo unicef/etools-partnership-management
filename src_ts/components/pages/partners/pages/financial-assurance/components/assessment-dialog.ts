@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -33,7 +33,7 @@ import {SlCheckbox} from '@shoelace-style/shoelace';
 @customElement('assessment-dialog')
 export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`
@@ -59,8 +59,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         ?disable-confirm-btn="${this.uploadInProgress}"
         ?disable-dismiss-btn="${this.uploadInProgress}"
       >
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row flex-c">
+          <div class="col-12 col-md-4">
             <etools-dropdown
               id="assessmentType"
               label="${translate('ASSESSMENT_TYPE')}"
@@ -99,7 +99,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
             </datepicker-lite>
           </div>
         </div>
-        <div class="row-h">
+        <div class="row">
           <etools-upload
             id="report"
             label="${translate('REPORT')}"
@@ -114,7 +114,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           >
           </etools-upload>
         </div>
-        <div class="row-h">
+        <div class="row">
           <etools-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
             >${translate('ARCHIVED')}</etools-checkbox
           >

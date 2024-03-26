@@ -7,7 +7,7 @@ import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js
 import CONSTANTS from '../../../../../../../config/app-constants';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -32,7 +32,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 @customElement('agreement-amendments')
 export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`
@@ -95,7 +95,12 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           color: var(--warning-color);
         }
       </style>
-
+      <etools-media-query
+        query="(max-width: 767px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
           <etools-icon-button
@@ -108,7 +113,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           </etools-icon-button>
         </div>
 
-        <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
+        <div id="download-template-wrapper" class="layout-horizontal row-second-bg b-border">
           <!-- Amendments template download -->
           <div id="download-template-msg">
             ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
@@ -127,25 +132,34 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
         </div>
 
         <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">
-          <etools-data-table-header id="listHeader" no-collapse no-title>
+          <etools-data-table-header
+            id="listHeader"
+            no-collapse
+            no-title
+            .lowResolutionLayout="${this.lowResolutionLayout}"
+          >
             <etools-data-table-column class="col-1"
               >${translate('AGREEMENT_REFERENCE_NUMBER')}</etools-data-table-column
             >
             <etools-data-table-column class="col-4">${translate('AMENDMENT_TYPE')}</etools-data-table-column>
             <etools-data-table-column class="col-2">${translate('SIGNED_DATE')}</etools-data-table-column>
-            <etools-data-table-column class="flex-c">${translate('SIGNED_AMENDMENT')}</etools-data-table-column>
+            <etools-data-table-column class="col-5">${translate('SIGNED_AMENDMENT')}</etools-data-table-column>
           </etools-data-table-header>
 
           ${(this.dataItems || []).map(
             (item: any) => html`
-              <etools-data-table-row no-collapse>
+              <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
                 <div slot="row-data">
-                  <span class="col-data col-1"> ${item.id ? html`${item.number}` : ``} </span>
-                  <span class="col-data col-4"
+                  <span class="col-data col-1" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
+                    ${item.id ? html`${item.number}` : ``}
+                  </span>
+                  <span class="col-data col-4" data-col-header-label="${translate('AMENDMENT_TYPE')}"
                     >${this._getReadonlyAmendmentTypes(this._amendmentTypes, item.types)}</span
                   >
-                  <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
-                  <span class="col-data flex-c">
+                  <span class="col-data col-2" data-col-header-label="${translate('SIGNED_DATE')}"
+                    >${this.getDateDisplayValue(item.signed_date)}</span
+                  >
+                  <span class="col-data col-5" data-col-header-label="${translate('SIGNED_AMENDMENT')}">
                     <etools-icon name="attachment" class="attachment"></etools-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
@@ -199,6 +213,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   @property({type: Boolean})
   editMode = false;
 
+  @property({type: Boolean})
+  lowResolutionLayout = false;
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {
       this._amendmentTypes = state.commonData!.agreementAmendmentTypes;

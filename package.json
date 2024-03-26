@@ -31,7 +31,8 @@
     "rd:init": "relative-deps init",
     "rd:add": "relative-deps add",
     "rd:reload": "relative-deps",
-    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent"
+    "rd:watch": "chokidar \"../../etools-polymer/**/*.js\" \"../../etools-polymer/**/**/*.js\" -c 'npm run rd:reload' --silent",
+    "prepare": "relative-deps"
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
@@ -41,7 +42,7 @@
     "@unicef-polymer/etools-modules-common": "^5.0.0-rc.46",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.3",
     "@unicef-polymer/etools-types": "^1.11.17",
-    "@unicef-polymer/etools-unicef": "^1.0.0-rc.64",
+    "@unicef-polymer/etools-unicef": "^1.0.0-rc.75",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.6",
     "chokidar-cli": "^3.0.0",
     "dayjs": "^1.11.10",
@@ -113,5 +114,7 @@
     "urijs": ">=1.19.11",
     "wd": ">=1.14.0"
   },
-  "relativeDependencies": {}
+  "relativeDependencies": {
+    "@unicef-polymer/etools-unicef": "../../etools-unicef"
+  }
 }

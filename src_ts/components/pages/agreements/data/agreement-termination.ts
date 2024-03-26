@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-warn-message';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 
@@ -25,7 +25,7 @@ import {translate} from 'lit-translate';
 @customElement('agreement-termination')
 export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixinLit(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {

@@ -5,6 +5,10 @@ export const sharedStyles = html`
     *[hidden] {
       display: none !important;
     }
+    .layout-vertical,
+    .layout-horizontal {
+      padding: 16px 24px;
+    }
 
     h1 {
       font-size: var(--etools-font-size-24, 24px);

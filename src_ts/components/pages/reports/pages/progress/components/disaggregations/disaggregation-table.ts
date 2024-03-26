@@ -6,7 +6,7 @@ import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';
 import './table-content/one-disaggregation';
 import './table-content/zero-disaggregations';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
@@ -23,7 +23,7 @@ import {translate} from 'lit-translate';
 @customElement('disaggregation-table')
 export class DisaggregationTable extends UtilsMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`

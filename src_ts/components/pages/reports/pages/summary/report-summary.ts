@@ -9,7 +9,7 @@ import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
@@ -29,7 +29,7 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 @customElement('report-summary')
 export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit, elevationStyles];
+    return [layoutStyles, elevationStyles];
   }
 
   render() {

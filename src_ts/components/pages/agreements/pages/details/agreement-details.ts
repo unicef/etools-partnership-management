@@ -30,7 +30,7 @@ import '../../../../endpoints/endpoints.js';
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import './components/amendments/agreement-amendments.js';
@@ -63,7 +63,7 @@ import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js'
 @customElement('agreement-details')
 export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
@@ -119,6 +119,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         }
         .padd-right {
           padding-inline-end: 16px;
+          flex: 1 1 0%;
         }
         .year-coll {
           width: 105px;
@@ -139,12 +140,17 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           --paper-input-container-underline_-_display: none !important;
           --paper-input-container-underline-focus_-_display: none;
         }
+        .row {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          padding: 16px 9px;
+        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="${translate('AGREEMENT_DETAILS')}">
-        <div class="row-h flex-c b-border row-second-bg">
-          <div class="col col-6">
-            <div class="flex-c padd-right">
+        <div class="row  b-border row-second-bg">
+          <div class="col-12 col-lg-6 col-md-12 layout-horizontal">
+            <div class="padd-right">
               <!-- Agreement Type -->
               <etools-dropdown
                 id="agreementType"
@@ -178,7 +184,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </div>
           </div>
 
-          <div class="col col-3">
+          <div class="col-12 col-md-6 col-lg-3">
             <!-- Reference Number -->
             <etools-input
               label="${translate('AGREEMENT_REFERENCE_NUMBER')}"
@@ -191,7 +197,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </etools-input>
           </div>
           ${this._typeMatches(this.agreement.agreement_type, 'PCA')
-            ? html` <div class="col col-3">
+            ? html` <div class="col-12 col-md-6 col-lg-3">
                 <etools-input
                   placeholder="—"
                   label="${translate('DURATION')} (${translate('SIGNED_DATE')} - ${translate('CP_END_DATE')})"
@@ -206,8 +212,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             : ''}
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-6">
+        <div class="row ">
+          <div class="col-12 col-md-6">
             <!-- Partner name -->
             <etools-dropdown
               id="partner"
@@ -236,7 +242,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </div>
 
           ${this._typeMatches(this.agreement.agreement_type, 'MOU')
-            ? html` <div class="col col-3">
+            ? html` <div class="col-12 col-md-6 col-lg-3">
                   <datepicker-lite
                     id="startDateField"
                     label="${translate('START_DATE')}"
@@ -253,7 +259,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                   >
                   </datepicker-lite>
                 </div>
-                <div class="col col-3">
+                <div class="col-12 col-md-6 col-lg-3">
                   <datepicker-lite
                     id="endDateField"
                     label="${translate('END_DATE')}"
@@ -273,7 +279,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             : ''}
           ${this._typeMatches(this.agreement.agreement_type, 'PCA')
             ? html`
-                <div class="col col-6">
+                <div class="col-12 col-md-6">
                   <etools-cp-structure
                     id="cpStructure"
                     module="agreements"
@@ -291,8 +297,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         </div>
 
         <div ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
-          <div class="row-h flex-c">
-            <div class="col col-6">
+          <div class="row ">
+            <div class="col-12 col-md-6">
               <!-- Signed By Partner -->
               <etools-dropdown
                 id="signedByPartner"
@@ -316,7 +322,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               >
               </etools-input>
             </div>
-            <div class="col col-3">
+            <div class="col-12 col-md-6 col-lg-3">
               <!-- Signed By Partner Date -->
               <datepicker-lite
                 class="w100"
@@ -332,14 +338,14 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               </datepicker-lite>
             </div>
           </div>
-          <div class="row-h flex-c">
-            <div class="col col-6">
+          <div class="row ">
+            <div class="col-12 col-md-6">
               <!-- Signed By UNICEF -->
               <etools-input readonly placeholder="—" .value="${translate('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')}">
               </etools-input>
             </div>
 
-            <div class="col col-3">
+            <div class="col-12 col-md-6 col-lg-3">
               <!-- Signed By UNICEF Date -->
               <datepicker-lite
                 class="w100"
@@ -357,9 +363,10 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </div>
         </div>
 
-        <div class="row-h flex-c" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'MOU')}">
+        <div class="row " ?hidden="${this._typeMatches(this.agreement.agreement_type, 'MOU')}">
           <!-- Partner Authorized Officers (partner staff members) -->
           <etools-dropdown-multi
+            class="col-12"
             id="officers"
             label="${translate('PARTNER_AUTHORIZED_OFFICERS')}"
             placeholder="&#8212;"
@@ -380,6 +387,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
           </etools-dropdown-multi>
           <etools-input
+            class="col-12"
             readonly
             placeholder="—"
             label="${translate('PARTNER_AUTHORIZED_OFFICERS')}"
@@ -424,8 +432,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </etools-button>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-6">
+        <div class="row ">
+          <div class="col-12 col-md-6">
             <etools-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
@@ -437,7 +445,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </etools-input>
           </div>
         </div>
-        <div class="row-h flex-c">
+        <div class="row ">
           <sl-switch
             ?checked="${this.agreement.special_conditions_pca}"
             @sl-change="${this.onSpecialConditionsPCAChanged}"
@@ -447,9 +455,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             ${translate('SPECIAL_CONDITIONS_PCA')}
           </sl-switch>
         </div>
-        <div class="row-h flex-c ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
+        <div class="row  ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
           <div
-            class="generate-pca col col-3"
+            class="generate-pca col-12 col-md-6 col-lg-3"
             ?hidden="${!this._showGeneratePcaBtn(
               this.agreement.agreement_type,
               this.isNewAgreement,
@@ -472,7 +480,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </div>
           </div>
           <div
-            class="generate-pca col col-3 align-items-center"
+            class="generate-pca col-12 col-md-6 col-lg-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
               this.isNewAgreement,
@@ -503,7 +511,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </etools-upload>
           </div>
           <div
-            class="col col-6"
+            class="col-12 col-md-6"
             ?hidden="${this._hideTerminationDoc(this.agreement.termination_doc, this.agreement.status)}"
           >
             <etools-upload
