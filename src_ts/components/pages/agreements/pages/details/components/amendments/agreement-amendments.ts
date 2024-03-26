@@ -12,7 +12,7 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import './add-ag-amendment-dialog.js';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../../../redux/store';
 import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';

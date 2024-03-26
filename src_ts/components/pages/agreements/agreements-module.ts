@@ -26,7 +26,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation, langChanged} from 'lit-translate';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AgreementDetails} from './pages/details/agreement-details';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';

@@ -4,7 +4,7 @@ import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../redux/store';
 
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';

@@ -3,8 +3,7 @@
 Copyright (c) 2018 The eTools Project Authors. All rights reserved.
 */
 
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
+import {connect, installMediaQueryWatcher, installRouter} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 
 // This element is connected to the Redux store.
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
@@ -74,7 +73,6 @@ import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, query} from 'lit/decorators.js';

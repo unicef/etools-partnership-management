@@ -1,4 +1,4 @@
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../redux/store';
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
