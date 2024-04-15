@@ -1,12 +1,12 @@
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {html, LitElement} from 'lit-element';
+import {html, LitElement} from 'lit';
 import {BASE_URL} from '../../../config/config';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 class NotFound extends LitElement {
@@ -37,7 +37,6 @@ class NotFound extends LitElement {
         }
 
         h1 {
-          @apply --page-title;
           margin-bottom: 24px;
         }
 

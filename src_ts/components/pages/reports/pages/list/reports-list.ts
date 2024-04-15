@@ -1,9 +1,9 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
-import '@unicef-polymer/etools-data-table/etools-data-table';
-import '@polymer/iron-media-query/iron-media-query.js';
-import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../components/report-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
@@ -12,18 +12,18 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './reports-filters';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
+import {abortRequestByKey} from '@unicef-polymer/etools-utils/dist/etools-ajax/request';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -36,10 +36,10 @@ import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {langChanged, translate} from 'lit-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
@@ -63,13 +63,17 @@ class ReportsList extends connect(store)(
           --paper-tooltip: {
             text-align: center;
             line-height: 1.4;
-            font-size: 12px;
+            font-size: var(--etools-font-size-12, 12px);
           }
         }
 
         .pd-ref,
         .view-report {
-          @apply --text-btn-style;
+          color: var(--primary-color);
+          font-weight: 500;
+          text-decoration: none;
+          outline: inherit;
+          text-transform: uppercase;
         }
 
         .pd-ref {
@@ -80,9 +84,9 @@ class ReportsList extends connect(store)(
           display: inline-block;
           border-radius: 1px;
           padding: 1px 6px;
-          font-size: 10px;
+          font-size: var(--etools-font-size-10, 10px);
           text-transform: uppercase;
-          background-color: var(--paper-grey-300);
+          background-color: var(--sl-color-gray-200);
           margin-inline-start: 5px;
           font-weight: bold;
         }
@@ -115,13 +119,13 @@ class ReportsList extends connect(store)(
         }
       </style>
 
-      <iron-media-query
+      <etools-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
-      ></iron-media-query>
+      ></etools-media-query>
 
       <section class="elevation page-content filters" elevation="1">
         <etools-filters
@@ -164,29 +168,26 @@ class ReportsList extends connect(store)(
                 (report: any) => html` <etools-data-table-row .lowResolutionLayout="${this.lowResolutionLayout}">
                   <div slot="row-data">
                     <span class="col-data col-2" data-col-header-label="${translate('REPORT_NUM')}">
-                      <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
-                        <a
-                          class="view-report"
-                          href="reports/${report.id}/progress"
-                          ?hidden="${!this._canViewReport(report.status)}"
-                        >
-                          ${this._getReportTitle(report)}
-                        </a>
-                        <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
-                        ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
-                      </span>
-                      <paper-tooltip for="tooltip-trigger-${report.id}" position="right">
-                        ${report.programme_document.title}
-                      </paper-tooltip>
+                      <sl-tooltip content="${report.programme_document.title}" placement="right">
+                        <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
+                          <a
+                            class="view-report"
+                            href="reports/${report.id}/progress"
+                            ?hidden="${!this._canViewReport(report.status)}"
+                          >
+                            ${this._getReportTitle(report)}
+                          </a>
+                          <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
+                          ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
+                        </span>
+                      </sl-tooltip>
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('PARTNER')}">
-                      <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
-                        ${this._displayOrDefault(report.partner_name)}
-                      </span>
-
-                      <paper-tooltip for="tooltip-partner-${report.id}" position="right" fit-to-visible-bounds>
-                        ${report.partner_vendor_number}
-                      </paper-tooltip>
+                      <sl-tooltip content="${report.partner_vendor_number}" placement="right">
+                        <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
+                          ${this._displayOrDefault(report.partner_name)}
+                        </span>
+                      </sl-tooltip>
                     </span>
                     <span class="col-data flex-c" data-col-header-label="${translate('REPORT_STATUS')}">
                       <report-status .status="${report.status}"></report-status>
@@ -202,7 +203,7 @@ class ReportsList extends connect(store)(
                       ? html` <span class="col-data col-2" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                           <a
                             class="pd-ref truncate"
-                            href="interventions/${report.programme_document?.external_id}/progress/reports"
+                            href="interventions/${report.programme_document?.external_id}/reports"
                             title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
                           >
                             ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}

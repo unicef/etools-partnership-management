@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const headerDropdownStyles = html`
@@ -9,6 +9,7 @@ export const headerDropdownStyles = html`
 
     :host {
       display: block;
+      --sl-spacing-small: 0;
     }
 
     :host(:hover) {
@@ -19,31 +20,8 @@ export const headerDropdownStyles = html`
       --paper-input-container-shared-input-style_-_max-width: 75px;
     }
 
-    etools-dropdown {
-      --paper-listbox: {
-        max-height: 600px;
-      }
-
-      --esmm-icons: {
-        color: var(--light-secondary-text-color);
-        cursor: pointer;
-      }
-
-      --paper-input-container-underline: {
-        display: none;
-      }
-
-      --paper-input-container-underline-focus: {
-        display: none;
-      }
-
-      --paper-input-container-shared-input-style: {
-        color: var(--light-secondary-text-color);
-        cursor: pointer;
-        font-size: 16px;
-        text-align: right;
-        width: 100%;
-      }
+    etools-dropdown::part(display-input) {
+      text-align: end;
     }
 
     countries-dropdown[dir='rtl'] {
@@ -51,7 +29,7 @@ export const headerDropdownStyles = html`
     }
 
     organizations-dropdown {
-      width: 165px;
+      width: 180px;
     }
 
     countries-dropdown {
@@ -66,12 +44,19 @@ export const headerDropdownStyles = html`
       width: 100%;
     }
 
-    etools-dropdown.warning {
-      --paper-input-container: {
-        padding-left: 3px;
-        box-sizing: border-box;
-        box-shadow: inset 0px 0px 0px 1.5px red;
-      }
+    etools-dropdown.warning::part(combobox) {
+      outline: 1.5px solid red !important;
+      padding: 4px;
+    }
+
+    etools-dropdown::part(display-input)::placeholder {
+      color: var(--sl-input-color);
+      opacity: 1;
+    }
+
+    etools-dropdown::part(display-input)::-ms-input-placeholder {
+      /* Edge 12-18 */
+      color: var(--sl-input-color);
     }
 
     @media (max-width: 768px) {

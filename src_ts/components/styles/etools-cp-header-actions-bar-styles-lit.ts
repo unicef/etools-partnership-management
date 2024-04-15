@@ -1,21 +1,14 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const etoolsCpHeaderActionsBarStyles = html` <style>
   .cp-header-actions-bar {
-    @apply --layout-horizontal;
+    display: flex;
     align-items: center;
   }
 
-  .cp-header-actions-bar paper-icon-button[disabled] {
+  .cp-header-actions-bar etools-icon-button[disabled] {
     visibility: hidden;
-  }
-
-  .cp-header-actions-bar paper-toggle-button {
-    --paper-toggle-button-label-color: white;
-    --paper-toggle-button-checked-bar-color: white;
-    padding-inline-end: 10px;
-    font-size: 16px;
   }
 
   .cp-header-actions-bar .separator {

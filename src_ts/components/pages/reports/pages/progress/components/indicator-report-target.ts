@@ -1,10 +1,11 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */
@@ -14,7 +15,7 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
     return html`
       <style>
         :host {
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
         }
 
         .target-row {
@@ -25,14 +26,12 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
           width: 100%;
           text-align: right;
           box-sizing: border-box;
-          @apply --indicator-report-target-row;
         }
 
         .target-row span:last-child {
           display: inline-block;
           width: 70px;
           margin-inline-start: 8px;
-          @apply --indicator-report-row-value;
         }
 
         :host([bold]) .target-row {

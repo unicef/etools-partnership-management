@@ -1,24 +1,23 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel';
-import '@unicef-polymer/etools-data-table/etools-data-table';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import './add-disaggregation-dialog';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../redux/store';
 import {patchDisaggregation} from '../../../../redux/actions/common-data';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {userIsPme} from '@unicef-polymer/etools-modules-common/dist/utils/user-permissions';
-import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 import {Disaggregation} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
@@ -26,9 +25,12 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import {translate} from 'lit-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
@@ -57,14 +59,16 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
 
         .qFilter {
           max-width: 200px;
+          display: flex;
         }
       </style>
 
       <div id="filters" class="paper-material elevation" elevation="1">
-        <paper-input
+        <etools-input
           id="query"
           class="qFilter"
           type="search"
+          clearable
           autocomplete="off"
           .value="${this.q}"
           @value-changed="${({detail}: CustomEvent) => {
@@ -73,18 +77,18 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           }}"
           placeholder="${translate('GENERAL.SEARCH')}"
         >
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+          <etools-icon name="search" slot="prefix"></etools-icon>
+        </etools-input>
       </div>
 
       <etools-content-panel panel-title="${translate('DISAGGREGATIONS')}">
-        <paper-icon-button
+        <etools-icon-button
           slot="panel-btns"
           ?hidden="${!userIsPme(this.currentUser)}"
-          icon="add-box"
+          name="add-box"
           @click="${this._addDisaggregation}"
         >
-        </paper-icon-button>
+        </etools-icon-button>
         <div ?hidden="${this._emptyList(this.filteredDisaggregations)}">
           <etools-data-table-header no-collapse no-title>
             <etools-data-table-column class="col-4" field="name">${translate('NAME')}</etools-data-table-column>
@@ -102,14 +106,14 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
                   <span class="col-data col-4">${item.name}</span>
                   <span class="col-data col-6">${this._displayGroups(item.disaggregation_values)}</span>
                   <span class="col-data col-2">
-                    <paper-toggle-button
+                    <sl-switch
                       data-id="${item.id}"
                       data-active="${item.active}"
                       ?disabled="${!userIsPme(this.currentUser)}"
                       ?checked="${item.active}"
-                      @checked-changed="${this._disaggregationChange}"
+                      @sl-change="${this._disaggregationChange}"
                     >
-                    </paper-toggle-button>
+                    </sl-switch>
                   </span>
                 </div>
               </etools-data-table-row>
@@ -205,7 +209,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
   }
 
   _disaggregationChange(e: any) {
-    const elDisaggregation = e.currentTarget as PaperToggleButtonElement;
+    const elDisaggregation = e.currentTarget as SlSwitch;
 
     // to avoid making calls when table is rendered, make sure property binded to checked and checked are different
     if (elDisaggregation.dataset.active === String(elDisaggregation.checked)) {

@@ -1,15 +1,10 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
-import '@polymer/iron-pages/iron-pages.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 
 import './components/report-status';
 import './components/report-rating-dialog';
@@ -23,14 +18,12 @@ import CommonMixin from '../../common/mixins/common-mixin-lit';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
-import {elevation2} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
@@ -38,12 +31,18 @@ import {translate, get as getTranslation} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-declare const dayjs: any;
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
+import dayjs from 'dayjs';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -61,18 +60,16 @@ export class ReportsModule extends connect(store)(
 ) {
   render() {
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
         }
 
         h1[main-title] sup {
-          font-size: 14px;
+          font-size: var(--etools-font-size-14, 14px);
         }
-        iron-icon {
-          color: var(--dark-secondary-text-color);
-        }
+
         .tooltip-trigger {
           position: relative;
         }
@@ -83,12 +80,18 @@ export class ReportsModule extends connect(store)(
           margin-inline-end: -20px;
         }
         .secondary-title {
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           font-weight: bold;
           color: var(--primary-color);
         }
-        paper-button:focus {
-          ${elevation2}
+        sl-tab::part(base) {
+          text-transform: uppercase;
+          opacity: 0.8;
+        }
+        sl-tab::part(base):focus-visible {
+          outline: 0;
+          opacity: 1;
+          font-weight: 700;
         }
       </style>
 
@@ -103,45 +106,38 @@ export class ReportsModule extends connect(store)(
                   </a>
                 </div>
 
-                <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
-                  <a class="primary" href="${this._getTitleLink(this.report)}">
-                    ${this.report?.programme_document?.reference_number}
-                  </a>
-                </span>
+                <sl-tooltip content="${this.report?.programme_document?.title}" placement="bottom">
+                  <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
+                    <a class="primary" href="${this._getTitleLink(this.report)}">
+                      ${this.report?.programme_document?.reference_number}
+                    </a>
+                  </span>
+                </sl-tooltip>
 
                 <span>: ${this.report?.report_type}${this.report?.report_number} ${this.report?.reporting_period}</span>
                 <!-- <sup>
                   <report-status .status="report.status"></report-status>
                 </sup> -->
-                <paper-tooltip
-                  for="tooltip-trigger-pdtitle"
-                  position="bottom"
-                  fit-to-visible-bounds
-                  animation-delay="0"
-                  offset="0"
-                >
-                  ${this.report?.programme_document?.title}
-                </paper-tooltip>
               `
             : ''}
         </div>
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
           <div class="action" ?hidden="${!this.listActive}">
-            <paper-menu-button id="export" close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="focus-as-link">
-                <iron-icon icon="file-download"></iron-icon>
+            <sl-dropdown>
+              <etools-button slot="trigger" variant="text" class="neutral" caret>
+                <etools-icon name="file-download" slot="prefix"></etools-icon>
                 ${translate('EXPORT')}
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
-                  >${translate('EXPORT_INDICATORS_PDF')}</paper-item
+              </etools-button>
+              <sl-menu>
+                <sl-menu-item tracker="Export Indicators - PDF" @click="${this._exportIndicatorsPDF}"
+                  >${translate('EXPORT_INDICATORS_PDF')}</sl-menu-item
                 >
-                <paper-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
-                  >${translate('EXPORT_INDICATORS_XLS')}</paper-item
+                <sl-menu-item tracker="Export Indicators - XLS" @click="${this._exportIndicatorsXLS}"
+                  >${translate('EXPORT_INDICATORS_XLS')}</sl-menu-item
                 >
-              </paper-listbox>
-            </paper-menu-button>
+              </sl-menu>
+            </sl-dropdown>
           </div>
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
@@ -151,40 +147,38 @@ export class ReportsModule extends connect(store)(
               tabindex="-1"
             ></report-status>
 
-            <paper-menu-button
-              close-on-activate
-              class="no-right-padd"
+            <sl-dropdown
               ?hidden="${!this.statusIs(this.report?.status, 'Sub')}"
               tabindex="${this.statusIs(this.report?.status, 'Sub') ? undefined : -1}"
             >
-              <paper-button slot="dropdown-trigger" class="primary-btn">${translate('ACCEPT_SEND_BACK')}</paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</paper-item>
-                <paper-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+              <etools-button variant="primary" slot="trigger">${translate('ACCEPT_SEND_BACK')}</etools-button>
+              <sl-menu>
+                <sl-menu-item @click="${this._accept}">${translate('ACCEPT_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._sendBackToPartner}">${translate('SEND_BACK_TO_PARTNER')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
 
-            <paper-menu-button close-on-activate horizontal-align>
-              <paper-button slot="dropdown-trigger" class="dropdown-trigger">
-                <iron-icon icon="more-vert"></iron-icon>
-              </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</paper-item>
-                <paper-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</paper-item>
-                <paper-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</paper-item>
-                <paper-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+            <sl-dropdown>
+              <etools-icon-button slot="trigger" name="more-vert"> </etools-icon-button>
+              <sl-menu>
+                <sl-menu-item @click="${this._downloadAnexC}">${translate('DOWNLOAD_REPORT')}</sl-menu-item>
+                <sl-menu-item @click="${this._goToActionPointModule}">${translate('ADD_ACTION_POINTS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadXls}">${translate('DOWNLOAD_XLS')}</sl-menu-item>
+                <sl-menu-item @click="${this._downloadPdf}">${translate('DOWNLOAD_PDF')}</sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
           </div>
         </div>
 
         ${this.tabsActive
-          ? html` <etools-tabs-lit
-              slot="tabs"
-              .tabs="${this.reportTabs}"
-              .activeTab="${this.reduxRouteDetails?.subRouteName}"
-              @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs-lit>`
+          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
+              ${this.reportTabs?.map(
+                (t) =>
+                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
+                    >${t.tabLabel}</sl-tab
+                  >`
+              )}
+            </sl-tab-group>`
           : ''}
       </page-content-header>
 
@@ -226,11 +220,13 @@ export class ReportsModule extends connect(store)(
     {
       tab: 'progress',
       tabLabel: getTranslation('RESULTS_REPORTED'),
+      translationKey: 'RESULTS_REPORTED',
       hidden: false
     },
     {
       tab: 'summary',
       tabLabel: getTranslation('OTHER_INFO'),
+      translationKey: 'OTHER_INFO',
       hidden: false
     }
   ];
@@ -250,6 +246,9 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   _page = '';
 
+  @property({type: String})
+  currentLanguage!: string;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
     if (!state.app?.routeDetails?.routeName) {
@@ -262,6 +261,27 @@ export class ReportsModule extends connect(store)(
       this.tabsActive = !this.listActive;
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
+      if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
+        if (this.currentLanguage) {
+          // language was already set, this is language change
+          this.reportTabs = this.applyTabsTitleTranslation(this.reportTabs);
+        }
+        this.currentLanguage = String(state.activeLanguage?.activeLanguage);
+      }
+    }
+  }
+
+  applyTabsTitleTranslation(pageTabs: any[]): any[] {
+    try {
+      return pageTabs.map((item) => {
+        return {
+          ...item,
+          tabLabel: getTranslation(item.translationKey)
+        };
+      });
+    } catch (ex) {
+      console.log(ex);
+      return this.reportTabs;
     }
   }
 
@@ -324,7 +344,7 @@ export class ReportsModule extends connect(store)(
 
   _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (!this.report || !this.report.id || newTabName == this.activePage) {
       return;
     }
@@ -392,7 +412,7 @@ export class ReportsModule extends connect(store)(
   }
 
   _getTitleLink(report: any) {
-    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/progress/reports`;
+    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/reports`;
   }
 
   _exportIndicatorsPDF(e: CustomEvent) {

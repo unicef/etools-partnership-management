@@ -1,17 +1,16 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import AjaxServerErrorsMixin from '../../../../common/mixins/ajax-server-errors-mixin-lit.js';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit.js';
@@ -22,7 +21,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 
-declare const dayjs: any;
+import dayjs from 'dayjs';
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
@@ -40,7 +39,7 @@ import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
@@ -63,16 +62,6 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     return html`
       ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
       <style>
-        :host {
-          --paper-input-container-input-webkit-spinner: {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-          --engagements-row: {
-            padding: 0 24px;
-          }
-        }
-
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
@@ -92,7 +81,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           align-items: center;
           position: relative;
           /*width: 66.66667%;*/
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           border: 2px solid rgba(0, 97, 233, 0.38);
           height: 56px;
           margin-inline-start: -24px;
@@ -104,7 +93,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         .from-vision {
           position: absolute;
           color: var(--secondary-color);
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           font-weight: 500;
           padding: 0 8px;
           top: -9px;
@@ -113,16 +102,16 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
 
         .green {
-          color: var(--paper-green-500);
+          color: var(--sl-color-green-500);
         }
 
         .hact-values {
-          font-size: 19px;
+          font-size: var(--etools-font-size-18, 18px);
         }
 
         .engagements-header {
           background-color: var(--light-theme-background-color);
-          @apply --engagements-row;
+          padding: 0 24px;
         }
 
         .panel-table-row {
@@ -146,7 +135,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .assessment-row {
           height: 48px;
-          font-size: 13px;
+          font-size: var(--etools-font-size-13, 13px);
           color: var(--list-text-color, #2b2b2b);
           padding: 0 24px;
         }
@@ -168,7 +157,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
         .planning-wrapper {
           padding: 24px;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
         }
 
         .no-r-padd .row-h {
@@ -184,7 +173,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           height: 56px;
           margin-top: -16px;
           margin-bottom: -15px;
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           color: var(--primary-text-color);
           align-items: center;
           justify-content: center;
@@ -196,11 +185,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           justify-content: center;
         }
 
-        paper-input {
-          text-align: center;
-          width: 35px;
-          font-size: 16px;
-          color: var(--primary-text-color);
+        etools-icon-button[name='open-in-new'] {
+          color: var(--primary-color);
         }
       </style>
 
@@ -303,8 +289,8 @@ export class PartnerFinancialAssurance extends PaginationMixin(
 
       <etools-content-panel panel-title="${translate('ASSURANCE_ACTIVITIES')}" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
-          </paper-icon-button>
+          <etools-icon-button name="create" title="${translate('GENERAL.EDIT')}" @click="${this._openHactEditDialog}">
+          </etools-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
@@ -416,7 +402,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
               <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
               <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
-                <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
+                <etools-icon-button name="open-in-new"></etools-icon-button>
                 ${translate('VIEW_REPORT')}
               </a>
             </div>
@@ -634,7 +620,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     }
     let engagements = cloneDeep(this.allEngagements);
     engagements = engagements
-      .sort((a: any, b: any) => dayjs(b.status_date) - dayjs(a.status_date))
+      .sort((a: any, b: any) => dayjs(b.status_date).unix() - dayjs(a.status_date).unix())
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.paginatedEngagements = engagements;
   }

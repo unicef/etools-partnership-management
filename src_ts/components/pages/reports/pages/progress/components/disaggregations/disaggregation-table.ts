@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
@@ -15,7 +16,7 @@ import {translate} from 'lit-translate';
  * We do not need `disaggregation-switches` element here (for now) and there is no editable data.
  * Minimal changes were made here so we minimize the issues if we update from PRP.
  *
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */
@@ -29,7 +30,7 @@ export class DisaggregationTable extends UtilsMixin(LitElement) {
       ${disaggregationTableStyles}
       <style>
         .data-key {
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           color: var(--secondary-text-color);
         }
 

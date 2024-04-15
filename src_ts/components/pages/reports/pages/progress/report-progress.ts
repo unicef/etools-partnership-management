@@ -1,6 +1,7 @@
-import {customElement, html, LitElement, property} from 'lit-element';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 
 import '../../../../common/components/etools-ram-indicators';
 
@@ -17,13 +18,14 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-
+import '@unicef-polymer/etools-unicef/src/etools-collapse/etools-collapse';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
@@ -61,9 +63,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           border-inline-end: 1px solid var(--primary-background-color);
         }
 
-        .indicator-toggle paper-icon-button {
-          width: 24px;
-          height: 24px;
+        .indicator-toggle etools-icon-button {
+          --etools-icon-font-size: var(--etools-font-size-24, 24px);
           padding: 0;
         }
 
@@ -83,11 +84,14 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
 
         .indicator-header-title h3 {
           margin: 0;
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
         }
 
         #no-report-data {
           background-color: var(--primary-background-color);
+        }
+        etools-icon-button::part(base) {
+          color: var(--primary-background-color);
         }
 
         .calculation-formula {
@@ -119,7 +123,6 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                 <etools-content-panel class="content-section" panel-title="${translate('CP_OUTPUT')}: ${result.title}">
                   <!-- RAM indicators display -->
                   <etools-ram-indicators-common
-                    class="row-h"
                     .interventionId="${this.report.programme_document.external_id}"
                     .cpId="${result.external_cp_output_id}"
                   ></etools-ram-indicators-common>
@@ -138,12 +141,12 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                             <div class="indicator">
                               <div class="layout-horizontal">
                                 <div class="indicator-toggle ${this._getClusterIndicatorClass(indicatorReport)}">
-                                  <paper-icon-button
+                                  <etools-icon-button
                                     @click="${this._toggle}"
                                     toggles-ind-details="${uniqueKey}"
-                                    .icon="${this._computeIcon(this.toggleFlags[uniqueKey])}"
+                                    .name="${this._computeIcon(this.toggleFlags[uniqueKey])}"
                                   >
-                                  </paper-icon-button>
+                                  </etools-icon-button>
                                 </div>
 
                                 <div class="indicator-header layout-horizontal flex-c">
@@ -186,10 +189,9 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                 </div>
                               </div>
 
-                              <iron-collapse
+                              <etools-collapse
                                 id="collapse-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
-                                .opened="${indicatorReport.expanded}"
-                                @transitioning-changed="${this._indicatorDetailsTransitioningComplete}"
+                                @transitionend="${this._indicatorDetailsTransitioningComplete}"
                               >
                                 <indicator-details
                                   id="indicator-details-${resultIndex}-${lowerResultIndex}-${indicatorReportIndex}"
@@ -197,7 +199,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                   ?isClusterIndicator="${indicatorReport.is_cluster_indicator}"
                                 >
                                 </indicator-details>
-                              </iron-collapse>
+                              </etools-collapse>
                             </div>
                           `;
                         }
@@ -233,11 +235,11 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? 'icons:expand-less' : 'icons:expand-more';
+    return opened ? 'expand-less' : 'expand-more';
   }
 
   _toggle(e: CustomEvent) {
-    const toggleInd = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
+    const toggleInd = (e.target as EtoolsIconButton).getAttribute('toggles-ind-details');
     const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggleInd) as any & {
       toggle(): void;
     };
@@ -251,7 +253,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
     const indicatorCollapsibleContent = e.target as Element;
     const indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
-    if (indicatorDetails && !e.detail.value && (indicatorCollapsibleContent as any)!.opened) {
+    if (indicatorDetails && (indicatorCollapsibleContent as any)!.opened) {
       // trigger indicator details request
       // @ts-ignore
       indicatorDetails.getIndicatorDetails();

@@ -1,17 +1,17 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
-import '@polymer/iron-label/iron-label';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {translate, get as getTranslation} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
@@ -25,6 +25,9 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
           position: relative;
           background-color: var(--light-theme-background-color);
         }
+        .container {
+          padding: 16px 24px;
+        }
 
         *[hidden] {
           display: none !important;
@@ -33,6 +36,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
         #label,
         #no-ram-indicators {
           color: var(--secondary-text-color, #737373);
+          display: block;
         }
 
         #ram-indicators-list {
@@ -43,10 +47,9 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
       </style>
 
       <etools-loading ?active="${this.loading}"></etools-loading>
-
-      <iron-label>
-        <span id="label">${translate('RAM_INDICATORS')}</span>
-        <div id="ram-indicators" iron-label-target>
+      <div class="container">
+        <label id="label">${translate('RAM_INDICATORS')}</label>
+        <div id="ram-indicators">
           ${this._noRamIndicators(this.ramIndicators.length)
             ? html`<span id="no-ram-indicators">&#8212;</span>`
             : html`
@@ -55,7 +58,7 @@ export class EtoolsRamIndicators extends EndpointsLitMixin(LitElement) {
                 </ul>
               `}
         </div>
-      </iron-label>
+      </div>
     `;
   }
 

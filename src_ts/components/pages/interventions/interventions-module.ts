@@ -1,9 +1,6 @@
-import {customElement, html, LitElement, property} from 'lit-element';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-icon-button/paper-icon-button';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
@@ -13,11 +10,10 @@ import '../../common/components/etools-error-messages-box.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {store, RootState} from '../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import InterventionItemData from './data/intervention-item-data.js';
 import './pages/intervention-tab-pages/intervention-tabs';
@@ -34,13 +30,17 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 import './pages/new/ecn-import-dialog';
-import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 
 // @ts-ignore
 setStore(store);
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin EndpointsMixin
@@ -62,7 +62,7 @@ export class InterventionsModule extends connect(store)(
 ) {
   render() {
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: flex;
@@ -109,10 +109,7 @@ export class InterventionsModule extends connect(store)(
           text-transform: uppercase;
           border-radius: 3px;
         }
-        paper-button paper-menu-button {
-          padding: 8px 2px;
-          margin-inline-start: 10px;
-        }
+
         .other-options {
           padding: 10px 24px;
           color: var(--primary-text-color);
@@ -121,6 +118,19 @@ export class InterventionsModule extends connect(store)(
 
         .other-options:hover {
           background-color: var(--secondary-background-color);
+        }
+
+        .split-btn {
+          --sl-spacing-medium: 0;
+        }
+        sl-dropdown#importEcn::part(trigger) {
+          display: inline-flex;
+          vertical-align: middle;
+        }
+
+        etools-icon[slot='trigger'] {
+          padding: 4px 10px;
+          border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
         }
       </style>
 
@@ -135,58 +145,58 @@ export class InterventionsModule extends connect(store)(
 
           <div slot="title-row-actions" class="content-header-actions export-options">
             <div class="action" ?hidden="${!this._pageEquals(this.activePage, 'list')}">
-              <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-                <paper-button slot="dropdown-trigger" class="focus-as-link">
-                  <iron-icon icon="file-download"></iron-icon>
+              <sl-dropdown id="pdExportMenuBtn" close-on-activate>
+                <etools-button slot="trigger" variant="text" class="neutral" caret>
+                  <etools-icon name="file-download" slot="prefix"></etools-icon>
                   ${translate('EXPORT')}
-                </paper-button>
-                <paper-listbox slot="dropdown-content">
-                  <paper-item @tap="${this._exportPdBudget}" tracker="Export PD Budget"
-                    >${translate('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</paper-item
+                </etools-button>
+                <sl-menu>
+                  <sl-menu-item @click="${this._exportPdBudget}" tracker="Export PD Budget"
+                    >${translate('INTERVENTIONS_LIST.PD_BUDGET_EXPORT')}</sl-menu-item
                   >
-                  <paper-item @tap="${this._exportPdResult}" tracker="Export PD Result"
-                    >${translate('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</paper-item
+                  <sl-menu-item @click="${this._exportPdResult}" tracker="Export PD Result"
+                    >${translate('INTERVENTIONS_LIST.PD_RESULT_EXPORT')}</sl-menu-item
                   >
-                  <paper-item @tap="${this._exportPdLocations}" tracker="Export PD Locations"
-                    >${translate('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</paper-item
+                  <sl-menu-item @click="${this._exportPdLocations}" tracker="Export PD Locations"
+                    >${translate('INTERVENTIONS_LIST.PD_LOCATIONS_EXPORT')}</sl-menu-item
                   >
-                </paper-listbox>
-              </paper-menu-button>
+                </sl-menu>
+              </sl-dropdown>
             </div>
 
             <div
               class="action"
               ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.userPermissions)}"
             >
-              <paper-button
-                class="primary-btn with-prefix main-button with-additional"
+              <etools-button
+                variant="primary"
+                class="split-btn"
                 @click="${this._goToNewInterventionPage}"
                 ?hidden="${this.listLoadingActive}"
               >
-                <iron-icon icon="add"></iron-icon>
-                ${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}
-                <paper-menu-button id="importEcn" horizontal-align>
-                  <paper-icon-button
-                    slot="dropdown-trigger"
-                    class="option-button"
-                    icon="expand-more"
+                <etools-icon name="add" slot="prefix"></etools-icon>
+                <span style="padding: 0 10px 0 0">${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
+                <sl-dropdown id="importEcn">
+                  <etools-icon
+                    slot="trigger"
+                    name="expand-more"
                     @click="${(event: MouseEvent) => {
                       event.stopImmediatePropagation();
+                      ((event.currentTarget as any)!.parentElement as SlDropdown).show();
                     }}"
-                  ></paper-icon-button>
-                  <div slot="dropdown-content">
-                    <div
-                      class="other-options"
+                  ></etools-icon>
+                  <sl-menu>
+                    <sl-menu-item
                       @click="${(e: CustomEvent) => {
                         e.stopImmediatePropagation();
                         this.openEcnImportDialog();
                       }}"
                     >
                       ${translate('IMPORT_ECN')}
-                    </div>
-                  </div>
-                </paper-menu-button>
-              </paper-button>
+                    </sl-menu-item>
+                  </sl-menu>
+                </sl-dropdown>
+              </etools-button>
             </div>
           </div>
         </page-content-header>
@@ -304,22 +314,17 @@ export class InterventionsModule extends connect(store)(
       'review',
       'progress',
       'reports',
-      'info'
+      'info',
+      'implementation-status',
+      'monitoring-activities',
+      'results-reported'
     ].includes(activePage);
   }
 
   openEcnImportDialog() {
-    this.closeEcnDropdown();
     openDialog({
       dialog: 'ecn-import-dialog'
     });
-  }
-
-  closeEcnDropdown() {
-    const element: PaperMenuButton | null = this.shadowRoot!.querySelector('paper-menu-button#importEcn');
-    if (element) {
-      element.close();
-    }
   }
 
   connectedCallback() {

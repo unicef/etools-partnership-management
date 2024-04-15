@@ -1,5 +1,5 @@
 import {store} from '../../../redux/store';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {updateUserData} from '../../../redux/actions/user';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -7,13 +7,13 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {getAllPermissions} from './user-permissions';
 import {UserPermissions, UserGroup, User, Constructor, EtoolsUser} from '@unicef-polymer/etools-types';
 import {setActiveLanguage} from '../../../redux/actions/active-language';
-import {property} from 'lit-element';
+import {property} from 'lit/decorators.js';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {languageIsAvailableInApp} from '../../utils/language';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixinLit
  * @appliesMixin EndpointsMixin

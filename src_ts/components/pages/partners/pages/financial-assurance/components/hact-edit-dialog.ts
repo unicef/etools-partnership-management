@@ -1,13 +1,15 @@
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import '@polymer/paper-input/paper-input';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import clone from 'lodash-es/clone';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {translate} from 'lit-translate';
@@ -27,7 +29,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         :host {
           display: block;
           --paper-input-container-label: {
-            font-size: 12px;
+            font-size: var(--etools-font-size-12, 12px);
             text-align: center;
           }
           --paper-input-container-input-webkit-spinner: {
@@ -45,21 +47,30 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
           flex: 1;
           color: var(--secondary-text-color);
           font-weight: 500;
+          font-size: var(--etools-font-size-14, 14px);
         }
 
         .partner-name {
           height: 48px;
           line-height: 48px;
           text-transform: uppercase;
-          font-size: 20px;
+          font-size: var(--etools-font-size-20, 20px);
           color: var(--primary-color);
         }
 
-        paper-input {
+        etools-input {
           max-width: 32px;
-          text-align: center;
         }
 
+        etools-input::part(input) {
+          text-align: center;
+        }
+        etools-input::part(form-control-label) {
+          text-align: center;
+        }
+        etools-input::part(prefix) {
+          margin-inline-end: unset;
+        }
         .avoid-scroll {
           overflow: hidden;
         }
@@ -79,7 +90,6 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         dialog-title="${translate('EDIT_HACT_ASSURANCE_PLAN')}"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         keep-dialog-open
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._saveChanges}"
       >
@@ -93,9 +103,11 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               ? html` <div class="layout-vertical col-3">
                   <div class="heading">${translate('PLANNED_PROGRAMMATIC_VISITS')}</div>
                   <div class="layout-horizontal space-around">
-                    <paper-input
+                    <etools-input
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      no-spin-buttons
+                      min="0"
                       auto-validate
                       error-message="${translate('INVALID')}"
                       .value="${this.editableValues.planned_visits.programmatic_q1}"
@@ -103,32 +115,38 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q1 = detail.value;
                       }}"
                       label="Q1"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       .value="${this.editableValues.planned_visits.programmatic_q2}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q2 = detail.value;
                       }}"
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q2"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       .value="${this.editableValues.planned_visits.programmatic_q3}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q3 = detail.value;
                       }}"
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       label="Q3"
-                    ></paper-input>
-                    <paper-input
+                    ></etools-input>
+                    <etools-input
                       type="number"
-                      allowed-pattern="[0-9]"
+                      allowed-pattern="^[0-9]"
+                      min="0"
+                      no-spin-buttons
                       auto-validate
                       error-message="${translate('INVALID')}"
                       .value="${this.editableValues.planned_visits.programmatic_q4}"
@@ -136,7 +154,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                         this.editableValues.planned_visits.programmatic_q4 = detail.value;
                       }}"
                       label="Q4"
-                    ></paper-input>
+                    ></etools-input>
                   </div>
                 </div>`
               : html``}
@@ -144,57 +162,68 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
             <div class="layout-vertical col-2">
               <div class="heading">${translate('FOLLOW_UP_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
-                <paper-input
+                <etools-input
+                  always-float-label
                   .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_follow_up = detail.value;
                   }}"
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                 >
-                </paper-input>
+                </etools-input>
               </div>
             </div>
 
             <div class="layout-vertical col-3">
               <div class="heading">${translate('PLANNED_SPOT_CHECKS')}</div>
               <div class="layout-horizontal space-around">
-                <paper-input
+                <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q1}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q1 = detail.value;
                   }}"
                   label="Q1"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q2}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q2 = detail.value;
                   }}"
                   label="Q2"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q3}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q3 = detail.value;
                   }}"
                   label="Q3"
-                ></paper-input>
-                <paper-input
+                ></etools-input>
+                <etools-input
                   type="number"
-                  allowed-pattern="[0-9]"
+                  allowed-pattern="^[0-9]"
+                  min="0"
+                  no-spin-buttons
                   .value="${this.editableValues.planned_engagement.spot_check_planned_q4}"
                   @value-changed="${({detail}: CustomEvent) => {
                     this.editableValues.planned_engagement.spot_check_planned_q4 = detail.value;
                   }}"
                   label="Q4"
-                ></paper-input>
+                ></etools-input>
               </div>
             </div>
 

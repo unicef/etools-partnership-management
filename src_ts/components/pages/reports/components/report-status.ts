@@ -1,11 +1,11 @@
-import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/image-icons.js';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {listenForLangChanged} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @extends {Polymer.Element}
  */
@@ -18,32 +18,31 @@ export class ReportStatus extends LitElement {
           display: inline-block;
         }
 
-        iron-icon {
-          --iron-icon-width: 16px;
-          --iron-icon-height: 16px;
+        etools-icon {
+          --etools-icon-font-size: var(--etools-font-size-16, 16px);
           padding-inline-end: 4px;
           margin-top: -2px;
         }
 
-        :host([status-type='default']) iron-icon {
+        :host([status-type='default']) etools-icon {
           color: var(--primary-color);
         }
 
-        :host([status-type='submitted']) iron-icon,
-        :host([status-type='success']) iron-icon {
+        :host([status-type='submitted']) etools-icon,
+        :host([status-type='success']) etools-icon {
           color: var(--success-color);
         }
 
-        :host([status-type='no-status']) iron-icon,
-        :host([status-type='error']) iron-icon {
+        :host([status-type='no-status']) etools-icon,
+        :host([status-type='error']) etools-icon {
           color: var(--dark-error-color);
         }
 
-        :host([status-type='neutral']) iron-icon {
+        :host([status-type='neutral']) etools-icon {
           color: var(--secondary-text-color);
         }
 
-        :host([status-type='warning']) iron-icon {
+        :host([status-type='warning']) etools-icon {
           color: var(--warning-color);
         }
 
@@ -52,7 +51,7 @@ export class ReportStatus extends LitElement {
         }
       </style>
 
-      ${!this.noIcon ? html`<iron-icon icon="${this.icon}"></iron-icon>` : ''}
+      ${!this.noIcon ? html`<etools-icon name="${this.icon}"></etools-icon>` : ''}
       ${!this.noLabel ? html`<span id="label">${this.label}</span>` : ''}
       <slot></slot>
     `;
@@ -68,13 +67,13 @@ export class ReportStatus extends LitElement {
   noIcon = false;
 
   @property({type: String, reflect: true, attribute: 'status-type'})
-  statusType!: string;
+  statusType = 'no-status';
 
   @property({type: String})
-  label!: string;
+  label = 'No Status';
 
   @property({type: String})
-  icon!: string;
+  icon = 'image:lens';
 
   @property({type: Boolean})
   final = false;
@@ -194,12 +193,12 @@ export class ReportStatus extends LitElement {
   _computeIcon(type: string) {
     switch (type) {
       case 'success':
-        return 'icons:check-circle';
+        return 'check-circle';
       case 'submitted':
-        return 'icons:assignment-turned-in';
+        return 'assignment-turned-in';
       case 'error':
       case 'warning':
-        return 'icons:error';
+        return 'error';
       default:
         return 'image:lens';
     }

@@ -1,8 +1,9 @@
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
@@ -18,7 +19,7 @@ import {translate} from 'lit-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('add-ag-amendment-dialog')
@@ -34,7 +35,6 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         no-padding
         keep-dialog-open
         id="add-ag-amendment"
-        opened
         size="md"
         ?hidden="${this.datePickerOpen}"
         .okBtnText="${translate('GENERAL.SAVE')}"

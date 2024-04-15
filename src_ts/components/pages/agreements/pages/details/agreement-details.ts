@@ -1,18 +1,14 @@
 /* eslint-disable max-len */
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input-container.js';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-upload/etools-upload.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 
 import {
   DECREASE_UPLOADS_IN_PROGRESS,
@@ -20,8 +16,7 @@ import {
   INCREASE_UNSAVED_UPLOADS
 } from '../../../../../redux/actions/upload-status';
 import {store, RootState} from '../../../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
-import '../../../../common/components/etools-form-element-wrapper';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
@@ -34,7 +29,7 @@ import '../../../../endpoints/endpoints.js';
 
 import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {buttonsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/button-styles';
+
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
@@ -45,18 +40,20 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsCpStructure} from '../../../../common/components/etools-cp-structure';
 import {MinimalStaffMember} from '../../../../../models/partners.models';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {translate, get as getTranslation} from 'lit-translate';
-import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin StaffMembersDataMixin
@@ -66,7 +63,7 @@ import debounce from 'lodash-es/debounce';
 @customElement('agreement-details')
 export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit, buttonsStyles];
+    return [gridLayoutStylesLit];
   }
 
   render() {
@@ -108,16 +105,17 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           padding-inline-start: 0;
         }
 
-        #generateMyPca {
-          cursor: pointer;
+        #generateMyPca::part(label) {
+          font-size: var(--etools-font-size-14, 14px);
+          font-weight: 600;
         }
 
-        paper-toggle-button {
-          font-size: 16px;
+        #generateMyPca::part(base) {
+          justify-content: flex-start !important;
         }
 
-        #cancelAoEdit {
-          color: var(--error-color);
+        etools-button#cancelAoEdit {
+          --sl-color-primary-600: var(--error-color);
         }
         .padd-right {
           padding-inline-end: 16px;
@@ -130,7 +128,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           display: block;
         }
         .ssfa-value {
-          font-size: 16px;
+          font-size: var(--etools-font-size-16, 16px);
           color: var(--primary-text-color);
           margin-top: -6px;
         }
@@ -182,7 +180,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
 
           <div class="col col-3">
             <!-- Reference Number -->
-            <paper-input
+            <etools-input
               label="${translate('AGREEMENT_REFERENCE_NUMBER')}"
               .value="${this.agreement.agreement_number}"
               .title="${this.agreement.agreement_number}"
@@ -190,18 +188,20 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               placeholder="&#8212;"
               readonly
             >
-            </paper-input>
+            </etools-input>
           </div>
           ${this._typeMatches(this.agreement.agreement_type, 'PCA')
             ? html` <div class="col col-3">
-                <etools-form-element-wrapper2
+                <etools-input
+                  placeholder="—"
                   label="${translate('DURATION')} (${translate('SIGNED_DATE')} - ${translate('CP_END_DATE')})"
                   ?hidden="${!this.agreement.id}"
+                  readonly
                   .value="${this.getDateDisplayValue(this.agreement.start)} &#8212; ${this.getDateDisplayValue(
                     this.agreement.end
                   )}"
                 >
-                </etools-form-element-wrapper2>
+                </etools-input>
               </div>`
             : ''}
         </div>
@@ -224,13 +224,15 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               required
             >
             </etools-dropdown>
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('PARTNER_NAME')}"
               ?required="${this.agreement.permissions?.required.partner}"
               ?hidden="${this.agreement.permissions?.edit.partner}"
               .value="${this.agreement.partner_name}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
 
           ${this._typeMatches(this.agreement.agreement_type, 'MOU')
@@ -305,12 +307,14 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                 ?hidden="${!this.agreement.permissions?.edit.partner_manager}"
               >
               </etools-dropdown>
-              <etools-form-element-wrapper2
+              <etools-input
+                readonly
+                placeholder="—"
                 label="${translate('SIGNED_BY_PARTNER')}"
                 ?hidden="${this.agreement.permissions?.edit.partner_manager}"
                 .value="${this._getReadonlySignedByPartner(this.staffMembers, this.agreement.partner_manager)}"
               >
-              </etools-form-element-wrapper2>
+              </etools-input>
             </div>
             <div class="col col-3">
               <!-- Signed By Partner Date -->
@@ -331,8 +335,8 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By UNICEF -->
-              <etools-form-element-wrapper2 .value="${translate('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')}">
-              </etools-form-element-wrapper2>
+              <etools-input readonly placeholder="—" .value="${translate('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')}">
+              </etools-input>
             </div>
 
             <div class="col col-3">
@@ -375,7 +379,9 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             ?auto-validate="${this.enableEditForAuthorizedOfficers}"
           >
           </etools-dropdown-multi>
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label="${translate('PARTNER_AUTHORIZED_OFFICERS')}"
             ?required="${this.agreement.permissions?.required.authorized_officers}"
             ?hidden="${this._allowAuthorizedOfficersEditing(
@@ -385,7 +391,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             )}"
             .value="${this.getNames(this.agreement.authorized_officers)}"
           >
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
 
         <div
@@ -396,29 +402,31 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             this.agreement.permissions?.edit.authorized_officers
           )}"
         >
-          <paper-button
+          <etools-button
             id="editAo"
-            class="secondary-btn"
+            variant="text"
+            class="no-pad no-marg"
             @click="${this._enableAoEdit}"
             ?hidden="${this.allowAoEditForSSFA}"
           >
-            <iron-icon icon="create"></iron-icon>
+            <etools-icon name="create"></etools-icon>
             <span>${translate('AMEND_PARTNER_AUTHORIZED_OFFICERS')}</span>
-          </paper-button>
-          <paper-button
+          </etools-button>
+          <etools-button
             id="cancelAoEdit"
-            class="secondary-btn"
+            variant="text"
+            class="no-pad no-marg"
             @click="${this._cancelAoEdit}"
             ?hidden="${!this.allowAoEditForSSFA}"
           >
-            <iron-icon icon="cancel"></iron-icon>
+            <etools-icon name="cancel"></etools-icon>
             <span>${translate('CANCEL_PARTNER_ATUHOTIZED_OFFICERS_AMENDMENT')}</span>
-          </paper-button>
+          </etools-button>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input
+            <etools-input
               label="${translate('AGREEMENT_TERMS_ACKNOWLEDGE_BY')}"
               .value="${this.getAckowledgedBy()}"
               .title="${this.getAckowledgedBy()}"
@@ -426,18 +434,18 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               placeholder="&#8212;"
               readonly
             >
-            </paper-input>
+            </etools-input>
           </div>
         </div>
         <div class="row-h flex-c">
-          <paper-toggle-button
+          <sl-switch
             ?checked="${this.agreement.special_conditions_pca}"
-            @checked-changed="${this.onSpecialConditionsPCAChanged}"
+            @sl-change="${this.onSpecialConditionsPCAChanged}"
             ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'PCA')}"
             ?disabled="${!this.agreement.permissions?.edit.special_conditions_pca}"
           >
             ${translate('SPECIAL_CONDITIONS_PCA')}
-          </paper-toggle-button>
+          </sl-switch>
         </div>
         <div class="row-h flex-c ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
           <div
@@ -449,19 +457,19 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
               this.agreement.status
             )}"
           >
-            <paper-input-container class="form-field-wrapper secondary-btn-wrapper w100" always-float-label>
-              <!-- Generate PCA -->
-              <label slot="label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
-              <paper-button
-                slot="input"
-                class="paper-input-input secondary-btn"
+            <!-- Generate PCA -->
+            <div style="display:flex;flex-direction:column;">
+              <label class="paper-label" aria-hidden="true">${translate('PCA_AGREEMENT_TO_SIGN')}</label>
+              <etools-button
+                variant="text"
+                class="no-pad no-marg"
                 id="generateMyPca"
                 @click="${this._openGeneratePCADialog}"
               >
-                <iron-icon icon="refresh"></iron-icon>
+                <etools-icon name="refresh"></etools-icon>
                 ${translate('GENERATE')}
-              </paper-button>
-            </paper-input-container>
+              </etools-button>
+            </div>
           </div>
           <div
             class="generate-pca col col-3 align-items-center"
@@ -473,7 +481,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
             <span class="type-warning">${this.generatePCAMessage}</span>
           </div>
-          <div class="col col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+          <div class="col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
             <etools-upload
               label=" ${translate('SIGNED_AGREEMENT')}"
               .fileUrl="${this.agreement.attachment}"
@@ -1017,7 +1025,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onSpecialConditionsPCAChanged(e: CustomEvent) {
-    this.agreement.special_conditions_pca = e.detail.value;
+    this.agreement.special_conditions_pca = (e.target! as SlSwitch).checked;
     this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
   }
 

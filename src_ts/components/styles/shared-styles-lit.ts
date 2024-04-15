@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 export const sharedStyles = html`
   <style>
@@ -7,7 +7,7 @@ export const sharedStyles = html`
     }
 
     h1 {
-      font-size: 25px;
+      font-size: var(--etools-font-size-24, 24px);
       margin: 16px 0;
       color: var(--primary-text-color);
     }
@@ -36,7 +36,7 @@ export const sharedStyles = html`
     paper-tabs {
       color: var(--light-primary-text-color);
       --paper-tabs: {
-        font-size: 14px;
+        font-size: var(--etools-font-size-14, 14px);
         font-weight: 500;
         text-transform: uppercase;
       }
@@ -50,12 +50,13 @@ export const sharedStyles = html`
     }
 
     .tab-link {
-      @apply --layout-horizontal;
-      @apply --layout-center-center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     paper-item {
-      font-size: 15px;
+      font-size: var(--etools-font-size-15, 15px);
       white-space: nowrap;
     }
 
@@ -64,40 +65,39 @@ export const sharedStyles = html`
       background-color: var(--primary-background-color);
     }
 
-    iron-icon.dark {
-      --iron-icon-fill-color: var(--dark-icon-color);
+    etools-icon.dark {
+      --etools-icon-fill-color: var(--dark-icon-color);
     }
 
-    iron-icon.light {
-      --iron-icon-fill-color: var(--light-icon-color);
+    etools-icon.light {
+      --etools-icon-fill-color: var(--light-icon-color);
     }
 
-    paper-icon-button.dark {
+    etools-icon-button.dark {
       color: var(--dark-icon-color);
-      --paper-icon-button-ink-color: var(--dark-ink-color);
+      --etools-icon-button-ink-color: var(--dark-ink-color);
     }
 
-    paper-icon-button.light {
+    etools-icon-button.light {
       color: var(--light-icon-color);
-      --paper-icon-button-ink-color: var(--light-ink-color);
+      --etools-icon-button-ink-color: var(--light-ink-color);
     }
 
-    .dropdown-with-clear-btn paper-icon-button.clear,
-    .dropdown-with-clear-btn paper-icon-button.remove,
-    paper-icon-button.remove-field.remove {
-      width: 35px;
-      height: 35px;
+    .dropdown-with-clear-btn etools-icon-button.clear,
+    .dropdown-with-clear-btn etools-icon-button.remove,
+    etools-icon-button.remove-field.remove {
+      --etools-icon-font-size: var(--etools-font-size-35, 35px);
       top: 10px;
     }
 
-    .dropdown-with-clear-btn paper-icon-button.remove,
-    paper-icon-button.remove-field.remove {
+    .dropdown-with-clear-btn etools-icon-button.remove,
+    etools-icon-button.remove-field.remove {
       color: var(--icon-delete-color);
     }
 
     .dropdown-with-clear-btn {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      display: flex;
+      align-items: center;
     }
 
     paper-input {
@@ -122,7 +122,7 @@ export const sharedStyles = html`
     datepicker-lite[readonly],
     etools-dropdown[readonly],
     etools-dropdown-multi[readonly],
-    etools-currency-amount-input[readonly],
+    etools-currency[readonly],
     .form-field-wrapper {
       --paper-input-container-underline: {
         display: none;
@@ -163,14 +163,6 @@ export const sharedStyles = html`
       padding: 8px 0;
     }
 
-    paper-checkbox {
-      --paper-checkbox-ink-size: 0;
-    }
-
-    paper-radio-button {
-      --paper-radio-button-ink-size: 0;
-    }
-
     datepicker-lite {
       --paper-input-prefix: {
         color: var(--dark-secondary-text-color);
@@ -182,7 +174,7 @@ export const sharedStyles = html`
     }
 
     .paper-label {
-      font-size: 12px;
+      font-size: var(--etools-font-size-12, 12px);
       color: var(--secondary-text-color);
       padding-top: 8px;
     }
@@ -199,7 +191,7 @@ export const sharedStyles = html`
     }
     .placeholder-style {
       color: var(--secondary-text-color);
-      font-size: 16px;
+      font-size: var(--etools-font-size-16, 16px);
     }
 
     /* responsive css rules */
@@ -209,7 +201,7 @@ export const sharedStyles = html`
       width: 100%;
     }
     .header-text {
-      font-size: 12px;
+      font-size: var(--etools-font-size-12, 12px);
       color: var(--list-secondary-text-color, #757575);
       font-weight: bold;
       -webkit-user-select: none;
@@ -233,7 +225,7 @@ export const sharedStyles = html`
     }
 
     etools-content-panel::part(ecp-header-title) {
-      font-size: 18px;
+      font-size: var(--etools-font-size-18, 18px);
       font-weight: 500;
       text-align: left;
     }

@@ -1,15 +1,15 @@
-import {html, LitElement, property} from 'lit-element';
-import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@polymer/iron-label/iron-label.js';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {setPartners} from '../../../redux/actions/partners';
@@ -19,7 +19,7 @@ import {translate, get as getTranslation} from 'lit-translate';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
@@ -47,12 +47,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
         }
         .title-indent {
           padding: 0 24px;
-          font-size: 16px;
-        }
-        paper-checkbox {
-          --paper-checkbox-label: {
-            font-size: 16px;
-          }
+          font-size: var(--etools-font-size-16, 16px);
         }
       </style>
       <etools-dialog
@@ -69,45 +64,45 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
           <div class="title-indent">${translate('SELECT_DATA_TO_REFRESH')}</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox
+              <etools-checkbox
                 ?checked="${this.partnersSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.partnersSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.partnersSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PARTNERS_GOVERNMENT')}</paper-checkbox
+                >${translate('PARTNERS_GOVERNMENT')}</etools-checkbox
               >
             </div>
             <div class="col col-6">
-              <paper-checkbox
+              <etools-checkbox
                 ?checked="${this.interventionsSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.interventionsSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.interventionsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('PD_SPD')}</paper-checkbox
+                >${translate('PD_SPD')}</etools-checkbox
               >
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <paper-checkbox
+              <etools-checkbox
                 ?checked="${this.agreementsSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.agreementsSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.agreementsSelected = e.target.checked;
                   this._singleSectionChanged();
                 }}"
-                >${translate('AGREEMENTS')}</paper-checkbox
+                >${translate('AGREEMENTS')}</etools-checkbox
               >
             </div>
             <div class="col col-6">
-              <paper-checkbox
+              <etools-checkbox
                 ?checked="${this.allSelected}"
-                @checked-changed="${(e: CustomEvent) => {
-                  this.allSelected = e.detail.value;
+                @sl-change="${(e: any) => {
+                  this.allSelected = e.target.checked;
                   this._allSelectedChanged();
                 }}"
-                >${translate('ALL')}</paper-checkbox
+                >${translate('ALL')}</etools-checkbox
               >
             </div>
           </div>
@@ -134,6 +129,12 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
   @property({type: String})
   page!: string | null;
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('close', () => {
+      (this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened = false;
+    });
+  }
   open() {
     if (!(this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened) {
       (this.shadowRoot!.querySelector('#refreshDialog') as EtoolsDialog).opened = true;

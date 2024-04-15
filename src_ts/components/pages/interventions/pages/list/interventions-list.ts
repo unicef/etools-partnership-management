@@ -1,18 +1,18 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
-import {customIcons} from '@unicef-polymer/etools-modules-common/dist/styles/custom-icons';
-import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
-import {GenericObject, ListItemIntervention, RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
+import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -20,24 +20,28 @@ import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.util';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import '@unicef-polymer/etools-filters/src/etools-filters';
+import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
 import '../../data/interventions-list-data.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 import {InterventionsListData} from '../../data/interventions-list-data.js';
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
 import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelper} from './interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {
+  EtoolsRouteDetails,
+  EtoolsRouteQueryParams
+} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
@@ -49,7 +53,7 @@ export class InterventionsList extends connect(store)(
 
   render() {
     return html`
-      ${customIcons} ${listFilterStyles}
+      ${listFilterStyles}
       <style>
         ${sharedStyles} ${elevationStyles} ${dataTableStylesLit} :host {
           box-sizing: border-box;
@@ -58,7 +62,6 @@ export class InterventionsList extends connect(store)(
         }
 
         .pd-ref {
-          @apply --text-btn-style;
           text-transform: none;
         }
 
@@ -74,7 +77,9 @@ export class InterventionsList extends connect(store)(
         #list {
           position: relative;
         }
-
+        .break-word {
+          word-break: break-all;
+        }
         section.page-content.filters {
           padding: 8px 24px;
         }
@@ -93,13 +98,13 @@ export class InterventionsList extends connect(store)(
         }
       </style>
 
-      <iron-media-query
+      <etools-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
-      ></iron-media-query>
+      ></etools-media-query>
       <interventions-list-data
         id="interventions"
         @filtered-interventions-changed="${(e: CustomEvent) => {
@@ -167,7 +172,7 @@ export class InterventionsList extends connect(store)(
             <div slot="row-data" class="p-relative">
               <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
                 <a
-                  class="pd-ref truncate"
+                  class="text-btn-style pd-ref truncate"
                   href="interventions/${intervention.id}/metadata"
                   title="${this.getDisplayValue(intervention.number)}"
                 >
@@ -188,7 +193,7 @@ export class InterventionsList extends connect(store)(
                 <div>${this.getStatusCellText(intervention)}</div>
               </div>
               <span
-                class="col-data col-2"
+                class="col-data col-2 break-word"
                 data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
                 title="${this.getDisplayValue(intervention.title)}"
               >
@@ -206,7 +211,7 @@ export class InterventionsList extends connect(store)(
                   )}"
                 >
                   <span slot="field">${this.getDateDisplayValue(intervention.start)}</span>
-                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                   <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
@@ -222,7 +227,7 @@ export class InterventionsList extends connect(store)(
                   )}"
                 >
                   <span slot="field">${this.getDateDisplayValue(intervention.end)}</span>
-                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
                   <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
@@ -261,10 +266,10 @@ export class InterventionsList extends connect(store)(
                     <span class="amount-currency">${intervention.budget_currency}</span>
                     <span>${displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
                   </span>
-                  <iron-icon
-                    icon="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
+                  <etools-icon
+                    name="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
                     slot="custom-icon"
-                  ></iron-icon>
+                  ></etools-icon>
                   <span slot="message">
                     <span
                       >${this.getIntListUnicefCashAmountTooltipMsg(
@@ -313,7 +318,7 @@ export class InterventionsList extends connect(store)(
   };
 
   @property({type: Object})
-  routeDetails!: RouteDetails | null;
+  routeDetails!: EtoolsRouteDetails | null;
 
   @property({type: Array})
   filteredInterventions: ListItemIntervention[] = [];
@@ -451,7 +456,7 @@ export class InterventionsList extends connect(store)(
     }
 
     // update filter selection and assign the result to etools-filters(trigger render)
-    const currentParams: RouteQueryParams = this.routeDetails!.queryParams || {};
+    const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
     this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
       omit(currentParams, ['page', 'size', 'sort']),
       availableFilters
@@ -495,12 +500,12 @@ export class InterventionsList extends connect(store)(
 
     const queryParams = this.routeDetails?.queryParams;
 
-    const sortOrder = queryParams?.sort ? queryParams?.sort?.split('.') : [];
+    const sortOrder = queryParams?.sort ? queryParams?.sort?.toString().split('.') : [];
 
     intervElem.query(
       sortOrder[0],
       sortOrder[1],
-      queryParams?.search?.toLowerCase() || '',
+      queryParams?.search?.toString().toLowerCase() || '',
       this.getFilterUrlValuesAsArray(queryParams?.type || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cp_outputs || ''),
       this.getFilterUrlValuesAsArray(queryParams?.donors || ''),
@@ -513,17 +518,17 @@ export class InterventionsList extends connect(store)(
       this.getFilterUrlValuesAsArray(queryParams?.offices || ''),
       this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
       Boolean(queryParams?.contingency_pd || false),
-      queryParams?.editable_by || '',
-      queryParams?.start || '',
-      queryParams?.end || '',
-      queryParams?.endAfter || '',
+      queryParams?.editable_by?.toString() || '',
+      queryParams?.start?.toString() || '',
+      queryParams?.end?.toString() || '',
+      queryParams?.endAfter?.toString() || '',
       queryParams?.page ? Number(queryParams.page) : 1,
       queryParams?.size ? Number(queryParams.size) : 10,
       false
     );
   }
-  getFilterUrlValuesAsArray(types: string) {
-    return types ? types.split(',') : [];
+  getFilterUrlValuesAsArray(types: string | number) {
+    return types ? types.toString().split(',') : [];
   }
 
   filtersChange(e: CustomEvent) {

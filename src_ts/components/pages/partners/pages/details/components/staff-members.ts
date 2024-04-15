@@ -1,22 +1,23 @@
-import {LitElement, html, customElement, property, PropertyValues} from 'lit-element';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 
-import '@polymer/paper-toggle-button/paper-toggle-button';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@unicef-polymer/etools-content-panel/etools-content-panel';
-import '@unicef-polymer/etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
 import '../../../../../common/components/icons-actions';
 import {translate} from 'lit-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 import {User} from '@unicef-polymer/etools-types/dist/user.types';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('staff-members')
@@ -49,18 +50,12 @@ export class StaffMembers extends LitElement {
           visibility: visible;
         }
 
-        iron-icon {
+        etools-icon {
           color: var(--dark-secondary-text-color);
         }
         span.col-data {
           word-break: break-all;
           word-wrap: break-word;
-        }
-
-        paper-toggle-button#showInactive {
-          font-size: 16px;
-          --paper-toggle-button-label-color: var(--primary-text-color);
-          --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
       </style>
       <etools-content-panel
@@ -69,17 +64,14 @@ export class StaffMembers extends LitElement {
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button
-            id="showInactive"
-            ?checked="${this.showInactive}"
-            @iron-change="${this.showInactiveChange}"
-          >
+          <sl-switch id="showInactive" ?checked="${this.showInactive}" @sl-change="${this.showInactiveChange}">
             ${translate('SHOW_INACTIVE')}
-          </paper-toggle-button>
+          </sl-switch>
           <div class="separator"></div>
           <a href="${this._getAMPLink(this.partnerId, this.user)}" target="_blank">
-            <iron-icon id="information-icon" icon="icons:open-in-new"></iron-icon>
-            <paper-tooltip for="information-icon" position="top">Access Management Portal</paper-tooltip>
+            <sl-tooltip placement="top" content="Access Management Portal">
+              <etools-icon id="information-icon" name="open-in-new"></etools-icon>
+            </sl-tooltip>
           </a>
         </div>
 
@@ -113,7 +105,7 @@ export class StaffMembers extends LitElement {
                       ? translate('NO_ACCESS')
                       : ''}</span
                   >
-                  <iron-icon icon="check" ?hidden="${!item.has_active_realm}"></iron-icon>
+                  <etools-icon name="check" ?hidden="${!item.has_active_realm}"></etools-icon>
                 </span>
               </div>
             </etools-data-table-row>`
@@ -159,7 +151,7 @@ export class StaffMembers extends LitElement {
   }
 
   showInactiveChange(e: CustomEvent) {
-    if (!e.detail) {
+    if (!e.currentTarget) {
       return;
     }
     this.showInactive = (e.currentTarget as HTMLInputElement).checked;

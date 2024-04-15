@@ -1,10 +1,9 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {LitElement} from 'lit-element';
+import {LitElement} from 'lit';
 import {Constructor} from '@unicef-polymer/etools-types';
 import {get as getTranslation} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function RiskRatingMixin<T extends Constructor<LitElement>>(baseClass: T) {

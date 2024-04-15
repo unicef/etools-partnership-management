@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 export const disaggregationTableStyles = html` <style>
   :host {
@@ -16,17 +16,17 @@ export const disaggregationTableStyles = html` <style>
 
   table {
     text-align: center;
-    font-size: 13px;
+    font-size: var(--etools-font-size-13, 13px);
   }
 
   /*  Text above the table  */
   h4 {
     font-weight: 400;
-    color: var(--paper-grey-600);
+    color: var(--sl-color-gray-500);
     margin: 0 0 15px 0;
   }
   h4 strong {
-    color: var(--paper-grey-800);
+    color: var(--sl-color-gray-700);
   }
   span.total {
     float: right;
@@ -94,6 +94,6 @@ export const disaggregationTableStyles = html` <style>
 
   .cellTitle,
   .cellTotal {
-    background-color: var(--paper-grey-100);
+    background-color: var(--sl-color-gray-50);
   }
 </style>`;
