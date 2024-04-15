@@ -94,5 +94,3 @@ workflows:
                 - master
                 - staging
                 - develop
-                - sl-dialog-tests
-                - rollup-build-test2
