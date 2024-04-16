@@ -127,12 +127,14 @@ class PageHeader extends connect(store)(
         }
 
         .envWarning {
-          color: var(--nonprod-text-warn-color);
+          color: #000;
+          background-color: var(--header-color);
           font-weight: 700;
-          font-size: var(--etools-font-size-18, 18px);
-          line-height: 20px;
+          padding: 5px 10px;
+          font-size: var(--etools-font-size-14, 14px);
+          line-height: 1;
+          border-radius: 10px;
         }
-
         support-btn {
           color: var(--header-color);
         }
@@ -147,10 +149,6 @@ class PageHeader extends connect(store)(
           }
         }
         @media (max-width: 920px) {
-          .envWarning {
-            font-size: var(--etools-font-size-14, 14px);
-            line-height: 16px;
-          }
           .titlebar img {
             margin-inline-end: 8px;
             margin-inline-start: 12px;
@@ -204,11 +202,7 @@ class PageHeader extends connect(store)(
             <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
             <img id="app-logo" alt="" src="${BASE_URL}assets/images/etools-logo-color-white.svg" />
             ${this.isStaging
-              ? html`
-            <div class="envWarning" ?hidden="${!this.environment}">
-              <span class='envLong'> - </span>${this.environment}
-              <span class='envLong'>TESTING ENVIRONMENT<span>
-            </div>`
+              ? html`<div class="envWarning" title="${this.environment} TESTING ENVIRONMENT">${this.environment}</div>`
               : ''}
           </div>
         </div>
