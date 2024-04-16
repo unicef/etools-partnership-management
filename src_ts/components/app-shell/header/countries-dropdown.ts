@@ -50,13 +50,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
             text-align: left;
             width: 100px;
           }
-        }
-
-        @media (max-width: 768px) {
-          etools-dropdown {
-            width: 130px;
-          }
-        }
+        }    
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
@@ -74,7 +68,9 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         @etools-selected-item-changed="${this._countrySelected}"
         .shownOptionsLimit="${280}"
         hide-search
-        auto-width
+        min-width="160px"
+        placement="bottom-end"
+        .syncWidth="${false}"
       ></etools-dropdown>
     `;
   }

@@ -29,15 +29,17 @@ export const headerDropdownStyles = html`
     }
 
     organizations-dropdown {
-      width: 180px;
+      max-width: 180px;
+      margin-inline-start: 10px;
     }
 
     countries-dropdown {
-      width: 160px;
+      max-width: 160px;
+      margin-inline-start: 10px;
     }
 
     #languageSelector {
-      width: 120px;
+      max-width: 160px;
     }
 
     .w100 {
@@ -61,8 +63,7 @@ export const headerDropdownStyles = html`
 
     @media (max-width: 768px) {
       etools-dropdown {
-        min-width: 130px;
-        width: 130px;
+        max-width: 130px;
       }
     }
   </style>

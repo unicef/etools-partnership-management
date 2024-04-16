@@ -102,9 +102,9 @@ class PageHeader extends connect(store)(
         }
 
         .dropdowns {
-          padding-top: 3px;
+          padding-block-start: 4px;
           display: flex;
-          margin-inline-end: 5px;
+          margin-inline-end: 16px;
         }
 
         .header {
@@ -131,10 +131,6 @@ class PageHeader extends connect(store)(
           font-weight: 700;
           font-size: var(--etools-font-size-18, 18px);
           line-height: 20px;
-        }
-
-        etools-profile-dropdown {
-          margin-inline-start: 16px;
         }
 
         support-btn {
@@ -219,21 +215,24 @@ class PageHeader extends connect(store)(
 
         <div class="header__item header__right-group">
           <div class="dropdowns">
-            <etools-dropdown
-              transparent
-              id="languageSelector"
-              .selected="${this.selectedLanguage}"
-              .options="${appLanguages}"
-              option-label="display_name"
-              option-value="value"
-              @etools-selected-item-changed="${this.languageChanged}"
-              trigger-value-change-event
-              hide-search
-              allow-outside-scroll
-              no-label-float
-              auto-width
-            ></etools-dropdown>
-
+             <div> 
+              <etools-dropdown
+                transparent
+                id="languageSelector"
+                .selected="${this.selectedLanguage}"
+                .options="${appLanguages}"
+                option-label="display_name"
+                option-value="value"
+                @etools-selected-item-changed="${this.languageChanged}"
+                trigger-value-change-event
+                hide-search
+                allow-outside-scroll
+                no-label-float
+                min-width="120px"
+                placement="bottom-end"
+                .syncWidth="${false}"
+              ></etools-dropdown>
+            </div>
             <countries-dropdown
               id="countries"
               .countries="${this.countries}"
