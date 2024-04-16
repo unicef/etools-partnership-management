@@ -215,7 +215,7 @@ class PageHeader extends connect(store)(
 
         <div class="header__item header__right-group">
           <div class="dropdowns">
-             <div> 
+            <div>
               <etools-dropdown
                 transparent
                 id="languageSelector"

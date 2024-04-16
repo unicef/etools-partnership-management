@@ -50,7 +50,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
             text-align: left;
             width: 100px;
           }
-        }    
+        }
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
