@@ -274,8 +274,8 @@ export class PartnersModule extends connect(store)(
       fireEvent(this, 'global-loading', {
         active: false,
         loadingSource: 'main-page'
-      });  
-    }, 100);    
+      });
+    }, 100);
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
