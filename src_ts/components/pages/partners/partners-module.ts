@@ -270,10 +270,12 @@ export class PartnersModule extends connect(store)(
     this.setPartnerTabs();
 
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'main-page'
+      });  
+    }, 100);    
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
