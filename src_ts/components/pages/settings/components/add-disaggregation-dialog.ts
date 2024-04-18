@@ -57,12 +57,16 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .newGroup {
-          width: 90px;
-          padding-inline-end: 6px;
+          width: 140px;
+          padding-inline-end: 8px;
         }
 
-        .newGroup:not(:first-of-type) {
-          padding-inline-start: 10px;
+        .col {
+          padding: 0 12px;
+        }
+
+        .col:not(:first-of-type) {
+          padding-inline-start: 0px !important;
         }
 
         .action.delete.no-padding {
@@ -99,7 +103,7 @@ export class AddDisaggregationDialog extends connect(store)(
         @close="${this._onClose}"
         ?show-spinner="${this.disableConfirmBtn}"
       >
-        <div class="layout-horizontal flex-c row-padding-v extra-padd">
+        <div class="layout-horizontal extra-padd">
           <div class="col col-4">
             <etools-input
               id="disaggregateByEl"
