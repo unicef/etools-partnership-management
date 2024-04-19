@@ -41,7 +41,7 @@
     "@unicef-polymer/etools-modules-common": "^5.0.0-rc.49",
     "@unicef-polymer/etools-piwik-analytics": "4.0.1-rc.3",
     "@unicef-polymer/etools-types": "^1.11.17",
-    "@unicef-polymer/etools-unicef": "^1.0.0-rc.81",
+    "@unicef-polymer/etools-unicef": "^1.0.0-rc.83",
     "@unicef-polymer/etools-utils": "^2.0.0-rc.7",
     "chokidar-cli": "^3.0.0",
     "dayjs": "^1.11.10",

@@ -111,7 +111,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
-          <etools-button variant="primary" class="default" @click="${this.cancelEdit}"
+          <etools-button variant="text" class="neutral" @click="${this.cancelEdit}"
             >${translate('GENERAL.CANCEL')}</etools-button
           >
           <etools-button variant="primary" raised @click="${this.saveGroups}"
