@@ -824,7 +824,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         return parseInt(s.id) === selectedId || -1;
       });
       if (selectedPartner && selectedPartner.length) {
-        return selectedPartner[0];
+        return selectedPartner[0].name;
       }
     }
     return '';
