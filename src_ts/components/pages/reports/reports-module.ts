@@ -1,5 +1,5 @@
 import {LitElement, html, PropertyValues} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -249,6 +249,8 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   currentLanguage!: string;
 
+  @state() isInitialLoading = true;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
     if (!state.app?.routeDetails?.routeName) {
@@ -269,6 +271,10 @@ export class ReportsModule extends connect(store)(
         this.currentLanguage = String(state.activeLanguage?.activeLanguage);
       }
     }
+    if (this.isInitialLoading) {
+      this.isInitialLoading = false;
+      this.hideShowLoading();
+    }
   }
 
   applyTabsTitleTranslation(pageTabs: any[]): any[] {
@@ -285,9 +291,7 @@ export class ReportsModule extends connect(store)(
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-
+  hideShowLoading() {
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,
@@ -300,10 +304,10 @@ export class ReportsModule extends connect(store)(
       active: true,
       loadingSource: 'reports-page'
     });
+  }
 
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {active: false});
-    }, 100);
+  connectedCallback() {
+    super.connectedCallback();
     this.requestReportDetails = debounce(this.requestReportDetails.bind(this), 50) as any;
   }
 

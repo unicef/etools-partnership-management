@@ -342,10 +342,12 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
      * Disable loading message for report summary tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'reports-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'reports-page'
+      });
+    }, 100);
   }
 
   /**

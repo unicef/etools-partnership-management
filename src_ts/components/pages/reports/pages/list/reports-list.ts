@@ -270,10 +270,12 @@ class ReportsList extends connect(store)(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'reports-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'reports-page'
+      });
+    }, 100);
   }
 
   stateChanged(state: RootState) {
