@@ -216,8 +216,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       // Useful when refreshing the page
       this.agreement = new Agreement();
     }
-    // fire agreement page loading message
-    this._showAgreementsPageLoadingMessage();
   }
 
   disconnectedCallback() {
