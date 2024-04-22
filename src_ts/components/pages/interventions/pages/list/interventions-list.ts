@@ -376,7 +376,7 @@ export class InterventionsList extends connect(store)(
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
 
-      if (state.interventions.shouldReGetList) {
+      if (state.interventions?.shouldReGetList) {
         getStore().dispatch(setShouldReGetList(false));
         const interventionsListElement = this.shadowRoot!.querySelector<InterventionsListData>('#interventions');
         if (interventionsListElement) {

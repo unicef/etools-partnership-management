@@ -182,13 +182,10 @@ class AppShell extends connect(store)(
             >
             </agreements-module>
 
-            <interventions-module
-              id="interventions"
-              class="main-page"
-              .userPermissions="${this.permissions}"
-              ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
-            >
-            </interventions-module>
+            ${this._activeModuleIs(this.module, 'interventions')
+              ? html`<interventions-module id="interventions" class="main-page" .userPermissions="${this.permissions}">
+                </interventions-module>`
+              : ``}
 
             <reports-module
               id="reports"
