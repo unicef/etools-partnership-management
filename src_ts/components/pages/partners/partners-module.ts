@@ -274,9 +274,7 @@ export class PartnersModule extends connect(store)(
       active: false,
       loadingSource: 'main-page'
     });
-    setTimeout(() => {
-      this._showPartnersPageLoadingMessage();
-    }, 2);
+    this._showPartnersPageLoadingMessage();
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */

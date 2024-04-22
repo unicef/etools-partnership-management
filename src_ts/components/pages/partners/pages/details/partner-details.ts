@@ -404,19 +404,6 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     return !attachment && !archived;
   }
 
-  firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'partners-page'
-      });
-    }, 200);
-  }
-
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('partner')) {
       this._partnerChanged(this.partner);
@@ -424,6 +411,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   public _partnerChanged(partner: any) {
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
+    }, 200);
     if (!isEmptyObject(partner)) {
       // decide if we should show core values assessment attachment
       this.showCoreValuesAssessmentAttachment = this._showCoreValueAssessment(partner.partner_type, partner.cso_type);
