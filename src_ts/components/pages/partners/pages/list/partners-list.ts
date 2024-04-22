@@ -22,17 +22,21 @@ export class PartnersList extends connect(store)(PartnersListBase) {
     /**
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
-     */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
+     */    
     super.connectedCallback();
   }
 
   stateChanged(state: RootState): void {
     if (state.app?.routeDetails?.routeName !== 'partners') {
       return;
+    }
+    if(state.partners?.listIsLoaded) {
+        setTimeout(() => {
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: 'partners-page'
+          });
+        }, 50);      
     }
     this.currentModule = 'partners';
     this.baseStateChanged(state);
