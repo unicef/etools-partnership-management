@@ -35,9 +35,11 @@ export class SettingsModule extends CommonMixinLit(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'main-page'
+      });
+    }, 100);
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
 import {LitElement, html, PropertyValues} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
@@ -263,21 +263,13 @@ export class PartnersModule extends connect(store)(
   @property({type: String})
   _page = '';
 
+  @state() isInitialLoading = true;
+
   public connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
     this.setPartnerTabs();
-
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
-    this._showPartnersPageLoadingMessage();
-    /**
-     * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-     */
   }
 
   setPartnerTabs() {
@@ -312,6 +304,10 @@ export class PartnersModule extends connect(store)(
       if (this.tabsActive && isNaN(this.selectedPartnerId)) {
         fireEvent(this, '404');
         return;
+      }
+      if (this.isInitialLoading) {
+        this.isInitialLoading = false;
+        this._showPartnersPageLoadingMessage();
       }
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
@@ -543,6 +539,11 @@ export class PartnersModule extends connect(store)(
    * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
    */
   public _showPartnersPageLoadingMessage() {
+    // deactivate main page loading msg triggered in app-shell
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     fireEvent(this, 'global-loading', {
       active: true,
       loadingSource: 'partners-page'

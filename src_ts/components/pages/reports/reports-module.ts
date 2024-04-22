@@ -265,7 +265,7 @@ export class ReportsModule extends connect(store)(
       this._page = this.reduxRouteDetails?.subRouteName!;
       if (this.isInitialLoading) {
         this.isInitialLoading = false;
-        this.hideShowLoading();
+        this._showReportsPageLoading();
       }
       if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
         if (this.currentLanguage) {
@@ -291,7 +291,7 @@ export class ReportsModule extends connect(store)(
     }
   }
 
-  hideShowLoading() {
+  _showReportsPageLoading() {
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,
