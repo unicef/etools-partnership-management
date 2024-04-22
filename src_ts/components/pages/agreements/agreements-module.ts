@@ -1,5 +1,5 @@
 import {LitElement, html} from 'lit';
-import {property, query, customElement} from 'lit/decorators.js';
+import {property, query, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {RootState, store} from '../../../redux/store';
 
@@ -206,13 +206,10 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   @property({type: Object})
   prevRouteDetails!: any;
 
+  @state() isInitialLoading = true;
+
   connectedCallback() {
     super.connectedCallback();
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
 
     this._initListeners();
     if (this.newAgreementActive) {
@@ -234,6 +231,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
     if (!state.app?.routeDetails!.subRouteName) {
       EtoolsRouter.replaceAppLocation('/pmp/agreements/list');
+    }
+
+    if (this.isInitialLoading) {
+      this.isInitialLoading = false;
+      this._showAgreementsPageLoadingMessage();
     }
 
     const routeDetails = state.app?.routeDetails;
@@ -529,6 +531,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
   _showAgreementsPageLoadingMessage() {
+    // deactivate main page loading msg triggered in app-shell
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     fireEvent(this, 'global-loading', {
       active: true,
       loadingSource: 'ag-page'
