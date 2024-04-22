@@ -195,7 +195,7 @@ class AppShell extends connect(store)(
             >
             </reports-module>
 
-            <not-found class="main-page" ?hidden="${!this._activeModuleIs(this.module, 'not-found')}"></not-found>
+            ${this._activeModuleIs(this.module, 'not-found') ? html`<not-found class="main-page"></not-found>` : ``}
 
             <settings-module
               id="settings"
