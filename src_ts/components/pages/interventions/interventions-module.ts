@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import CONSTANTS from '../../../config/app-constants';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
@@ -276,6 +276,8 @@ export class InterventionsModule extends connect(store)(
   @property({type: Boolean})
   listLoadingActive = true;
 
+  @state() isInitialLoading = true;
+
   stateChanged(state: RootState) {
     this.envStateChanged(state);
 
@@ -288,6 +290,10 @@ export class InterventionsModule extends connect(store)(
         this.tabsActive = !['list', 'new'].includes(routeDetials!.subRouteName!);
         this.activePage = routeDetials!.subRouteName!;
         this.pageChanged(routeDetials!.subRouteName!);
+      }
+      if (this.isInitialLoading) {
+        this.isInitialLoading = false;
+        this._setInterventionsPageLoading();
       }
     }
 
@@ -329,21 +335,24 @@ export class InterventionsModule extends connect(store)(
 
   connectedCallback() {
     super.connectedCallback();
-    fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'interv-page'
-    });
     this._initInterventionsModuleListeners();
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeInterventionsModuleListeners();
+  }
+
+  _setInterventionsPageLoading() {
+    // deactivate main page loading msg triggered in app-shell
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
+    fireEvent(this, 'global-loading', {
+      active: true,
+      loadingSource: 'interv-page'
+    });
   }
 
   _initInterventionsModuleListeners() {
