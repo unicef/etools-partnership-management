@@ -233,7 +233,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
     if (this.isInitialLoading) {
       this.isInitialLoading = false;
-      this._showAgreementsPageLoadingMessage();
+      this._hideMainLoading();
     }
 
     const routeDetails = state.app?.routeDetails;
@@ -528,7 +528,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   }
 
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-  _showAgreementsPageLoadingMessage() {
+  _hideMainLoading() {
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,
