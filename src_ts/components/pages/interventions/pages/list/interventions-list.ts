@@ -437,7 +437,7 @@ export class InterventionsList extends connect(store)(
   }
 
   shouldReGetListBecauseOfEditsOnItems(state: RootState) {
-    return state.interventions.shouldReGetList;
+    return state.interventions?.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
