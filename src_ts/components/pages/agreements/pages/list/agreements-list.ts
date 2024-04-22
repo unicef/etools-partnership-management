@@ -250,16 +250,6 @@ export class AgreementsList extends connect(store)(
     super.connectedCallback();
 
     this.loadFilteredAgreements = debounce(this.loadFilteredAgreements.bind(this), 600) as any;
-    /**
-     * Disable loading message for main list elements load,
-     * triggered by parent element on stamp
-     */
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'ag-page'
-      });
-    });
   }
 
   stateChanged(state: RootState) {

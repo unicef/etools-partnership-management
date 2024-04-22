@@ -6,7 +6,6 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.
 
 import './sent-bk-comments.js';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
-import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -335,20 +334,6 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
 
   @property({type: Array})
   reportAttachments!: any[];
-
-  connectedCallback() {
-    super.connectedCallback();
-    /**
-     * Disable loading message for report summary tab elements load,
-     * triggered by parent element on stamp or by tap event on tabs
-     */
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'reports-page'
-      });
-    }, 100);
-  }
 
   /**
    * SR report check, used to hide attachment from this page. SR report attachment is displayed in progress tab

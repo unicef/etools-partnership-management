@@ -656,19 +656,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     }
   }
 
-  firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'ag-page'
-      });
-    }, 200);
-  }
-
   resetError(event: any): void {
     event.target.invalid = false;
   }

@@ -5,7 +5,6 @@ import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query'
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../components/report-status';
-import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
@@ -266,16 +265,6 @@ class ReportsList extends connect(store)(
     super.connectedCallback();
 
     this._loadReportsData = debounce(this._loadReportsData.bind(this), 400) as any;
-    /**
-     * Disable loading message for main list elements load,
-     * triggered by parent element on stamp
-     */
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'reports-page'
-      });
-    }, 100);
   }
 
   stateChanged(state: RootState) {

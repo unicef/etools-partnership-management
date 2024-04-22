@@ -534,10 +534,6 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       active: false,
       loadingSource: 'main-page'
     });
-    fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'ag-page'
-    });
   }
 
   _deleteAgreement(e: CustomEvent) {
