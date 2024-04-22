@@ -263,6 +263,10 @@ export class ReportsModule extends connect(store)(
       this.tabsActive = !this.listActive;
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
+      if (this.isInitialLoading) {
+        this.isInitialLoading = false;
+        this.hideShowLoading();
+      }
       if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
         if (this.currentLanguage) {
           // language was already set, this is language change
@@ -270,10 +274,6 @@ export class ReportsModule extends connect(store)(
         }
         this.currentLanguage = String(state.activeLanguage?.activeLanguage);
       }
-    }
-    if (this.isInitialLoading) {
-      this.isInitialLoading = false;
-      this.hideShowLoading();
     }
   }
 
