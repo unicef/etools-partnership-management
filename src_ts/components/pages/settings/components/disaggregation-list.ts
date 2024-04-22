@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
@@ -28,6 +28,7 @@ import pmpEdpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
  * @LitElement
@@ -162,9 +163,19 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
   @property({type: Boolean})
   editMode!: boolean;
 
+  @state() isInitialLoading = true;
+
   stateChanged(state: RootState) {
     if (!state.commonData) {
       return;
+    }
+
+    if (state.app?.routeDetails?.routeName === 'settings' && this.isInitialLoading) {
+      this.isInitialLoading = false;
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'main-page'
+      });
     }
 
     if (!isJsonStrMatch(state.commonData.disaggregations, this.disaggregations)) {
