@@ -130,7 +130,7 @@
     "typescript": "^4.5.4",
     "ua-parser-js": ">=1.0.33",
     "ajv": ">=6.12.6",
-    "follow-redirects": ">=1.14.9",
+    "follow-redirects": ">=1.15.6",
     "shelljs": ">=0.8.5",
     "node-fetch": ">=2.6.7",
     "path-parse": ">=1.0.7",
