@@ -75,7 +75,7 @@ import {registerTranslateConfig, use, translate, get as getTranslation} from 'li
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
@@ -182,8 +182,13 @@ class AppShell extends connect(store)(
             >
             </agreements-module>
 
-            ${this._activeModuleIs(this.module, 'interventions')
-              ? html`<interventions-module id="interventions" class="main-page" .userPermissions="${this.permissions}">
+            ${this.interventionsLoaded
+              ? html`<interventions-module
+                  id="interventions"
+                  class="main-page"
+                  .userPermissions="${this.permissions}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
+                >
                 </interventions-module>`
               : ``}
 
@@ -237,6 +242,9 @@ class AppShell extends connect(store)(
 
   set module(val: string) {
     if (val !== this._module) {
+      if (!this.interventionsLoaded) {
+        this.interventionsLoaded = val === 'interventions';
+      }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);
     }
@@ -296,6 +304,8 @@ class AppShell extends connect(store)(
   private translationFilesAreLoaded = false;
 
   @query('#drawer') private drawer!: LitElement;
+
+  @state() interventionsLoaded = false;
 
   constructor() {
     super();
