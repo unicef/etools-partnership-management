@@ -345,7 +345,7 @@ class InterventionItemData extends connect(store)(
     dexieObject.country_programmes = responseDetail.country_programmes;
     dexieObject.end = responseDetail.end;
     dexieObject.title = responseDetail.title;
-    dexieObject.start = responseDetail.start;
+    dexieObject.start = responseDetail.start || '';
     dexieObject.status = responseDetail.status;
     dexieObject.number = responseDetail.number;
     dexieObject.offices = responseDetail.offices;

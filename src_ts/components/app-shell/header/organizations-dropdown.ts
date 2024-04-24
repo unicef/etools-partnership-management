@@ -40,6 +40,7 @@ export class organizationsDropdown extends connect(store)(EndpointsLitMixin(LitE
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this.onOrganizationChange}"
+        hide-search
         min-width="160px"
         placement="bottom-end"
         .syncWidth="${false}"
