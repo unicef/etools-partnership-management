@@ -8,6 +8,7 @@ import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
 import dayjs from 'dayjs';
 import dayJsUtc from 'dayjs/plugin/utc';
 import dayJisSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { ActivityItemsMixin } from '../pages/intervention-tab-pages/intervention-workplan-editor/editor-utils/activity-item-mixin';
 dayjs.extend(dayJsUtc);
 dayjs.extend(dayJisSameOrAfter);
 /**
@@ -31,6 +32,13 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
 
   @property({type: Object})
   currentQuery: GenericObject | null = null;
+
+  _handleMyResponse(res: ListItemIntervention[]) {
+    // need to set start as '' instead of null otherwise will get wrong number of items in the list
+    //  because Dexie .orderBy excluding items with null values in 'field' property
+    res = (res || []).map(el => el.start ? el : {...el, start: ''});
+    this._handleResponse(res);   
+  }
 
   _filterFound(intervention: ListItemIntervention, prop: string, multiple: boolean, filterValues: any) {
     if (!filterValues.length) {
@@ -96,8 +104,8 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
     // WARN: Fix for .orderBy excluding items with null values in 'field' property
     if (field) {
       await window.EtoolsPmpApp.DexieDb.interventions
-        .filter(function (i: any) {
-          return i[field] == null;
+        .filter(function (i: any) {          
+          return i[field] == null;          
         })
         .modify({[field]: ''});
     }
