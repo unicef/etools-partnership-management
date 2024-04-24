@@ -191,12 +191,18 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
         // This special Dexie function allows the work of counting
         // the number of query results to be done in a parallel process,
         // instead of blocking the main query
-        Dexie.ignoreTransaction(function () {
-          queryResult.count(function (count: number) {
-            // @ts-ignore
-            self.totalResults = count;
-            fireEvent(self, 'total-results-changed', count);
-          });
+        // Dexie.ignoreTransaction(function () {
+        //   queryResult.count(function (count: number) {
+        //     // @ts-ignore
+        //     self.totalResults = count;
+        //     fireEvent(self, 'total-results-changed', count);
+        //   });
+        // });
+
+        // replaced logic above because returned wrong items count
+        queryResult.db.interventions.count().then((count: number) => {
+          self.totalResults = count;
+          fireEvent(self, 'total-results-changed', count);
         });
 
         return queryResult
