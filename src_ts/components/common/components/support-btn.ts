@@ -1,6 +1,7 @@
 /* eslint-disable lit/attribute-value-entities */
-import {css, CSSResult, customElement, html, LitElement, TemplateResult} from 'lit-element';
-import '@polymer/iron-icons/communication-icons';
+import {css, CSSResult, html, LitElement, TemplateResult} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {translate} from 'lit-translate';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 /* eslint-disable max-len */
@@ -21,10 +22,10 @@ export class SupportBtn extends MatomoMixin(LitElement) {
       a {
         color: var(--light-secondary-text-color);
         text-decoration: none;
-        font-size: 16px;
+        font-size: var(--etools-font-size-16, 16px);
       }
 
-      iron-icon {
+      etools-icon {
         margin-right: 4px;
         color: var(--light-secondary-text-color);
       }
@@ -44,9 +45,9 @@ export class SupportBtn extends MatomoMixin(LitElement) {
         href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=c8e43760db622450f65a2aea4b9619ad&sysparm_category=99c51053db0a6f40f65a2aea4b9619af"
         target="_blank"
         tracker="Support"
-        @tap="${this.trackAnalytics}"
+        @click="${this.trackAnalytics}"
       >
-        <iron-icon icon="communication:textsms"></iron-icon>
+        <etools-icon name="communication:textsms"></etools-icon>
         <span class="support-text">${translate('SUPPORT')}</span>
       </a>
     `;

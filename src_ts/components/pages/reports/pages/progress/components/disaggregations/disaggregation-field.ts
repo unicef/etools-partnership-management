@@ -1,12 +1,12 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '@polymer/paper-input/paper-input.js';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {toNumericValues} from './mixins/disaggregation-field';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('disaggregation-field')
@@ -22,7 +22,7 @@ export class DisaggregationField extends LitElement {
           }
 
           --paper-input-container-input: {
-            font-size: 13px;
+            font-size: var(--etools-font-size-13, 13px);
           }
 
           --paper-input-container-input-webkit-spinner: {
@@ -31,7 +31,7 @@ export class DisaggregationField extends LitElement {
         }
       </style>
 
-      <paper-input
+      <etools-input
         id="field"
         .value="${this.value}"
         type="number"
@@ -43,7 +43,7 @@ export class DisaggregationField extends LitElement {
         required
         auto-validate
       >
-      </paper-input>
+      </etools-input>
     `;
   }
 
@@ -79,7 +79,7 @@ export class DisaggregationField extends LitElement {
   }
 
   validate() {
-    return (this.shadowRoot?.querySelector('#field') as PaperInputElement).validate();
+    return (this.shadowRoot?.querySelector('#field') as EtoolsInput).validate();
   }
 
   getField() {

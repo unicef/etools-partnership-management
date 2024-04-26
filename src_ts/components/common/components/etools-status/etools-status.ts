@@ -1,11 +1,10 @@
-import {LitElement, customElement, html, property, PropertyValues} from 'lit-element';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../redux/store';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/av-icons.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
@@ -13,7 +12,7 @@ import {translate, get as getTranslation} from 'lit-translate';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('etools-status')
@@ -29,8 +28,8 @@ export class EtoolsStatus extends connect(store)(LitElement) {
                 <div class="status-icon">
                   <span class="icon-wrapper" style="${status.iconContainerStyles}">
                     <span>${this._getTrueIndex(index)}</span>
-                    <iron-icon class="done-icon" icon="done"></iron-icon>
-                    <iron-icon class="custom-icon" icon="${status.icon}" style="${status.iconStyles}"></iron-icon>
+                    <etools-icon class="done-icon" name="done"></etools-icon>
+                    <etools-icon class="custom-icon" name="${status.icon}" style="${status.iconStyles}"></etools-icon>
                   </span>
                 </div>
                 <div class="status">
@@ -73,8 +72,12 @@ export class EtoolsStatus extends connect(store)(LitElement) {
   @property({type: Boolean})
   showInfoIcon = false;
 
-  private _statusChangedDebouncer!: Debouncer;
-  private _actionsOptionsChangedDebouncer!: Debouncer;
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    this._computeAvailableStatuses = debounce(this._computeAvailableStatuses.bind(this), 20) as any;
+    this._handleActionsChanged = debounce(this._handleActionsChanged.bind(this), 20) as any;
+  }
 
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('statuses')) {
@@ -117,23 +120,15 @@ export class EtoolsStatus extends connect(store)(LitElement) {
   }
 
   _handleStatusChanged(statuses: Status[]) {
-    this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer, timeOut.after(10), () => {
-      this._computeAvailableStatuses(statuses);
-    });
+    this._computeAvailableStatuses(statuses);
   }
 
   _handleActionsChanged() {
-    this._actionsOptionsChangedDebouncer = Debouncer.debounce(
-      this._actionsOptionsChangedDebouncer,
-      timeOut.after(10),
-      () => {
-        let hidden = true;
-        this.actions.forEach((elem: StatusAction) => {
-          hidden = elem.hidden && hidden;
-        });
-        this.hideActions = hidden;
-      }
-    );
+    let hidden = true;
+    this.actions.forEach((elem: StatusAction) => {
+      hidden = elem.hidden && hidden;
+    });
+    this.hideActions = hidden;
   }
 
   _getStatusIcon(icon: string) {

@@ -1,4 +1,3 @@
-declare const dayjs: any;
 import Dexie from 'dexie';
 import {store} from '../../../../redux/store';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -6,11 +5,15 @@ import {setPartners} from '../../../../redux/actions/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {customElement, LitElement, property} from 'lit-element';
-import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 
+import ListDataMixinLit from '../../../common/mixins/list-data-mixin-lit';
+import dayjs from 'dayjs';
+import dayJsUtc from 'dayjs/plugin/utc';
+dayjs.extend(dayJsUtc);
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ListDataMixin
@@ -126,11 +129,11 @@ export class PartnersListData extends ListDataMixinLit(LitElement) {
         if (searchString && searchString.length) {
           let vnMatch = true;
           if (partner.vendor_number) {
-            vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
+            vnMatch = partner?.vendor_number?.toString().toLowerCase().indexOf(searchString) < 0;
           }
           if (
-            partner.name.toLowerCase().indexOf(searchString) < 0 &&
-            partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+            partner?.name?.toLowerCase().indexOf(searchString) < 0 &&
+            partner?.short_name?.toLowerCase().indexOf(searchString) < 0 &&
             vnMatch
           ) {
             return false;

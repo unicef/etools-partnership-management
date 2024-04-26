@@ -1,22 +1,24 @@
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints';
-import {repeat} from 'lit-html/directives/repeat';
+import {repeat} from 'lit/directives/repeat.js';
 import {translate} from 'lit-translate';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
@@ -32,7 +34,8 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
     return html`
       <style>
         ${sharedStyles} ${dataTableStylesLit} :host {
-          @apply --layout-flex;
+          flex: 1;
+          flex-basis: 0.000000001px;
         }
 
         .monitoring-visits-container {

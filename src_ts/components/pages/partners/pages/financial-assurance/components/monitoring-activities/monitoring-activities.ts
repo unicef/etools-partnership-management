@@ -1,25 +1,27 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-content-panel';
-import '@unicef-polymer/etools-loading';
-import '@polymer/paper-icon-button';
-import '@polymer/paper-button';
-import '@polymer/iron-icons/editor-icons';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {getUniqueId} from '@unicef-polymer/etools-utils/dist/general.util';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import clone from 'lodash-es/clone';
 import {monitoringActivitiesStyles} from './monitoring-activities.styles';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {Partner} from '../../../../../../../models/partners.models';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../../endpoints/endpoints';
 import {translate} from 'lit-translate';
+
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -51,8 +53,8 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
       >
         ${this.showEditBtn(this.activities, this.isReadonly)
           ? html` <div slot="panel-btns">
-              <paper-icon-button icon="create" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
-              </paper-icon-button>
+              <etools-icon-button name="create" title="${translate('GENERAL.EDIT')}" @click="${this.startEdit}">
+              </etools-icon-button>
             </div>`
           : html``}
 
@@ -86,12 +88,12 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
                 data-activity-id="${activity.id}"
               >
                 <div class="flex-2 cell">
-                  <iron-icon
+                  <etools-icon
                     ?hidden="${!this.editMode}"
                     class="flex-none"
-                    icon="editor:drag-handle"
+                    name="editor:drag-handle"
                     @mousedown="${this.startDrag}"
-                  ></iron-icon>
+                  ></etools-icon>
                   ${this.editMode
                     ? html`${activity.reference_number}`
                     : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
@@ -109,8 +111,12 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">
-          <paper-button @click="${this.cancelEdit}">${translate('GENERAL.CANCEL')}</paper-button>
-          <paper-button raised class="save" @click="${this.saveGroups}">${translate('GENERAL.SAVE')}</paper-button>
+          <etools-button variant="text" class="neutral" @click="${this.cancelEdit}"
+            >${translate('GENERAL.CANCEL')}</etools-button
+          >
+          <etools-button variant="primary" raised @click="${this.saveGroups}"
+            >${translate('GENERAL.SAVE')}</etools-button
+          >
         </div>
       </etools-content-panel>
     `;

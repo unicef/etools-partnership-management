@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import './disaggregation-field.js';
 import {appGridStyles} from './styles/app-grid-styles';
 import UtilsMixin from '../../../../../../common/mixins/utils-mixin';
@@ -6,7 +7,7 @@ import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  */
@@ -42,8 +43,6 @@ export class DisaggregationTableCellPercentage extends UtilsMixin(LitElement) {
         }
 
         .computed-value {
-          @apply --app-grid-expandible-item;
-
           color: var(--secondary-text-color);
         }
       </style>
@@ -54,7 +53,7 @@ export class DisaggregationTableCellPercentage extends UtilsMixin(LitElement) {
         <div class="item">
           <span>${this._formatNumber(this.data?.d, '-', 0, ',')}</span>
         </div>
-        <div class="computed-value">${this._toPercentage(this.data?.c)}</div>
+        <div class="computed-value app-grid-expandible-item">${this._toPercentage(this.data?.c)}</div>
       </div>
     `;
   }

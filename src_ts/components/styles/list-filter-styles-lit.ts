@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const listFilterStyles = html` <style>
@@ -63,11 +63,7 @@ export const listFilterStyles = html` <style>
     align-items: center;
     cursor: pointer;
     font-weight: normal;
-    font-size: 16px;
-  }
-
-  #hiddenToggle paper-toggle-button {
-    margin-inline-start: 10px;
+    font-size: var(--etools-font-size-16, 16px);
   }
 
   .fixed-controls {
@@ -85,49 +81,12 @@ export const listFilterStyles = html` <style>
   #filterMenu {
     max-width: 126px;
     padding: 0;
-    --paper-menu-button-content: {
-      overflow-x: hidden !important;
-    }
   }
 
   #filterMenu .button {
     color: var(--list-primary-color, #40c4ff);
     font-weight: 500;
     margin: 0;
-  }
-
-  #filterMenu .button iron-icon {
-    margin-inline-end: 5px;
-  }
-
-  #filterMenu paper-listbox {
-    min-width: 250px;
-  }
-
-  #filterMenu paper-icon-item {
-    --paper-item-icon-width: auto;
-
-    --paper-item-selected: {
-      font-weight: normal !important;
-    }
-  }
-
-  #filterMenu paper-icon-item[selected] {
-    font-weight: normal !important;
-    background: var(--esmm-list-item-selected-color, #dcdcdc);
-    --paper-item-icon: {
-      margin-inline-end: 16px;
-    }
-  }
-
-  paper-icon-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    min-height: 48px;
-    box-sizing: border-box;
-    width: 100%;
   }
 
   .clear-all-filters {

@@ -625,5 +625,15 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Invalid Vendor Number for new partner!",
   "IMPORTING_PARTNER_INFO": "Importing partner information...",
   "PLEASE_REFRESH_DATA": "Please refresh data!",
-  "SUPPORT": "Support"
+  "SUPPORT": "Support",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Rate the overall progress of this PD/SPD in light of this report and monitoring visits.",
+  "MET": "Met",
+  "ON_TRACK": "On Track",
+  "NO_PROGRESS": "No Progress",
+  "CONSTRAINED": "Constrained",
+  "FEEDBACK_COMMENTS": "Feedback/Comments",
+  "REPORT_FOR": "Report for",
+  "RATE_ACCEPT_REPORT": "Rate & Accept Report",
+  "SENDING_RATING": "Sending rating...",
+  "NO_REPORTING_PERIOD": "No reporting period"
 }

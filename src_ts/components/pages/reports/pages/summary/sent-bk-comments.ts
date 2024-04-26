@@ -1,13 +1,14 @@
-import {LitElement, html, property, customElement} from 'lit-element';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '../../../../common/components/etools-form-element-wrapper';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 
 /*
  * @customElement
- * @polymer
+ * @LitElement
  */
 @customElement('sent-bk-comments')
 export class SentBkComments extends LitElement {
@@ -17,23 +18,21 @@ export class SentBkComments extends LitElement {
         :host {
           display: block;
         }
-        etools-dialog::part(ed-title) {
-          border-bottom: solid 1px var(--dark-divider-color);
-        }
       </style>
 
       <etools-dialog
-        opened
         @close="${this._onClose}"
         dialog-title="${translate('SENT_BACK_COMMENTS')}"
         size="md"
         hide-confirm-btn
       >
-        <etools-form-element-wrapper2
+        <etools-input
+          readonly
+          placeholder="—"
           .label="${this._getHeading(this.report.review_date, this.report.reviewed_by_name)}"
           .value="${this.report.sent_back_feedback}"
         >
-        </etools-form-element-wrapper2>
+        </etools-input>
       </etools-dialog>
     `;
   }

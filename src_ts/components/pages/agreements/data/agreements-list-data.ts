@@ -1,8 +1,8 @@
-import {customElement, LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import ListDataMixin from '../../../common/mixins/list-data-mixin-lit';
 import {store} from '../../../../redux/store';
 
-declare const dayjs: any;
 import Dexie from 'dexie';
 
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -10,9 +10,11 @@ import {setAgreements} from '../../../../redux/actions/agreements';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
-
+import dayjs from 'dayjs';
+import dayJsUtc from 'dayjs/plugin/utc';
+dayjs.extend(dayJsUtc);
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin ListDataMixin

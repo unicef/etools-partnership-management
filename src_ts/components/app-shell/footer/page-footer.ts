@@ -1,9 +1,9 @@
-import {html, LitElement} from 'lit-element';
+import {html, LitElement} from 'lit';
 import {BASE_URL} from '../../../config/config';
 
 /**
  * page footer element
- * @polymer
+ * @LitElement
  * @customElement
  */
 class PageFooter extends LitElement {
@@ -37,7 +37,7 @@ class PageFooter extends LitElement {
 
         #unicef-logo img {
           height: 28px;
-          width: 118px;
+          width: 115px;
         }
 
         .footer-link {
@@ -59,7 +59,7 @@ class PageFooter extends LitElement {
       <footer>
         <div id="footer-content">
           <span id="unicef-logo">
-            <img src="${BASE_URL}images/UNICEF_logo.png" alt="UNICEF logo" />
+            <img src="${BASE_URL}assets/images/UNICEF_logo.webp" alt="UNICEF logo" />
           </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>

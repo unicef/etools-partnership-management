@@ -1,13 +1,15 @@
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {AnyObject, Constructor, User} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {get as getTranslation} from 'lit-translate';
 
 /**
- * @polymerMixin
+ * @LitElementMixin
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
@@ -25,16 +27,16 @@ function ReportDetailsMixin<T extends Constructor<LitElement>>(baseClass: T) {
     @property({type: Array})
     reportActions = [
       {
-        label: 'Accept',
+        label: getTranslation('ACCEPT'),
         primary: true,
         event: 'accept-report'
       },
       {
-        label: 'Send back to partner',
+        label: getTranslation('SEND_BACK_TO_PARTNER'),
         event: 'send-back-to-partner'
       },
       {
-        label: 'Download',
+        label: getTranslation('DOWNLOAD'),
         event: 'download-report'
       }
     ];

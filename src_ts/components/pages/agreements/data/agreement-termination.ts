@@ -1,10 +1,11 @@
-import {LitElement, html, property, customElement} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
 import CommonMixinLit from '../../../common/mixins/common-mixin-lit';
 import pmpEndpoints from '../../../endpoints/endpoints';
-import '@unicef-polymer/etools-dialog/etools-dialog';
-import '@unicef-polymer/etools-upload/etools-upload';
-import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-warn-message';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
@@ -17,7 +18,7 @@ import CONSTANTS from '../../../../config/app-constants';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
@@ -44,10 +45,10 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         no-padding
         keep-dialog-open
         id="agreementTermination"
-        opened
         size="md"
         ?hidden="${this.warningOpened}"
         .okBtnText="${translate('TERMINATE')}"
+        confirmBtnVariant="danger"
         dialog-title="${translate('TERMINATE_AGREEMENT')}"
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._triggerAgreementTermination}"
@@ -86,9 +87,6 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
 
   @property({type: Number})
   agreementId!: number;
-
-  @property({type: Boolean})
-  opened!: boolean;
 
   @property({type: Boolean})
   warningOpened!: boolean;

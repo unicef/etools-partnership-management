@@ -1,9 +1,7 @@
-import {LitElement, html, property, customElement} from 'lit-element';
-import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import '@unicef-polymer/etools-upload/etools-upload.js';
-
-import '../../../../../common/components/etools-form-element-wrapper';
-
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
@@ -18,14 +16,14 @@ export class SrDetails extends LitElement {
   render() {
     return html`
       ${sharedStyles}
-      <style include="paper-material-styles">
+      <style>
         :host {
           display: block;
           background-color: var(--primary-background-color);
         }
-        iron-label {
+        label {
           display: block;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           color: var(--secondary-text-color);
         }
 
@@ -36,14 +34,19 @@ export class SrDetails extends LitElement {
 
       <div class="paper-material elevation" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper2 label="${translate('NARRATIVE')}" .value="${this.report?.narrative}">
-          </etools-form-element-wrapper2>
+          <etools-textarea
+            readonly
+            placeholder="—"
+            label="${translate('NARRATIVE')}"
+            .value="${this.report?.narrative}"
+          >
+          </etools-textarea>
         </div>
         <div class="row-padding">
           ${(this.reportAttachments || []).map(
             (item: AnyObject, index: number) => html`
               <div class="att">
-                <iron-label for="file_${index}">${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')}</iron-label>
+                <label for="file_${index}">${getTranslatedValue(item.type, 'COMMON_DATA.FILETYPES')}</label>
                 <a class="primary" id="file_${index}" href="${item.path}" target="_blank">${item.file_name}</a>
               </div>
             `

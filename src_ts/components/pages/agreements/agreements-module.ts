@@ -1,7 +1,6 @@
-import {LitElement, html, property, query, customElement} from 'lit-element';
-import '@polymer/iron-pages/iron-pages';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-button/paper-button.js';
+import {LitElement, html} from 'lit';
+import {property, query, customElement, state} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
@@ -17,7 +16,6 @@ import '../../common/components/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
@@ -28,12 +26,13 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation, langChanged} from 'lit-translate';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AgreementDetails} from './pages/details/agreement-details';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
@@ -45,7 +44,7 @@ const AgreementsModuleRequiredMixins = MatomoMixin(
 );
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
@@ -54,7 +53,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   render() {
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
@@ -73,18 +72,23 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
-            <a target="_blank" href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Agreements export">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+            <etools-button
+              class="neutral"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Agreements export"
+            >
+              <etools-icon name="file-download" slot="prefix"></etools-icon>
+              ${translate('EXPORT')}
+            </etools-button>
           </div>
           <div class="action" ?hidden="${!this._showNewAgreementAddButton(this.listActive, this.permissions)}">
-            <paper-button class="primary-btn with-prefix" @click="${this._goToNewAgreementPage}">
-              <iron-icon icon="add"></iron-icon>
+            <etools-button variant="primary" @click="${this._goToNewAgreementPage}">
+              <etools-icon name="add" slot="prefix"></etools-icon>
               ${translate('ADD_NEW_AGREEMENT')}
-            </paper-button>
+            </etools-button>
           </div>
         </div>
       </page-content-header>
@@ -202,21 +206,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   @property({type: Object})
   prevRouteDetails!: any;
 
+  @state() isInitialLoading = true;
+
   connectedCallback() {
     super.connectedCallback();
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
 
     this._initListeners();
     if (this.newAgreementActive) {
       // Useful when refreshing the page
       this.agreement = new Agreement();
     }
-    // fire agreement page loading message
-    this._showAgreementsPageLoadingMessage();
   }
 
   disconnectedCallback() {
@@ -230,6 +229,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
     if (!state.app?.routeDetails!.subRouteName) {
       EtoolsRouter.replaceAppLocation('/pmp/agreements/list');
+    }
+
+    if (this.isInitialLoading) {
+      this.isInitialLoading = false;
+      this._hideMainLoading();
     }
 
     const routeDetails = state.app?.routeDetails;
@@ -255,16 +259,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   _initListeners() {
     this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
-    this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
+    // this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
 
     this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
-    this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+    // this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
     this._newAgreementSaved = this._newAgreementSaved.bind(this);
   }
 
   _removeListeners() {
     this.removeEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
-    this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+    // this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
   }
 
   _showNewAgreementAddButton(listActive: boolean, permissions: UserPermissions) {
@@ -336,7 +340,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     // go to new agreement
     this.agreement = new Agreement();
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
-    this._handleAgreementSelectionLoadingMsg();
+    // this._handleAgreementSelectionLoadingMsg();
   }
 
   saveAmendment(event: CustomEvent) {
@@ -515,19 +519,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     });
   }
 
-  _handleTabSelectAction(e: CustomEvent) {
-    this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
-  }
-
-  _handleAgreementSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
-  }
+  // _handleAgreementSelectionLoadingMsg() {
+  //   this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
+  // }
 
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-  _showAgreementsPageLoadingMessage() {
+  _hideMainLoading() {
+    // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'ag-page'
+      active: false,
+      loadingSource: 'main-page'
     });
   }
 

@@ -1,9 +1,6 @@
-import {LitElement, html, property, customElement, PropertyValues} from 'lit-element';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-tabs/paper-tab.js';
-import '@polymer/paper-tabs/paper-tabs.js';
-import '@polymer/app-layout/app-grid/app-grid-style.js';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
@@ -11,14 +8,16 @@ import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparis
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {appGridStyles} from './disaggregations/styles/app-grid-styles';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 import {translate} from 'lit-translate';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
@@ -54,8 +53,8 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         }
 
         .tab-header {
-          @apply --layout-horizontal;
-          @apply --layout-justified;
+          display: flex;
+          justify-content: space-between;
           padding: 10px 24px;
           border-bottom: 1px solid var(--dark-divider-color);
           background-color: var(--light-theme-background-color);
@@ -63,7 +62,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
 
         .tab-header dl {
           margin: 0;
-          font-size: 12px;
+          font-size: var(--etools-font-size-12, 12px);
           color: var(--primary-text-color);
         }
 
@@ -76,7 +75,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
         .tab-header dt:first-of-type,
         .tab-header dd:first-of-type {
           font-weight: bold;
-          font-size: 13px;
+          font-size: var(--etools-font-size-13, 13px);
         }
 
         .tab-header dt:last-of-type,
@@ -93,79 +92,94 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
           max-height: 500px;
           overflow: auto;
         }
+        sl-tab-group {
+          --indicator-color: var(--primary-color);
+        }
+        sl-tab-group::part(tabs) {
+          border-bottom: 0;
+        }
+        sl-tab-group::part(active-tab-indicator) {
+          bottom: 0;
+        }
+        sl-tab:not([active])::part(base) {
+          color: var(--secondary-text-color);
+        }
+        sl-tab::part(base) {
+          text-transform: uppercase;
+          opacity: 0.8;
+        }
+        sl-tab::part(base):focus-visible {
+          outline: 0;
+          opacity: 1;
+          font-weight: 700;
+        }
       </style>
 
       <etools-loading ?active="${this.loading}"></etools-loading>
 
-      <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
-
       ${!this.loading
-        ? html`<paper-tabs
-            .selected="${this.selected}"
-            @selected-changed="${this.onSelectedTabChanged}"
-            selectable="paper-tab"
-            scrollable
-          >
+        ? html`<sl-tab-group @sl-tab-show="${this.onSelectedTabChanged}">
             ${(this.locationData || []).map(
-              (topLevelLocation: any) => html`<paper-tab>
+              (topLevelLocation: any, index: number) => html` <sl-tab
+                slot="nav"
+                panel="tab_${index}"
+                ?active="${this.selectedTab === `tab_${index}`}"
+              >
                 <report-status .status="${this._computeLocationStatus(topLevelLocation)}" no-label></report-status>
                 ${topLevelLocation.title}
-              </paper-tab>`
+              </sl-tab>`
             )}
-          </paper-tabs>`
+          </sl-tab-group>`
         : ''}
+      ${(this.locationData || []).map(
+        (topLevelLocation: any, index: number) => html`
+          <div name="tab_${index}" ?hidden="${!this.isActiveTab(this.selectedTab, `tab_${index}`)}">
+            ${topLevelLocation.byEntity.map(
+              (location: any) => html`
+                <div>
+                  <div class="tab-header">
+                    <dl>
+                      ${this._equals(location.display_type, 'number')
+                        ? html`
+                            <dt>
+                              ${translate('LOCATION_PROGRESS_AGAINST')} ${location.reporting_entity.title}
+                              ${translate('TARGET_LOWCASE')}:
+                            </dt>
+                            <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
+                            <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
+                            <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
+                          `
+                        : html` <dt>${translate('LOCATION_PROGRESS')}:</dt>
+                            <dd>
+                              ${this._formatIndicatorValue(location.display_type, location.location_progress.c, true)}
+                            </dd>
+                            <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
+                            <dd>
+                              ${this._formatIndicatorValue(
+                                location.display_type,
+                                location.previous_location_progress?.c,
+                                true
+                              )}
+                            </dd>`}
+                    </dl>
+                  </div>
 
-      <iron-pages .selected="${this.selected}">
-        ${(this.locationData || []).map(
-          (topLevelLocation: any) => html`
-            <div>
-              ${topLevelLocation.byEntity.map(
-                (location: any) => html`
-                  <div>
-                    <div class="tab-header">
-                      <dl>
-                        ${this._equals(location.display_type, 'number')
-                          ? html`
-                              <dt>
-                                ${translate('LOCATION_PROGRESS_AGAINST')} ${location.reporting_entity.title}
-                                ${translate('TARGET_LOWCASE')}:
-                              </dt>
-                              <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
-                              <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
-                              <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
-                            `
-                          : html` <dt>${translate('LOCATION_PROGRESS')}:</dt>
-                              <dd>
-                                ${this._formatIndicatorValue(location.display_type, location.location_progress.c, true)}
-                              </dd>
-                              <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
-                              <dd>
-                                ${this._formatIndicatorValue(
-                                  location.display_type,
-                                  location.previous_location_progress?.c,
-                                  true
-                                )}
-                              </dd>`}
-                      </dl>
-                    </div>
-
-                    <div class="table-container app-grid">
-                      <div class="item">
-                        <disaggregation-table
-                          .data="${location}"
-                          .mapping="${this.indicatorReport.disagg_lookup_map}"
-                          .labels="${this.indicatorReport.labels}"
-                        >
-                        </disaggregation-table>
-                      </div>
+                  <div class="table-container app-grid">
+                    <div class="item">
+                      <disaggregation-table
+                        .data="${location}"
+                        .mapping="${this.indicatorReport.disagg_lookup_map}"
+                        .labels="${this.indicatorReport.labels}"
+                      >
+                      </disaggregation-table>
                     </div>
                   </div>
-                `
-              )}
-            </div>
-          `
-        )}
-      </iron-pages>
+                </div>
+              `
+            )}
+          </div>
+        `
+      )}
     `;
   }
 
@@ -178,8 +192,8 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
   @property({type: Boolean})
   loading = false;
 
-  @property({type: Number})
-  selected = 0;
+  @property({type: String})
+  selectedTab = 'tab_0';
 
   @property({type: Boolean, reflect: true})
   isClusterIndicator = false;
@@ -188,7 +202,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
   locationData!: any[];
 
   onSelectedTabChanged(e: CustomEvent) {
-    this.selected = e.detail.value;
+    this.selectedTab = e.detail.name;
   }
 
   updated(changedProperties: PropertyValues) {
@@ -232,6 +246,10 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
 
   _hideLoading() {
     this.loading = false;
+  }
+
+  isActiveTab(tab: string, expectedTab: string): boolean {
+    return tab === expectedTab;
   }
 
   _computeParams(indicatorReportId: string) {

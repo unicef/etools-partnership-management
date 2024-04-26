@@ -1,22 +1,18 @@
-import {html, LitElement, property} from 'lit-element';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-button/paper-button.js';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin GestureEventListeners
  */
 /* eslint-disable new-cap */
-class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
+class EtoolsErrorMessagesBox extends LitElement {
   render() {
     // language=HTML
     return html`
-      ${buttonsStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -26,7 +22,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
           display: flex;
           flex-direction: row;
           flex: 1;
-          @apply --etools-error-messages-box;
         }
 
         :host([hidden]) {
@@ -63,10 +58,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
           justify-content: flex-end;
         }
 
-        paper-button {
-          margin: 0;
-        }
-
         .cancel-li-display {
           display: block;
         }
@@ -83,7 +74,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(LitElement) {
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn" @tap="${this._resetErrors}"> Ok </paper-button>
+          <etools-button variant="danger" @click="${this._resetErrors}"> Ok </etools-button>
         </div>
       </etools-content-panel>
     `;

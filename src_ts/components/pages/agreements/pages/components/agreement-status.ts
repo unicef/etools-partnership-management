@@ -1,5 +1,6 @@
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
-import '@polymer/iron-icons/av-icons.js';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import CONSTANTS from '../../../../../config/app-constants';
 import EtoolsStatusCommonMixin from '../../../../common/components/etools-status/etools-status-common-mixin-lit';
 import '../../../../common/components/etools-status/etools-status';
@@ -11,7 +12,7 @@ import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
@@ -140,14 +141,18 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED'),
         icon: 'av:pause-circle-filled',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-29, 29px); color: ' +
+          this.getComputedStyleValue('--warning-color'),
         hidden: false,
         completed: false
       },
       {
         label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.TERMINATED'),
         icon: 'report-problem',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-29, 29px); color: ' +
+          this.getComputedStyleValue('--error-color'),
         hidden: false,
         completed: false
       },

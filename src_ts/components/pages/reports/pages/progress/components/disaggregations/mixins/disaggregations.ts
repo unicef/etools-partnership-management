@@ -1,11 +1,9 @@
-import {LitElement} from 'lit-element';
+import {LitElement} from 'lit';
 import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
-
-// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 /**
  * Disaggregation table mixin
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function DisaggregationsMixin<T extends Constructor<LitElement>>(baseClass: T) {

@@ -5,7 +5,9 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 
 /**
@@ -19,10 +21,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       <style>
         :host {
           width: 100%;
-          --etools-status-container: {
-            height: auto;
-            min-height: 40px;
-          }
+
           --etools-status-label-style: {
             font-weight: normal;
             width: 120px;
@@ -138,7 +137,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.NOTSYNCED'),
         icon: 'info',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
         completed: false
@@ -146,7 +147,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION'),
         icon: 'autorenew',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
         completed: false
@@ -154,7 +157,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.BLOCKEDINVISION'),
         icon: 'block',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
         completed: false
@@ -162,7 +167,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION'),
         icon: 'delete-forever',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-28, 28px); color: ' +
+          this.getComputedStyleValue('--error-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
         completed: false
@@ -211,6 +218,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         }
       }
     }
+    this.possibleActions = [...this.possibleActions];
   }
   _computeAvailableStatuses() {
     let activeStatus;

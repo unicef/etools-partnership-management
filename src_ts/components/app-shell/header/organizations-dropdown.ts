@@ -1,31 +1,33 @@
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {customElement, LitElement, html, property, query} from 'lit-element';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import {LitElement, html} from 'lit';
+import {property, query, customElement} from 'lit/decorators.js';
 
-import {fireEvent} from '@unicef-polymer/etools-modules-common/dist/utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsUser} from '@unicef-polymer/etools-types';
-import EtoolsPageRefreshMixinLit from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin-lit.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {get as getTranslation, translate} from 'lit-translate';
-import {isEmptyObject} from '@unicef-polymer/etools-modules-common/dist/utils/utils';
+import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../endpoints/endpoints.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {headerDropdownStyles} from './header-dropdown-styles';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 
 /**
  * @LitElement
  * @customElement
  */
 @customElement('organizations-dropdown')
-export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixinLit(EndpointsLitMixin(LitElement))) {
+export class organizationsDropdown extends connect(store)(EndpointsLitMixin(LitElement)) {
   public render() {
     return html`
       ${headerDropdownStyles}
       <etools-dropdown
+        transparent
         ?hidden=${isEmptyObject(this.organizations)}
         id="organizationSelector"
         placeholder="${translate('SELECT_ORGANIZATION')}"
@@ -39,6 +41,10 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
         trigger-value-change-event
         @etools-selected-item-changed="${this.onOrganizationChange}"
         hide-search
+        min-width="160px"
+        placement="bottom-end"
+        .syncWidth="${false}"
+        auto-width
       ></etools-dropdown>
     `;
   }
@@ -56,11 +62,6 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
 
   public connectedCallback() {
     super.connectedCallback();
-
-    setTimeout(() => {
-      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      this.organizationSelectorDropdown.fitInto = fitInto;
-    }, 0);
   }
 
   public stateChanged(state: RootState) {
@@ -118,14 +119,14 @@ export class organizationsDropdown extends connect(store)(EtoolsPageRefreshMixin
 
   protected _handleResponse() {
     // clear Dexie and storage
-    this.refresh();
-    this.clearLocalStorage();
+    DexieRefresh.refresh();
+    DexieRefresh.clearLocalStorage();
 
     history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
   }
 
   protected _handleError(error: any) {
-    logError('organization change failed!', 'organization-dropdown', error);
+    EtoolsLogger.error('organization change failed!', 'organization-dropdown', error);
     this.organizationSelectorDropdown.selected = this.currentOrganizationId;
     fireEvent(this, 'toast', {text: 'Something went wrong changing your organization. Please try again'});
     fireEvent(this, 'global-loading', {

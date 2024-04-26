@@ -1,12 +1,11 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-
-import {LitElement, property, PropertyValues} from 'lit-element';
+import {LitElement, PropertyValues} from 'lit';
+import {property} from 'lit/decorators.js';
 import {BASE_URL} from '../../../config/config';
 import {Route} from '../../../typings/route.types';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 /**
  * Module main elements common functionality
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function ModuleRoutingMixinLit<T extends Constructor<LitElement>>(baseClass: T) {
