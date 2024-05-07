@@ -77,7 +77,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   get deleteWarningMessage() {
     return getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {
-      partner: this.partner.name
+      partner: this.partner?.name
     });
   }
 
@@ -87,7 +87,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     listenForLangChanged(() => {
       this.setPossibleActions();
       this.setPossibleStatuses();
-      this._computeAvailableActions(this.partner.hidden, this.editMode);
+      this._computeAvailableActions(this.partner?.hidden, this.editMode);
     });
     this.addEventListener('delete-confirmed', this._dialogConfirmationCallback.bind(this) as any);
   }
@@ -112,15 +112,15 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   updated(changedProperties: PropertyValues) {
     if ((changedProperties.has('partner') || changedProperties.has('possibleStatuses')) && this.partner) {
       this._partnerStatusChanged(
-        this.partner.vision_synced,
-        this.partner.deleted_flag,
-        this.partner.blocked,
+        this.partner?.vision_synced,
+        this.partner?.deleted_flag,
+        this.partner?.blocked,
         this.possibleStatuses
       );
     }
 
     if ((changedProperties.has('partner') || changedProperties.has('editMode')) && this.partner) {
-      this._computeAvailableActions(this.partner.hidden, this.editMode);
+      this._computeAvailableActions(this.partner?.hidden, this.editMode);
     }
   }
 
@@ -199,7 +199,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     if (!this.editMode) {
       return;
     }
-    fireEvent(this, 'delete-partner', {id: this.partner.id});
+    fireEvent(this, 'delete-partner', {id: this.partner?.id});
   }
 
   _computeAvailableActions(_hidden: boolean, editMode: boolean) {
@@ -250,25 +250,25 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   }
   _showSyncedStatus() {
     return (
-      this.partner.vision_synced === true &&
-      this.partner.deleted_flag === false &&
-      (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)
+      this.partner?.vision_synced === true &&
+      this.partner?.deleted_flag === false &&
+      (typeof this.partner?.blocked === 'undefined' || this.partner?.blocked === false)
     );
   }
 
   _showBlockedStatus() {
     return (
-      this.partner.deleted_flag === false &&
-      typeof this.partner.blocked !== 'undefined' &&
-      this.partner.blocked === true
+      this.partner?.deleted_flag === false &&
+      typeof this.partner?.blocked !== 'undefined' &&
+      this.partner?.blocked === true
     );
   }
 
   _showMakedForDeletionStatus() {
-    return this.partner.deleted_flag;
+    return this.partner?.deleted_flag;
   }
 
   _showNotSyncedStatus() {
-    return this.partner.vision_synced === false;
+    return this.partner?.vision_synced === false;
   }
 }
