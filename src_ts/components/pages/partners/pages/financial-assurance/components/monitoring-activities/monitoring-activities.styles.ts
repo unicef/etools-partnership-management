@@ -134,6 +134,7 @@ export const monitoringActivitiesStyles = html`<style>
     align-items: center;
     justify-content: flex-end;
     margin-inline-end: 15px;
+    margin-block-start: 12px;
     margin-bottom: 15px;
   }
   .cell:not(:last-of-type) {

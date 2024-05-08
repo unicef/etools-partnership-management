@@ -94,16 +94,22 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
       });
     }
     // WARN: Fix for .orderBy excluding items with null values in 'field' property
-    if (field) {
-      await window.EtoolsPmpApp.DexieDb.interventions
-        .filter(function (i: any) {
-          return i[field] == null;
-        })
-        .modify({[field]: ''});
-    }
+    // if (field) {
+    //   await window.EtoolsPmpApp.DexieDb.interventions
+    //     .filter(function (i: any) {
+    //       if (i[field] == null) {
+    //         console.log(`field is null ${field}`, i);
+    //       }
+    //       return i[field] == null;
+    //     })
+    //     .modify({[field]: ''});
+    // }
 
     this.waitForListDataRequestToFinish().then(() => {
       const interventionsDexieTable = window.EtoolsPmpApp.DexieDb.interventions;
+      // WARN: Fix for .orderBy excluding items with null values in 'field' property
+      this._updateNullField(field);
+
       window.EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function () {
         self.currentQuery = Dexie.currentTransaction;
 
@@ -233,5 +239,15 @@ export class InterventionsListData extends ListDataMixinLit(LitElement) {
         }
       }, 50);
     });
+  }
+
+  private _updateNullField(field: string) {
+    if (field) {
+      window.EtoolsPmpApp.DexieDb.interventions
+        .filter(function (i: any) {
+          return i[field] == null;
+        })
+        .modify({[field]: ''});
+    }
   }
 }

@@ -2,7 +2,7 @@
 import {LitElement, CSSResultArray, TemplateResult} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';

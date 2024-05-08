@@ -16,7 +16,7 @@ import {
   INCREASE_UNSAVED_UPLOADS
 } from '../../../../../redux/actions/upload-status';
 import {store, RootState} from '../../../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import '../../../../common/components/etools-cp-structure';
 import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
@@ -664,19 +664,6 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     }
   }
 
-  firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'ag-page'
-      });
-    }, 200);
-  }
-
   resetError(event: any): void {
     event.target.invalid = false;
   }
@@ -845,7 +832,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
         return parseInt(s.id) === selectedId || -1;
       });
       if (selectedPartner && selectedPartner.length) {
-        return selectedPartner[0];
+        return selectedPartner[0].name;
       }
     }
     return '';

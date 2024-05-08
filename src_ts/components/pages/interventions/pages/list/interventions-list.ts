@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -376,7 +376,7 @@ export class InterventionsList extends connect(store)(
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
 
-      if (state.interventions.shouldReGetList) {
+      if (state.interventions?.shouldReGetList) {
         getStore().dispatch(setShouldReGetList(false));
         const interventionsListElement = this.shadowRoot!.querySelector<InterventionsListData>('#interventions');
         if (interventionsListElement) {
@@ -437,7 +437,7 @@ export class InterventionsList extends connect(store)(
   }
 
   shouldReGetListBecauseOfEditsOnItems(state: RootState) {
-    return state.interventions.shouldReGetList;
+    return state.interventions?.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {

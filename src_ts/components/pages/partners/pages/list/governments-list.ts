@@ -1,6 +1,6 @@
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {customElement} from 'lit/decorators.js';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {getGovernmentFilters, GovernmentFiltersHelper} from './governments-filters';
 import {PartnersListBase} from './partners-list-base';
@@ -12,11 +12,6 @@ export class GovernmentsList extends connect(store)(PartnersListBase) {
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
-
     super.connectedCallback();
   }
   stateChanged(state: RootState): void {
@@ -24,6 +19,10 @@ export class GovernmentsList extends connect(store)(PartnersListBase) {
       return;
     }
 
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'partners-page'
+    });
     this.currentModule = 'government-partners';
     this.prevQueryStringObj.partner_types = 'Government';
     this.baseStateChanged(state);

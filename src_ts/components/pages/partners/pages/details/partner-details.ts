@@ -33,7 +33,7 @@ import {LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
 import {translate} from 'lit-translate';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
@@ -424,19 +424,6 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     return !attachment && !archived;
   }
 
-  firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'partners-page'
-      });
-    }, 200);
-  }
-
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('partner')) {
       this._partnerChanged(this.partner);
@@ -444,6 +431,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   public _partnerChanged(partner: any) {
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
+    }, 200);
     if (!isEmptyObject(partner)) {
       // decide if we should show core values assessment attachment
       this.showCoreValuesAssessmentAttachment = this._showCoreValueAssessment(partner.partner_type, partner.cso_type);

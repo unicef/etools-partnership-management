@@ -1,5 +1,5 @@
 import {LitElement, html, PropertyValues} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -23,7 +23,7 @@ import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-s
 import ReportDetailsMixin from './mixins/report-details-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
@@ -249,6 +249,8 @@ export class ReportsModule extends connect(store)(
   @property({type: String})
   currentLanguage!: string;
 
+  @state() isInitialLoading = true;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
     if (!state.app?.routeDetails?.routeName) {
@@ -261,6 +263,10 @@ export class ReportsModule extends connect(store)(
       this.tabsActive = !this.listActive;
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
+      if (this.isInitialLoading) {
+        this.isInitialLoading = false;
+        this._hideMainLoading();
+      }
       if (this.currentLanguage !== state.activeLanguage?.activeLanguage) {
         if (this.currentLanguage) {
           // language was already set, this is language change
@@ -285,25 +291,16 @@ export class ReportsModule extends connect(store)(
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-
+  _hideMainLoading() {
     // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
       active: false,
       loadingSource: 'main-page'
     });
-    /**
-     * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-     */
-    fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'reports-page'
-    });
+  }
 
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {active: false});
-    }, 100);
+  connectedCallback() {
+    super.connectedCallback();
     this.requestReportDetails = debounce(this.requestReportDetails.bind(this), 50) as any;
   }
 

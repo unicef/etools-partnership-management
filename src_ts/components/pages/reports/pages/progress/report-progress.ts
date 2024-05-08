@@ -17,7 +17,6 @@ import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
@@ -221,18 +220,6 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
 
   @property({type: Object})
   toggleFlags: GenericObject = {};
-
-  connectedCallback() {
-    super.connectedCallback();
-    /**
-     * Disable loading message for report progress tab elements load,
-     * triggered by parent element on stamp or by tap event on tabs
-     */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'reports-page'
-    });
-  }
 
   _computeIcon(opened: boolean) {
     return opened ? 'expand-less' : 'expand-more';

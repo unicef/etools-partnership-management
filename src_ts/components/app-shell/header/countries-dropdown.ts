@@ -1,4 +1,4 @@
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import UploadsMixin from '../../../components/common/mixins/uploads-mixin';
@@ -51,12 +51,6 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
             width: 100px;
           }
         }
-
-        @media (max-width: 768px) {
-          etools-dropdown {
-            width: 130px;
-          }
-        }
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
@@ -74,7 +68,9 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
         @etools-selected-item-changed="${this._countrySelected}"
         .shownOptionsLimit="${280}"
         hide-search
-        auto-width
+        min-width="160px"
+        placement="bottom-end"
+        .syncWidth="${false}"
       ></etools-dropdown>
     `;
   }

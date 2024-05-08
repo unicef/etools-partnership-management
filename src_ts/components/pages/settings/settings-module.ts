@@ -4,7 +4,6 @@ import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 
 /**
@@ -30,14 +29,5 @@ export class SettingsModule extends CommonMixinLit(LitElement) {
         </div>
       </div>
     `;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
   }
 }

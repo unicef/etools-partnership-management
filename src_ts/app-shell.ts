@@ -3,8 +3,7 @@
 Copyright (c) 2018 The eTools Project Authors. All rights reserved.
 */
 
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
+import {connect, installMediaQueryWatcher, installRouter} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 
 // This element is connected to the Redux store.
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
@@ -74,10 +73,9 @@ import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
@@ -184,13 +182,15 @@ class AppShell extends connect(store)(
             >
             </agreements-module>
 
-            <interventions-module
-              id="interventions"
-              class="main-page"
-              .userPermissions="${this.permissions}"
-              ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
-            >
-            </interventions-module>
+            ${this.interventionsLoaded
+              ? html`<interventions-module
+                  id="interventions"
+                  class="main-page"
+                  .userPermissions="${this.permissions}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
+                >
+                </interventions-module>`
+              : ``}
 
             <reports-module
               id="reports"
@@ -200,7 +200,7 @@ class AppShell extends connect(store)(
             >
             </reports-module>
 
-            <not-found class="main-page" ?hidden="${!this._activeModuleIs(this.module, 'not-found')}"></not-found>
+            ${this._activeModuleIs(this.module, 'not-found') ? html`<not-found class="main-page"></not-found>` : ``}
 
             <settings-module
               id="settings"
@@ -242,6 +242,9 @@ class AppShell extends connect(store)(
 
   set module(val: string) {
     if (val !== this._module) {
+      if (!this.interventionsLoaded) {
+        this.interventionsLoaded = val === 'interventions';
+      }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);
     }
@@ -301,6 +304,8 @@ class AppShell extends connect(store)(
   private translationFilesAreLoaded = false;
 
   @query('#drawer') private drawer!: LitElement;
+
+  @state() interventionsLoaded = false;
 
   constructor() {
     super();

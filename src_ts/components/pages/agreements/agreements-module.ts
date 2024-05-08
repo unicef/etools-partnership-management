@@ -1,5 +1,5 @@
 import {LitElement, html} from 'lit';
-import {property, query, customElement} from 'lit/decorators.js';
+import {property, query, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {RootState, store} from '../../../redux/store';
 
@@ -26,7 +26,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation, langChanged} from 'lit-translate';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {AgreementDetails} from './pages/details/agreement-details';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
@@ -206,21 +206,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
   @property({type: Object})
   prevRouteDetails!: any;
 
+  @state() isInitialLoading = true;
+
   connectedCallback() {
     super.connectedCallback();
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
 
     this._initListeners();
     if (this.newAgreementActive) {
       // Useful when refreshing the page
       this.agreement = new Agreement();
     }
-    // fire agreement page loading message
-    this._showAgreementsPageLoadingMessage();
   }
 
   disconnectedCallback() {
@@ -234,6 +229,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
     if (!state.app?.routeDetails!.subRouteName) {
       EtoolsRouter.replaceAppLocation('/pmp/agreements/list');
+    }
+
+    if (this.isInitialLoading) {
+      this.isInitialLoading = false;
+      this._hideMainLoading();
     }
 
     const routeDetails = state.app?.routeDetails;
@@ -259,16 +259,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
 
   _initListeners() {
     this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
-    this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
+    // this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
 
     this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
-    this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+    // this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
     this._newAgreementSaved = this._newAgreementSaved.bind(this);
   }
 
   _removeListeners() {
     this.removeEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
-    this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+    // this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
   }
 
   _showNewAgreementAddButton(listActive: boolean, permissions: UserPermissions) {
@@ -340,7 +340,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     // go to new agreement
     this.agreement = new Agreement();
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
-    this._handleAgreementSelectionLoadingMsg();
+    // this._handleAgreementSelectionLoadingMsg();
   }
 
   saveAmendment(event: CustomEvent) {
@@ -519,19 +519,16 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     });
   }
 
-  _handleTabSelectAction(e: CustomEvent) {
-    this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
-  }
-
-  _handleAgreementSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
-  }
+  // _handleAgreementSelectionLoadingMsg() {
+  //   this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
+  // }
 
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-  _showAgreementsPageLoadingMessage() {
+  _hideMainLoading() {
+    // deactivate main page loading msg triggered in app-shell
     fireEvent(this, 'global-loading', {
-      active: true,
-      loadingSource: 'ag-page'
+      active: false,
+      loadingSource: 'main-page'
     });
   }
 
