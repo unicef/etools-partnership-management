@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "أثناء تنفيذ البرنامج ، هل استجاب موظفو اليونيسف للاستفسارات وطلبات المساعدة التقنية في الوقت المناسب؟",
   "RESULTS_REPORTED": "تم الإبلاغ عن النتائج",
   "RESULTS_TO_SHOW": "{{from}} - {{to}} من {{count}} من النتائج المراد عرضها",
+  "SHOWING_RESULTS": "عرض {{count}} نتيجة",
   "RUSSIAN": "الروسية",
   "SAVE": "يحفظ",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "احفظ قبل إنشاء قالب PCA",

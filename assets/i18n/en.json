@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "During the course of programme implementation, did UNICEF staff respond to queries and requests for technical assistance in a timely manner?",
   "RESULTS_REPORTED": "Results Reported",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} of {{count}} results to show",
+  "SHOWING_RESULTS": "Showing {{count}} results",
   "RUSSIAN": "Russian",
   "SAVE": "Save",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Save before generating the PCA template",
