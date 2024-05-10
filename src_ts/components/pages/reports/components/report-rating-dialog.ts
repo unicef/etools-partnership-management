@@ -1,17 +1,19 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '@polymer/paper-radio-button/paper-radio-button.js';
-import '@polymer/paper-radio-group/paper-radio-group.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-radio/etools-radio-group';
+import '@shoelace-style/shoelace/dist/components/radio/radio.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-declare const dayjs: any;
+import dayjs from 'dayjs';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../redux/store';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {translate, get as getTranslation} from 'lit-translate';
 
 /*
   status: 'accepted'/'sent back'
@@ -19,7 +21,7 @@ import pmpEdpoints from '../../../endpoints/endpoints';
   comment: required when sending a report back
 */
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */
@@ -32,37 +34,34 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         [hidden] {
           display: none !important;
         }
-        paper-radio-group {
-          padding-bottom: 8px;
-        }
       </style>
       <etools-dialog
         id="reportRatingDialog"
         size="md"
         keep-dialog-open
-        opened
-        spinner-text="Sending rating..."
+        spinner-text="${translate('SENDING_RATING')}"
         ?disable-confirm-btn="${!this.selectedOverallStatus.length}"
         ok-btn-text="${this.okBtnText}"
-        dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
+        dialog-title="${translate('REPORT_FOR')} ${this.report.programme_document
+          .reference_number}: ${this.translateReportingPeriodText(this.report.reporting_period)}"
         ?show-spinner="${this.showSpinner}"
         @confirm-btn-clicked="${this.saveStatus}"
         @close="${this._onClose}"
       >
         <div id="content-box" ?hidden="${this.isSRReport}">
-          <p>Rate the overall progress of this PD/SPD in light of this report and monitoring visits.</p>
-          <paper-radio-group
+          <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
+          <etools-radio-group
             id="overallStatus"
-            .selected="${this.selectedOverallStatus}"
-            @selected-changed="${({detail}: CustomEvent) => {
-              this.selectedOverallStatus = detail.value;
+            .value="${this.selectedOverallStatus}"
+            @sl-change="${(e: any) => {
+              this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <paper-radio-button name="Met"> Met</paper-radio-button>
-            <paper-radio-button name="OnT"> On track</paper-radio-button>
-            <paper-radio-button name="NoP"> No progress</paper-radio-button>
-            <paper-radio-button name="Con"> Constrained</paper-radio-button>
-          </paper-radio-group>
+            <sl-radio value="Met"> ${translate('MET')}</sl-radio>
+            <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
+            <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
+            <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+          </etools-radio-group>
         </div>
       </etools-dialog>
     `;
@@ -96,7 +95,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   init() {
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
     this.selectedOverallStatus = this.isSRReport ? 'Met' : '';
-    this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
+    this.okBtnText = this.isSRReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
   }
 
   _onClose(): void {
@@ -106,7 +105,12 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   getCurrentDate() {
     return dayjs(new Date()).format('D-MMM-YYYY');
   }
-
+  translateReportingPeriodText(periodText: string) {
+    if (periodText === 'No reporting period') {
+      return getTranslation('NO_REPORTING_PERIOD');
+    }
+    return periodText;
+  }
   saveStatus() {
     const requestBody = {
       status: 'Acc',

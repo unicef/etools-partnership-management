@@ -1,4 +1,4 @@
-import {css, CSSResult} from 'lit-element';
+import {css, CSSResult} from 'lit';
 
 // language=css
 export const NewInterventionStyles: CSSResult = css`
@@ -15,7 +15,7 @@ export const NewInterventionStyles: CSSResult = css`
     padding: 0 35px;
     border-bottom: 1px solid var(--dark-divider-color);
     font-weight: 500;
-    font-size: 18px;
+    font-size: var(--etools-font-size-18, 18px);
     line-height: 50px;
     color: var(--dark-primary-text-color);
   }
@@ -39,20 +39,11 @@ export const NewInterventionStyles: CSSResult = css`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 20px;
   }
 
-  paper-toggle-button {
-    margin-top: 25px;
-  }
-
-  paper-button {
-    background-color: var(--light-disabled-text-color);
-    padding: 8px 20px;
+  etools-button {
     margin-inline-start: 24px;
-  }
-
-  .primary-btn {
-    background-color: var(--default-primary-color);
   }
 `;

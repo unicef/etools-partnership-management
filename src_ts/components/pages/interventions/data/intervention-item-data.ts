@@ -1,10 +1,10 @@
 import {store} from '../../../../redux/store';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {
@@ -19,7 +19,8 @@ import {
   Agreement,
   MinimalAgreement
 } from '@unicef-polymer/etools-types';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
@@ -27,7 +28,7 @@ import {get as getTranslation} from 'lit-translate';
 import {setShouldReGetList} from '../pages/intervention-tab-pages/common/actions/interventions';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
@@ -344,7 +345,7 @@ class InterventionItemData extends connect(store)(
     dexieObject.country_programmes = responseDetail.country_programmes;
     dexieObject.end = responseDetail.end;
     dexieObject.title = responseDetail.title;
-    dexieObject.start = responseDetail.start;
+    dexieObject.start = responseDetail.start || '';
     dexieObject.status = responseDetail.status;
     dexieObject.number = responseDetail.number;
     dexieObject.offices = responseDetail.offices;

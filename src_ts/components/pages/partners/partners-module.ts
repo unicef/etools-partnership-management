@@ -1,12 +1,11 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {LitElement, html, property, PropertyValues, customElement} from 'lit-element';
-import '@polymer/iron-icons/iron-icons';
-import '@polymer/paper-button/paper-button';
-import '@polymer/iron-pages/iron-pages';
+import {LitElement, html, PropertyValues} from 'lit';
+import {property, customElement, state} from 'lit/decorators.js';
 
-import {connect} from 'pwa-helpers/connect-mixin';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../redux/store';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
@@ -15,7 +14,6 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
-import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
@@ -23,7 +21,6 @@ import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../styles/buttons-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 import './data/partner-item-data.js';
@@ -41,12 +38,14 @@ import './pages/list/partners-list';
 import './pages/list/governments-list';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
+import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
- * @appliesMixin GestureEventListeners
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -57,12 +56,10 @@ import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/r
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   MatomoMixin(
-    GestureEventListeners(
-      CommonMixinLit(
-        // eslint-disable-next-line new-cap
-        ScrollControlMixinLit(
-          ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
-        )
+    CommonMixinLit(
+      // eslint-disable-next-line new-cap
+      ScrollControlMixinLit(
+        ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
       )
     )
   )
@@ -72,13 +69,34 @@ export class PartnersModule extends connect(store)(
     // main template
     // language=HTML
     return html`
-      ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      ${pageLayoutStyles} ${sharedStyles} ${pageContentHeaderSlottedStyles}
       <style>
         :host {
           display: block;
         }
         section {
           background-color: #eeeeee;
+        }
+        sl-tab-group {
+          --indicator-color: var(--primary-color);
+        }
+        sl-tab-group::part(tabs) {
+          border-bottom: 0;
+        }
+        sl-tab-group::part(active-tab-indicator) {
+          bottom: 0;
+        }
+        sl-tab:not([active])::part(base) {
+          color: var(--secondary-text-color);
+        }
+        sl-tab::part(base) {
+          text-transform: uppercase;
+          opacity: 0.8;
+        }
+        sl-tab::part(base):focus-visible {
+          outline: 0;
+          opacity: 1;
+          font-weight: 700;
         }
       </style>
 
@@ -92,33 +110,37 @@ export class PartnersModule extends connect(store)(
         </div>
 
         <div slot="title-row-actions" class="content-header-actions">
-          <div class="action" hidden>
-            <a target="_blank" .href="${this.csvDownloadUrl}" @tap="${this.trackAnalytics}" tracker="Export Partners">
-              <paper-button tabindex="-1">
-                <iron-icon icon="file-download"></iron-icon>
-                ${translate('EXPORT')}
-              </paper-button>
-            </a>
+          <div class="action" ?hidden="${!this.listActive}">
+            <etools-button
+              class="neutral"
+              variant="text"
+              target="_blank"
+              href="${this.csvDownloadUrl}"
+              @click="${this.trackAnalytics}"
+              tracker="Export Partners"
+              hidden
+            >
+              <etools-icon name="file-download"></etools-icon>
+              ${translate('EXPORT')}
+            </etools-button>
           </div>
           <div class="action" ?hidden="${!this._showNewPartnerBtn(this.listActive, this.permissions)}">
-            <paper-button
-              class="primary-btn with-prefix"
-              tracker="Import Sync Partner"
-              @click="${this._openNewPartnerDialog}"
-            >
-              <iron-icon icon="add"></iron-icon>
+            <etools-button variant="primary" tracker="Import Sync Partner" @click="${this._openNewPartnerDialog}">
+              <etools-icon name="add"></etools-icon>
               ${translate('IMPORT_SYNC_PARTNER')}
-            </paper-button>
+            </etools-button>
           </div>
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <etools-tabs-lit
-              slot="tabs"
-              .tabs="${this.partnerTabs}"
-              .activeTab="${this.reduxRouteDetails?.subRouteName}"
-              @iron-select="${this._handleTabSelectAction}"
-            ></etools-tabs-lit>`
+          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
+              ${this.partnerTabs?.map(
+                (t) =>
+                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
+                    >${t.tabLabel}</sl-tab
+                  >`
+              )}
+            </sl-tab-group>`
           : ''}
       </page-content-header>
 
@@ -241,21 +263,13 @@ export class PartnersModule extends connect(store)(
   @property({type: String})
   _page = '';
 
+  @state() isInitialLoading = true;
+
   public connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
     this.setPartnerTabs();
-
-    // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'main-page'
-    });
-    /**
-     * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-     */
-    this._showPartnersPageLoadingMessage();
   }
 
   setPartnerTabs() {
@@ -290,6 +304,10 @@ export class PartnersModule extends connect(store)(
       if (this.tabsActive && isNaN(this.selectedPartnerId)) {
         fireEvent(this, '404');
         return;
+      }
+      if (this.isInitialLoading) {
+        this.isInitialLoading = false;
+        this._showPartnersPageLoadingMessage();
       }
       this.activePage = this.reduxRouteDetails?.subRouteName!;
       this._page = this.reduxRouteDetails?.subRouteName!;
@@ -504,7 +522,7 @@ export class PartnersModule extends connect(store)(
 
   public _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (!this.partner || newTabName == this.activePage) {
       return;
     }
@@ -521,6 +539,11 @@ export class PartnersModule extends connect(store)(
    * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
    */
   public _showPartnersPageLoadingMessage() {
+    // deactivate main page loading msg triggered in app-shell
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     fireEvent(this, 'global-loading', {
       active: true,
       loadingSource: 'partners-page'

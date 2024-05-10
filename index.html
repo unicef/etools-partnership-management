@@ -1,11 +1,6 @@
 <!--
 @license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Can be accessed at ./LICENSE.txt
 -->
 
 <!DOCTYPE html>
@@ -27,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     -->
     <base href="/pmp/" />
 
-    <link rel="icon" href="images/favicon.ico" />
+    <link rel="icon" href="assets/images/favicon.ico" />
 
     <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="manifest.json" />
@@ -45,14 +40,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="apple-mobile-web-app-title" content="eTools PMP" />
 
     <!-- Homescreen icons -->
-    <link rel="apple-touch-icon" href="images/manifest/icon-48x48.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="images/manifest/icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="96x96" href="images/manifest/icon-96x96.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="images/manifest/icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="images/manifest/icon-192x192.png" />
+    <link rel="apple-touch-icon" href="assets/images/manifest/icon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/images/manifest/icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="assets/images/manifest/icon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/images/manifest/icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/images/manifest/icon-192x192.png" />
 
     <!-- Tile icon for Windows 8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/manifest/icon-144x144.png" />
+    <meta name="msapplication-TileImage" content="assets/images/manifest/icon-144x144.png" />
     <meta name="msapplication-TileColor" content="#3f51b5" />
     <meta name="msapplication-tap-highlight" content="no" />
 
@@ -61,11 +56,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="twitter:site" content="@username" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="eTools PMP" />
-    <meta property="og:image" content="images/manifest/icon-144x144.png" />
+    <meta property="og:image" content="assets/images/manifest/icon-144x144.png" />
 
     <!-- Performance tip: hint to the browser to start the handshake for the fonts site -->
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link rel="stylesheet" type="text/css" href="node_modules/leaflet/dist/leaflet.css" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" crossorigin="anonymous" href="https://fonts.googleapis.com">
+    <link rel="preconnect" crossorigin="anonymous" href="https://fonts.gstatic.com">
+    <link rel="preload" as="style" crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic&display=swap"></noscript>
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/dist/themes/light.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/dist/themes/light.css"></noscript>
+    
+    <link rel="preload" href="node_modules/leaflet/dist/leaflet.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css"></noscript>
+
+    <link rel="preload" href="assets/css/app-theme.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/app-theme.css"></noscript>
     <script>
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
@@ -91,13 +99,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       body {
         margin: 0;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        font-size: 14px;
+        font-family: var(--sl-font-sans, 'Roboto, Noto, sans-serif');
+        font-size: var(--etools-font-size-14, 14px);
         font-weight: 400;
         line-height: 1.5;
         min-height: 100vh;
-        background-color: #eeeeee;
-        color: rgba(0, 0, 0, 0.87);
+        background-color: var(--secondary-background-color);
+        color: var(--primary-text-color);
         -webkit-font-smoothing: antialiased;
       }
       * {
@@ -116,24 +124,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- need this for leaflet -->
     <div class="leaflet-tile-pane hidden"></div>
     <div id="buildRevNo" style="display: none">revNo</div>
+    <div id="buildDate" style="display: none">bDate</div>
     <app-shell></app-shell>
     <noscript> Please enable JavaScript to view this website. </noscript>
-    <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
-    <script src="node_modules/leaflet/dist/leaflet.js"></script>
-    <script src="node_modules/esri-leaflet/dist/esri-leaflet.js"></script>
-    <script src="node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <script src="node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js"></script>
-    <script src="assets/packages/esri-leaflet-webmap.js"></script>
-    <script src="node_modules/dayjs/dayjs.min.js"></script>
-    <script src="node_modules/dayjs/plugin/utc.js"></script>
-    <script src="node_modules/dayjs/plugin/isBetween.js"></script>
-    <script src="node_modules/dayjs/plugin/isSameOrBefore.js"></script>
-    <script src="node_modules/dayjs/plugin/isSameOrAfter.js"></script>
-    <script src="node_modules/focus-visible/dist/focus-visible.min.js"></script>
-    <script src="node_modules/@webcomponents/shadycss/apply-shim.min.js"></script>
     <!-- Built with love using PWA Starter Kit -->
-    <script type="module" src="src/app-shell.js"></script>
+    <script type="module" src="src/app-shell.js" defer></script>
   </body>
 </html>

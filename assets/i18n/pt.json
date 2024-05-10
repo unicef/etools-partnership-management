@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "Durante a implementação do programa, a equipe do UNICEF respondeu às perguntas e solicitações de assistência técnica em tempo hábil?",
   "RESULTS_REPORTED": "Resultados reportados",
   "RESULTS_TO_SHOW": "{{from}} - {{to}} de {{count}} mostrar resultados",
+  "SHOWING_RESULTS": "Mostrando {{count}} resultados",
   "RUSSIAN": "Russo",
   "SAVE": "Salvar",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Salve antes de gerar o modelo PCA",
@@ -625,5 +626,15 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Número de Vendedor Inválido para novo parceiro!",
   "IMPORTING_PARTNER_INFO": "Importar informação do parceiro...",
   "PLEASE_REFRESH_DATA": "Por favor, actualize os dados!",
-  "SUPPORT": "Apoiar"
+  "SUPPORT": "Apoiar",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Avalie o progresso geral deste PD/SPD à luz deste relatório e das visitas de monitorização.",
+  "MET": "Conheceu",
+  "ON_TRACK": "No caminho certo",
+  "NO_PROGRESS": "Sem progresso",
+  "CONSTRAINED": "Restrito",
+  "FEEDBACK_COMMENTS": "Feedback/Comentários",
+  "REPORT_FOR": "Relatório para",
+  "RATE_ACCEPT_REPORT": "Avaliar e aceitar relatório",
+  "SENDING_RATING": "Enviando avaliação...",
+  "NO_REPORTING_PERIOD": "Sem período de relatório"
 }

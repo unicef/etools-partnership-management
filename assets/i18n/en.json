@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "During the course of programme implementation, did UNICEF staff respond to queries and requests for technical assistance in a timely manner?",
   "RESULTS_REPORTED": "Results Reported",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} of {{count}} results to show",
+  "SHOWING_RESULTS": "Showing {{count}} results",
   "RUSSIAN": "Russian",
   "SAVE": "Save",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Save before generating the PCA template",
@@ -625,5 +626,15 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Invalid Vendor Number for new partner!",
   "IMPORTING_PARTNER_INFO": "Importing partner information...",
   "PLEASE_REFRESH_DATA": "Please refresh data!",
-  "SUPPORT": "Support"
+  "SUPPORT": "Support",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Rate the overall progress of this PD/SPD in light of this report and monitoring visits.",
+  "MET": "Met",
+  "ON_TRACK": "On Track",
+  "NO_PROGRESS": "No Progress",
+  "CONSTRAINED": "Constrained",
+  "FEEDBACK_COMMENTS": "Feedback/Comments",
+  "REPORT_FOR": "Report for",
+  "RATE_ACCEPT_REPORT": "Rate & Accept Report",
+  "SENDING_RATING": "Sending rating...",
+  "NO_REPORTING_PERIOD": "No reporting period"
 }

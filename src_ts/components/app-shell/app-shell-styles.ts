@@ -1,12 +1,11 @@
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
-import {html} from 'lit-element';
+import {html} from 'lit';
 import {pageLayoutStyles} from '../styles/page-layout-styles-lit';
 import {sharedStyles} from '../styles/shared-styles-lit';
-import {buttonsStyles} from '../styles/buttons-styles-lit';
 
 // language=HTML
 export const AppShellStyles = html`
-  ${pageLayoutStyles} ${sharedStyles} ${buttonsStyles} ${appDrawerStyles}
+  ${pageLayoutStyles} ${sharedStyles} ${appDrawerStyles}
   <style>
     :host {
       display: block;

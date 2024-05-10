@@ -1,16 +1,9 @@
 /**
 @license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Copyright (c) 2018 The eTools Project Authors. All rights reserved.
 */
 
-import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
+import {connect, installMediaQueryWatcher, installRouter} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 
 // This element is connected to the Redux store.
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
@@ -40,19 +33,18 @@ store.addReducers({
 });
 
 // These are the elements needed by this element.
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-import '@polymer/app-layout/app-drawer/app-drawer.js';
-import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '@polymer/app-layout/app-header/app-header.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer-layout';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header-layout';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
-import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
+import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics.js';
-import {AppMenuMixin} from './components/app-shell/menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from './components/common/common-data.js';
-import '@unicef-polymer/etools-toasts';
+import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts';
 import UserDataMixin from './components/common/user/user-data-mixin';
 
 import './components/app-shell/menu/app-menu.js';
@@ -65,44 +57,30 @@ import './components/common/environment-flags/environment-flags';
 import './components/pages/partners/data/partners-list-data.js';
 import './components/pages/agreements/data/agreements-list-data.js';
 
-import './components/app-shell/app-theme.js';
-import './components/styles/app-mixins.js';
 import UtilsMixin from './components/common/mixins/utils-mixin.js';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
 import './config/config.js';
 import './components/utils/routes';
-// Gesture events like tap and track generated from touch will not be
-// preventable, allowing for better scrolling performance.
-setPassiveTouchGestures(true);
 
-import {BASE_URL} from './config/config';
+import {BASE_URL, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
-import {GenericObject, UserPermissions, User, RouteDetails} from '@unicef-polymer/etools-types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {installRouter} from 'pwa-helpers/router';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, query, state} from 'lit/decorators.js';
 import ScrollControlMixinLit from './components/common/mixins/scroll-control-mixin-lit';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-
-declare const dayjs: any;
-declare const dayjs_plugin_utc: any;
-declare const dayjs_plugin_isSameOrBefore: any;
-declare const dayjs_plugin_isSameOrAfter: any;
-declare const dayjs_plugin_isBetween: any;
-
-dayjs.extend(dayjs_plugin_utc);
-dayjs.extend(dayjs_plugin_isSameOrAfter);
-dayjs.extend(dayjs_plugin_isSameOrBefore);
-dayjs.extend(dayjs_plugin_isBetween);
+import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
 
 function fetchLangFiles(lang: string) {
   return Promise.allSettled([
@@ -119,12 +97,12 @@ const translationConfig = registerTranslateConfig({
   loader: (lang: string) => fetchLangFiles(lang)
 });
 
-setRootPath(BASE_URL);
+setBasePath(BASE_URL);
+initializeIcons();
 
 /**
  * @customElement
- * @polymer
- * @appliesMixin AppMenuMixin
+ * @LitElement
  * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
  * @appliesMixin ScrollControlMixin
@@ -136,7 +114,7 @@ setRootPath(BASE_URL);
 class AppShell extends connect(store)(
   UploadsMixin(
     // eslint-disable-next-line new-cap
-    AppMenuMixin(ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement))))))
+    ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement)))))
   )
 ) {
   render() {
@@ -167,7 +145,8 @@ class AppShell extends connect(store)(
           id="drawer"
           slot="drawer"
           transition-duration="350"
-          ?opened="${this._drawerOpened}"
+          @app-drawer-transitioned="${this.onDrawerToggle}"
+          ?opened="${this.drawerOpened}"
           ?swipe-open="${this.narrow}"
           ?small-menu="${this.smallMenu}"
         >
@@ -203,13 +182,15 @@ class AppShell extends connect(store)(
             >
             </agreements-module>
 
-            <interventions-module
-              id="interventions"
-              class="main-page"
-              .userPermissions="${this.permissions}"
-              ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
-            >
-            </interventions-module>
+            ${this.interventionsLoaded
+              ? html`<interventions-module
+                  id="interventions"
+                  class="main-page"
+                  .userPermissions="${this.permissions}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'interventions')}"
+                >
+                </interventions-module>`
+              : ``}
 
             <reports-module
               id="reports"
@@ -219,7 +200,7 @@ class AppShell extends connect(store)(
             >
             </reports-module>
 
-            <not-found class="main-page" ?hidden="${!this._activeModuleIs(this.module, 'not-found')}"></not-found>
+            ${this._activeModuleIs(this.module, 'not-found') ? html`<not-found class="main-page"></not-found>` : ``}
 
             <settings-module
               id="settings"
@@ -240,7 +221,10 @@ class AppShell extends connect(store)(
   }
 
   @property({type: Boolean})
-  _drawerOpened = false;
+  drawerOpened = false;
+
+  @property({type: Boolean})
+  public smallMenu = false;
 
   @property({type: String})
   _page?: string | null;
@@ -258,6 +242,9 @@ class AppShell extends connect(store)(
 
   set module(val: string) {
     if (val !== this._module) {
+      if (!this.interventionsLoaded) {
+        this.interventionsLoaded = val === 'interventions';
+      }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);
     }
@@ -311,23 +298,39 @@ class AppShell extends connect(store)(
   currentLanguageIsSet!: boolean;
 
   @property({type: Object})
-  reduxRouteDetails?: RouteDetails;
+  reduxRouteDetails?: EtoolsRouteDetails;
 
   @property({type: Boolean})
   private translationFilesAreLoaded = false;
+
+  @query('#drawer') private drawer!: LitElement;
+
+  @state() interventionsLoaded = false;
+
+  constructor() {
+    super();
+
+    const menuTypeStoredVal: string | null = localStorage.getItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY);
+    if (!menuTypeStoredVal) {
+      this.smallMenu = false;
+    } else {
+      this.smallMenu = !!parseInt(menuTypeStoredVal, 10);
+    }
+  }
 
   public async connectedCallback() {
     super.connectedCallback();
 
     this._initListeners();
-    if (this.shadowRoot?.querySelector('#appHeadLayout')) {
-      window.EtoolsEsmmFitIntoEl = this.shadowRoot
-        ?.querySelector('#appHeadLayout')!
-        .shadowRoot!.querySelector('#contentContainer');
+    installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
+
+    const appHeaderLayout = this.shadowRoot?.querySelector('#appHeadLayout');
+    if (appHeaderLayout) {
+      window.EtoolsEsmmFitIntoEl = appHeaderLayout.shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
 
-    // Override ajax error parser inside @unicef-polymer/etools-ajax
+    // Override ajax error parser inside @unicef-polymer/etools-utils/dist/etools-ajax
     // for string translation using lit-translate
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);
@@ -354,7 +357,6 @@ class AppShell extends connect(store)(
       this.preliminaryUrlChangeHandling(decodeURIComponent(location.pathname + location.search))
     );
 
-    installMediaQueryWatcher(`(min-width: 460px)`, () => fireEvent(this, 'change-drawer-state'));
     // @ts-ignore
     this.addEventListener('toast', ({detail}: CustomEvent) => (this.currentToastMessage = detail.text));
   }
@@ -409,6 +411,10 @@ class AppShell extends connect(store)(
         this.reduxRouteDetails?.subRouteName != currentRouteDetails?.subRouteName ||
         this.reduxRouteDetails?.subSubRouteName != currentRouteDetails?.subSubRouteName
       ) {
+        fireEvent(this, 'clear-loading-messages', {
+          bubbles: true,
+          composed: true
+        });
         if (await this.stayingOnPage()) {
           return;
         }
@@ -498,8 +504,8 @@ class AppShell extends connect(store)(
     this.addEventListener('forbidden', this._onForbidden);
     this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
     // Event trigerred by the app-drawer component
-    this.addEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.addEventListener('change-drawer-state', this.changeDrawerState);
+    this.addEventListener('toggle-small-menu', this.toggleMenu as any);
   }
 
   private _removeListeners() {
@@ -507,8 +513,8 @@ class AppShell extends connect(store)(
     this.removeEventListener('update-main-path', this._updateMainPath as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
-    this.removeEventListener('app-drawer-transitioned', this.syncWithDrawerState);
     this.removeEventListener('change-drawer-state', this.changeDrawerState);
+    this.removeEventListener('toggle-small-menu', this.toggleMenu as any);
   }
 
   public disconnectedCallback() {
@@ -516,12 +522,19 @@ class AppShell extends connect(store)(
     this._removeListeners();
   }
 
-  public syncWithDrawerState() {
-    this._drawerOpened = Boolean((this.shadowRoot?.querySelector('#drawer') as AppDrawerElement).opened);
+  public changeDrawerState() {
+    this.drawerOpened = !this.drawerOpened;
   }
 
-  public changeDrawerState() {
-    this._drawerOpened = !this._drawerOpened;
+  public onDrawerToggle() {
+    const drawerOpened = (this.drawer as any).opened;
+    if (this.drawerOpened !== drawerOpened) {
+      this.drawerOpened = drawerOpened;
+    }
+  }
+
+  public toggleMenu(e: CustomEvent) {
+    this.smallMenu = e.detail.value;
   }
 
   private async _showConfirmNewVersionDialog() {
@@ -602,7 +615,7 @@ class AppShell extends connect(store)(
         bubbles: true,
         composed: true
       });
-      this.shadowRoot!.querySelector('app-menu')!.shadowRoot!.querySelector('iron-selector')!.select(this.module);
+      (this.shadowRoot!.querySelector('app-menu') as any).selectedOption = this.module;
       return true;
     }
   }

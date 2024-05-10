@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const navMenuStyles = html`
@@ -25,10 +25,6 @@ export const navMenuStyles = html`
     }
 
     @media (max-height: 600px) {
-      paper-tooltip {
-        display: none;
-      }
-
       :host([small-menu]) {
         overflow-x: hidden;
       }
@@ -48,7 +44,7 @@ export const navMenuStyles = html`
       color: white;
       min-height: 60px;
       padding: 0 16px;
-      font-size: 14px;
+      font-size: var(--etools-font-size-14, 14px);
       line-height: 18px;
       text-transform: uppercase;
     }
@@ -72,7 +68,6 @@ export const navMenuStyles = html`
     :host([small-menu]) #app-name,
     :host #menu-header-top-icon,
     :host([small-menu]) .nav-menu-item .name,
-    :host(:not([small-menu])) paper-tooltip,
     :host(:not([small-menu])) #expand-menu,
     :host([small-menu]) .section-title span,
     :host([small-menu]) #minimize-menu,
@@ -85,12 +80,9 @@ export const navMenuStyles = html`
       display: block;
     }
 
-    .menu-header paper-icon-button {
-      --paper-icon-button: {
-        width: 24px;
-        height: 24px;
-        padding: 0;
-      }
+    .menu-header etools-icon-button {
+      --etools-icon-font-size: var(--etools-font-size-24, 24px);
+      padding: 0;
     }
 
     #menu-header-top-icon,
@@ -100,8 +92,12 @@ export const navMenuStyles = html`
     }
 
     #menu-header-top-icon {
-      width: 36px;
-      height: 36px;
+      --etools-icon-font-size: var(--etools-font-size-36, 36px);
+    }
+
+    #menu-header-top-icon::part(base) {
+      width: 36px !important;
+      height: 30px !important;
     }
 
     .divider {
@@ -118,13 +114,13 @@ export const navMenuStyles = html`
     }
 
     .nav-menu,
-    .nav-menu iron-selector[role='navigation'] {
+    .nav-menu .menu-selector[role='navigation'] {
       flex: 1;
     }
 
     .nav-menu-item {
       width: 100%;
-      font-size: 14px;
+      font-size: var(--etools-font-size-14, 14px);
       font-weight: 500;
       position: relative;
       height: 48px;
@@ -139,7 +135,7 @@ export const navMenuStyles = html`
 
     .nav-menu-item.section-title {
       color: var(--primary-text-color);
-      font-size: 13px;
+      font-size: var(--etools-font-size-13, 13px);
       font-weight: 500;
       text-transform: none;
       border-top: 1px solid var(--dark-divider-color);
@@ -149,11 +145,11 @@ export const navMenuStyles = html`
       height: 0;
     }
 
-    .nav-menu-item.iron-selected {
+    .nav-menu-item.selected {
       background-color: var(--secondary-background-color);
     }
 
-    .nav-menu-item.iron-selected:active {
+    .nav-menu-item.selected:active {
       background-color: var(--dark-divider-color);
     }
 
@@ -162,22 +158,23 @@ export const navMenuStyles = html`
       color: var(--primary-text-color);
     }
 
-    .nav-menu-item iron-icon {
+    .nav-menu-item etools-icon {
       margin: 0 16px;
       color: var(--dark-icon-color);
+      --etools-icon-font-size: var(--etools-font-size-24, 24px);
     }
 
-    :host([small-menu]) .nav-menu-item iron-icon {
+    :host([small-menu]) .nav-menu-item etools-icon {
       margin: 0;
     }
 
-    .nav-menu-item.iron-selected .name,
-    .nav-menu-item.iron-selected iron-icon {
+    .nav-menu-item.selected .name,
+    .nav-menu-item.selected etools-icon {
       color: var(--primary-color);
     }
 
     .nav-menu-item.lighter-item .name,
-    .nav-menu-item.lighter-item iron-icon {
+    .nav-menu-item.lighter-item etools-icon {
       color: var(--secondary-text-color);
     }
 

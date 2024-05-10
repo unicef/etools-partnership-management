@@ -1,18 +1,17 @@
-import {customElement} from 'lit-element';
+import {customElement} from 'lit/decorators.js';
 import {store, RootState} from '../../../../../redux/store';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {PartnersListBase} from './partners-list-base';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin EndpointsMixin
- * @appliesMixin ListFiltersMixins
  * @appliesMixin CommonMixin
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
@@ -24,16 +23,20 @@ export class PartnersList extends connect(store)(PartnersListBase) {
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {
-      active: false,
-      loadingSource: 'partners-page'
-    });
     super.connectedCallback();
   }
 
   stateChanged(state: RootState): void {
     if (state.app?.routeDetails?.routeName !== 'partners') {
       return;
+    }
+    if (state.partners?.listIsLoaded) {
+      setTimeout(() => {
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'partners-page'
+        });
+      }, 50);
     }
     this.currentModule = 'partners';
     this.baseStateChanged(state);

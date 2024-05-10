@@ -5,7 +5,9 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {Partner} from '../../../../models/partners.models';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+
 import {get as getTranslation, listenForLangChanged} from 'lit-translate';
 
 /**
@@ -19,10 +21,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       <style>
         :host {
           width: 100%;
-          --etools-status-container: {
-            height: auto;
-            min-height: 40px;
-          }
+
           --etools-status-label-style: {
             font-weight: normal;
             width: 120px;
@@ -78,7 +77,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
 
   get deleteWarningMessage() {
     return getTranslation('ARE_YOU_SURE_DELETE_PARTNER', {
-      partner: this.partner.name
+      partner: this.partner?.name
     });
   }
 
@@ -88,7 +87,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     listenForLangChanged(() => {
       this.setPossibleActions();
       this.setPossibleStatuses();
-      this._computeAvailableActions(this.partner.hidden, this.editMode);
+      this._computeAvailableActions(this.partner?.hidden, this.editMode);
     });
     this.addEventListener('delete-confirmed', this._dialogConfirmationCallback.bind(this) as any);
   }
@@ -113,15 +112,15 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   updated(changedProperties: PropertyValues) {
     if ((changedProperties.has('partner') || changedProperties.has('possibleStatuses')) && this.partner) {
       this._partnerStatusChanged(
-        this.partner.vision_synced,
-        this.partner.deleted_flag,
-        this.partner.blocked,
+        this.partner?.vision_synced,
+        this.partner?.deleted_flag,
+        this.partner?.blocked,
         this.possibleStatuses
       );
     }
 
     if ((changedProperties.has('partner') || changedProperties.has('editMode')) && this.partner) {
-      this._computeAvailableActions(this.partner.hidden, this.editMode);
+      this._computeAvailableActions(this.partner?.hidden, this.editMode);
     }
   }
 
@@ -138,7 +137,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.NOTSYNCED'),
         icon: 'info',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
         completed: false
@@ -146,7 +147,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.SYNCEDFROMVISION'),
         icon: 'autorenew',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
         completed: false
@@ -154,7 +157,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.BLOCKEDINVISION'),
         icon: 'block',
-        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-18, 18px); color: ' +
+          this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
         completed: false
@@ -162,7 +167,9 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
       {
         label: getTranslation('PARTNER_STATUSES.MARKEDFORDELETIONINVISION'),
         icon: 'delete-forever',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        iconStyles:
+          '--etools-icon-font-size: var(--etools-font-size-28, 28px); color: ' +
+          this.getComputedStyleValue('--error-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
         completed: false
@@ -192,7 +199,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
     if (!this.editMode) {
       return;
     }
-    fireEvent(this, 'delete-partner', {id: this.partner.id});
+    fireEvent(this, 'delete-partner', {id: this.partner?.id});
   }
 
   _computeAvailableActions(_hidden: boolean, editMode: boolean) {
@@ -211,6 +218,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
         }
       }
     }
+    this.possibleActions = [...this.possibleActions];
   }
   _computeAvailableStatuses() {
     let activeStatus;
@@ -242,25 +250,25 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
   }
   _showSyncedStatus() {
     return (
-      this.partner.vision_synced === true &&
-      this.partner.deleted_flag === false &&
-      (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)
+      this.partner?.vision_synced === true &&
+      this.partner?.deleted_flag === false &&
+      (typeof this.partner?.blocked === 'undefined' || this.partner?.blocked === false)
     );
   }
 
   _showBlockedStatus() {
     return (
-      this.partner.deleted_flag === false &&
-      typeof this.partner.blocked !== 'undefined' &&
-      this.partner.blocked === true
+      this.partner?.deleted_flag === false &&
+      typeof this.partner?.blocked !== 'undefined' &&
+      this.partner?.blocked === true
     );
   }
 
   _showMakedForDeletionStatus() {
-    return this.partner.deleted_flag;
+    return this.partner?.deleted_flag;
   }
 
   _showNotSyncedStatus() {
-    return this.partner.vision_synced === false;
+    return this.partner?.vision_synced === false;
   }
 }

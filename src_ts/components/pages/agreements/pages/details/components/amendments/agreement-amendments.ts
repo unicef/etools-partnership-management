@@ -1,21 +1,18 @@
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-button/paper-button.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
 import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {buttonsStyles} from '../../../../../../styles/buttons-styles-lit';
 
 import './add-ag-amendment-dialog.js';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../../../redux/store';
 import {isJsonStrMatch, isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -23,9 +20,12 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
  */
@@ -36,7 +36,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
   }
   render() {
     return html`
-      ${sharedStyles} ${buttonsStyles}
+      ${sharedStyles}
       <style>
         ${dataTableStylesLit} [hidden] {
           display: none !important;
@@ -73,10 +73,16 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           margin: 0;
           margin-inline-start: 24px;
           padding: 0;
+          --sl-input-height-medium: 24px;
         }
-
-        #download-template-a {
-          display: inherit;
+        #download-template-btn::part(label) {
+          font-size: var(--etools-font-size-14, 14px);
+          font-weight: 600;
+        }
+        etools-icon[name='file-download'] {
+          --etools-icon-font-size: var(--etools-font-size-20, 20px);
+          vertical-align: middle;
+          margin-inline-end: 5px;
         }
 
         /* amendment template download section styles end */
@@ -92,14 +98,14 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
       <etools-content-panel panel-title="${translate('AMENDMENTS')} (${(this.dataItems || []).length})">
         <div slot="panel-btns">
-          <paper-icon-button
-            icon="add-box"
+          <etools-icon-button
+            name="add-box"
             ?hidden="${!this.editMode}"
             ?disabled="${!this.editMode}"
             title="${translate('GENERAL.ADD')}"
             @click="${this._openAddAgAmendmentDialog}"
           >
-          </paper-icon-button>
+          </etools-icon-button>
         </div>
 
         <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
@@ -108,12 +114,16 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
             ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
           </div>
           <!-- Download template btn -->
-          <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
-            <paper-button id="download-template-btn" class="secondary-btn">
-              <iron-icon icon="file-download"></iron-icon>
-              ${translate('DOWNLOAD_TEMPLATE')}
-            </paper-button>
-          </a>
+          <etools-button
+            id="download-template-btn"
+            variant="text"
+            target="_blank"
+            href="/static/agreements/amendment_template.docx"
+            download
+          >
+            <etools-icon name="file-download"></etools-icon>
+            ${translate('DOWNLOAD_TEMPLATE')}
+          </etools-button>
         </div>
 
         <div id="amendments-wrapper" ?hidden="${isEmptyObject(this.dataItems)}">
@@ -136,7 +146,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
                   >
                   <span class="col-data col-2">${this.getDateDisplayValue(item.signed_date)}</span>
                   <span class="col-data flex-c">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
+                    <etools-icon name="attachment" class="attachment"></etools-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
                       ${item.id

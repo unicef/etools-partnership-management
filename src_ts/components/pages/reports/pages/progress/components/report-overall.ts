@@ -1,40 +1,52 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '../../../../../common/components/etools-form-element-wrapper';
+import {css, html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '../../../components/report-status.js';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('report-overall')
 export class ReportOverall extends LitElement {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [
+      gridLayoutStylesLit,
+      css`
+        .status-column etools-input::part(input) {
+          width: 0;
+        }
+      `
+    ];
   }
   render() {
     return html`
       <div class="row-h">
         <div class="col col-5">
-          <etools-form-element-wrapper2
+          <etools-textarea
+            readonly
+            placeholder="—"
             label="${translate('PD_SPD_OUTPUT_EXPECTED_RESULT')}"
             .value="${this.lowerResultTitle}"
           >
-          </etools-form-element-wrapper2>
+          </etools-textarea>
         </div>
-        <div class="col col-2">
-          <etools-form-element-wrapper2 label="${translate('OVERALL_STATUS')}" no-placeholder>
+        <div class="col col-2 status-column">
+          <etools-input readonly placeholder="" label="${translate('OVERALL_STATUS')}">
             <report-status .status="${this.latestIndicator.overall_status}" slot="prefix"></report-status>
-          </etools-form-element-wrapper2>
+          </etools-input>
         </div>
         <div class="col col-5">
-          <etools-form-element-wrapper2
+          <etools-textarea
+            readonly
+            placeholder="—"
             label="${translate('NARRATIVE_ASSESSMENT')}"
             .value="${this.latestIndicator.narrative_assessment}"
           >
-          </etools-form-element-wrapper2>
+          </etools-textarea>
         </div>
       </div>
     `;

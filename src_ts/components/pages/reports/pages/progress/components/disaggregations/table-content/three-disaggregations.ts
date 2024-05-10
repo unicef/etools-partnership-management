@@ -1,4 +1,5 @@
-import {html, LitElement, property, customElement, PropertyValues} from 'lit-element';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
 import '../disaggregation-table-row.js';
 import UtilsMixin from '../../../../../../../common/mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
@@ -7,7 +8,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from 'lit-translate';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin

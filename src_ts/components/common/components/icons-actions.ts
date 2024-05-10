@@ -1,18 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {property} from '@polymer/decorators';
+import {property} from 'lit/decorators.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {LitElement, html} from 'lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-class IconsActions extends PolymerElement {
-  static get template() {
+class IconsActions extends LitElement {
+  render() {
     return html`
       <style>
         [hidden] {
@@ -39,15 +37,15 @@ class IconsActions extends PolymerElement {
           right: unset;
           left: 0;
         }
-
-        paper-icon-button {
-          color: var(--dark-icon-color, #6f6f70);
-        }
       </style>
 
-      <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
-      <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
-      <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
+      <etools-icon-button ?hidden="${!this.showEdit}" name="create" @click="${this._onEdit}"></etools-icon-button>
+      <etools-icon-button ?hidden="${!this.showDelete}" name="delete" @click="${this._onDelete}"></etools-icon-button>
+      <etools-icon-button
+        ?hidden="${!this.showDeactivate}"
+        name="block"
+        @click="${this._onDeactivate}"
+      ></etools-icon-button>
     `;
   }
 

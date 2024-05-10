@@ -1,26 +1,26 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-input/paper-input.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {sendRequest} from '@unicef-polymer/etools-ajax';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
 import {LocationObject, MinimalAgreement} from '@unicef-polymer/etools-types';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('ecn-import-dialog')
@@ -47,12 +47,11 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
         dialog-title="${translate('IMPORT_ECN')}"
         keep-dialog-open
         ?show-spinner="${this.loadingInProcess}"
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this.save}"
       >
         <div id="container">
-          <paper-input
+          <etools-input
             id="ecnNo"
             label="${translate('ECN_NUMBER')}"
             @value-changed="${({detail}: CustomEvent) => {
@@ -63,8 +62,8 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             auto-validate
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
-          ></paper-input>
-          <paper-input
+          ></etools-input>
+          <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
             label=${translate('UNPP_CFEI_DSR_REF_NUM')}
@@ -73,7 +72,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             required
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) => this.valueChanged(detail, 'cfei_number')}"
-          ></paper-input>
+          ></etools-input>
           <etools-dropdown
             id="partnerDropdw"
             label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
@@ -200,9 +199,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   }
 
   validateCFEI(e?: CustomEvent) {
-    const elem = e
-      ? (e.currentTarget as PaperInputElement)
-      : this.shadowRoot?.querySelector<PaperInputElement>('#unppNumber')!;
+    const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
     return elem.validate();
   }
 

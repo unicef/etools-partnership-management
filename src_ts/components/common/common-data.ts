@@ -1,4 +1,3 @@
-// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../redux/store';
 
 import * as commonDataActions from '../../redux/actions/common-data.js';
@@ -7,15 +6,16 @@ import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparis
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Constructor, LabelAndValue} from '@unicef-polymer/etools-types';
 import {CommonDataState} from '../../redux/reducers/common-data';
-import {sendRequest} from '@unicef-polymer/etools-ajax';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import pmpEdpoints from '../endpoints/endpoints';
-import {LitElement, property} from 'lit-element';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import EnvironmentFlagsMixinLit from './environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {translateLabelAndValueArray} from '../utils/language';
 
 /**
- * @polymer
+ * @LitElement
  * @mixinFunction
  */
 function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {

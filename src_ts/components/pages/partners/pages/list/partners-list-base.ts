@@ -1,37 +1,32 @@
-import {html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
+
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
-import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
-import '@polymer/iron-media-query/iron-media-query.js';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import '../../data/partners-list-data.js';
 
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-menu-button/paper-menu-button';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-listbox/paper-listbox';
-import '@polymer/paper-item/paper-icon-item';
-import '@polymer/paper-item/paper-item-body';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import '@polymer/paper-styles/element-styles/paper-material-styles';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit';
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
 import {translate} from 'lit-translate';
 import {Partner} from '../../../../../models/partners.models';
-import {displayCurrencyAmount} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-module';
+import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {EtoolsFilter} from '@unicef-polymer/etools-filters/src/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import {PartnersListData} from '../../data/partners-list-data';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
@@ -47,7 +42,7 @@ import {RootState, store} from '../../../../../redux/store';
 import get from 'lodash-es/get';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../endpoints/endpoints';
-import {FiltersHelper} from '@unicef-polymer/etools-filters/src/filters-helper.class';
+import {FiltersHelper} from '@unicef-polymer/etools-unicef/src/etools-filters/filters-helper.class';
 import {setShouldReloadPartners} from '../../../../../redux/actions/partners';
 
 export class PartnersListBase extends CommonMixin(
@@ -68,10 +63,10 @@ export class PartnersListBase extends CommonMixin(
         :host {
           box-sizing: border-box;
           background-color: #eeeeee;
+          position: relative;
         }
 
         .vendor-nr {
-          @apply --text-btn-style;
           text-transform: none;
         }
 
@@ -79,15 +74,17 @@ export class PartnersListBase extends CommonMixin(
           margin: 0 0 24px 0;
         }
         #list {
-          position: relative;
+          position: inherit;
         }
 
         section.page-content.filters {
           padding: 8px 24px;
+          z-index: 56;
         }
 
         .filters {
           position: relative;
+          z-index: 1;
         }
 
         @media (max-width: 576px) {
@@ -104,13 +101,13 @@ export class PartnersListBase extends CommonMixin(
         }
       </style>
 
-      <iron-media-query
+      <etools-media-query
         query="(max-width: 767px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
-      ></iron-media-query>
+      ></etools-media-query>
 
       <partners-list-data
         id="partners-${this.localName}"
@@ -177,7 +174,7 @@ export class PartnersListBase extends CommonMixin(
             <div slot="row-data">
               <span class="col-data flex-c" data-col-header-label="${translate('VENDOR_NO')}">
                 <a
-                  class="vendor-nr truncate"
+                  class="text-btn-style vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
                   title="${this.getDisplayValue(partner.vendor_number, ',', false)}"
                   @click="${this._triggerPartnerLoadingMsg}"
@@ -190,14 +187,14 @@ export class PartnersListBase extends CommonMixin(
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
                   <etools-info-tooltip class="marked-for-deletion" custom-icon ?hidden="${!partner.deleted_flag}">
-                    <iron-icon icon="delete" slot="custom-icon"></iron-icon>
+                    <etools-icon name="delete" slot="custom-icon"></etools-icon>
                     <span slot="message">${translate('MARKED_FOR_DELETION')}</span>
                   </etools-info-tooltip>
                 </span>
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.blocked}">
                   <etools-info-tooltip class="blocked" custom-icon ?hidden="${!partner.blocked}">
-                    <iron-icon icon="block" slot="custom-icon"></iron-icon>
+                    <etools-icon name="block" slot="custom-icon"></etools-icon>
                     <span slot="message">${translate('BLOCKED')}</span>
                   </etools-info-tooltip>
                 </span>

@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "أثناء تنفيذ البرنامج ، هل استجاب موظفو اليونيسف للاستفسارات وطلبات المساعدة التقنية في الوقت المناسب؟",
   "RESULTS_REPORTED": "تم الإبلاغ عن النتائج",
   "RESULTS_TO_SHOW": "{{from}} - {{to}} من {{count}} من النتائج المراد عرضها",
+  "SHOWING_RESULTS": "عرض {{count}} نتيجة",
   "RUSSIAN": "الروسية",
   "SAVE": "يحفظ",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "احفظ قبل إنشاء قالب PCA",
@@ -625,5 +626,15 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "!رقم البائع غير صالح لشريك جديد",
   "IMPORTING_PARTNER_INFO": "... جاري استيراد معلومات الشريك",
   "PLEASE_REFRESH_DATA": "يرجى تحديث البيانات!",
-  "SUPPORT": "يدعم"
+  "SUPPORT": "يدعم",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "قم بتقييم التقدم الإجمالي لـ PD/SPD في ضوء هذا التقرير وزيارات المراقبة.",
+  "MET": "التقى",
+  "ON_TRACK": "على الطريق",
+  "NO_PROGRESS": "لا تقدم",
+  "CONSTRAINED": "مقيدة",
+  "FEEDBACK_COMMENTS": "ردود الفعل / التعليقات",
+  "REPORT_FOR": "تقرير لـ",
+  "RATE_ACCEPT_REPORT": "تقدير وقبول التقرير",
+  "SENDING_RATING": "إرسال التقييم...",
+  "NO_REPORTING_PERIOD": "فترة تقرير غير متاحة"
 }

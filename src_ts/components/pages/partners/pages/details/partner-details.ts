@@ -1,15 +1,14 @@
 /* eslint-disable lit-a11y/anchor-is-valid */
-import {customElement, html, LitElement, property, PropertyValues} from 'lit-element';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/communication-icons.js';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import {html, LitElement, PropertyValues} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
-import {dataTableStylesLit} from '@unicef-polymer/etools-data-table/data-table-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
@@ -17,10 +16,9 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {isEmptyObject, isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {RootState, store} from '../../../../../redux/store';
 
-import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
-import '@unicef-polymer/etools-data-table/etools-data-table.js';
-import '../../../../common/components/etools-form-element-wrapper';
+import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 
 import '../../../../common/components/etools-error-messages-box.js';
 import '../../../../common/components/icons-actions';
@@ -34,15 +32,15 @@ import {LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
 import {translate} from 'lit-translate';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-
-declare const dayjs: any;
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import dayjs from 'dayjs';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @mixinFunction
  * @appliesMixin CommonMixin
@@ -70,12 +68,6 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           width: 100%;
         }
 
-        paper-toggle-button#showArchived {
-          font-size: 16px;
-          --paper-toggle-button-label-color: var(--primary-text-color);
-          --paper-toggle-button-checked-bar-color: var(--primary-color);
-        }
-
         icons-actions2 {
           visibility: hidden;
         }
@@ -84,8 +76,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           visibility: visible;
         }
 
-        iron-icon {
+        etools-icon {
           color: var(--dark-secondary-text-color);
+        }
+
+        etools-icon {
+          margin-inline-end: 5px;
         }
 
         .cvs-file {
@@ -99,19 +95,26 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
       <etools-content-panel class="content-section" panel-title="${translate('PARTNER_DETAILS')}">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('FULL_NAME')}"
               title="${this.partner.name}"
               .value="${this.partner.name}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('SHORT_NAME')}" .value="${this.partner.short_name}">
-            </etools-form-element-wrapper2>
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('SHORT_NAME')}"
+              .value="${this.partner.short_name}"
+            >
+            </etools-input>
           </div>
           <div class="col col-4">
-            <paper-input
+            <etools-input
               label="${translate('ALTERNATE_NAME')}"
               .value="${this.partner.alternate_name}"
               @value-changed="${({detail}: CustomEvent) => {
@@ -119,21 +122,28 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
               }}"
               placeholder="&#8212;"
               ?readonly="${!this.editMode}"
-            ></paper-input>
+            ></etools-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('VENDOR_NUMBER')}" .value="${this.partner.vendor_number}">
-            </etools-form-element-wrapper2>
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('VENDOR_NUMBER')}"
+              .value="${this.partner.vendor_number}"
+            >
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('PARTNER_TYPE')}"
               .value="${this._computePartnerType(this.partner)}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
             <etools-dropdown-multi
@@ -151,93 +161,113 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         </div>
 
         <div class="row-h flex-c">
-          <etools-form-element-wrapper2
+          <etools-input
+            readonly
+            placeholder="—"
             label="${translate('ADDRESS')}"
             title="${this.partner.address}"
             .value="${this.partner.address}"
           >
-            <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-          </etools-form-element-wrapper2>
+            <etools-icon slot="prefix" name="communication:location-on"></etools-icon>
+          </etools-input>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper2 label="${translate('PHONE_NUMBER')}" .value="${this.partner.phone_number}">
-              <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            </etools-form-element-wrapper2>
+            <etools-input
+              readonly
+              placeholder="—"
+              label="${translate('PHONE_NUMBER')}"
+              .value="${this.partner.phone_number}"
+            >
+              <etools-icon slot="prefix" name="communication:phone"></etools-icon>
+            </etools-input>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('EMAIL_ADDRESS')}"
               title="${this.partner.email}"
               .value="${this.partner.email}"
             >
-              <iron-icon icon="communication:email" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+              <etools-icon name="communication:email" slot="prefix"></etools-icon>
+            </etools-input>
           </div>
           <div class="col col-4"></div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- HACT Risk rating -->
-            <etools-form-element-wrapper2 label="${translate('HACT_RISK_RATING')}" no-placeholder>
-              <span class="${this.getRiskRatingClass(this.partner.rating)}">
+            <div>
+              <label class="paper-label">${translate('HACT_RISK_RATING')} </label>
+              <div class="${this.getRiskRatingClass(this.partner.rating)} input-label" ?empty="${!this.partner.rating}">
                 ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
-              </span>
-            </etools-form-element-wrapper2>
+              </div>
+            </div>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('TYPE_OF_ASSESSMENT')}"
               .value="${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')}"
             >
-            </etools-form-element-wrapper2>
+            </etools-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('DATE_OF_REPORT')}"
               .value="${this.getDateDisplayValue(this.partner.last_assessment_date)}"
             >
-              <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+              <etools-icon name="date-range" slot="prefix"></etools-icon>
+            </etools-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- PSEA risk rating -->
-            <etools-form-element-wrapper2 label="${translate('SEA_RISK_RATING')}" no-placeholder>
-              <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
+            <div>
+              <label class="paper-label">${translate('SEA_RISK_RATING')} </label>
+              <div
+                class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)} input-label"
+                ?empty="${!this.partner.sea_risk_rating_name}"
+              >
                 ${translateValue(
                   this.getRiskRatingValue(this.partner.sea_risk_rating_name),
                   'COMMON_DATA.SEARISKRATINGS'
                 )}
-              </span>
-            </etools-form-element-wrapper2>
+              </div>
+            </div>
           </div>
 
           <div class="col col-4">
             <!--Last PSEA Assess. Date-->
-            <etools-form-element-wrapper2
+            <etools-input
+              readonly
+              placeholder="—"
               label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
               .value="${this.getDateDisplayValue(this.partner.psea_assessment_date)}"
             >
-              <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            </etools-form-element-wrapper2>
+              <etools-icon name="date-range" slot="prefix"></etools-icon>
+            </etools-input>
           </div>
         </div>
       </etools-content-panel>
 
       <etools-content-panel class="content-section" panel-title="${translate('CORE_VALUES_ASSESSMENTS')}">
         <div slot="panel-btns" id="show-archived">
-          <paper-toggle-button
+          <sl-switch
             id="showArchived"
             ?checked="${this.showArchivedAssessments}"
-            @iron-change="${this.showArchivedChange}"
+            @sl-change="${this.showArchivedChange}"
           >
             ${translate('SHOW_ARCHIVED')}
-          </paper-toggle-button>
+          </sl-switch>
         </div>
 
         <div ?hidden="${!this._shouldDisplayCVAList()}">
@@ -262,7 +292,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                   <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
                 </span>
                 <span class="col-data col-6">
-                  <iron-icon icon="attachment" ?hidden="${!item.attachment}"></iron-icon>
+                  <etools-icon name="attachment" ?hidden="${!item.attachment}"></etools-icon>
                   <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
                   <a class="cvs-file" href="${item.attachment}" target="_blank" download
                     >${this.getFileNameFromURL(item.attachment)}</a
@@ -270,7 +300,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
                 </span>
                 <span class="col-data col-2">
                   <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
-                  <iron-icon icon="check" ?hidden="${!item.archived}"></iron-icon>
+                  <etools-icon name="check" ?hidden="${!item.archived}"></etools-icon>
                 </span>
                 <icons-actions2
                   .item="${item}"
@@ -364,7 +394,7 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   showArchivedChange(e: CustomEvent) {
-    if (!e.detail) {
+    if (!e.currentTarget) {
       return;
     }
     this.showArchivedAssessments = (e.currentTarget as HTMLInputElement).checked;
@@ -374,19 +404,6 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     return !attachment && !archived;
   }
 
-  firstUpdated(changedProperties: PropertyValues): void {
-    super.firstUpdated(changedProperties);
-
-    // Disable loading message for details tab elements load,
-    // triggered by parent element on stamp
-    setTimeout(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'partners-page'
-      });
-    }, 200);
-  }
-
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('partner')) {
       this._partnerChanged(this.partner);
@@ -394,6 +411,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   }
 
   public _partnerChanged(partner: any) {
+    setTimeout(() => {
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: 'partners-page'
+      });
+    }, 200);
     if (!isEmptyObject(partner)) {
       // decide if we should show core values assessment attachment
       this.showCoreValuesAssessmentAttachment = this._showCoreValueAssessment(partner.partner_type, partner.cso_type);

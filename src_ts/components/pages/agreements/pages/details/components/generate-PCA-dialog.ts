@@ -1,16 +1,16 @@
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-item/paper-item.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
-import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
 @customElement('generate-pca-dialog')
@@ -22,16 +22,14 @@ export class GeneratePcaDialog extends LitElement {
     return html`
       ${sharedStyles}
       <style>
-        paper-dropdown-menu,
-        paper-listbox {
-          width: 250px;
-        }
-
         .terms_wrapper {
           overflow-y: auto;
           overflow-x: hidden;
           max-height: 40vh;
           margin-bottom: 25px;
+        }
+        etools-checkbox[invalid]::part(control) {
+          border-color: red;
         }
       </style>
       <etools-dialog
@@ -42,15 +40,14 @@ export class GeneratePcaDialog extends LitElement {
         keep-dialog-open
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._onConfirm}"
-        opened
       >
         <div>
           <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
             <div class="col col-12">
-              <paper-checkbox
-                @checked-changed=${({detail}: CustomEvent) => {
-                  this.acknowledgedTC = detail.value;
+              <etools-checkbox
+                @sl-change=${(e: any) => {
+                  this.acknowledgedTC = e.target.checked;
                 }}
                 required
                 ?invalid="${this.errors.acknowledgedTC}"
@@ -58,7 +55,7 @@ export class GeneratePcaDialog extends LitElement {
                 @click="${() => this.resetFieldError('acknowledgedTC')}"
               >
                 ${translate('PCA_READ_AND_FOLLOWED_INSTRUCTIONS')}
-              </paper-checkbox>
+              </etools-checkbox>
             </div>
           </div>
           <div class="layout-horizontal row-padding-v  flex-c">

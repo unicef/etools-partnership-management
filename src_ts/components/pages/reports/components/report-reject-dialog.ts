@@ -1,19 +1,22 @@
-import {html, LitElement, property, customElement} from 'lit-element';
-import '@polymer/paper-input/paper-input.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {html, LitElement} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-declare const dayjs: any;
-import {connect} from 'pwa-helpers/connect-mixin';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
+import dayjs from 'dayjs';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
+import {translate} from 'lit-translate';
+import {get as getTranslation} from 'lit-translate/util';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */
@@ -32,23 +35,23 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
         id="reportRejectDialog"
         size="md"
         keep-dialog-open
-        opened
-        spinner-text="Sending rating..."
+        spinner-text="${translate('SENDING_RATING')}"
         ?disable-confirm-btn="${!this.comment.length}"
-        ok-btn-text="Send Back to Partner"
-        dialog-title="Report for ${this.report.programme_document.reference_number}: ${this.report.reporting_period}"
+        ok-btn-text="${translate('SEND_BACK_TO_PARTNER')}"
+        dialog-title="${translate('REPORT_FOR')} ${this.report.programme_document
+          .reference_number}: ${this.translateReportingPeriodText(this.report.reporting_period)}"
         ?show-spinner="${this.showSpinner}"
         @confirm-btn-clicked="${this.saveStatus}"
         @close="${this._onClose}"
       >
         <div id="content-box">
-          <paper-input
+          <etools-input
             required
-            label="Feedback/Comments"
+            label="${translate('FEEDBACK_COMMENTS')}"
             placeholder="&#8212;"
             .value="${this.comment}"
             @value-changed="${({detail}: CustomEvent) => (this.comment = detail.value)}"
-          ></paper-input>
+          ></etools-input>
         </div>
       </etools-dialog>
     `;
@@ -82,7 +85,12 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
   getCurrentDate() {
     return dayjs(new Date()).format('D-MMM-YYYY');
   }
-
+  translateReportingPeriodText(periodText: string) {
+    if (periodText === 'No reporting period') {
+      return getTranslation('NO_REPORTING_PERIOD');
+    }
+    return periodText;
+  }
   saveStatus() {
     const requestBody = {
       status: 'Sen',

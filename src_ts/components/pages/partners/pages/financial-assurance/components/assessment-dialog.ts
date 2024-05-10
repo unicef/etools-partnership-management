@@ -1,31 +1,32 @@
-import {LitElement, html, customElement, property} from 'lit-element';
-import '@polymer/paper-checkbox/paper-checkbox';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-upload/etools-upload.js';
+import {LitElement, html} from 'lit';
+import {property, customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
 import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../../redux/store';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {copy} from '@unicef-polymer/etools-utils/dist/general.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
-import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
+import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 import {translate} from 'lit-translate';
+import {SlCheckbox} from '@shoelace-style/shoelace';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
  */
@@ -53,7 +54,6 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         size="md"
         ok-btn-text="${translate('GENERAL.SAVE')}"
         dialog-title="${translate('ASSESSMENT')}"
-        opened
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._validateAndSaveAssessment}"
         ?disable-confirm-btn="${this.uploadInProgress}"
@@ -115,8 +115,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           </etools-upload>
         </div>
         <div class="row-h">
-          <paper-checkbox ?checked="${!this.assessment.active}" @checked-changed="${this._archivedChanged}"
-            >${translate('ARCHIVED')}</paper-checkbox
+          <etools-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
+            >${translate('ARCHIVED')}</etools-checkbox
           >
         </div>
       </etools-dialog>
@@ -280,7 +280,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
   }
 
   _archivedChanged(e: CustomEvent) {
-    this.assessment.active = !(e.target as PaperCheckboxElement).checked;
+    this.assessment.active = !(e.target as SlCheckbox).checked;
   }
 
   getCurrentDate() {

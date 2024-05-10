@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "Au cours de la mise en œuvre du programme, le personnel de l'UNICEF a-t-il répondu aux questions et aux demandes d'assistance technique en temps opportun ?",
   "RESULTS_REPORTED": "Résultats rapportés",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} résultats sur {{count}} à afficher",
+  "SHOWING_RESULTS": "Affichage de {{count}} résultats",
   "RUSSIAN": "Russe",
   "SAVE": "sauvegarder",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Enregistrer avant de générer le modèle ACP",
@@ -625,5 +626,15 @@
   "PARTNER_INVALID_VENDOR_NUMBER": "Numéro de fournisseur non valide pour le nouveau partenaire !",
   "IMPORTING_PARTNER_INFO": "Importation d'informations sur les partenaires...",
   "PLEASE_REFRESH_DATA": "Veuillez actualiser les données !",
-  "SUPPORT": "Soutien"
+  "SUPPORT": "Soutien",
+  "RATE_THE_OVERALL_PROGRESS_OF_THIS_PD": "Évaluez les progrès globaux de ce PD/SPD à la lumière de ce rapport et des visites de suivi.",
+  "MET": "Rencontré",
+  "ON_TRACK": "Sur la bonne voie",
+  "NO_PROGRESS": "Pas de progrès",
+  "CONSTRAINED": "Contraint",
+  "FEEDBACK_COMMENTS": "Feedback/Commentaires",
+  "REPORT_FOR": "Rapport pour",
+  "RATE_ACCEPT_REPORT": "Noter et accepter le rapport",
+  "SENDING_RATING": "Envoi de la notation...",
+  "NO_REPORTING_PERIOD": "Pas de période de déclaration"
 }
