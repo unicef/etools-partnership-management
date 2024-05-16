@@ -28,14 +28,6 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
       <style>
         :host {
           display: block;
-          --paper-input-container-label: {
-            font-size: var(--etools-font-size-12, 12px);
-            text-align: center;
-          }
-          --paper-input-container-input-webkit-spinner: {
-            -webkit-appearance: none;
-            margin: 0;
-          }
         }
 
         .heading {
@@ -51,7 +43,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         }
 
         .partner-name {
-          height: 48px;
+          min-height: 48px;
           line-height: 48px;
           text-transform: uppercase;
           font-size: var(--etools-font-size-20, 20px);
@@ -82,6 +74,16 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
         .space-between {
           justify-content: space-between;
         }
+        .layout-vertical.col-md-2,
+        .layout-vertical.col-md-3,
+        .layout-vertical.col-md-4 {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .row {
+          margin-right: 0 !important;
+          margin-left: 0 !important;
+        }
       </style>
 
       <etools-dialog
@@ -98,13 +100,14 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
             <div class="partner-name">${this.partner.name}</div>
           </div>
 
-          <div class="avoid-scroll layout-horizontal space-between">
+          <div class="avoid-scroll row space-between">
             ${this.isGovPartner
-              ? html` <div class="layout-vertical col-3">
+              ? html` <div class="layout-vertical col-md-3 col-12 ">
                   <div class="heading">${translate('PLANNED_PROGRAMMATIC_VISITS')}</div>
-                  <div class="layout-horizontal space-around">
+                  <div class="row space-around">
                     <etools-input
                       type="number"
+                      class="col-3"
                       allowed-pattern="^[0-9]"
                       no-spin-buttons
                       min="0"
@@ -117,6 +120,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                       label="Q1"
                     ></etools-input>
                     <etools-input
+                      class="col-3"
                       .value="${this.editableValues.planned_visits.programmatic_q2}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q2 = detail.value;
@@ -130,6 +134,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                       label="Q2"
                     ></etools-input>
                     <etools-input
+                      class="col-3"
                       .value="${this.editableValues.planned_visits.programmatic_q3}"
                       @value-changed="${({detail}: CustomEvent) => {
                         this.editableValues.planned_visits.programmatic_q3 = detail.value;
@@ -143,6 +148,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                       label="Q3"
                     ></etools-input>
                     <etools-input
+                      class="col-3"
                       type="number"
                       allowed-pattern="^[0-9]"
                       min="0"
@@ -159,10 +165,11 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                 </div>`
               : html``}
 
-            <div class="layout-vertical col-2">
+            <div class="layout-vertical col-md-2 col-12">
               <div class="heading">${translate('FOLLOW_UP_SPOT_CHECKS')}</div>
-              <div class="layout-horizontal space-around">
+              <div class="row space-around">
                 <etools-input
+                  class="col-12"
                   always-float-label
                   .value="${this.editableValues.planned_engagement.spot_check_follow_up}"
                   @value-changed="${({detail}: CustomEvent) => {
@@ -177,10 +184,11 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               </div>
             </div>
 
-            <div class="layout-vertical col-3">
+            <div class="layout-vertical col-md-3 col-12">
               <div class="heading">${translate('PLANNED_SPOT_CHECKS')}</div>
-              <div class="layout-horizontal space-around">
+              <div class="row space-around">
                 <etools-input
+                  class="col-3"
                   type="number"
                   allowed-pattern="^[0-9]"
                   min="0"
@@ -192,6 +200,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   label="Q1"
                 ></etools-input>
                 <etools-input
+                  class="col-3"
                   type="number"
                   allowed-pattern="^[0-9]"
                   min="0"
@@ -203,6 +212,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   label="Q2"
                 ></etools-input>
                 <etools-input
+                  class="col-3"
                   type="number"
                   allowed-pattern="^[0-9]"
                   min="0"
@@ -214,6 +224,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
                   label="Q3"
                 ></etools-input>
                 <etools-input
+                  class="col-3"
                   type="number"
                   allowed-pattern="^[0-9]"
                   min="0"
@@ -227,7 +238,7 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
               </div>
             </div>
 
-            <div class="layout-vertical col-4">
+            <div class="layout-vertical col-md-4 col-12">
               <div class="heading">${translate('REQUIRED_AUDITS')}</div>
               <etools-dropdown-multi
                 placeholder="&#8212;"

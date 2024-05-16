@@ -30,7 +30,12 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
   render() {
     return html`
       ${sharedStyles}
-
+      <style>
+        .row {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+      </style>
       <etools-dialog
         no-padding
         keep-dialog-open
@@ -44,8 +49,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         .disableConfirmBtn="${this.uploadInProgress}"
         .disableDismissBtn="${this.uploadInProgress}"
       >
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row">
+          <div class="col col-md-4 col-12">
             <!-- Signed Date -->
             <datepicker-lite
               id="signedDate"
@@ -65,9 +70,10 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
             </datepicker-lite>
           </div>
         </div>
-        <div class="row-h flex-c">
+        <div class="row">
           <!-- Signed Agreement -->
           <etools-upload
+            class="col col-md-4 col-12"
             id="signedAmendment"
             label="${translate('SIGNED_AMENDMENT')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
@@ -83,8 +89,9 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
           </etools-upload>
         </div>
 
-        <div class="row-h flex-c">
+        <div class="row">
           <etools-dropdown-multi
+            class="col col-12"
             id="amendmentTypes"
             label="${translate('AMENDMENT_TYPES')}"
             .options="${this.amendmentTypes}"
@@ -100,8 +107,9 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         </div>
 
         ${this._showAuthorizedOfficersField(this.showAuthorizedOfficers, this._aoTypeSelected)
-          ? html` <div class="row-h flex-c">
+          ? html` <div class="row">
               <etools-dropdown-multi
+                class="col col-12"
                 id="officers"
                 label="${translate('AUTHORIZED_OFFICERS')}"
                 placeholder="&#8212;"

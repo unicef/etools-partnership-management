@@ -95,6 +95,10 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           margin-right: 0 !important;
           padding: 16px 9px;
         }
+        .row.no-data {
+          margin: 0;
+          padding: 16px 11px;
+        }
       </style>
       <etools-media-query
         query="(max-width: 767px)"
@@ -328,11 +332,9 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
             </etools-data-table-row>`
           )}
         </div>
-        <etools-data-table-row no-collapse ?hidden="${this._shouldDisplayCVAList()}">
-          <div slot="row-data" class="p-relative">
-            <div class="col-data col-12">${translate('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')}</div>
-          </div>
-        </etools-data-table-row>
+        <div class="row no-data" ?hidden="${this._shouldDisplayCVAList()}">
+          <p class="col-12">${translate('THERE_ARE_NO_CORE_VALUE_ASSESSMENTS')}</p>
+        </div>
       </etools-content-panel>
 
       <staff-members

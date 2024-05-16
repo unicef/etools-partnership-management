@@ -94,6 +94,11 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
         .unsaved-amendment {
           color: var(--warning-color);
         }
+        .row.row-second-bg.b-border,
+        .row.no-data {
+          margin: 0;
+          padding: 16px 11px;
+        }
       </style>
       <etools-media-query
         query="(max-width: 767px)"
@@ -113,13 +118,14 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           </etools-icon-button>
         </div>
 
-        <div id="download-template-wrapper" class="layout-horizontal row-second-bg b-border">
+        <div id="download-template-wrapper" class="row row-second-bg b-border">
           <!-- Amendments template download -->
-          <div id="download-template-msg">
+          <div id="download-template-msg" class="col-md-5 col-12">
             ${translate('USE_THE_AMENDMENT_TEMPLATE_FOR_DOCUMENTING_CHANGES_AND_SIGNING')}
           </div>
           <!-- Download template btn -->
           <etools-button
+            class="col-md-7 col-12"
             id="download-template-btn"
             variant="text"
             target="_blank"
@@ -177,8 +183,8 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           )}
         </div>
 
-        <div class="row-h" ?hidden="${!isEmptyObject(this.dataItems)}">
-          <p>${translate('THERE_ARE_NO_AMENDMENTS_ADDED')}</p>
+        <div class="row no-data" ?hidden="${!isEmptyObject(this.dataItems)}">
+          <p class="col-12">${translate('THERE_ARE_NO_AMENDMENTS_ADDED')}</p>
         </div>
       </etools-content-panel>
     `;

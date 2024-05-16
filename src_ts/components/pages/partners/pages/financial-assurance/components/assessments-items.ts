@@ -53,7 +53,6 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
           box-sizing: border-box;
-          --ecp-header-height: auto;
         }
 
         .no-assessments-warning {

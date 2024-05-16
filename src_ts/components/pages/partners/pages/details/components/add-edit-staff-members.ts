@@ -58,7 +58,7 @@ export class AddEditStaffMembers extends CommonMixinLit(EndpointsLitMixin(LitEle
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._savePartnerContact}"
       >
-        <div class="layout-horizontal row-padding-v flex-c">
+        <div class="row">
           <div class="col col-9">
             <etools-input
               id="title"

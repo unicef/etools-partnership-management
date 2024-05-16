@@ -59,6 +59,10 @@ export class StaffMembers extends LitElement {
           word-break: break-all;
           word-wrap: break-word;
         }
+        .row.no-data {
+          margin: 0;
+          padding: 16px 11px;
+        }
       </style>
       <etools-media-query
         query="(max-width: 767px)"
@@ -134,8 +138,8 @@ export class StaffMembers extends LitElement {
           )}
         </div>
 
-        <div class="layout-vertical" ?hidden="${!this._emptyList(this.dataItems?.length)}">
-          <p>${translate('THERE_ARE_NO_STAFF_MEMBERS_ADDED')}</p>
+        <div class="row no-data" ?hidden="${!this._emptyList(this.dataItems?.length)}">
+          <p class="col-12">${translate('THERE_ARE_NO_STAFF_MEMBERS_ADDED')}</p>
         </div>
       </etools-content-panel>
     `;

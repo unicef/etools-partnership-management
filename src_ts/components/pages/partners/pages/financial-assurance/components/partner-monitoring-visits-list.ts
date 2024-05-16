@@ -46,6 +46,10 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
           margin-top: -10px;
           margin-bottom: -40px;
         }
+        .row.no-data {
+          margin: 0;
+          padding: 16px 11px;
+        }
       </style>
       <etools-media-query
         query="(max-width: 767px)"
@@ -182,10 +186,10 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
           )}
         </div>
         <div
-          class="layout-vertical"
+          class="row no-data"
           ?hidden="${!this._hideMonitoringVisits(this.monitoringVisits.length, this.tpmActivities.length)}"
         >
-          <p>${this.showTpmVisits ? translate('NO_PROGRAMATIC_VISITS') : translate('NO_ACTIVITIES')}</p>
+          <p class="col-12">${this.showTpmVisits ? translate('NO_PROGRAMATIC_VISITS') : translate('NO_ACTIVITIES')}</p>
         </div>
       </div>
     `;

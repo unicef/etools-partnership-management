@@ -24,8 +24,8 @@ export class ReportOverall extends LitElement {
   }
   render() {
     return html`
-      <div class="row-h">
-        <div class="col col-5">
+      <div class="row">
+        <div class="col col-md-5 col-12">
           <etools-textarea
             readonly
             placeholder="—"
@@ -34,12 +34,12 @@ export class ReportOverall extends LitElement {
           >
           </etools-textarea>
         </div>
-        <div class="col col-2 status-column">
+        <div class="col col-md-2 col-12 status-column">
           <etools-input readonly placeholder="" label="${translate('OVERALL_STATUS')}">
             <report-status .status="${this.latestIndicator.overall_status}" slot="prefix"></report-status>
           </etools-input>
         </div>
-        <div class="col col-5">
+        <div class="col col-md-5 col-12">
           <etools-textarea
             readonly
             placeholder="—"

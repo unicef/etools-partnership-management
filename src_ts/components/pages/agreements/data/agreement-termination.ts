@@ -55,8 +55,9 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         ?disableConfirmBtn="${this.uploadInProgress}"
         ?disableDismissBtn="${this.uploadInProgress}"
       >
-        <div class="row-h flex-c">
+        <div class="row">
           <etools-upload
+            class="col-12"
             id="terminationNotice"
             label="${translate('TERMINATION_NOTICE')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
@@ -71,7 +72,7 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
           >
           </etools-upload>
         </div>
-        <div class="row-h">
+        <div class="row">
           <etools-warn-message-lit .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
           </etools-warn-message-lit>
         </div>

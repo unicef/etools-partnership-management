@@ -148,8 +148,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                   </etools-icon-button>
                                 </div>
 
-                                <div class="indicator-header layout-horizontal flex-c">
-                                  <div class="col col-8 indicator-header-title">
+                                <div class="indicator-header row">
+                                  <div class="col col-md-8 col-12 indicator-header-title">
                                     <h3>
                                       ${this.getIndicatorDisplayType(indicatorReport.reportable.blueprint)}
                                       ${indicatorReport.reportable.blueprint.title}
@@ -166,7 +166,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                       </span>
                                     </div>
                                   </div>
-                                  <div class="col col-4 indicator-header-target">
+                                  <div class="col col-md-4 col-12 indicator-header-target">
                                     <indicator-report-target2
                                       .displayType="${indicatorReport.reportable.blueprint.display_type}"
                                       .target="${indicatorReport.reportable.target}"

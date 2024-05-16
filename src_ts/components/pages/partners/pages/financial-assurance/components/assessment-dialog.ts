@@ -42,8 +42,12 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         :host {
           display: block;
         }
-        .padd-left {
-          padding-inline-start: 48px !important;
+        .padding-container {
+          padding: 16px 9px;
+        }
+        .padding-container.row {
+          margin-right: 0;
+          margin-left: 0;
         }
       </style>
 
@@ -59,8 +63,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         ?disable-confirm-btn="${this.uploadInProgress}"
         ?disable-dismiss-btn="${this.uploadInProgress}"
       >
-        <div class="row flex-c">
-          <div class="col-12 col-md-4">
+        <div class="row padding-container">
+          <div class="col-12 col-md-5">
             <etools-dropdown
               id="assessmentType"
               label="${translate('ASSESSMENT_TYPE')}"
@@ -80,7 +84,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
               auto-validate
             ></etools-dropdown>
           </div>
-          <div class="col col-5 padd-left">
+          <div class="col-12 col-md-5">
             <datepicker-lite
               id="dateSubmitted"
               label="${translate('DATE_OF_ASSESSMENT')}"
@@ -99,8 +103,9 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
             </datepicker-lite>
           </div>
         </div>
-        <div class="row">
+        <div class="row padding-container">
           <etools-upload
+            class="col-12"
             id="report"
             label="${translate('REPORT')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
@@ -114,8 +119,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           >
           </etools-upload>
         </div>
-        <div class="row">
-          <etools-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
+        <div class="row padding-container">
+          <etools-checkbox class="col-12" ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
             >${translate('ARCHIVED')}</etools-checkbox
           >
         </div>

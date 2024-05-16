@@ -37,31 +37,10 @@ export const sharedStyles = html`
       height: 48px;
     }
 
-    paper-tabs {
-      color: var(--light-primary-text-color);
-      --paper-tabs: {
-        font-size: var(--etools-font-size-14, 14px);
-        font-weight: 500;
-        text-transform: uppercase;
-      }
-    }
-
-    paper-tabs > * {
-      --paper-tab-ink: var(--primary-color);
-      --paper-tab-content-unselected: {
-        color: var(--light-secondary-text-color);
-      }
-    }
-
     .tab-link {
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    paper-item {
-      font-size: var(--etools-font-size-15, 15px);
-      white-space: nowrap;
     }
 
     div[elevation] {
@@ -104,83 +83,20 @@ export const sharedStyles = html`
       align-items: center;
     }
 
-    paper-input {
-      --paper-input-prefix: {
-        margin-top: -5px;
-        margin-inline-end: 10px;
-        color: var(--dark-secondary-text-color);
-      }
-      --paper-input-suffix: {
-        margin-top: -5px;
-        margin-inline-start: 10px;
-        color: var(--dark-secondary-text-color);
-      }
-    }
-    paper-dropdown-menu paper-item {
-      cursor: pointer;
-    }
-
-    /* paper input readonly state */
-    paper-input[readonly],
-    paper-textarea[readonly],
     datepicker-lite[readonly],
     etools-dropdown[readonly],
     etools-dropdown-multi[readonly],
     etools-currency[readonly],
     .form-field-wrapper {
-      --paper-input-container-underline: {
-        display: none;
-      }
-      --paper-input-container-underline-focus: {
-        display: none;
-      }
-      --paper-input-char-counter: {
-        display: none;
-      }
-
       width: 100%;
-    }
-
-    paper-input,
-    paper-input-container {
-      --paper-input-container-input: {
-        min-height: 23px; /* IE11 fix - letter 'g' is cut off */
-      }
-    }
-
-    etools-dropdown,
-    etools-dropdown-multi {
-      --paper-input-container-input: {
-        text-overflow: ellipsis;
-      }
-    }
-
-    paper-input.right-to-left {
-      text-align: right;
-      --paper-input-container-input: {
-        direction: rtl;
-        unicode-bidi: bidi-override;
-      }
     }
 
     .custom-field-wrapper {
       padding: 8px 0;
     }
 
-    datepicker-lite {
-      --paper-input-prefix: {
-        color: var(--dark-secondary-text-color);
-      }
-    }
-
     .capitalize {
       text-transform: capitalize;
-    }
-
-    .paper-label {
-      font-size: var(--etools-font-size-12, 12px);
-      color: var(--secondary-text-color);
-      padding-top: 8px;
     }
 
     .input-label {

@@ -46,10 +46,6 @@ export class AddDisaggregationDialog extends connect(store)(
     return html`
       ${sharedStyles} ${actionIconBtnsStyles}
       <style>
-        paper-input {
-          width: 100%;
-        }
-
         .groups {
           align-items: center;
           flex-wrap: wrap;
@@ -64,9 +60,10 @@ export class AddDisaggregationDialog extends connect(store)(
         .col {
           padding: 0 12px;
         }
-
-        .col:not(:first-of-type) {
-          padding-inline-start: 0px !important;
+        @media (min-width: 850px) {
+          .col:not(:first-of-type) {
+            padding-inline-start: 0px !important;
+          }
         }
 
         .action.delete.no-padding {
@@ -103,8 +100,8 @@ export class AddDisaggregationDialog extends connect(store)(
         @close="${this._onClose}"
         ?show-spinner="${this.disableConfirmBtn}"
       >
-        <div class="layout-horizontal extra-padd">
-          <div class="col col-4">
+        <div class="row extra-padd">
+          <div class="col col-md-4 col-12">
             <etools-input
               id="disaggregateByEl"
               label="${translate('DISAGGREGATION')}"
@@ -120,7 +117,7 @@ export class AddDisaggregationDialog extends connect(store)(
             >
             </etools-input>
           </div>
-          <div class="col col-8">
+          <div class="col col-md-8 col-12">
             <div class="layout-vertical">
               <label class="paper-label group-label">${translate('DISAGGREGATION_GROUP')}</label>
               <div class="layout-horizontal groups">
