@@ -94,4 +94,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - 36560
+                - mobile-friendly
