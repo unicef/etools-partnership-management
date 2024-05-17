@@ -146,7 +146,7 @@ export class PartnersListBase extends CommonMixin(
             count: this.paginator.count || 0
           })}"
         >
-          <etools-data-table-column class="flex-c" field="vendor_number" sortable>
+          <etools-data-table-column class="col-1" field="vendor_number" sortable>
             ${translate('VENDOR_NO')}
           </etools-data-table-column>
           <etools-data-table-column class="col-3" field="name" sortable>
@@ -155,13 +155,13 @@ export class PartnersListBase extends CommonMixin(
           <etools-data-table-column class="col-2" field="partner_type">
             ${translate('PARTNER_TYPE')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="hact_rating">
+          <etools-data-table-column class="col-1" field="hact_rating">
             ${translate('HACT_RISK_RATING')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="sea_rating">
+          <etools-data-table-column class="col-2" field="sea_rating">
             ${translate('SEA_RISK_RATING')}
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="psea_date">
+          <etools-data-table-column class="col-3" field="psea_date">
             ${translate('LAST_PSEA_ASSESS_DATE')}
           </etools-data-table-column>
         </etools-data-table-header>
@@ -172,7 +172,7 @@ export class PartnersListBase extends CommonMixin(
             .detailsOpened="${this.detailsOpened}"
           >
             <div slot="row-data">
-              <span class="col-data flex-c" data-col-header-label="${translate('VENDOR_NO')}">
+              <span class="col-data col-1" data-col-header-label="${translate('VENDOR_NO')}">
                 <a
                   class="text-btn-style vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
@@ -203,7 +203,7 @@ export class PartnersListBase extends CommonMixin(
                 ${this._computeType(partner.cso_type, partner.partner_type)}
               </span>
               <span
-                class="col-data flex-c"
+                class="col-data col-1"
                 data-col-header-label="${translate('HACT_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
@@ -213,7 +213,7 @@ export class PartnersListBase extends CommonMixin(
                 )}
               </span>
               <span
-                class="col-data flex-c"
+                class="col-data col-2"
                 data-col-header-label="${translate('SEA_RISK_RATING')}"
                 style="text-transform: capitalize"
               >
@@ -222,28 +222,28 @@ export class PartnersListBase extends CommonMixin(
                   'COMMON_DATA.SEARISKRATINGS'
                 )}
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
+              <span class="col-data col-3" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
                 ${this.getDateDisplayValue(partner.psea_assessment_date)}
               </span>
             </div>
             <div slot="row-data-details">
-              <div class="row-details-content flex-c">
+              <div class="row-details-content col-2">
                 <span class="rdc-title">${translate('SHARED_PARTNER')}</span>
                 <span>${this.getDisplayValue(partner.shared_with, ',', false)}</span>
               </div>
-              <div class="row-details-content flex-c">
+              <div class="row-details-content col-3">
                 <span class="rdc-title">${translate('EMAIL')}</span>
                 <span>${this.getDisplayValue(partner.email, ',', false)}</span>
               </div>
-              <div class="row-details-content flex-c">
+              <div class="row-details-content col-1">
                 <span class="rdc-title">${translate('PHONE_NUMBER')}</span>
                 <span>${this.getDisplayValue(partner.phone_number, ',', false)}</span>
               </div>
-              <div class="row-details-content flex-c">
+              <div class="row-details-content col-2">
                 <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CP')}</span>
                 <span>$ ${displayCurrencyAmount(partner.total_ct_cp, '0')}</span>
               </div>
-              <div class="row-details-content flex-c">
+              <div class="row-details-content col-2">
                 <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR')}</span>
                 <span>$ ${displayCurrencyAmount(partner.total_ct_ytd, '0')}</span>
               </div>

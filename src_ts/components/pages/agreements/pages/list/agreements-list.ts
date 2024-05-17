@@ -149,10 +149,10 @@ export class AgreementsList extends connect(store)(
           <etools-data-table-column class="col-2" field="partner_status"
             >${translate('STATUS')}</etools-data-table-column
           >
-          <etools-data-table-column class="flex-c" field="start" sortable
+          <etools-data-table-column class="col-1" field="start" sortable
             >${translate('START_DATE')}</etools-data-table-column
           >
-          <etools-data-table-column class="flex-c" field="end" sortable
+          <etools-data-table-column class="col-1" field="end" sortable
             >${translate('END_DATE')}</etools-data-table-column
           >
         </etools-data-table-header>
@@ -192,10 +192,10 @@ export class AgreementsList extends connect(store)(
                   'COMMON_DATA.AGREEMENTSTATUSES'
                 )}
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('START_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('START_DATE')}">
                 ${this._checkAndShowAgreementDate(agreement.start)}
               </span>
-              <span class="col-data flex-c" data-col-header-label="${translate('END_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('END_DATE')}">
                 ${this._checkAndShowAgreementDate(agreement.end)}
               </span>
             </div>

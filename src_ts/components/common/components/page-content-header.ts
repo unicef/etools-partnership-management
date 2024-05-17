@@ -19,15 +19,16 @@ class PageContentHeader extends LitElement {
         }
 
         :host {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          flex: 1;
-
+          position: sticky;
+          top: 0;
+          z-index: 121;
+          width: 100%;
+          box-sizing: border-box;
+          display: block;
           background-color: var(--primary-background-color);
-          padding: 0 24px;
-          min-height: 85px;
+          min-height: 65px;
           border-bottom: 1px solid var(--darker-divider-color);
+          padding-top: 24px;
         }
 
         :host([with-tabs-visible]) {
@@ -37,39 +38,75 @@ class PageContentHeader extends LitElement {
         .content-header-row {
           display: flex;
           flex-direction: row;
-          justify-content: flex-start;
-        }
-
-        .title-row {
-          align-items: center;
-          margin: 30px 0 0;
-          padding: 0 24px;
-        }
-
-        .title-row h1 {
+          justify-content: center;
+          flex-wrap: wrap;
           flex: 1;
+          align-items: center;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          padding-inline: 24px 12px;
+        }
+
+        .content-header-row h1 {
           margin: 0;
           font-weight: normal;
           text-transform: capitalize;
           font-size: var(--etools-font-size-24, 24px);
-          line-height: 1.3;
+          line-height: 18px;
           min-height: 31px;
         }
 
-        .tabs {
-          margin-top: 5px;
+        .title {
+          padding-inline-end: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 400px;
         }
 
+        .flex-block {
+          max-width: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          flex: 1;
+        }
+
+        .flex-block > * {
+          margin: 7px 0 !important;
+        }
+        .content-header-row.tabs {
+          padding-bottom: 0;
+        }
         @media print {
           :host {
             padding: 0;
-            border-bottom: none;
-            min-height: 0 !important;
-            margin-bottom: 16px;
           }
 
-          .title-row h1 {
+          .content-header-row h1 {
             font-size: var(--etools-font-size-18, 18px);
+          }
+        }
+
+        @media (max-width: 1300px) {
+          .content-header-row {
+            flex-direction: column;
+          }
+          .flex-block {
+            place-content: center;
+          }
+        }
+
+        @media (max-width: 770px) {
+          .flex-block {
+            flex-wrap: wrap;
+            place-content: center;
+          }
+          .title {
+            flex: 100%;
+            max-width: 100%;
+            text-align: center;
           }
         }
 
@@ -77,17 +114,24 @@ class PageContentHeader extends LitElement {
           :host {
             padding: 0 5px;
           }
-          .title-row {
-            padding: 0 5px 5px 5px;
+        }
+
+        @media (max-width: 450px) {
+          :host {
+            position: relative;
           }
         }
       </style>
 
-      <div class="content-header-row title-row">
-        <h1>
-          <slot name="page-title"></slot>
-        </h1>
-        <slot name="title-row-actions"></slot>
+      <div class="content-header-row">
+        <div class="flex-block">
+          <h1 class="title">
+            <slot name="page-title"></slot>
+          </h1>
+        </div>
+        <div class="row-actions">
+          <slot name="title-row-actions"></slot>
+        </div>
       </div>
 
       <div class="content-header-row tabs" ?hidden="${!this.withTabsVisible}">
