@@ -95,6 +95,11 @@ export const navMenuStyles = html`
       --etools-icon-font-size: var(--etools-font-size-36, 36px);
     }
 
+    #menu-header-top-icon::part(base) {
+      width: 36px !important;
+      height: 30px !important;
+    }
+
     .divider {
       margin: 8px 0;
       border-bottom: 1px solid var(--dark-divider-color);

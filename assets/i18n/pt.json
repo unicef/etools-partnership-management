@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "Durante a implementação do programa, a equipe do UNICEF respondeu às perguntas e solicitações de assistência técnica em tempo hábil?",
   "RESULTS_REPORTED": "Resultados reportados",
   "RESULTS_TO_SHOW": "{{from}} - {{to}} de {{count}} mostrar resultados",
+  "SHOWING_RESULTS": "Mostrando {{count}} resultados",
   "RUSSIAN": "Russo",
   "SAVE": "Salvar",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Salve antes de gerar o modelo PCA",

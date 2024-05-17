@@ -537,6 +537,7 @@
   "RESPOND_REQUESTS_IN_TIME": "Au cours de la mise en œuvre du programme, le personnel de l'UNICEF a-t-il répondu aux questions et aux demandes d'assistance technique en temps opportun ?",
   "RESULTS_REPORTED": "Résultats rapportés",
   "RESULTS_TO_SHOW": "{{from}}-{{to}} résultats sur {{count}} à afficher",
+  "SHOWING_RESULTS": "Affichage de {{count}} résultats",
   "RUSSIAN": "Russe",
   "SAVE": "sauvegarder",
   "SAVE_BEFORE_GENERATING_PCA_TEMPLATE": "Enregistrer avant de générer le modèle ACP",
