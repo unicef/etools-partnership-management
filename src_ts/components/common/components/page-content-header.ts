@@ -60,8 +60,8 @@ class PageContentHeader extends LitElement {
           padding-inline-end: 20px;
           overflow: hidden;
           text-overflow: ellipsis;
-          white-space: nowrap;
-          max-width: 400px;
+          white-space: normal;
+          max-width: 60%;
         }
 
         .flex-block {
@@ -78,6 +78,7 @@ class PageContentHeader extends LitElement {
         }
         .content-header-row.tabs {
           padding-bottom: 0;
+          justify-content: flex-start;
         }
         @media print {
           :host {
