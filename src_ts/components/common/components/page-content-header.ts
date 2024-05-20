@@ -52,7 +52,7 @@ class PageContentHeader extends LitElement {
           font-weight: normal;
           text-transform: capitalize;
           font-size: var(--etools-font-size-24, 24px);
-          line-height: 18px;
+          line-height: var(--etools-font-size-24, 24px);
           min-height: 31px;
         }
 
@@ -61,7 +61,6 @@ class PageContentHeader extends LitElement {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: normal;
-          max-width: 60%;
         }
 
         .flex-block {
@@ -78,7 +77,7 @@ class PageContentHeader extends LitElement {
         }
         .content-header-row.tabs {
           padding-bottom: 0;
-          justify-content: flex-start;
+          display: block;
         }
         @media print {
           :host {
@@ -87,6 +86,7 @@ class PageContentHeader extends LitElement {
 
           .content-header-row h1 {
             font-size: var(--etools-font-size-18, 18px);
+            line-height: var(--etools-font-size-18, 18px);
           }
         }
 
@@ -108,6 +108,9 @@ class PageContentHeader extends LitElement {
             flex: 100%;
             max-width: 100%;
             text-align: center;
+          }
+          .content-header-row h1 {
+            display: block;
           }
         }
 
