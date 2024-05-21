@@ -79,10 +79,10 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         .vision {
           align-items: center;
           position: relative;
-          width: 100%;
+          width: calc(100% - 3px);
           font-size: var(--etools-font-size-16, 16px);
           border: 2px solid rgba(0, 97, 233, 0.38);
-          height: 56px;
+          min-height: 56px;
           margin-inline-start: -24px;
           padding-inline-start: 24px;
           line-height: normal;
@@ -212,7 +212,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         }
       </style>
       <etools-media-query
-        query="(max-width: 1025px)"
+        query="(max-width: 1200px)"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"
@@ -356,7 +356,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         </div>
         <div class="planning-wrapper">
           <div class="row">
-            <div class="table-main col-lg-4 col-12 no-r-padd">
+            <div class="table-main col-xl-4 col-12 no-r-padd">
               <div class="table-main panel-row-tall row panel-table-row darker-bg">
                 <div class="col-4 table-title">${translate('PROGRAMMATIC_VISITS')}</div>
                 <div class="quarter">Q1</div>
@@ -389,7 +389,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             </div>
 
             <div
-              class="table-main col-lg-4 col-12 ${this.lowResolutionLayout
+              class="table-main col-xl-4 col-12 ${this.lowResolutionLayout
                 ? 'margin-t no-r-padd'
                 : 'margin-l no-r-padd'}"
             >
@@ -425,7 +425,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             </div>
 
             <div
-              class="table-main col-lg-2 col-12 ${this.lowResolutionLayout
+              class="table-main col-xl-2 col-12 ${this.lowResolutionLayout
                 ? 'margin-t no-r-padd'
                 : 'margin-l no-r-padd'}"
             >

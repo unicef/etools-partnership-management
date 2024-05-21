@@ -90,24 +90,10 @@ class PageContentHeader extends LitElement {
           }
         }
 
-        @media (max-width: 1300px) {
-          .content-header-row {
-            flex-direction: column;
-          }
-          .flex-block {
-            place-content: center;
-          }
-        }
-
         @media (max-width: 770px) {
-          .flex-block {
-            flex-wrap: wrap;
-            place-content: center;
-          }
           .title {
             flex: 100%;
             max-width: 100%;
-            text-align: center;
           }
           .content-header-row h1 {
             display: block;

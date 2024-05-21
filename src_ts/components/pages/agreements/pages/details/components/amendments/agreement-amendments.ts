@@ -55,10 +55,6 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
           max-width: 100%;
         }
 
-        #amendments-wrapper {
-          margin-top: 16px;
-        }
-
         :host(:not([edit-mode])) #amendments-wrapper {
           margin-bottom: 24px;
         }
@@ -101,7 +97,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
         }
       </style>
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1000px)"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"

@@ -19,6 +19,9 @@ export class ReportOverall extends LitElement {
         .status-column etools-input::part(input) {
           width: 0;
         }
+        .row {
+          padding: 16px 24px !important;
+        }
       `
     ];
   }

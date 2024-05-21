@@ -100,6 +100,9 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         .calculation-formula-delimiter {
           margin: 0 16px;
         }
+        .indicator-header.row {
+          width: calc(100% -34px);
+        }
       </style>
 
       <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->

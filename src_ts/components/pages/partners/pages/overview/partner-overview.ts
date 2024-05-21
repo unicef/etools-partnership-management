@@ -139,7 +139,7 @@ export class PartnerOverview extends PaginationMixin(
         }
       </style>
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1100px)"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
         }}"

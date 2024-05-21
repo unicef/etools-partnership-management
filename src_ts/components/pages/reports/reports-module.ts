@@ -122,7 +122,7 @@ export class ReportsModule extends connect(store)(
             : ''}
         </div>
 
-        <div slot="title-row-actions" class="content-header-actions move-to-the-right">
+        <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
               <etools-button slot="trigger" variant="text" class="neutral" caret>

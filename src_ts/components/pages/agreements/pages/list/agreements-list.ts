@@ -95,7 +95,7 @@ export class AgreementsList extends connect(store)(
       </style>
 
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1100px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
@@ -142,11 +142,11 @@ export class AgreementsList extends connect(store)(
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
             ${translate('AGREEMENT_REFERENCE_NUMBER')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-4" field="partner_name" sortable>
+          <etools-data-table-column class="col-6" field="partner_name" sortable>
             ${translate('PARTNER_FULL_NAME')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type">${translate('TYPE')}</etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_status"
+          <etools-data-table-column class="col-1" field="partner_type">${translate('TYPE')}</etools-data-table-column>
+          <etools-data-table-column class="col-1" field="partner_status"
             >${translate('STATUS')}</etools-data-table-column
           >
           <etools-data-table-column class="col-1" field="start" sortable
@@ -174,19 +174,19 @@ export class AgreementsList extends connect(store)(
                 </a>
               </span>
               <span
-                class="col-data col-4"
+                class="col-data col-6"
                 data-col-header-label="${translate('PARTNER_FULL_NAME')}"
                 title="${this.getDisplayValue(agreement.partner_name, ',', false)}"
               >
                 <span> ${this.getDisplayValue(agreement.partner_name, ',', false)} </span>
               </span>
-              <span class="col-data col-2" data-col-header-label="${translate('TYPE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('TYPE')}">
                 ${translateValue(
                   this.getDisplayValue(agreement.agreement_type, ',', false) as string,
                   'AGREEMENT_TYPES'
                 )}
               </span>
-              <span class="col-data col-2 capitalize" data-col-header-label="${translate('STATUS')}">
+              <span class="col-data col-1 capitalize" data-col-header-label="${translate('STATUS')}">
                 ${translateValue(
                   this.getDisplayValue(agreement.status, ',', false) as string,
                   'COMMON_DATA.AGREEMENTSTATUSES'

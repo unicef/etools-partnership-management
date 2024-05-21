@@ -102,7 +102,7 @@ export class PartnersListBase extends CommonMixin(
       </style>
 
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1200px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
@@ -146,13 +146,13 @@ export class PartnersListBase extends CommonMixin(
             count: this.paginator.count || 0
           })}"
         >
-          <etools-data-table-column class="col-1" field="vendor_number" sortable>
+          <etools-data-table-column class="col-2" field="vendor_number" sortable>
             ${translate('VENDOR_NO')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-3" field="name" sortable>
+          <etools-data-table-column class="col-5" field="name" sortable>
             ${translate('NAME_SHORT_FULL')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="partner_type">
+          <etools-data-table-column class="col-1" field="partner_type">
             ${translate('PARTNER_TYPE')}
           </etools-data-table-column>
           <etools-data-table-column class="col-1" field="hact_rating">
@@ -161,7 +161,7 @@ export class PartnersListBase extends CommonMixin(
           <etools-data-table-column class="col-2" field="sea_rating">
             ${translate('SEA_RISK_RATING')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-3" field="psea_date">
+          <etools-data-table-column class="col-1" field="psea_date">
             ${translate('LAST_PSEA_ASSESS_DATE')}
           </etools-data-table-column>
         </etools-data-table-header>
@@ -172,7 +172,7 @@ export class PartnersListBase extends CommonMixin(
             .detailsOpened="${this.detailsOpened}"
           >
             <div slot="row-data">
-              <span class="col-data col-1" data-col-header-label="${translate('VENDOR_NO')}">
+              <span class="col-data col-2" data-col-header-label="${translate('VENDOR_NO')}">
                 <a
                   class="text-btn-style vendor-nr truncate"
                   href="${this.currentModule}/${partner.id}/details"
@@ -182,7 +182,7 @@ export class PartnersListBase extends CommonMixin(
                   ${this.getDisplayValue(partner.vendor_number, ',', false)}
                 </a>
               </span>
-              <span class="col-data col-3" data-col-header-label="${translate('NAME_SHORT_FULL')}">
+              <span class="col-data col-5" data-col-header-label="${translate('NAME_SHORT_FULL')}">
                 <span>${this._computeName(partner.name, partner.short_name)}</span>
 
                 <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
@@ -199,7 +199,7 @@ export class PartnersListBase extends CommonMixin(
                   </etools-info-tooltip>
                 </span>
               </span>
-              <span class="col-data col-2" data-col-header-label="${translate('PARTNER_TYPE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('PARTNER_TYPE')}">
                 ${this._computeType(partner.cso_type, partner.partner_type)}
               </span>
               <span
@@ -222,7 +222,7 @@ export class PartnersListBase extends CommonMixin(
                   'COMMON_DATA.SEARISKRATINGS'
                 )}
               </span>
-              <span class="col-data col-3" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
                 ${this.getDateDisplayValue(partner.psea_assessment_date)}
               </span>
             </div>
