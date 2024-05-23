@@ -11,10 +11,10 @@ import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints.js';
-import {headerDropdownStyles} from './header-dropdown-styles';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
+import {toolbarDropdownStyles} from '@unicef-polymer/etools-unicef/src/styles/toolbar-dropdown-styles';
 import {get as getTranslation, translate} from 'lit-translate';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment.js';
 
 /**
  * @LitElement
@@ -28,7 +28,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
     // main template
     // language=HTML
     return html`
-      ${headerDropdownStyles}
+      ${toolbarDropdownStyles}
       <style>
         *[hidden] {
           display: none !important;
@@ -144,7 +144,7 @@ class CountriesDropdown extends connect(store)(UploadsMixin(EndpointsLitMixin(Li
   }
 
   protected _handleResponse() {
-    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
+    history.pushState(window.history.state, '', `${Environment.basePath}partners`);
     DexieRefresh.refresh();
   }
 

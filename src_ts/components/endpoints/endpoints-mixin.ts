@@ -2,13 +2,14 @@ import {RootState} from '../../redux/store';
 
 import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from './endpoints.js';
-import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
+import {tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {property} from 'lit/decorators.js';
 import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
 import get from 'lodash-es/get';
 import {LitElement} from 'lit';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -61,8 +62,8 @@ function EndpointsMixin<T extends Constructor<LitElement>>(baseClass: T) {
     public getEndpoint(endpointName: string, data?: GenericObject) {
       const endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
       const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
-      const baseSite = authorizationTokenMustBeAdded ? tokenEndpointsHost(endpoint.token) : window.location.origin;
-
+      const baseSite = authorizationTokenMustBeAdded ? Environment.getHost(endpoint.token) : window.location.origin;
+      console.log('heeeelllooo', baseSite);
       if (this._hasUrlTemplate(endpoint)) {
         if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
           // we need to get corresponding PRP country ID

@@ -2,7 +2,6 @@
 import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
-import {BASE_URL} from '../../../../../config/config';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from 'lit-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
@@ -13,13 +12,14 @@ import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import {SlSwitch} from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
     ${sharedStyles}
     <style>
       label[required] {
-          background: url(${BASE_URL + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
+          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
           width: auto !important;
           max-width: 100%;
           right: auto;
@@ -27,7 +27,7 @@ export function template(this: InterventionNew): TemplateResult {
       }
 
       :host-context([dir='rtl'])  label[required] {
-          background: url(${BASE_URL + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
+          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
       paper-input#unppNumber {

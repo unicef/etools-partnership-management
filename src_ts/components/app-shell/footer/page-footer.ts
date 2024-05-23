@@ -1,5 +1,5 @@
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {html, LitElement} from 'lit';
-import {BASE_URL} from '../../../config/config';
 
 /**
  * page footer element
@@ -59,7 +59,7 @@ class PageFooter extends LitElement {
       <footer>
         <div id="footer-content">
           <span id="unicef-logo">
-            <img src="${BASE_URL}assets/images/UNICEF_logo.webp" alt="UNICEF logo" />
+            <img src="${Environment.basePath}assets/images/UNICEF_logo.webp" alt="UNICEF logo" />
           </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>

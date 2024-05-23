@@ -36,10 +36,10 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -504,7 +504,7 @@ export class PartnersModule extends connect(store)(
       return;
     }
     const newPath = `${this.currentModule}/${this.partner!.id}/${newTabName}`;
-    history.pushState(window.history.state, '', `${ROOT_PATH}${newPath}`);
+    history.pushState(window.history.state, '', `${Environment.basePath}${newPath}`);
     window.dispatchEvent(new CustomEvent('popstate'));
   }
 

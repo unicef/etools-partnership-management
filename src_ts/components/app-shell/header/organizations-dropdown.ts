@@ -13,9 +13,9 @@ import {get as getTranslation, translate} from 'lit-translate';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../endpoints/endpoints.js';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
-import {headerDropdownStyles} from './header-dropdown-styles';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config.js';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
+import {toolbarDropdownStyles} from '@unicef-polymer/etools-unicef/src/styles/toolbar-dropdown-styles';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -25,7 +25,7 @@ import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-re
 export class organizationsDropdown extends connect(store)(EndpointsLitMixin(LitElement)) {
   public render() {
     return html`
-      ${headerDropdownStyles}
+      ${toolbarDropdownStyles}
       <etools-dropdown
         transparent
         ?hidden=${isEmptyObject(this.organizations)}
@@ -122,7 +122,7 @@ export class organizationsDropdown extends connect(store)(EndpointsLitMixin(LitE
     DexieRefresh.refresh();
     DexieRefresh.clearLocalStorage();
 
-    history.pushState(window.history.state, '', `${ROOT_PATH}partners`);
+    history.pushState(window.history.state, '', `${Environment.basePath}partners`);
   }
 
   protected _handleError(error: any) {
