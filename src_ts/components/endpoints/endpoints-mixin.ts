@@ -63,7 +63,6 @@ function EndpointsMixin<T extends Constructor<LitElement>>(baseClass: T) {
       const endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
       const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
       const baseSite = authorizationTokenMustBeAdded ? Environment.getHost(endpoint.token) : window.location.origin;
-      console.log('heeeelllooo', baseSite);
       if (this._hasUrlTemplate(endpoint)) {
         if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
           // we need to get corresponding PRP country ID
