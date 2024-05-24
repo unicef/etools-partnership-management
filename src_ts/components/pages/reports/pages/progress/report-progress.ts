@@ -101,7 +101,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
           margin: 0 16px;
         }
         .indicator-header.row {
-          width: calc(100% -34px);
+          width: calc(100% - 34px);
         }
       </style>
 
