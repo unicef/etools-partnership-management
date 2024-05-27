@@ -74,6 +74,9 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
         .pb-0 {
           padding-bottom: 0 !important;
         }
+        .row-padding {
+          padding: 16px;
+        }
       </style>
       <div class="content-section paper-material elevation remove-padding" elevation="1">
         <div class="row-h b-border">
