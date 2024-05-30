@@ -41,6 +41,7 @@ class PageHeader extends connect(store)(
       <app-toolbar
         @menu-button-clicked="${this.menuBtnClicked}"
         .profile=${this.profile}
+        responsive-width="850.9px"
         sticky
         class="content-align header"
       >
