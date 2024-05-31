@@ -82,7 +82,7 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .group-label {
-          padding-top: 9px !important;
+          padding-top: 3px !important;
         }
         #disaggregateByEl {
           padding-top: 6px;

@@ -39,6 +39,10 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         #agreementTermination {
           --etools-dialog-default-btn-bg: var(--error-color);
         }
+        .row {
+          padding: 16px 14px;
+          margin: 0 !important;
+        }
       </style>
 
       <etools-dialog
@@ -73,7 +77,10 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
           </etools-upload>
         </div>
         <div class="row">
-          <etools-warn-message-lit .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
+          <etools-warn-message-lit
+            class="col-12"
+            .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}"
+          >
           </etools-warn-message-lit>
         </div>
       </etools-dialog>

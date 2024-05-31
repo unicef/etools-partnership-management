@@ -34,7 +34,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<LitElement>>(baseClass: T
     active!: boolean;
 
     @property({type: Number})
-    minimumDistanceFromWindowTop = 76;
+    minimumDistanceFromWindowTop = 176;
 
     @property({type: String})
     sectionName!: string; // PD/SPD, Partners, Agreements
