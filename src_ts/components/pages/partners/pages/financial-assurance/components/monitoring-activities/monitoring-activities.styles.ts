@@ -61,6 +61,7 @@ export const monitoringActivitiesStyles = html`<style>
   .activities.hovered:not(.origin-group) .row,
   .activities.grouped .row {
     padding-inline-start: 5px;
+    margin-left: 0;
   }
   .activities .remove,
   .activities .braces {
