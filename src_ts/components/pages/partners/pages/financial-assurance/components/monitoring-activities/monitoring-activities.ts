@@ -63,10 +63,10 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
         ${!(this.activities || []).length
           ? html`<div class="no-activities">${translate('NO_ACTIVITIES')}</div>`
           : html` <div class="row panel-row-tall layout-horizontal">
-              <etools-data-table-column class="flex-2 cell">${translate('REFERENCE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">${translate('START_DATE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">${translate('END_DATE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-2 cell">${translate('LOCATION_SITE')}</etools-data-table-column>
+              <etools-data-table-column class="col-4">${translate('REFERENCE')}</etools-data-table-column>
+              <etools-data-table-column class="col-2">${translate('START_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="col-2">${translate('END_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="col-4">${translate('LOCATION_SITE')}</etools-data-table-column>
             </div>`}
         ${(this.mappedGroups || []).map(
           (item: AnyObject) => html` <div
@@ -87,7 +87,7 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
                 data-group-id="${item.id}"
                 data-activity-id="${activity.id}"
               >
-                <div class="flex-2 cell">
+                <div class="col-4">
                   <etools-icon
                     ?hidden="${!this.editMode}"
                     class="flex-none"
@@ -100,11 +100,9 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
                         ${activity.reference_number}
                       </a>`}
                 </div>
-                <div class="flex-1 cell">${activity.start_date}</div>
-                <div class="flex-1 cell">${activity.end_date}</div>
-                <div class="flex-2 cell">
-                  ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
-                </div>
+                <div class="col-2">${activity.start_date}</div>
+                <div class="col-2">${activity.end_date}</div>
+                <div class="col-4">${this.locationAndSite(activity.location.name, activity.location_site?.name)}</div>
               </div>`
             )}
           </div>`

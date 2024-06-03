@@ -1,5 +1,5 @@
-import {LitElement, html} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
@@ -327,11 +327,18 @@ export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)
     this.selectedAudits = selectedAudits;
   }
 
-  _auditsChanged() {
-    this.auditMap.map(
-      (audit: any) =>
-        (this.editableValues.planned_engagement[`${audit.prop}`] = this.selectedAudits.includes(audit.label))
-    );
+  _auditsChanged(e: CustomEvent) {
+    const selectedItems = e.detail?.selectedItems;
+
+    if (!selectedItems) {
+      return;
+    }
+
+    const selectedLabels = new Set(selectedItems.map((a: any) => a.label));
+
+    this.auditMap.forEach((audit: any) => {
+      this.editableValues.planned_engagement[audit.prop] = selectedLabels.has(audit.label);
+    });
   }
 
   _saveChanges() {
