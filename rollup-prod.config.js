@@ -32,14 +32,12 @@ const copyConfig = {
   targets: [
     { src: 'manifest.json', dest: 'src' },
     { src: 'version.json', dest: 'src' },
-    { src: 'node_modules/leaflet/dist/leaflet.js', dest: 'src/node_modules/leaflet/dist' },
+    { src: 'node_modules/leaflet/dist/', dest: 'src/node_modules/leaflet/' },
     { src: 'node_modules/esri-leaflet/dist/esri-leaflet.js', dest: 'src/node_modules/esri-leaflet/dist' },
     {
       src: 'node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js',
       dest: 'src/node_modules/@mapbox/leaflet-omnivore/'
-    },
-    { src: 'node_modules/leaflet/dist/leaflet.css', dest: 'src/node_modules/leaflet/dist' },
-    { src: 'node_modules/leaflet/dist/images/marker-icon.png', dest: 'src/node_modules/leaflet/dist/images' },
+    },    
     {
       src: 'node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
       dest: 'src/node_modules/leaflet.markercluster/dist'
