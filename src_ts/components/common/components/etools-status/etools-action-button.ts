@@ -50,17 +50,26 @@ export class EtoolsActionButton extends LitElement {
         sl-menu-item {
           text-transform: uppercase;
         }
+        etools-icon {
+          padding-inline-start: 8px;
+          color: var(--light-icon-color);
+          cursor: pointer;
+        }
       </style>
 
       ${this.primaryAction
         ? html`<etools-button-group>
+            ${this.showInfoIcon
+              ? html` <sl-tooltip placement="top" hoist content="${this.infoText}">
+                  <etools-icon name="info-outline"></etools-icon
+                ></sl-tooltip>`
+              : html``}
             <etools-button
               id="primary"
               variant="primary"
               @click="${this._handlePrimaryClick}"
               ?disabled="${this.disabled}"
             >
-              ${this.showInfoIcon ? html`<etools-icon slot="prefix" name="info-outline"></etools-icon>` : html``}
               ${this.primaryAction.label}
             </etools-button>
             ${(this.secondaryActions || []).length
@@ -99,6 +108,9 @@ export class EtoolsActionButton extends LitElement {
 
   @property({type: Boolean})
   showInfoIcon = false;
+
+  @property({type: String})
+  infoText = '';
 
   connectedCallback(): void {
     super.connectedCallback();
