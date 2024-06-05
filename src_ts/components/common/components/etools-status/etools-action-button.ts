@@ -60,7 +60,7 @@ export class EtoolsActionButton extends LitElement {
       ${this.primaryAction
         ? html`<etools-button-group>
             ${this.showInfoIcon
-              ? html` <sl-tooltip placement="top" hoist content="${this.infoText}">
+              ? html` <sl-tooltip placement="top" style="--max-width: 120px;" hoist content="${this.infoText}">
                   <etools-icon name="info-outline"></etools-icon
                 ></sl-tooltip>`
               : html``}
