@@ -4,9 +4,10 @@ import {store, RootState} from '../../../redux/store';
 import '@unicef-polymer/etools-unicef/src/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-app-selector/etools-app-selector';
-import '../header/countries-dropdown';
-import '../header/organizations-dropdown';
-import '../header/languages-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/countries-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/organizations-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/languages-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/buttons/support-button';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -16,8 +17,14 @@ import {translate} from 'lit-translate';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
-import '../../common/components/support-btn';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import pmpEdpoints from '../../endpoints/endpoints';
+import {updateUserData} from '../../../redux/actions/user';
+import {setActiveLanguage} from '../../../redux/actions/active-language';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {appLanguages} from '../../../config/app-constants';
+import UploadsMixin from '../../common/mixins/uploads-mixin';
 
 store.addReducers({
   activeLanguage
@@ -32,54 +39,8 @@ store.addReducers({
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  MatomoMixin(ProfileOperationsMixin(LitElement))
+  UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))
 ) {
-  render() {
-    // main template
-    // language=HTML
-    return html`
-      <app-toolbar
-        @menu-button-clicked="${this.menuBtnClicked}"
-        .profile=${this.profile}
-        responsive-width="850.9px"
-        sticky
-        class="content-align header"
-      >
-        <div slot="dropdowns">
-          <languages-dropdown .profile="${this.profile}"></languages-dropdown>
-          <countries-dropdown id="countries" .countries="${this.countries}" .currentCountry="${this.profile?.country}">
-          </countries-dropdown>
-          <organizations-dropdown></organizations-dropdown>
-        </div>
-        <div slot="icons">
-          <support-btn title="${translate('SUPPORT')}"></support-btn>
-          <etools-profile-dropdown
-            title="${translate('PROFILE_AND_SIGNOUT')}"
-            .sections="${this.allSections}"
-            .offices="${this.allOffices}"
-            .users="${this.allUsers}"
-            .profile="${this.profile}"
-            @save-profile="${this._saveProfile}"
-            @sign-out="${this._signOut}"
-          ></etools-profile-dropdown>
-
-          <etools-icon-button
-            title="${translate('GENERAL.REFRESH')}"
-            id="refresh"
-            label="refresh"
-            name="refresh"
-            tracker="hard refresh"
-            @click="${this._onRefreshClick}"
-          >
-          </etools-icon-button>
-        </div>
-      </app-toolbar>
-    `;
-  }
-
-  @property({type: Array})
-  countries!: any[];
-
   @property({type: Array})
   offices: any[] = [];
 
@@ -107,8 +68,90 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
+  @property({type: String})
+  activeLanguage?: string;
+
+  render() {
+    // main template
+    // language=HTML
+    return html`
+      <app-toolbar
+        @menu-button-clicked="${this.menuBtnClicked}"
+        .profile=${this.profile}
+        responsive-width="850.9px"
+        sticky
+        class="content-align header"
+      >
+        <div slot="dropdowns">
+          <languages-dropdown
+            .profile="${this.profile}"
+            .availableLanguages="${appLanguages}"
+            .activeLanguage="${this.activeLanguage}"
+            .changeLanguageEndpoint="${pmpEdpoints.myProfile}"
+            @user-language-changed="${this.languageChanged}"
+          ></languages-dropdown>
+          <countries-dropdown
+            id="countries"
+            .profile="${this.profile}"
+            .changeCountryEndpoint="${pmpEdpoints.changeCountry}"
+            .selectionValidator="${this.countrySelectionValidator.bind(this)}"
+            @country-changed="${this.countryOrOrganizationChanged}"
+          >
+          </countries-dropdown>
+          <organizations-dropdown
+            .profile="${this.profile}"
+            .changeOrganizationEndpoint="${pmpEdpoints.changeOrganization}"
+            @organization-changed="${this.countryOrOrganizationChanged}"
+          ></organizations-dropdown>
+        </div>
+        <div slot="icons">
+          <support-btn></support-btn>
+          <etools-profile-dropdown
+            title="${translate('PROFILE_AND_SIGNOUT')}"
+            .sections="${this.allSections}"
+            .offices="${this.allOffices}"
+            .users="${this.allUsers}"
+            .profile="${this.profile}"
+            @save-profile="${this._saveProfile}"
+            @sign-out="${this._signOut}"
+          ></etools-profile-dropdown>
+
+          <etools-icon-button
+            title="${translate('GENERAL.REFRESH')}"
+            id="refresh"
+            label="refresh"
+            name="refresh"
+            tracker="hard refresh"
+            @click="${this._onRefreshClick}"
+          >
+          </etools-icon-button>
+        </div>
+      </app-toolbar>
+    `;
+  }
+
   public connectedCallback() {
     super.connectedCallback();
+  }
+
+  public languageChanged(e: any) {
+    store.dispatch(updateUserData(e.detail.user));
+    store.dispatch(setActiveLanguage(e.detail.language));
+  }
+
+  public countryOrOrganizationChanged() {
+    DexieRefresh.refresh();
+    DexieRefresh.clearLocalStorage();
+
+    history.pushState(window.history.state, '', `${Environment.basePath}partners`);
+  }
+
+  public async countrySelectionValidator() {
+    if (this.existsUploadsUnsavedOrInProgress()) {
+      return await this.confirmLeaveUploadInProgress();
+    }
+
+    return true;
   }
 
   public stateChanged(state: RootState) {
@@ -130,45 +173,16 @@ class PageHeader extends connect(store)(
 
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
-
       this._profileChanged(this.profile);
+    }
 
-      // TODO _updateCountriesList called 2 times bellow
-      this._updateCountriesList(this.profile.countries_available);
-
-      if (this.profile && this.profile.countries_available) {
-        this.countries = this._updateCountriesList(this.profile.countries_available);
-      }
+    if (this.activeLanguage !== state.activeLanguage?.activeLanguage) {
+      this.activeLanguage = state.activeLanguage?.activeLanguage;
     }
   }
 
   public menuBtnClicked() {
     fireEvent(this, 'change-drawer-state');
-  }
-
-  private _updateCountriesList(countries: any[]) {
-    if (!countries) {
-      return [];
-    }
-
-    const countriesList: any[] = countries.map((arrayItem) => {
-      return {
-        id: arrayItem.id,
-        name: arrayItem.name
-      };
-    });
-
-    countriesList.sort((a: string, b: string) => {
-      if ((a as any).name < (b as any).name) {
-        return -1;
-      }
-      if ((a as any).name > (b as any).name) {
-        return 1;
-      }
-      return 0;
-    });
-
-    return countriesList;
   }
 
   private _onRefreshClick(e: CustomEvent) {

@@ -38,6 +38,7 @@ import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header-layout';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-footer';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
@@ -51,7 +52,6 @@ import './components/app-shell/menu/app-menu.js';
 import './components/app-shell/header/page-header.js';
 import './components/app-shell/header/data-refresh-dialog';
 import {DataRefreshDialog} from './components/app-shell/header/data-refresh-dialog';
-import './components/app-shell/footer/page-footer.js';
 
 import './components/common/environment-flags/environment-flags';
 import './components/pages/partners/data/partners-list-data.js';
@@ -209,7 +209,7 @@ class AppShell extends connect(store)(
             ></settings-module>
           </main>
 
-          <page-footer></page-footer>
+          <app-footer></app-footer>
         </app-header-layout>
       </app-drawer-layout>
 
