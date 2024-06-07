@@ -7,7 +7,6 @@ import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
-import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
@@ -21,6 +20,7 @@ import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -254,7 +254,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [ColumnStyles, NewInterventionStyles];
+    return [layoutStyles, NewInterventionStyles];
   }
 
   cancel() {

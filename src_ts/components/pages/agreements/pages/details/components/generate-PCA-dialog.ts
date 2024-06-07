@@ -7,7 +7,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
 import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 
 /**
  * @LitElement
@@ -16,7 +16,7 @@ import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/st
 @customElement('generate-pca-dialog')
 export class GeneratePcaDialog extends LitElement {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`

@@ -9,7 +9,6 @@ import {translate} from 'lit-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import pmpEdpoints from '../../../../endpoints/endpoints';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {RootState, store} from '../../../../../redux/store';
 import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
@@ -18,6 +17,7 @@ import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixin
 import CONSTANTS from '../../../../../config/app-constants';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -216,7 +216,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
       .then((intervention: any) => {
         this.loadingInProcess = false;
         fireEvent(this, 'dialog-closed', {confirmed: true});
-        history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
+        history.pushState(window.history.state, '', `${Environment.basePath}interventions/${intervention.id}/metadata`);
         window.dispatchEvent(new CustomEvent('popstate'));
         this.waitForRouteDetailsUpdate().then(() => store.dispatch(setShouldReGetList(true)));
       })

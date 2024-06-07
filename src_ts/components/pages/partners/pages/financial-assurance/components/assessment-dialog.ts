@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
@@ -33,7 +33,7 @@ import {SlCheckbox} from '@shoelace-style/shoelace';
 @customElement('assessment-dialog')
 export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`
@@ -42,8 +42,12 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         :host {
           display: block;
         }
-        .padd-left {
-          padding-inline-start: 48px !important;
+        .padding-container {
+          padding: 16px 9px;
+        }
+        .padding-container.row {
+          margin-right: 0;
+          margin-left: 0;
         }
       </style>
 
@@ -59,8 +63,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
         ?disable-confirm-btn="${this.uploadInProgress}"
         ?disable-dismiss-btn="${this.uploadInProgress}"
       >
-        <div class="row-h flex-c">
-          <div class="col col-4">
+        <div class="row padding-container">
+          <div class="col-12 col-md-5">
             <etools-dropdown
               id="assessmentType"
               label="${translate('ASSESSMENT_TYPE')}"
@@ -80,7 +84,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
               auto-validate
             ></etools-dropdown>
           </div>
-          <div class="col col-5 padd-left">
+          <div class="col-12 col-md-5">
             <datepicker-lite
               id="dateSubmitted"
               label="${translate('DATE_OF_ASSESSMENT')}"
@@ -99,8 +103,9 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
             </datepicker-lite>
           </div>
         </div>
-        <div class="row-h">
+        <div class="row padding-container">
           <etools-upload
+            class="col-12"
             id="report"
             label="${translate('REPORT')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
@@ -114,8 +119,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
           >
           </etools-upload>
         </div>
-        <div class="row-h">
-          <etools-checkbox ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
+        <div class="row padding-container">
+          <etools-checkbox class="col-12" ?checked="${!this.assessment.active}" @sl-change="${this._archivedChanged}"
             >${translate('ARCHIVED')}</etools-checkbox
           >
         </div>

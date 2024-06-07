@@ -1,9 +1,9 @@
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {html, LitElement} from 'lit';
-import {BASE_URL} from '../../../config/config';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -48,7 +48,7 @@ class NotFound extends LitElement {
 
       <div class="page-content elevation" elevation="1">
         <h1>404 - Page not found!</h1>
-        <a href="${BASE_URL}partners/list">Head back home.</a>
+        <a href="${Environment.basePath}partners/list">Head back home.</a>
       </div>
     `;
   }

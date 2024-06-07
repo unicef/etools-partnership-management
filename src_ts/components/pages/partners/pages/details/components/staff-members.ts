@@ -3,8 +3,9 @@ import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
@@ -23,13 +24,14 @@ import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 @customElement('staff-members')
 export class StaffMembers extends LitElement {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
     return html`
+      ${sharedStyles}
       <style>
-        ${sharedStyles} ${dataTableStylesLit} ${etoolsCpHeaderActionsBarStyles} [hidden] {
+        ${dataTableStylesLit} ${etoolsCpHeaderActionsBarStyles} [hidden] {
           display: none !important;
         }
 
@@ -57,7 +59,17 @@ export class StaffMembers extends LitElement {
           word-break: break-all;
           word-wrap: break-word;
         }
+        .row.no-data {
+          margin: 0;
+          padding: 16px 11px;
+        }
       </style>
+      <etools-media-query
+        query="(max-width: 767px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel
         class="content-section"
         panel-title="${translate('PARTNER_CONTACTS')} (${this.dataItems?.length})"
@@ -76,7 +88,7 @@ export class StaffMembers extends LitElement {
         </div>
 
         <div ?hidden="${this._emptyList(this.dataItems?.length)}">
-          <etools-data-table-header no-collapse no-title>
+          <etools-data-table-header no-collapse no-title .lowResolutionLayout="${this.lowResolutionLayout}">
             <etools-data-table-column class="col-2">${translate('POSITION')}</etools-data-table-column>
             <etools-data-table-column class="col-2">${translate('FIRST_NAME')}</etools-data-table-column>
             <etools-data-table-column class="col-2">${translate('LAST_NAME')}</etools-data-table-column>
@@ -90,14 +102,28 @@ export class StaffMembers extends LitElement {
               secondary-bg-on-hover
               no-collapse
               ?hidden="${!this._isVisible(item.has_active_realm, this.showInactive)}"
+              .lowResolutionLayout="${this.lowResolutionLayout}"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-2">${this._displayValue(item.title)}</span>
-                <span class="col-data col-2">${this._displayValue(item.first_name)}</span>
-                <span class="col-data col-2">${this._displayValue(item.last_name)}</span>
-                <span class="col-data col-2">${this._displayValue(item.phone)}</span>
-                <span class="col-data col-2">${this._displayValue(item.email)}</span>
-                <span class="col-data col-2 center-align">
+                <span class="col-data col-2" data-col-header-label="${translate('POSITION')}"
+                  >${this._displayValue(item.title)}</span
+                >
+                <span class="col-data col-2" data-col-header-label="${translate('FIRST_NAME')}"
+                  >${this._displayValue(item.first_name)}</span
+                >
+                <span class="col-data col-2" data-col-header-label="${translate('LAST_NAME')}"
+                  >${this._displayValue(item.last_name)}</span
+                >
+                <span class="col-data col-2" data-col-header-label="${translate('PHONE_NUMBER')}"
+                  >${this._displayValue(item.phone)}</span
+                >
+                <span class="col-data col-2" data-col-header-label="${translate('EMAIL_ADDRESS')}"
+                  >${this._displayValue(item.email)}</span
+                >
+                <span
+                  class="col-data col-2 ${!this.lowResolutionLayout ? 'center-align' : ''}"
+                  data-col-header-label="${translate('ACTIVE_STAFF')}"
+                >
                   <span ?hidden="${item.has_active_realm}" class="placeholder-style"
                     >${!item.active
                       ? translate('INACTIVE')
@@ -112,8 +138,8 @@ export class StaffMembers extends LitElement {
           )}
         </div>
 
-        <div class="row-h" ?hidden="${!this._emptyList(this.dataItems?.length)}">
-          <p>${translate('THERE_ARE_NO_STAFF_MEMBERS_ADDED')}</p>
+        <div class="row no-data" ?hidden="${!this._emptyList(this.dataItems?.length)}">
+          <p class="col-12">${translate('THERE_ARE_NO_STAFF_MEMBERS_ADDED')}</p>
         </div>
       </etools-content-panel>
     `;
@@ -131,6 +157,8 @@ export class StaffMembers extends LitElement {
   @property({type: Object})
   user!: User;
 
+  @property({type: Boolean})
+  lowResolutionLayout = false;
   updated(changedProperties: PropertyValues) {
     if (changedProperties.has('dataItems')) {
       this.dataItemsChanged();

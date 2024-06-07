@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-warn-message';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-lit';
 
@@ -25,7 +25,7 @@ import {translate} from 'lit-translate';
 @customElement('agreement-termination')
 export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixinLit(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
@@ -38,6 +38,10 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
 
         #agreementTermination {
           --etools-dialog-default-btn-bg: var(--error-color);
+        }
+        .row {
+          padding: 16px 14px;
+          margin: 0 !important;
         }
       </style>
 
@@ -55,8 +59,9 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         ?disableConfirmBtn="${this.uploadInProgress}"
         ?disableDismissBtn="${this.uploadInProgress}"
       >
-        <div class="row-h flex-c">
+        <div class="row">
           <etools-upload
+            class="col-12"
             id="terminationNotice"
             label="${translate('TERMINATION_NOTICE')}"
             accept=".doc,.docx,.pdf,.jpg,.png"
@@ -71,8 +76,11 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
           >
           </etools-upload>
         </div>
-        <div class="row-h">
-          <etools-warn-message-lit .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}">
+        <div class="row">
+          <etools-warn-message-lit
+            class="col-12"
+            .messages="${translate('ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED')}"
+          >
           </etools-warn-message-lit>
         </div>
       </etools-dialog>

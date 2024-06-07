@@ -38,6 +38,7 @@ import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header-layout';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-footer';
 
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
@@ -51,7 +52,6 @@ import './components/app-shell/menu/app-menu.js';
 import './components/app-shell/header/page-header.js';
 import './components/app-shell/header/data-refresh-dialog';
 import {DataRefreshDialog} from './components/app-shell/header/data-refresh-dialog';
-import './components/app-shell/footer/page-footer.js';
 
 import './components/common/environment-flags/environment-flags';
 import './components/pages/partners/data/partners-list-data.js';
@@ -64,7 +64,7 @@ import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import './config/config.js';
 import './components/utils/routes';
 
-import {BASE_URL, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
+import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
 import UploadsMixin from './components/common/mixins/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -72,7 +72,6 @@ import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, query, state} from 'lit/decorators.js';
@@ -81,6 +80,7 @@ import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/uti
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import {initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 function fetchLangFiles(lang: string) {
   return Promise.allSettled([
@@ -97,7 +97,7 @@ const translationConfig = registerTranslateConfig({
   loader: (lang: string) => fetchLangFiles(lang)
 });
 
-setBasePath(BASE_URL);
+setBasePath(Environment.basePath);
 initializeIcons();
 
 /**
@@ -209,7 +209,7 @@ class AppShell extends connect(store)(
             ></settings-module>
           </main>
 
-          <page-footer></page-footer>
+          <app-footer></app-footer>
         </app-header-layout>
       </app-drawer-layout>
 
@@ -430,7 +430,7 @@ class AppShell extends connect(store)(
   }
 
   _getRootPathAndModule(module: string) {
-    return `${ROOT_PATH}${module}`;
+    return `${Environment.basePath}${module}`;
   }
 
   checkAppVersion() {
@@ -583,7 +583,7 @@ class AppShell extends connect(store)(
   }
 
   private _updatePath(path: string) {
-    history.pushState(window.history.state, '', `${ROOT_PATH}${path}`);
+    history.pushState(window.history.state, '', `${Environment.basePath}${path}`);
     window.dispatchEvent(new CustomEvent('popstate'));
   }
 

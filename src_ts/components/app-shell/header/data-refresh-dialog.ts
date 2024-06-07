@@ -7,7 +7,7 @@ import {store} from '../../../redux/store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEdpoints from '../../endpoints/endpoints';
@@ -26,7 +26,7 @@ import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-re
  */
 class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`

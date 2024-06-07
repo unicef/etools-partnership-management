@@ -1,8 +1,8 @@
 import {LitElement, PropertyValues} from 'lit';
 import {property} from 'lit/decorators.js';
-import {BASE_URL} from '../../../config/config';
 import {Route} from '../../../typings/route.types';
 import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 /**
  * Module main elements common functionality
  * @LitElement
@@ -27,9 +27,6 @@ function ModuleRoutingMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
 
     @property({type: Object})
     subRouteData: any;
-
-    @property({type: String})
-    rootPath = BASE_URL;
 
     @property({type: String})
     moduleName!: string;
@@ -97,7 +94,7 @@ function ModuleRoutingMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
 
     isActiveModule(moduleName?: string) {
       const mName = !moduleName ? this.moduleName : moduleName;
-      return this.rootPath + mName === this.route.prefix;
+      return Environment.basePath + mName === this.route.prefix;
     }
   }
   return ModuleRoutingClass;

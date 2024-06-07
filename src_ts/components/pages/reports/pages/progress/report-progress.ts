@@ -14,7 +14,7 @@ import './components/sr-details';
 import UtilsMixin from '../../../../common/mixins/utils-mixin';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
@@ -32,7 +32,7 @@ import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-bu
 @customElement('report-progress')
 export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
@@ -100,6 +100,9 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
         .calculation-formula-delimiter {
           margin: 0 16px;
         }
+        .indicator-header.row {
+          width: calc(100% - 34px);
+        }
       </style>
 
       <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
@@ -148,8 +151,8 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                   </etools-icon-button>
                                 </div>
 
-                                <div class="indicator-header layout-horizontal flex-c">
-                                  <div class="col col-8 indicator-header-title">
+                                <div class="indicator-header row">
+                                  <div class="col col-md-8 col-12 indicator-header-title">
                                     <h3>
                                       ${this.getIndicatorDisplayType(indicatorReport.reportable.blueprint)}
                                       ${indicatorReport.reportable.blueprint.title}
@@ -166,7 +169,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                                       </span>
                                     </div>
                                   </div>
-                                  <div class="col col-4 indicator-header-target">
+                                  <div class="col col-md-4 col-12 indicator-header-target">
                                     <indicator-report-target2
                                       .displayType="${indicatorReport.reportable.blueprint.display_type}"
                                       .target="${indicatorReport.reportable.target}"

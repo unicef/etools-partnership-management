@@ -36,11 +36,10 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
 import './pages/list/governments-list';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
-import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
-import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -75,28 +74,7 @@ export class PartnersModule extends connect(store)(
           display: block;
         }
         section {
-          background-color: #eeeeee;
-        }
-        sl-tab-group {
-          --indicator-color: var(--primary-color);
-        }
-        sl-tab-group::part(tabs) {
-          border-bottom: 0;
-        }
-        sl-tab-group::part(active-tab-indicator) {
-          bottom: 0;
-        }
-        sl-tab:not([active])::part(base) {
-          color: var(--secondary-text-color);
-        }
-        sl-tab::part(base) {
-          text-transform: uppercase;
-          opacity: 0.8;
-        }
-        sl-tab::part(base):focus-visible {
-          outline: 0;
-          opacity: 1;
-          font-weight: 700;
+          --primary-background-color: #eeeeee;
         }
       </style>
 
@@ -133,14 +111,15 @@ export class PartnersModule extends connect(store)(
         </div>
 
         ${this._showPageTabs(this.activePage)
-          ? html` <sl-tab-group slot="tabs" @sl-tab-show="${this._handleTabSelectAction}">
-              ${this.partnerTabs?.map(
-                (t) =>
-                  html` <sl-tab slot="nav" panel="${t.tab}" ?active="${this.reduxRouteDetails?.subRouteName === t.tab}"
-                    >${t.tabLabel}</sl-tab
-                  >`
-              )}
-            </sl-tab-group>`
+          ? html`
+              <etools-tabs-lit
+                slot="tabs"
+                .tabs="${this.partnerTabs}"
+                .activeTab="${this.reduxRouteDetails?.subRouteName}"
+                @sl-tab-show="${this._handleTabSelectAction}"
+                id="pageTabs"
+              ></etools-tabs-lit>
+            `
           : ''}
       </page-content-header>
 
@@ -151,52 +130,50 @@ export class PartnersModule extends connect(store)(
             title="Errors Saving Partner"
             .errors="${this.serverErrors}"
           ></etools-error-messages-box>
-          <section id="partnersPages" role="main">
-            <partners-list
-              id="list"
-              name="list"
-              ?hidden="${!(
-                this._pageEquals(this.activePage, 'list') &&
-                this.partnersListActive(this.listActive, this.reduxRouteDetails)
-              )}"
-              @csvDownloadUrl-changed=${(e: any) => {
-                this.csvDownloadUrl = e.detail;
-              }}
-            >
-            </partners-list>
-            <governments-list
-              id="g-list"
-              name="g-list"
-              ?hidden="${!(
-                this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.reduxRouteDetails)
-              )}"
-              @csvDownloadUrl-changed=${(e: any) => {
-                this.csvDownloadUrl = e.detail;
-              }}
-            >
-            </governments-list>
-            <partner-overview
-              ?hidden="${!this._pageEquals(this.activePage, 'overview')}"
-              name="overview"
-              .partner="${this.partner}"
-            ></partner-overview>
-            <partner-details
-              id="partnerDetails"
-              ?hidden="${!this._pageEquals(this.activePage, 'details')}"
-              name="details"
-              .partner="${this.partner}"
-              .editMode="${this._hasEditPermissions(this.permissions)}"
-            ></partner-details>
+          <partners-list
+            id="list"
+            name="list"
+            ?hidden="${!(
+              this._pageEquals(this.activePage, 'list') &&
+              this.partnersListActive(this.listActive, this.reduxRouteDetails)
+            )}"
+            @csvDownloadUrl-changed=${(e: any) => {
+              this.csvDownloadUrl = e.detail;
+            }}
+          >
+          </partners-list>
+          <governments-list
+            id="g-list"
+            name="g-list"
+            ?hidden="${!(
+              this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.reduxRouteDetails)
+            )}"
+            @csvDownloadUrl-changed=${(e: any) => {
+              this.csvDownloadUrl = e.detail;
+            }}
+          >
+          </governments-list>
+          <partner-overview
+            ?hidden="${!this._pageEquals(this.activePage, 'overview')}"
+            name="overview"
+            .partner="${this.partner}"
+          ></partner-overview>
+          <partner-details
+            id="partnerDetails"
+            ?hidden="${!this._pageEquals(this.activePage, 'details')}"
+            name="details"
+            .partner="${this.partner}"
+            .editMode="${this._hasEditPermissions(this.permissions)}"
+          ></partner-details>
 
-            <partner-financial-assurance
-              id="financialAssurance"
-              ?hidden="${!this._pageEquals(this.activePage, 'financial-assurance')}"
-              .partner="${this.partner}"
-              .editMode="${this._hasEditPermissions(this.permissions)}"
-              name="financial-assurance"
-            >
-            </partner-financial-assurance>
-          </section>
+          <partner-financial-assurance
+            id="financialAssurance"
+            ?hidden="${!this._pageEquals(this.activePage, 'financial-assurance')}"
+            .partner="${this.partner}"
+            .editMode="${this._hasEditPermissions(this.permissions)}"
+            name="financial-assurance"
+          >
+          </partner-financial-assurance>
         </div>
         <!-- page content end -->
 
@@ -527,7 +504,7 @@ export class PartnersModule extends connect(store)(
       return;
     }
     const newPath = `${this.currentModule}/${this.partner!.id}/${newTabName}`;
-    history.pushState(window.history.state, '', `${ROOT_PATH}${newPath}`);
+    history.pushState(window.history.state, '', `${Environment.basePath}${newPath}`);
     window.dispatchEvent(new CustomEvent('popstate'));
   }
 

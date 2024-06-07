@@ -42,7 +42,7 @@ export class EtoolsStatus extends connect(store)(LitElement) {
           <etools-action-button
             ?disabled="${!this.allowSave(this.uploadsInProgress)}"
             .actions="${this.actions}"
-            title="${this.getUploadInProgressOrUnsavedTooltip(this.uploadsInProgress, this.unsavedUploads)}"
+            .infoText="${this.getUploadInProgressOrUnsavedTooltip(this.uploadsInProgress, this.unsavedUploads)}"
             ?showInfoIcon="${this.showInfoIcon}"
           >
           </etools-action-button>

@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import pmpEdpoints from '../../../../../endpoints/endpoints';
@@ -20,7 +20,7 @@ import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etoo
 @customElement('edit-core-values-assessment')
 export class EditCoreValuesAssessment extends CommonMixinLit(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     // language=HTML
