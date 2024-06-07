@@ -1,36 +1,30 @@
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
-import {BASE_URL, isProductionServer, _checkEnvironment} from '../../../config/config';
 import '@unicef-polymer/etools-unicef/src/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-app-selector/etools-app-selector';
-import '../header/countries-dropdown';
-import '../header/organizations-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/countries-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/organizations-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/dropdowns/languages-dropdown';
+import '@unicef-polymer/etools-modules-common/dist/components/buttons/support-button';
 import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from 'lit/decorators.js';
-import {translate, use} from 'lit-translate';
-import {setActiveLanguage} from '../../../redux/actions/active-language.js';
+import {translate} from 'lit-translate';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
-import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {updateUserData} from '../../../redux/actions/user';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
-import 'dayjs/locale/fr.js';
-import 'dayjs/locale/ru.js';
-import 'dayjs/locale/pt.js';
-import 'dayjs/locale/ar.js';
-import 'dayjs/locale/es.js';
+import {setActiveLanguage} from '../../../redux/actions/active-language';
+import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {appLanguages} from '../../../config/app-constants';
-import {headerDropdownStyles} from './header-dropdown-styles';
-import '../../common/components/support-btn';
-import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
-import dayjs from 'dayjs';
+import UploadsMixin from '../../common/mixins/uploads-mixin';
 
 store.addReducers({
   activeLanguage
@@ -45,197 +39,73 @@ store.addReducers({
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  MatomoMixin(ProfileOperationsMixin(LitElement))
+  UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))
 ) {
+  @property({type: Array})
+  offices: any[] = [];
+
+  @property({type: Array})
+  sections: any[] = [];
+
+  @property({type: Array})
+  users: MinimalUser[] = [];
+
+  @property({type: Array})
+  allSections: LabelAndValue[] = [];
+
+  @property({type: Array})
+  allOffices: LabelAndValue[] = [];
+
+  @property({type: Array})
+  allUsers: LabelAndValue[] = [];
+
+  @property({type: Object})
+  profile: User | null = null;
+
+  @property({type: Array})
+  editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
+
+  @property({type: Object})
+  userProfileDialog!: GenericObject;
+
+  @property({type: String})
+  activeLanguage?: string;
+
   render() {
     // main template
     // language=HTML
     return html`
-      ${headerDropdownStyles}
-      <style>
-        app-toolbar {
-          padding-inline-end: 16px;
-          padding-inline-start: 0px;
-          height: 60px;
-          background-color: ${this.headerColor};
-        }
-
-        .titlebar {
-          color: var(--header-color);
-        }
-
-        countries-dropdown {
-          --countries-dropdown-color: var(--light-secondary-text-color);
-        }
-
-        etools-profile-dropdown,
-        #refresh {
-          color: var(--light-secondary-text-color);
-        }
-
-        #menuButton {
-          display: block;
-          color: var(--light-secondary-text-color);
-        }
-
-        .titlebar {
-          flex: 1;
-          font-size: var(--etools-font-size-28, 28px);
-          font-weight: 300;
-        }
-
-        .titlebar img {
-          width: 34px;
-          margin-inline-end: 8px;
-          margin-inline-start: 12px;
-        }
-
-        .content-align {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-        }
-
-        #app-logo {
-          height: 32px;
-          width: auto;
-        }
-
-        .dropdowns {
-          padding-block-start: 4px;
-          display: flex;
-          margin-inline-end: 16px;
-        }
-
-        .header {
-          flex-wrap: wrap;
-          height: 100%;
-          justify-content: space-between;
-        }
-
-        .nav-menu-button {
-          min-width: 70px;
-        }
-
-        .header__item {
-          display: flex;
-          align-items: center;
-        }
-
-        .header__right-group {
-          justify-content: space-evenly;
-        }
-
-        .envWarning {
-          color: #000;
-          background-color: var(--header-color);
-          font-weight: 700;
-          padding: 5px 10px;
-          font-size: var(--etools-font-size-14, 14px);
-          line-height: 1;
-          border-radius: 10px;
-        }
-        support-btn {
-          color: var(--header-color);
-        }
-
-        support-btn {
-          color: var(--header-color);
-        }
-
-        @media (min-width: 850px) {
-          #menuButton {
-            display: none;
-          }
-        }
-        @media (max-width: 920px) {
-          .titlebar img {
-            margin-inline-end: 8px;
-            margin-inline-start: 12px;
-          }
-        }
-        @media (max-width: 768px) {
-          #app-logo {
-            width: 90px;
-          }
-          .envLong {
-            display: none;
-          }
-          etools-app-selector {
-            width: 42px;
-          }
-          .titlebar img {
-            margin-inline-end: 8px;
-            margin-inline-start: 12px;
-          }
-
-          etools-profile-dropdown {
-            margin-inline-start: 0px;
-            width: 40px;
-          }
-        }
-        @media (max-width: 576px) {
-          etools-app-selector {
-            --app-selector-button-padding: 18px 8px;
-          }
-          #app-logo {
-            display: none;
-          }
-          .envWarning {
-            font-size: var(--etools-font-size-10, 10px);
-            margin-inline-start: 2px;
-          }
-          #refresh {
-            width: 24px;
-            padding: 0px;
-          }
-          app-toolbar {
-            padding-inline-end: 4px;
-          }
-        }
-      </style>
-
-      <app-toolbar sticky class="content-align header">
-        <div class="header__item">
-          <etools-icon-button id="menuButton" name="menu" @click="${this.menuBtnClicked}"></etools-icon-button>
-          <div class="titlebar content-align">
-            <etools-app-selector id="app-selector" .user="${this.profile}"></etools-app-selector>
-            <img id="app-logo" alt="" src="${BASE_URL}assets/images/etools-logo-color-white.svg" />
-            ${this.isStaging
-              ? html`<div class="envWarning" title="${this.environment} TESTING ENVIRONMENT">${this.environment}</div>`
-              : ''}
-          </div>
+      <app-toolbar
+        @menu-button-clicked="${this.menuBtnClicked}"
+        .profile=${this.profile}
+        responsive-width="850.9px"
+        sticky
+        class="content-align header"
+      >
+        <div slot="dropdowns">
+          <languages-dropdown
+            .profile="${this.profile}"
+            .availableLanguages="${appLanguages}"
+            .activeLanguage="${this.activeLanguage}"
+            .changeLanguageEndpoint="${pmpEdpoints.myProfile}"
+            @user-language-changed="${this.languageChanged}"
+          ></languages-dropdown>
+          <countries-dropdown
+            id="countries"
+            .profile="${this.profile}"
+            .changeCountryEndpoint="${pmpEdpoints.changeCountry}"
+            .selectionValidator="${this.countrySelectionValidator.bind(this)}"
+            @country-changed="${this.countryOrOrganizationChanged}"
+          >
+          </countries-dropdown>
+          <organizations-dropdown
+            .profile="${this.profile}"
+            .changeOrganizationEndpoint="${pmpEdpoints.changeOrganization}"
+            @organization-changed="${this.countryOrOrganizationChanged}"
+          ></organizations-dropdown>
         </div>
-
-        <div class="header__item header__right-group">
-          <div class="dropdowns">
-            <div>
-              <etools-dropdown
-                transparent
-                id="languageSelector"
-                .selected="${this.selectedLanguage}"
-                .options="${appLanguages}"
-                option-label="display_name"
-                option-value="value"
-                @etools-selected-item-changed="${this.languageChanged}"
-                trigger-value-change-event
-                hide-search
-                allow-outside-scroll
-                no-label-float
-                min-width="120px"
-                placement="bottom-end"
-                .syncWidth="${false}"
-              ></etools-dropdown>
-            </div>
-            <countries-dropdown
-              id="countries"
-              .countries="${this.countries}"
-              .currentCountry="${this.profile?.country}"
-            >
-            </countries-dropdown>
-            <organizations-dropdown></organizations-dropdown>
-          </div>
-          <support-btn title="${translate('SUPPORT')}"></support-btn>
+        <div slot="icons">
+          <support-btn></support-btn>
           <etools-profile-dropdown
             title="${translate('PROFILE_AND_SIGNOUT')}"
             .sections="${this.allSections}"
@@ -260,54 +130,28 @@ class PageHeader extends connect(store)(
     `;
   }
 
-  @property({type: String})
-  rootPath!: string;
-
-  @property({type: Array})
-  countries!: any[];
-
-  @property({type: Array})
-  offices: any[] = [];
-
-  @property({type: Array})
-  sections: any[] = [];
-
-  @property({type: Array})
-  users: MinimalUser[] = [];
-
-  @property({type: Array})
-  allSections: LabelAndValue[] = [];
-
-  @property({type: Array})
-  allOffices: LabelAndValue[] = [];
-
-  @property({type: Array})
-  allUsers: LabelAndValue[] = [];
-
-  @property({type: String})
-  environment: string | null = _checkEnvironment();
-
-  @property({type: Boolean})
-  isStaging = !isProductionServer();
-
-  @property({type: Object})
-  profile: User | null = null;
-
-  @property({type: Array})
-  editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
-
-  @property({type: Object})
-  userProfileDialog!: GenericObject;
-
-  @property({type: String})
-  headerColor = 'var(--header-bg-color)';
-
-  @property({type: String})
-  selectedLanguage = '';
-
   public connectedCallback() {
     super.connectedCallback();
-    this._setBgColor();
+  }
+
+  public languageChanged(e: any) {
+    store.dispatch(updateUserData(e.detail.user));
+    store.dispatch(setActiveLanguage(e.detail.language));
+  }
+
+  public countryOrOrganizationChanged() {
+    DexieRefresh.refresh();
+    DexieRefresh.clearLocalStorage();
+
+    history.pushState(window.history.state, '', `${Environment.basePath}partners`);
+  }
+
+  public async countrySelectionValidator() {
+    if (this.existsUploadsUnsavedOrInProgress()) {
+      return await this.confirmLeaveUploadInProgress();
+    }
+
+    return true;
   }
 
   public stateChanged(state: RootState) {
@@ -329,30 +173,11 @@ class PageHeader extends connect(store)(
 
     if (state.user!.data !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       this.profile = state.user!.data;
-
       this._profileChanged(this.profile);
-
-      // TODO _updateCountriesList called 2 times bellow
-      this._updateCountriesList(this.profile.countries_available);
-
-      if (this.profile && this.profile.countries_available) {
-        this.countries = this._updateCountriesList(this.profile.countries_available);
-      }
     }
 
-    if (state.activeLanguage!.activeLanguage && state.activeLanguage!.activeLanguage !== this.selectedLanguage) {
-      this.selectedLanguage = state.activeLanguage!.activeLanguage;
-      window.EtoolsLanguage = this.selectedLanguage;
-      this.setLanguageDirection();
-    }
-  }
-
-  private setLanguageDirection() {
-    const htmlTag = document.querySelector('html');
-    if (this.selectedLanguage === 'ar') {
-      htmlTag!.setAttribute('dir', 'rtl');
-    } else if (htmlTag!.getAttribute('dir')) {
-      htmlTag!.removeAttribute('dir');
+    if (this.activeLanguage !== state.activeLanguage?.activeLanguage) {
+      this.activeLanguage = state.activeLanguage?.activeLanguage;
     }
   }
 
@@ -360,67 +185,6 @@ class PageHeader extends connect(store)(
     fireEvent(this, 'change-drawer-state');
   }
 
-  public _setBgColor() {
-    // If not production environment, changing header color to red
-    if (!isProductionServer()) {
-      this.headerColor = 'var(--nonprod-header-color)';
-    }
-  }
-
-  private _updateCountriesList(countries: any[]) {
-    if (!countries) {
-      return [];
-    }
-
-    const countriesList: any[] = countries.map((arrayItem) => {
-      return {
-        id: arrayItem.id,
-        name: arrayItem.name
-      };
-    });
-
-    countriesList.sort((a: string, b: string) => {
-      if ((a as any).name < (b as any).name) {
-        return -1;
-      }
-      if ((a as any).name > (b as any).name) {
-        return 1;
-      }
-      return 0;
-    });
-
-    return countriesList;
-  }
-
-  languageChanged(e: CustomEvent): void {
-    if (!e.detail.selectedItem) {
-      return;
-    }
-
-    const newLanguage = e.detail.selectedItem.value;
-    if (newLanguage) {
-      dayjs.locale(newLanguage);
-      // Event caught by self translating npm packages
-      fireEvent(this, 'language-changed', {language: newLanguage});
-    }
-    if (newLanguage !== this.selectedLanguage) {
-      window.EtoolsLanguage = newLanguage;
-      use(newLanguage).then(() => {
-        if (this.profile?.preferences?.language != newLanguage) {
-          this.updateUserPreference(newLanguage);
-        }
-      });
-    }
-  }
-
-  private updateUserPreference(language: string) {
-    sendRequest({endpoint: pmpEdpoints.myProfile, method: 'PATCH', body: {preferences: {language: language}}})
-      .then((response) => {
-        store.dispatch(updateUserData(response));
-        store.dispatch(setActiveLanguage(language));
-      })
-      .catch((err: any) => parseRequestErrorsAndShowAsToastMsgs(err, this));
-  }
   private _onRefreshClick(e: CustomEvent) {
     this.trackAnalytics(e);
     this._openDataRefreshDialog();

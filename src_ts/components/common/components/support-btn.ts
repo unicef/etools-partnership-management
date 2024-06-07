@@ -1,7 +1,7 @@
 /* eslint-disable lit/attribute-value-entities */
 import {css, CSSResult, html, LitElement, TemplateResult} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import {translate} from 'lit-translate';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 /* eslint-disable max-len */
@@ -20,14 +20,11 @@ export class SupportBtn extends MatomoMixin(LitElement) {
       }
 
       a {
-        color: var(--light-secondary-text-color);
+        color: var(--header-color);
         text-decoration: none;
-        font-size: var(--etools-font-size-16, 16px);
-      }
-
-      etools-icon {
-        margin-right: 4px;
-        color: var(--light-secondary-text-color);
+        font-size: var(--etools-font-size-14, 14px);
+        padding-top: 4px;
+        display: flex;
       }
 
       @media (max-width: 650px) {
@@ -47,8 +44,11 @@ export class SupportBtn extends MatomoMixin(LitElement) {
         tracker="Support"
         @click="${this.trackAnalytics}"
       >
-        <etools-icon name="communication:textsms"></etools-icon>
-        <span class="support-text">${translate('SUPPORT')}</span>
+        <etools-icon-button
+          name="communication:textsms"
+          label="${translate('SUPPORT')}"
+          title="${translate('SUPPORT')}"
+        ></etools-icon-button>
       </a>
     `;
   }

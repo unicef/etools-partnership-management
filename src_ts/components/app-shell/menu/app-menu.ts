@@ -8,9 +8,10 @@ import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mi
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import {BASE_URL, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
+import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from 'lit-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * PMP main menu
@@ -55,7 +56,7 @@ class AppMenu extends connect(store)(
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'partners')}"
             menu-name="partners"
-            href="${BASE_URL}partners/list"
+            href="${Environment.basePath}partners/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('PARTNERS')}">
               <etools-icon id="partners-icon" name="social:people"></etools-icon>
@@ -66,7 +67,7 @@ class AppMenu extends connect(store)(
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'agreements')}"
             menu-name="agreements"
-            href="${BASE_URL}agreements/list"
+            href="${Environment.basePath}agreements/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('AGREEMENTS')}">
               <etools-icon id="agreements-icon" name="av:playlist-add-check"></etools-icon>
@@ -77,7 +78,7 @@ class AppMenu extends connect(store)(
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'interventions')}"
             menu-name="interventions"
-            href="${BASE_URL}interventions/list"
+            href="${Environment.basePath}interventions/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('PD_SPD')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
@@ -89,7 +90,7 @@ class AppMenu extends connect(store)(
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"
             menu-name="government-partners"
-            href="${BASE_URL}government-partners/list"
+            href="${Environment.basePath}government-partners/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GOVERNMENT')}">
               <etools-icon id="gov-icon" name="account-balance"></etools-icon>
@@ -101,7 +102,7 @@ class AppMenu extends connect(store)(
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'reports')}"
             ?hidden="${this.environmentFlags?.prp_mode_off}"
             menu-name="reports"
-            href="${BASE_URL}reports/list"
+            href="${Environment.basePath}reports/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('REPORTS')}">
               <etools-icon id="reports-icon" name="assignment"></etools-icon>
@@ -113,7 +114,7 @@ class AppMenu extends connect(store)(
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'settings')}"
             ?hidden="${this.environmentFlags?.prp_mode_off}"
             menu-name="settings"
-            href="${BASE_URL}settings"
+            href="${Environment.basePath}settings"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('SETTINGS')}">
               <etools-icon id="settings-icon" name="settings"></etools-icon>
@@ -183,9 +184,6 @@ class AppMenu extends connect(store)(
 
   @property({type: String})
   selectedOption = '';
-
-  @property({type: String})
-  rootPath = BASE_URL;
 
   @property({type: Boolean, attribute: 'small-menu'})
   smallMenu = false;

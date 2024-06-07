@@ -29,11 +29,11 @@ export const monitoringActivitiesStyles = html`<style>
     flex: none;
   }
   .row {
-    height: 48px;
+    min-height: 48px;
     font-size: var(--etools-font-size-13, 13px);
     color: var(--list-text-color, #2b2b2b);
-    padding: 0 35px;
-    border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
+    /*padding: 0 35px;*/
+    /*border-bottom: 1px solid var(--list-divider-color, #9d9d9d);*/
     align-items: center;
     transition: padding 0.2s;
   }
@@ -57,10 +57,12 @@ export const monitoringActivitiesStyles = html`<style>
   .activities.grouped {
     padding-block: 10px;
     padding-inline: 30px 0;
+    --list-row-wrapper-padding-inline: 0;
   }
   .activities.hovered:not(.origin-group) .row,
   .activities.grouped .row {
-    padding-inline-start: 5px;
+    /*padding-inline-start: 5px;*/
+    /*margin-left: 0;*/
   }
   .activities .remove,
   .activities .braces {

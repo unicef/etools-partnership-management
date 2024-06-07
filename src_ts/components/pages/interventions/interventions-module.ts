@@ -25,7 +25,6 @@ import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit'
 import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
@@ -35,6 +34,7 @@ import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 // @ts-ignore
 setStore(store);
@@ -421,7 +421,7 @@ export class InterventionsModule extends connect(store)(
     if (!this._hasEditPermissions(this.userPermissions)) {
       return;
     }
-    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/new`);
+    history.pushState(window.history.state, '', `${Environment.basePath}interventions/new`);
     window.dispatchEvent(new CustomEvent('popstate'));
     fireEvent(this, 'global-loading', {
       active: true,
@@ -437,7 +437,7 @@ export class InterventionsModule extends connect(store)(
    * Go to details page once the new intervention has been saved
    */
   _newInterventionSaved(intervention: Intervention) {
-    history.pushState(window.history.state, '', `${ROOT_PATH}interventions/${intervention.id}/metadata`);
+    history.pushState(window.history.state, '', `${Environment.basePath}interventions/${intervention.id}/metadata`);
     window.dispatchEvent(new CustomEvent('popstate'));
     this.requestUpdate();
   }

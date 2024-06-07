@@ -4,7 +4,8 @@ import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
-import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
@@ -17,9 +18,10 @@ import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit.js'
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
 import dayjs from 'dayjs';
 import {AP_DOMAIN} from '../../../../../config/config';
@@ -54,7 +56,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   EtoolsCurrency(CommonMixin(EndpointsLitMixin(AjaxServerErrorsMixin(RiskRatingMixin(LitElement)))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     if (!this.partner) return;
@@ -62,6 +64,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
     return html`
       ${pageCommonStyles} ${sharedStyles} ${riskRatingStyles}
       <style>
+        ${dataTableStylesLit}
         /* overview panel styles */
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
@@ -73,17 +76,13 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           padding-inline-end: 0;
         }
 
-        .overview-row {
-          padding-inline-start: 48px !important;
-        }
-
         .vision {
           align-items: center;
           position: relative;
-          /*width: 66.66667%;*/
+          width: calc(100% - 3px);
           font-size: var(--etools-font-size-16, 16px);
           border: 2px solid rgba(0, 97, 233, 0.38);
-          height: 56px;
+          min-height: 56px;
           margin-inline-start: -24px;
           padding-inline-start: 24px;
           line-height: normal;
@@ -117,6 +116,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         .panel-table-row {
           border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
           align-items: center;
+          padding: 16px 24px;
         }
 
         .darker-bg {
@@ -155,12 +155,16 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           margin-inline-start: 56px;
         }
 
+        .margin-t {
+          margin-top: 24px;
+        }
+
         .planning-wrapper {
           padding: 24px;
           font-size: var(--etools-font-size-12, 12px);
         }
 
-        .no-r-padd .row-h {
+        .no-r-padd .row {
           padding-inline-end: 0;
         }
 
@@ -188,10 +192,38 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         etools-icon-button[name='open-in-new'] {
           color: var(--primary-color);
         }
+        .col {
+          display: flex;
+          flex-direction: row;
+          box-sizing: border-box;
+        }
+        etools-data-table-header {
+          --list-bg-color: var(--medium-theme-background-color, #eeeeee);
+        }
+        etools-data-table-row.no-divider,
+        etools-data-table-header.no-divider {
+          --list-divider-color: none !important;
+        }
+        .overview-row {
+          padding-inline-start: 34px;
+        }
+        *[slot='row-data'] .col-data.center-align {
+          justify-content: center;
+        }
       </style>
-
+      <etools-media-query
+        query="(max-width: 1200px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel panel-title="${this._getYear()} ${translate('OVERVIEW')}" class="content-section">
-        <div class="row-h overview-header">
+        <etools-data-table-header
+          class="no-divider"
+          no-title
+          no-collapse
+          .lowResolutionLayout="${this.lowResolutionLayout}"
+        >
           <etools-data-table-column class="col col-1"> ${translate('HACT_RISK_RATING')} </etools-data-table-column>
           <etools-data-table-column class="col col-2">
             ${translate('TYPE_OF_ASSESSMENT')} - ${translate('DATE_OF_ASSESSMENT')}
@@ -217,54 +249,84 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           <etools-data-table-column class="col col-1 center-align">
             ${translate('LAST_PSEA_ASSESSMENT_DATE')}
           </etools-data-table-column>
-        </div>
-
-        <div class="row-h overview-row">
-          <div class="col col-4 vision">
-            <div class="from-vision">${translate('FROM_VISION')}</div>
-            <div class="col-3">
-              <span class="${this.getRiskRatingClass(this.partner.rating)}">
-                ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
+        </etools-data-table-header>
+        <etools-data-table-row class="no-divider" no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
+          <div slot="row-data">
+            <div
+              class="col-data col-12 col-md-4"
+              data-col-header-label="${translate('HACT_RISK_RATING')} / ${translate(
+                'TYPE_OF_ASSESSMENT'
+              )} - ${translate('DATE_OF_ASSESSMENT')} / ${translate('CASH_TRANSFERS_USD')}"
+            >
+              <div class="${this.lowResolutionLayout ? 'layout-horizontal' : 'row'}  vision">
+                <div class="from-vision">${translate('FROM_VISION')}</div>
+                <div class="col-3">
+                  <span class="${this.getRiskRatingClass(this.partner.rating)}">
+                    ${translateValue(this.getRiskRatingValue(this.partner.rating), 'COMMON_DATA.PARTNERRISKRATINGS')}
+                  </span>
+                </div>
+                <div class="col col-5">
+                  ${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')} <br />
+                  ${this.getDateDisplayValue(this.partner.last_assessment_date)}
+                </div>
+                <div class="col col-4 ${this.lowResolutionLayout ? '' : 'center-align'}">
+                  $ ${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-data col col-2  ${this.lowResolutionLayout ? '' : 'center-align  hact-values'}"
+              data-col-header-label="${translate('PROG_VISIT')} 
+            ${translate('PLANNED_MR_COMPLETED')}"
+            >
+              <strong>
+                ${this.partner.hact_values?.programmatic_visits?.planned?.total} /
+                <span class="green"> ${this.partner.hact_min_requirements?.programmatic_visits}</span>
+                / ${this.partner.hact_values?.programmatic_visits?.completed?.total}
+              </strong>
+            </div>
+            <div
+              class="col-data col col-2  ${this.lowResolutionLayout ? '' : 'center-align  hact-values'}"
+              data-col-header-label="${translate('SPOT_CHECKS')} 
+            ${translate('REQUIRED_COMPLETED')}"
+            >
+              <strong>
+                <span class="green">${this.partner.planned_engagement?.spot_check_required} </span>
+                / ${this.partner.hact_values?.spot_checks?.completed?.total}
+              </strong>
+            </div>
+            <div
+              class="col-data col-2 col  ${this.lowResolutionLayout ? '' : 'center-align hact-values'}"
+              data-col-header-label="${translate('AUDIT')} 
+            ${translate('REQUIRED_COMPLETED')}"
+            >
+              <strong>
+                <span class="green">${this._getMinReqAudits(this.partner.planned_engagement)} </span>
+                / ${this.partner.hact_values?.audits?.completed}
+              </strong>
+            </div>
+            <div
+              class="col-data col-1 col  ${this.lowResolutionLayout ? '' : 'center-align'}"
+              data-col-header-label="${translate('SEA_RISK_RATING')}"
+            >
+              <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
+                ${translateValue(
+                  this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1),
+                  'COMMON_DATA.SEARISKRATINGS'
+                )}
               </span>
             </div>
-            <div class="col col-5">
-              ${translateValue(this.partner.type_of_assessment, 'COMMON_DATA.ASSESSMENTTYPES')} <br />
-              ${this.getDateDisplayValue(this.partner.last_assessment_date)}
+            <div
+              class="col-data col col-1  ${this.lowResolutionLayout ? '' : 'center-align'}"
+              data-col-header-label="${translate('LAST_PSEA_ASSESSMENT_DATE')}"
+            >
+              ${this.getDateDisplayValue(this.partner.psea_assessment_date)}
             </div>
-            <div class="col col-4 center-align">$ ${this.displayCurrencyAmount(this.partner.total_ct_ytd, '0', 0)}</div>
           </div>
-          <div class="col col-2 center-align hact-values">
-            <strong>
-              ${this.partner.hact_values?.programmatic_visits?.planned?.total} /
-              <span class="green"> ${this.partner.hact_min_requirements?.programmatic_visits}</span>
-              / ${this.partner.hact_values?.programmatic_visits?.completed?.total}
-            </strong>
-          </div>
-          <div class="col col-2 center-align hact-values">
-            <strong>
-              <span class="green">${this.partner.planned_engagement?.spot_check_required} </span>
-              / ${this.partner.hact_values?.spot_checks?.completed?.total}
-            </strong>
-          </div>
-          <div class="col-2 col center-align hact-values">
-            <strong>
-              <span class="green">${this._getMinReqAudits(this.partner.planned_engagement)} </span>
-              / ${this.partner.hact_values?.audits?.completed}
-            </strong>
-          </div>
-          <div class="col-1 col center-align">
-            <span class="${this.getRiskRatingClass(this.partner.sea_risk_rating_name)}">
-              ${translateValue(
-                this.getRiskRatingValue(this.partner.sea_risk_rating_name, 1),
-                'COMMON_DATA.SEARISKRATINGS'
-              )}
-            </span>
-          </div>
-          <div class="col col-1 center-align">${this.getDateDisplayValue(this.partner.psea_assessment_date)}</div>
-        </div>
-        <div class="row-h overview-row">
-          <div class="col col-1"></div>
-          <div class="col col-3">
+        </etools-data-table-row>
+        <div class="layout-horizontal ${!this.lowResolutionLayout ? 'overview-row' : ''} ">
+          <div class="col col-1" ?hidden="${this.lowResolutionLayout}"></div>
+          <div class="col col-md-3 col-12">
             <etools-dropdown
               label="${translate('BASIS_FOR_RISK_RATING')}"
               .options="${this.basisOptions}"
@@ -293,9 +355,9 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           </etools-icon-button>
         </div>
         <div class="planning-wrapper">
-          <div class="layout-horizontal">
-            <div class="table-main col-4 no-r-padd">
-              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+          <div class="row">
+            <div class="table-main col-xl-4 col-12 no-r-padd">
+              <div class="table-main panel-row-tall row panel-table-row darker-bg">
                 <div class="col-4 table-title">${translate('PROGRAMMATIC_VISITS')}</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
@@ -303,7 +365,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
                 <div class="quarter">Q4</div>
                 <div class="col-2 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
-              <div class="row-h panel-table-row">
+              <div class="row panel-table-row">
                 <div class="col-4">${translate('PLANNED')}</div>
                 <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q1}</div>
                 <div class="quarter">${this.partner.hact_values?.programmatic_visits?.planned?.q2}</div>
@@ -314,7 +376,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
                 </div>
               </div>
 
-              <div class="row-h panel-table-row ">
+              <div class="row panel-table-row ">
                 <div class="col-4">${translate('COMPLETED')}</div>
                 <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q1}</div>
                 <div class="quarter">${this.partner.hact_values?.programmatic_visits?.completed?.q2}</div>
@@ -326,8 +388,12 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               </div>
             </div>
 
-            <div class="table-main col-4 margin-l no-r-padd">
-              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+            <div
+              class="table-main col-xl-4 col-12 ${this.lowResolutionLayout
+                ? 'margin-t no-r-padd'
+                : 'margin-l no-r-padd'}"
+            >
+              <div class="table-main panel-row-tall row panel-table-row darker-bg">
                 <div class="col-4 table-title">${translate('SPOT_CHECK')}</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
@@ -335,7 +401,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
                 <div class="quarter">Q4</div>
                 <div class="col-2 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
-              <div class="row-h panel-table-row">
+              <div class="row panel-table-row">
                 <div class="col-4">${translate('PLANNED')}</div>
                 <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q1}</div>
                 <div class="quarter">${this.partner.planned_engagement?.spot_check_planned_q2}</div>
@@ -346,7 +412,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
                 </div>
               </div>
 
-              <div class="row-h panel-table-row">
+              <div class="row panel-table-row">
                 <div class="col-4">${translate('COMPLETED')}</div>
                 <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q1}</div>
                 <div class="quarter">${this.partner.hact_values?.spot_checks?.completed?.q2}</div>
@@ -358,19 +424,23 @@ export class PartnerFinancialAssurance extends PaginationMixin(
               </div>
             </div>
 
-            <div class="table-main col-2 margin-l no-r-padd">
-              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-                <div class="flex-c table-title">${translate('AUDITS')}</div>
+            <div
+              class="table-main col-xl-2 col-12 ${this.lowResolutionLayout
+                ? 'margin-t no-r-padd'
+                : 'margin-l no-r-padd'}"
+            >
+              <div class="table-main panel-row-tall row panel-table-row darker-bg">
+                <div class="col-7 table-title">${translate('AUDITS')}</div>
                 <div class="col-5 center-align">${translate('GENERAL.TOTAL_C')}</div>
               </div>
-              <div class="row-h panel-table-row ">
-                <div class="flex-c">${translate('REQUIRED')}</div>
+              <div class="row panel-table-row ">
+                <div class="col-7">${translate('REQUIRED')}</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
                   ${this.partner.hact_min_requirements?.audits}
                 </div>
               </div>
-              <div class="row-h panel-table-row ">
-                <div class="flex-c">${translate('COMPLETED')}</div>
+              <div class="row panel-table-row ">
+                <div class="col-7">${translate('COMPLETED')}</div>
                 <div class="col-5 layout-horizontal center-align totals darker-bg">
                   ${this.partner.hact_values?.audits?.completed}
                 </div>
@@ -385,7 +455,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         class="content-section"
         panel-title="${translate('ASSESSMENTS_AND_ASSURANCE')} (${this.allEngagements.length})"
       >
-        <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
+        <etools-data-table-header no-title no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
           <etools-data-table-column class="col-3">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('DATE')} </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('AMOUNT_TESTED')} <br />(USD) </etools-data-table-column>
@@ -393,22 +463,38 @@ export class PartnerFinancialAssurance extends PaginationMixin(
             ${translate('OUTSTANDING_FINDINGS')} <br />(USD)
           </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('REPORT')} </etools-data-table-column>
-        </div>
+        </etools-data-table-header>
         ${this.paginatedEngagements.map(
           (item) => html`
-            <div class="assessment-row panel-table-row layout-horizontal">
-              <div class="col-3">${this._displayType(item.engagement_type)}</div>
-              <div class="col-2">${this.getDateDisplayValue(item.status_date)}</div>
-              <div class="col-2">${this.displayCurrencyAmount(item.amount_tested, 0, 0)}</div>
-              <div class="col-3 col">${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}</div>
-              <a class="report col-2" target="_blank" href="${this.linkFixUp(item.object_url)}">
-                <etools-icon-button name="open-in-new"></etools-icon-button>
-                ${translate('VIEW_REPORT')}
-              </a>
-            </div>
+            <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
+              <div slot="row-data" class="layout-horizontal">
+                <div class="col-data col-3" data-col-header-label="${translate('ENGAGEMENT_TYPE')}">
+                  ${this._displayType(item.engagement_type)}
+                </div>
+                <div class="col-data col-2" data-col-header-label="${translate('DATE')}">
+                  ${this.getDateDisplayValue(item.status_date)}
+                </div>
+                <div class="col-data col-2" data-col-header-label="${translate('AMOUNT_TESTED')}">
+                  ${this.displayCurrencyAmount(item.amount_tested, 0, 0)}
+                </div>
+                <div class="col-data col-3 col" data-col-header-label="${translate('OUTSTANDING_FINDINGS')}">
+                  ${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}
+                </div>
+                <a
+                  class="col-data ${this.lowResolutionLayout ? '' : 'report'} col-2"
+                  data-col-header-label="${translate('REPORT')}"
+                  target="_blank"
+                  href="${this.linkFixUp(item.object_url)}"
+                >
+                  <etools-icon-button name="open-in-new"></etools-icon-button>
+                  ${translate('VIEW_REPORT')}
+                </a>
+              </div>
+            </etools-data-table-row>
           `
         )}
         <etools-data-table-footer
+          .lowResolutionLayout="${this.lowResolutionLayout}"
           .pageSize="${this.paginator.page_size}"
           .pageNumber="${this.paginator.page}"
           .totalResults="${this.paginator.count}"
@@ -454,6 +540,9 @@ export class PartnerFinancialAssurance extends PaginationMixin(
   allEngagements: any[] = [];
 
   _partner!: any;
+
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   set partner(partner) {
     // If is needed to avoid infinite request.

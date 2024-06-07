@@ -8,7 +8,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import RepeatableDataSetsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/repeatable-data-sets-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
@@ -38,7 +38,7 @@ export class AddDisaggregationDialog extends connect(store)(
   CommonMixin(RepeatableDataSetsMixin(EndpointsLitMixin(LitElement)))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
 
   render() {
@@ -46,10 +46,6 @@ export class AddDisaggregationDialog extends connect(store)(
     return html`
       ${sharedStyles} ${actionIconBtnsStyles}
       <style>
-        paper-input {
-          width: 100%;
-        }
-
         .groups {
           align-items: center;
           flex-wrap: wrap;
@@ -64,9 +60,10 @@ export class AddDisaggregationDialog extends connect(store)(
         .col {
           padding: 0 12px;
         }
-
-        .col:not(:first-of-type) {
-          padding-inline-start: 0px !important;
+        @media (min-width: 850px) {
+          .col:not(:first-of-type) {
+            padding-inline-start: 0px !important;
+          }
         }
 
         .action.delete.no-padding {
@@ -85,7 +82,7 @@ export class AddDisaggregationDialog extends connect(store)(
         }
 
         .group-label {
-          padding-top: 9px !important;
+          padding-top: 3px !important;
         }
         #disaggregateByEl {
           padding-top: 6px;
@@ -103,8 +100,8 @@ export class AddDisaggregationDialog extends connect(store)(
         @close="${this._onClose}"
         ?show-spinner="${this.disableConfirmBtn}"
       >
-        <div class="layout-horizontal extra-padd">
-          <div class="col col-4">
+        <div class="row extra-padd">
+          <div class="col col-md-4 col-12">
             <etools-input
               id="disaggregateByEl"
               label="${translate('DISAGGREGATION')}"
@@ -120,7 +117,7 @@ export class AddDisaggregationDialog extends connect(store)(
             >
             </etools-input>
           </div>
-          <div class="col col-8">
+          <div class="col col-md-8 col-12">
             <div class="layout-vertical">
               <label class="paper-label group-label">${translate('DISAGGREGATION_GROUP')}</label>
               <div class="layout-horizontal groups">

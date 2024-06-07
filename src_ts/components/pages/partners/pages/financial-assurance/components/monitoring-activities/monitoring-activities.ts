@@ -3,7 +3,7 @@ import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import {pageCommonStyles} from '../../../../../../styles/page-common-styles-lit';
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -22,6 +22,7 @@ import pmpEdpoints from '../../../../../../endpoints/endpoints';
 import {translate} from 'lit-translate';
 
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
 type ActivitiesGroup = {
   activities: MonitoringActivity[];
@@ -41,11 +42,22 @@ enum DragAndDropClasses {
 @customElement('monitoring-activities')
 export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`
       ${pageCommonStyles} ${sharedStyles} ${monitoringActivitiesStyles}
+      <style>
+        ${dataTableStylesLit} #listHeader {
+          --list-bg-color: var(--medium-theme-background-color, #eeeeee);
+        }
+      </style>
+      <etools-media-query
+        query="(max-width: 1167px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel
         id="monitoring-activities-panel"
         class="content-section"
@@ -62,12 +74,17 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
 
         ${!(this.activities || []).length
           ? html`<div class="no-activities">${translate('NO_ACTIVITIES')}</div>`
-          : html` <div class="row panel-row-tall layout-horizontal">
-              <etools-data-table-column class="flex-2 cell">${translate('REFERENCE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">${translate('START_DATE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-1 cell">${translate('END_DATE')}</etools-data-table-column>
-              <etools-data-table-column class="flex-2 cell">${translate('LOCATION_SITE')}</etools-data-table-column>
-            </div>`}
+          : html` <etools-data-table-header
+              id="listHeader"
+              no-collapse
+              no-title
+              .lowResolutionLayout="${this.lowResolutionLayout}"
+            >
+              <etools-data-table-column class="col-4">${translate('REFERENCE')}</etools-data-table-column>
+              <etools-data-table-column class="col-2">${translate('START_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="col-2">${translate('END_DATE')}</etools-data-table-column>
+              <etools-data-table-column class="col-4">${translate('LOCATION_SITE')}</etools-data-table-column>
+            </etools-data-table-header>`}
         ${(this.mappedGroups || []).map(
           (item: AnyObject) => html` <div
             class="activities ${this.groupedClass(item.activities.length)}"
@@ -82,30 +99,39 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
               </div>
             </div>
             ${(item.activities || []).map(
-              (activity: AnyObject) => html` <div
-                class="row layout-horizontal"
-                data-group-id="${item.id}"
-                data-activity-id="${activity.id}"
-              >
-                <div class="flex-2 cell">
-                  <etools-icon
-                    ?hidden="${!this.editMode}"
-                    class="flex-none"
-                    name="editor:drag-handle"
-                    @mousedown="${this.startDrag}"
-                  ></etools-icon>
-                  ${this.editMode
-                    ? html`${activity.reference_number}`
-                    : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
-                        ${activity.reference_number}
-                      </a>`}
-                </div>
-                <div class="flex-1 cell">${activity.start_date}</div>
-                <div class="flex-1 cell">${activity.end_date}</div>
-                <div class="flex-2 cell">
-                  ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
-                </div>
-              </div>`
+              (activity: AnyObject) => html`
+                <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}"
+                  ><div
+                    class="row layout-horizontal"
+                    slot="row-data"
+                    data-group-id="${item.id}"
+                    data-activity-id="${activity.id}"
+                  >
+                    <div class="col-data col-4" data-col-header-label="${translate('REFERENCE')}">
+                      <etools-icon
+                        ?hidden="${!this.editMode}"
+                        class="flex-none"
+                        name="editor:drag-handle"
+                        @mousedown="${this.startDrag}"
+                      ></etools-icon>
+                      ${this.editMode
+                        ? html`${activity.reference_number}`
+                        : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
+                            ${activity.reference_number}
+                          </a>`}
+                    </div>
+                    <div class="col-data col-2" data-col-header-label="${translate('START_DATE')}">
+                      ${activity.start_date}
+                    </div>
+                    <div class="col-data col-2" data-col-header-label="${translate('END_DATE')}">
+                      ${activity.end_date}
+                    </div>
+                    <div class="col-data col-4" data-col-header-label="${translate('LOCATION_SITE')}">
+                      ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
+                    </div>
+                  </div></etools-data-table-row
+                >
+              `
             )}
           </div>`
         )}
@@ -139,6 +165,9 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
 
   @property({type: Boolean})
   editMode = false;
+
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   @property({type: Number})
   set partnerId(id: number) {

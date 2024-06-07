@@ -30,7 +30,6 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate, get as getTranslation} from 'lit-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
-import {ROOT_PATH} from '@unicef-polymer/etools-modules-common/dist/config/config';
 
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
@@ -40,6 +39,7 @@ import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import dayjs from 'dayjs';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 /**
  * @LitElement
@@ -122,7 +122,7 @@ export class ReportsModule extends connect(store)(
             : ''}
         </div>
 
-        <div slot="title-row-actions" class="content-header-actions move-to-the-right">
+        <div slot="title-row-actions" class="content-header-actions">
           <div class="action" ?hidden="${!this.listActive}">
             <sl-dropdown>
               <etools-button slot="trigger" variant="text" class="neutral" caret>
@@ -346,7 +346,7 @@ export class ReportsModule extends connect(store)(
       return;
     }
     const newPath = `reports/${this.report!.id}/${newTabName}`;
-    history.pushState(window.history.state, '', `${ROOT_PATH}${newPath}`);
+    history.pushState(window.history.state, '', `${Environment.basePath}${newPath}`);
     window.dispatchEvent(new CustomEvent('popstate'));
   }
 

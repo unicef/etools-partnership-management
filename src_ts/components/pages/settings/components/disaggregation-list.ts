@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-pa
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -41,7 +41,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 @customElement('disaggregation-list')
 export class DisaggregationList extends connect(store)(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement)))) {
   static get styles() {
-    return [gridLayoutStylesLit, elevationStyles];
+    return [layoutStyles, elevationStyles];
   }
   render() {
     // language=HTML
@@ -63,7 +63,12 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           display: flex;
         }
       </style>
-
+      <etools-media-query
+        query="(max-width: 1025px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <div id="filters" class="paper-material elevation" elevation="1">
         <etools-input
           id="query"
@@ -91,7 +96,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
         >
         </etools-icon-button>
         <div ?hidden="${this._emptyList(this.filteredDisaggregations)}">
-          <etools-data-table-header no-collapse no-title>
+          <etools-data-table-header no-collapse no-title .lowResolutionLayout="${this.lowResolutionLayout}">
             <etools-data-table-column class="col-4" field="name">${translate('NAME')}</etools-data-table-column>
             <etools-data-table-column class="col-6" field="disaggregation_values">
               ${translate('DISAGGREGATION_GROUP')}
@@ -102,11 +107,13 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           </etools-data-table-header>
           ${(this.paginatedDisaggregations || []).map(
             (item: any) => html`
-              <etools-data-table-row no-collapse>
+              <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
                 <div slot="row-data">
-                  <span class="col-data col-4">${item.name}</span>
-                  <span class="col-data col-6">${this._displayGroups(item.disaggregation_values)}</span>
-                  <span class="col-data col-2">
+                  <span class="col-data col-4" data-col-header-label="${translate('NAME')}">${item.name}</span>
+                  <span class="col-data col-6" data-col-header-label="${translate('DISAGGREGATION_GROUP')}"
+                    >${this._displayGroups(item.disaggregation_values)}</span
+                  >
+                  <span class="col-data col-2" data-col-header-label="${translate('ACTIVE')}">
                     <sl-switch
                       data-id="${item.id}"
                       data-active="${item.active}"
@@ -122,6 +129,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
           )}
 
           <etools-data-table-footer
+            .lowResolutionLayout="${this.lowResolutionLayout}"
             .pageSize="${this.paginator.page_size}"
             .pageNumber="${this.paginator.page}"
             .totalResults="${this.paginator.count}"
@@ -146,6 +154,9 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
 
   @property({type: Array})
   paginatedDisaggregations!: Disaggregation[];
+
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   _q!: string;
 

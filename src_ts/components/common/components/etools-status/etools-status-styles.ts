@@ -13,7 +13,7 @@ export const etoolsStatusStyles = html`
     }
     :host(.sticky-status) {
       position: fixed;
-      top: 84px;
+      top: 220px;
       width: 200px;
     }
 
