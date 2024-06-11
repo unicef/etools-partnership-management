@@ -19,16 +19,14 @@ class PageContentHeader extends LitElement {
         }
 
         :host {
-          position: sticky;
-          top: 0;
-          z-index: 121;
-          width: 100%;
-          box-sizing: border-box;
-          display: block;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          flex: 1;
           background-color: var(--primary-background-color);
-          min-height: 65px;
+          padding: 0 24px;
+          min-height: 85px;
           border-bottom: 1px solid var(--darker-divider-color);
-          padding-top: 24px;
         }
 
         :host([with-tabs-visible]) {
