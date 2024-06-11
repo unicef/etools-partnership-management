@@ -217,6 +217,7 @@ export class AgreementAmendments extends connect(store)(CommonMixinLit(LitElemen
 
   @property({type: Boolean})
   lowResolutionLayout = false;
+
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {
       this._amendmentTypes = state.commonData!.agreementAmendmentTypes;
