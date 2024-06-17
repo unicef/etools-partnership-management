@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
@@ -12,7 +12,7 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
+import {AnyObject, GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -24,10 +24,9 @@ import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {translate} from 'lit-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
-import '../../data/interventions-list-data.js';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
-import {InterventionsListData} from '../../data/interventions-list-data.js';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
@@ -105,21 +104,6 @@ export class InterventionsList extends connect(store)(
           this.lowResolutionLayout = e.detail.value;
         }}"
       ></etools-media-query>
-      <interventions-list-data
-        id="interventions"
-        @filtered-interventions-changed="${(e: CustomEvent) => {
-          this.filteredInterventions = e.detail;
-        }}"
-        @total-results-changed="${(e: CustomEvent) => {
-          this.paginator = {...this.paginator, count: e.detail};
-          // etools-data-table-footer is not displayed without this:
-          setTimeout(() => this.requestUpdate());
-        }}"
-        @list-loading="${({detail}: CustomEvent) => (this.listLoadingActive = detail.active)}"
-        list-data-path="filteredInterventions"
-        fire-data-loaded
-      >
-      </interventions-list-data>
 
       <section class="elevation page-content filters" elevation="1">
         <etools-filters
@@ -131,7 +115,7 @@ export class InterventionsList extends connect(store)(
       </section>
 
       <div id="list" elevation="1" class="paper-material elevation">
-        <etools-loading ?active="${this.listLoadingActive}"></etools-loading>
+        <etools-loading source="list" ?active="${this.listLoadingActive}"></etools-loading>
         <etools-data-table-header
           .lowResolutionLayout="${this.lowResolutionLayout}"
           id="listHeader"
@@ -164,7 +148,7 @@ export class InterventionsList extends connect(store)(
           </etools-data-table-column>
         </etools-data-table-header>
 
-        ${this.filteredInterventions.map(
+        ${(this.filteredInterventions || []).map(
           (intervention: ListItemIntervention) => html` <etools-data-table-row
             .lowResolutionLayout="${this.lowResolutionLayout}"
             .detailsOpened="${this.detailsOpened}"
@@ -314,7 +298,7 @@ export class InterventionsList extends connect(store)(
   prevQueryStringObj: GenericObject = {
     size: 10,
     page: 1,
-    sort: 'start.desc'
+    ordering: '-start'
   };
 
   @property({type: Object})
@@ -326,16 +310,8 @@ export class InterventionsList extends connect(store)(
   @property({type: Array})
   partners = [];
 
-  private _listLoadingActive = false;
   @property({type: Boolean})
-  get listLoadingActive() {
-    return this._listLoadingActive;
-  }
-
-  set listLoadingActive(value: boolean) {
-    this._listLoadingActive = value;
-    fireEvent(this, 'list-loading-active', {value: value});
-  }
+  listLoadingActive = false;
 
   connectedCallback(): void {
     this.loadFilteredInterventions = debounce(this.loadFilteredInterventions.bind(this), 600);
@@ -370,25 +346,12 @@ export class InterventionsList extends connect(store)(
         return;
       }
 
-      this.listLoadingActive = true;
+      // this.listLoadingActive = true;
       this.routeDetails = cloneDeep(stateRouteDetails);
       this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
       this.initFiltersForDisplay(state);
       this.initializePaginatorFromUrl(this.routeDetails?.queryParams);
-
-      if (state.interventions?.shouldReGetList) {
-        getStore().dispatch(setShouldReGetList(false));
-        const interventionsListElement = this.shadowRoot!.querySelector<InterventionsListData>('#interventions');
-        if (interventionsListElement) {
-          pmpEdpoints.interventions.bypassCache = true;
-          interventionsListElement._elementReady().finally(() => {
-            this.loadFilteredInterventions();
-            pmpEdpoints.interventions.bypassCache = false;
-          });
-        }
-      } else {
-        this.loadFilteredInterventions();
-      }
+      this.loadFilteredInterventions();
     }
 
     if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
@@ -397,6 +360,12 @@ export class InterventionsList extends connect(store)(
       this.translateFilters(this.allFilters);
       this.populateDropdownFilterOptionsFromCommonData(state, this.allFilters);
       this.allFilters = [...this.allFilters];
+    }
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('listLoadingActive')) {
+      fireEvent(this, 'list-loading-active', {value: this.listLoadingActive});
     }
   }
 
@@ -458,7 +427,7 @@ export class InterventionsList extends connect(store)(
     // update filter selection and assign the result to etools-filters(trigger render)
     const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
     this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
-      omit(currentParams, ['page', 'size', 'sort']),
+      omit(currentParams, ['page', 'size', 'ordering']),
       availableFilters
     );
   }
@@ -493,40 +462,69 @@ export class InterventionsList extends connect(store)(
   }
 
   loadFilteredInterventions() {
-    const intervElem = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
-    if (!intervElem) {
-      return;
+    this.listLoadingActive = true;
+
+    sendRequest({
+      endpoint: {
+        url: pmpEdpoints.interventions.url + this.getFilteringQueryParams()
+      },
+      method: 'GET'
+    })
+      .then((response) => {
+        this.filteredInterventions = response.results;
+        this.paginator = {...this.paginator, count: response.count};
+        getStore().dispatch(setShouldReGetList(false));
+      })
+      .finally(() => {
+        this.listLoadingActive = false;
+      });
+  }
+
+  getFilteringQueryParams() {
+    const queryParams = this.routeDetails?.queryParams!;
+
+    let qs = this.getListQueryString(queryParams as any, false);
+    if (qs) {
+      qs = pmpEdpoints.interventions.url.includes('?') ? '&' + qs : '?' + qs;
+    }
+    if (queryParams.ordering) {
+      qs =
+        qs +
+        (qs.includes('?') || pmpEdpoints.interventions.url.includes('?') ? '&' : '?') +
+        'ordering=' +
+        queryParams.ordering;
     }
 
-    const queryParams = this.routeDetails?.queryParams;
-
-    const sortOrder = queryParams?.sort ? queryParams?.sort?.toString().split('.') : [];
-
-    intervElem.query(
-      sortOrder[0],
-      sortOrder[1],
-      queryParams?.search?.toString().toLowerCase() || '',
-      this.getFilterUrlValuesAsArray(queryParams?.type || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.cp_outputs || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.donors || ''),
-      this.getFilterValuesByProperty(this.partners, 'label', queryParams?.partners, 'value'),
-      this.getFilterUrlValuesAsArray(queryParams?.grants || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.status || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.section || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.unicef_focal_points || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.budget_owner || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.offices || ''),
-      this.getFilterUrlValuesAsArray(queryParams?.cpStructures || ''),
-      Boolean(queryParams?.contingency_pd || false),
-      queryParams?.editable_by?.toString() || '',
-      queryParams?.start?.toString() || '',
-      queryParams?.end?.toString() || '',
-      queryParams?.endAfter?.toString() || '',
-      queryParams?.page ? Number(queryParams.page) : 1,
-      queryParams?.size ? Number(queryParams.size) : 10,
-      false
-    );
+    return qs;
   }
+
+  public getListQueryString(queryStringObj: GenericObject<any>, forExport: boolean) {
+    const exportParams: AnyObject = {
+      status: queryStringObj.status,
+      document_type: queryStringObj.document_type,
+      sections: queryStringObj.section,
+      office: queryStringObj.offices,
+      donors: queryStringObj.donors,
+      partners: queryStringObj.partners,
+      grants: queryStringObj.grants,
+      unicef_focal_points: queryStringObj.unicef_focal_points,
+      budget_owner__in: queryStringObj.budget_owner__in,
+      country_programme: queryStringObj.country_programme,
+      cp_outputs: queryStringObj.cp_outputs,
+      start: queryStringObj.start,
+      end: queryStringObj.end,
+      end_after: queryStringObj.endAfter,
+      editable_by: queryStringObj.editable_by,
+      contingency_pd: queryStringObj.contingency_pd,
+      search: queryStringObj.search
+    };
+    if (!forExport) {
+      exportParams.page = queryStringObj.page;
+      exportParams.page_size = queryStringObj.size;
+    }
+    return this._buildListRetrivalQueryString(exportParams, forExport);
+  }
+
   getFilterUrlValuesAsArray(types: string | number) {
     return types ? types.toString().split(',') : [];
   }
@@ -536,9 +534,9 @@ export class InterventionsList extends connect(store)(
   }
 
   // Override from lists-common-mixin
-  _sortOrderChanged(e: CustomEvent) {
-    const sort = e.detail.field + '.' + e.detail.direction;
-    this.updateCurrentParams({sort: sort});
+  _sortOrderChanged(e: CustomEvent) {    
+    const ordering = (e.detail.direction === 'asc' ? '' : '-') + e.detail.field;
+    this.updateCurrentParams({ordering: ordering});
   }
 
   paginatorChanged() {
@@ -548,37 +546,14 @@ export class InterventionsList extends connect(store)(
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
     let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
-      currentParams = pick(currentParams, ['sort', 'size', 'page']);
+      currentParams = pick(currentParams, ['ordering', 'size', 'page']);
     }
     this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
-    fireEvent(this, 'csv-download-url-changed', this.buildCsvDownloadUrl(this.prevQueryStringObj) as any);
+    fireEvent(this, 'csv-download-url-changed', this.getListQueryString(this.prevQueryStringObj, true) as any);
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
     EtoolsRouter.replaceAppLocation(`interventions/list?${stringParams}`);
-  }
-
-  public buildCsvDownloadUrl(queryStringObj: GenericObject<any>) {
-    const exportParams = {
-      status: queryStringObj.status,
-      document_type: queryStringObj.type,
-      sections: queryStringObj.section,
-      office: queryStringObj.offices,
-      donors: queryStringObj.donors,
-      partners: queryStringObj.partners,
-      grants: queryStringObj.grants,
-      unicef_focal_points: queryStringObj.unicef_focal_points,
-      budget_owner: queryStringObj.budget_owner,
-      country_programme: queryStringObj.cpStructures,
-      cp_outputs: queryStringObj.cp_outputs,
-      start: queryStringObj.start,
-      end: queryStringObj.end,
-      end_after: queryStringObj.endAfter,
-      editable_by: queryStringObj.editable_by,
-      contingency_pd: queryStringObj.contingency_pd,
-      search: queryStringObj.search
-    };
-    return this._buildExportQueryString(exportParams);
   }
 
   _triggerInterventionLoadingMsg() {
