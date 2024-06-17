@@ -534,7 +534,7 @@ export class InterventionsList extends connect(store)(
   }
 
   // Override from lists-common-mixin
-  _sortOrderChanged(e: CustomEvent) {    
+  _sortOrderChanged(e: CustomEvent) {
     const ordering = (e.detail.direction === 'asc' ? '' : '-') + e.detail.field;
     this.updateCurrentParams({ordering: ordering});
   }
