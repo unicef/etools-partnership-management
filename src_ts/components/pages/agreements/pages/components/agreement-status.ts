@@ -140,7 +140,7 @@ export class AgreementStatus extends EtoolsStatusCommonMixin(LitElement) {
       },
       {
         label: getTranslation('COMMON_DATA.AGREEMENTSTATUSES.SUSPENDED'),
-        icon: 'av:pause-circle-filled',
+        icon: 'pause-circle-filled',
         iconStyles:
           '--etools-icon-font-size: var(--etools-font-size-29, 29px); color: ' +
           this.getComputedStyleValue('--warning-color'),

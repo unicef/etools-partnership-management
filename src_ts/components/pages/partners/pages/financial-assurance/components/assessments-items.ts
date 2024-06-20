@@ -10,7 +10,7 @@ import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '../../../../../styles/shared-styles-lit';
 import '../../../../../common/components/icons-actions';
 import './assessment-dialog.js';
@@ -25,6 +25,7 @@ import cloneDeep from 'lodash-es/cloneDeep.js';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
 /**
  * @customElement
@@ -35,14 +36,14 @@ import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button'
 @customElement('assessments-items')
 export class AssessmentsItems extends CommonMixin(LitElement) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     // language=HTML
     return html`
       ${sharedStyles} ${etoolsCpHeaderActionsBarStyles}
       <style>
-        [hidden] {
+        ${dataTableStylesLit} [hidden] {
           display: none !important;
         }
 
@@ -89,7 +90,12 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           color: var(--list-primary-color, #0099ff);
         }
       </style>
-
+      <etools-media-query
+        query="(max-width: 767px)"
+        @query-matches-changed="${(e: CustomEvent) => {
+          this.lowResolutionLayout = e.detail.value;
+        }}"
+      ></etools-media-query>
       <etools-content-panel
         panel-title="${translate('OTHER_ASSESSMENTS')} (${this.dataItems?.length})"
         class="content-section"
@@ -110,7 +116,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         </div>
 
         <div ?hidden="${this._emptyList(this.dataItems?.length)}">
-          <etools-data-table-header no-collapse no-title>
+          <etools-data-table-header no-collapse no-title .lowResolutionLayout="${this.lowResolutionLayout}">
             <etools-data-table-column class="col-3"> ${translate('ASSESSMENT_TYPE')} </etools-data-table-column>
             <etools-data-table-column class="col-2"> ${translate('DATE_OF_ASSESSMENT')} </etools-data-table-column>
             <etools-data-table-column class="col-5"> ${translate('REPORT')} </etools-data-table-column>
@@ -120,16 +126,19 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           ${this.dataItems?.map(
             (item) => html`
               <etools-data-table-row
+                .lowResolutionLayout="${this.lowResolutionLayout}"
                 secondary-bg-on-hover
                 no-collapse
                 ?hidden="${!this._isVisible(item.active, this.showArchived)}"
               >
                 <div slot="row-data" class="layout-horizontal p-relative">
-                  <span class="col-data col-3">
+                  <span class="col-data col-3" data-col-header-label="${translate('ASSESSMENT_TYPE')}">
                     ${translateValue(item.type || '', 'COMMON_DATA.ASSESSMENTTYPES')}
                   </span>
-                  <span class="col-data col-2"> ${this.getDateDisplayValue(item.completed_date || '')} </span>
-                  <span class="col-data col-5">
+                  <span class="col-data col-2" data-col-header-label="${translate('DATE_OF_ASSESSMENT')}">
+                    ${this.getDateDisplayValue(item.completed_date || '')}
+                  </span>
+                  <span class="col-data col-5" data-col-header-label="${translate('REPORT')}">
                     <etools-icon name="attachment" class="attachment"></etools-icon>
                     <span class="break-word">
                       <!-- target="_blank" is there for IE -->
@@ -138,7 +147,10 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
                       </a>
                     </span>
                   </span>
-                  <span class="col-data col-2 center-align">
+                  <span
+                    class="col-data col-2 ${this.lowResolutionLayout ? '' : 'center-align'}"
+                    data-col-header-label="${translate('ARCHIVED')}"
+                  >
                     <span ?hidden="${!item.active}" class="placeholder-style">&#8212;</span>
                     <etools-icon name="check" ?hidden="${item.active}"></etools-icon>
                   </span>
@@ -155,7 +167,7 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
           )}
         </div>
 
-        <div class="row-h no-assessments-warning" ?hidden="${!this._emptyList(this.dataItems?.length)}">
+        <div class="layout-vertical no-assessments-warning" ?hidden="${!this._emptyList(this.dataItems?.length)}">
           <p>${translate('THERE_ARE_NO_ASSESSMENTS_ADDED')}</p>
         </div>
       </etools-content-panel>
@@ -187,6 +199,9 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
 
   @property({type: Boolean})
   showDelete = false;
+
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   newAssessmentAdded(data: any) {
     this.dataItems.push(data.detail);

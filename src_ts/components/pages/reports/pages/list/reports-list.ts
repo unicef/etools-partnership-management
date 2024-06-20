@@ -10,7 +10,7 @@ import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/p
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
-import {gridLayoutStylesLit} from '@unicef-polymer/etools-modules-common/dist/styles/grid-layout-styles-lit';
+import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -50,7 +50,7 @@ class ReportsList extends connect(store)(
   ListsCommonMixin(PaginationMixin(CommonMixin(EndpointsLitMixin(LitElement))))
 ) {
   static get styles() {
-    return [gridLayoutStylesLit];
+    return [layoutStyles];
   }
   render() {
     return html`
@@ -152,12 +152,12 @@ class ReportsList extends connect(store)(
                 })}"
               >
                 <etools-data-table-column class="col-2">${translate('REPORT_NUM')}</etools-data-table-column>
-                <etools-data-table-column class="flex-c">${translate('PARTNER')}</etools-data-table-column>
-                <etools-data-table-column class="flex-c">${translate('REPORT_STATUS')}</etools-data-table-column>
-                <etools-data-table-column class="flex-c">${translate('DUE_DATE')}</etools-data-table-column>
-                <etools-data-table-column class="flex-c">${translate('REPORTING_PERIOD')}</etools-data-table-column>
+                <etools-data-table-column class="col-3">${translate('PARTNER')}</etools-data-table-column>
+                <etools-data-table-column class="col-1">${translate('REPORT_STATUS')}</etools-data-table-column>
+                <etools-data-table-column class="col-1">${translate('DUE_DATE')}</etools-data-table-column>
+                <etools-data-table-column class="col-2">${translate('REPORTING_PERIOD')}</etools-data-table-column>
                 ${!this.noPdSsfaRef
-                  ? html`<etools-data-table-column class="col-2"
+                  ? html`<etools-data-table-column class="col-3"
                       >${translate('PD_SPD_REF_NUM')}</etools-data-table-column
                     >`
                   : ''}
@@ -181,25 +181,25 @@ class ReportsList extends connect(store)(
                         </span>
                       </sl-tooltip>
                     </span>
-                    <span class="col-data flex-c" data-col-header-label="${translate('PARTNER')}">
+                    <span class="col-data col-3" data-col-header-label="${translate('PARTNER')}">
                       <sl-tooltip content="${report.partner_vendor_number}" placement="right">
                         <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
                           ${this._displayOrDefault(report.partner_name)}
                         </span>
                       </sl-tooltip>
                     </span>
-                    <span class="col-data flex-c" data-col-header-label="${translate('REPORT_STATUS')}">
+                    <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
                       <report-status .status="${report.status}"></report-status>
                     </span>
-                    <span class="col-data flex-c" data-col-header-label="${translate('DUE_DATE')}">
+                    <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}
                     </span>
-                    <span class="col-data flex-c" data-col-header-label="${translate('REPORTING_PERIOD')}">
+                    <span class="col-data col-2" data-col-header-label="${translate('REPORTING_PERIOD')}">
                       ${this.displayLocalizedReportingPeriod(report.reporting_period)}
                     </span>
 
                     ${!this.noPdSsfaRef
-                      ? html` <span class="col-data col-2" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
+                      ? html` <span class="col-data col-3" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                           <a
                             class="pd-ref truncate"
                             href="interventions/${report.programme_document?.external_id}/reports"
