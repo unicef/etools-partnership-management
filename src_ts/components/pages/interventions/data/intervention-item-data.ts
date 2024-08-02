@@ -1,23 +1,17 @@
 import {store} from '../../../../redux/store';
 import AjaxServerErrorsMixin from '../../../common/mixins/ajax-server-errors-mixin-lit';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
-import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../redux/store';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {
   ExpectedResult,
   FrsDetails,
-  InterventionAttachment,
-  ListItemIntervention,
   PlannedVisit,
   Intervention,
   Office,
-  GenericObject,
-  Agreement,
-  MinimalAgreement
+  GenericObject
 } from '@unicef-polymer/etools-types';
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
@@ -170,7 +164,7 @@ class InterventionItemData extends connect(store)(
   /**
    * Handle received data from request
    */
-  _handleResponse(response: Intervention, ajaxMethod: string) {
+  _handleResponse(response: Intervention, _ajaxMethod: string) {
     // @ts-ignore
     this.intervention = this._handleDataConversions(response);
 
@@ -180,93 +174,6 @@ class InterventionItemData extends connect(store)(
       // reset callback
       this.handleResponseAdditionalCallback = null;
     }
-
-    if (ajaxMethod !== 'GET') {
-      this.updateInterventionsListInDexieDb(response);
-      // TODO - in theory this is not needed anymore because SSFA agreements will no longer exist
-      // this.updateAgreementInDexieDb(response.agreement!, response.document_type!, response.status);
-    }
-  }
-
-  updateInterventionsListInDexieDb(intervention: Intervention) {
-    const mappedResponse = this._formatResponseDataForDexie(intervention);
-    window.EtoolsPmpApp.DexieDb.table('interventions')
-      .put(mappedResponse)
-      .then(() => {
-        fireEvent(this, 'reload-list');
-      });
-  }
-
-  updateAgreementInDexieDb(agreementId: number, document_type: string, status: string) {
-    if (!agreementId) {
-      return;
-    }
-    if (
-      document_type &&
-      document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
-      status !== CONSTANTS.STATUSES.Draft.toLowerCase()
-    ) {
-      sendRequest({
-        endpoint: this.getEndpoint(pmpEdpoints, this.pdEndpoints.AGREEMENT_DETAILS, {
-          id: agreementId
-        })
-      }).then((resp: any) => {
-        this.updateAgreeementStatus.bind(this, resp)();
-      });
-    }
-  }
-
-  updateAgreeementStatus(agreement: Agreement) {
-    const minimalAgreement = this._getMinimalAgreementData(agreement);
-    window.EtoolsPmpApp.DexieDb.table('agreements').put(minimalAgreement);
-  }
-
-  _getMinimalAgreementData(detail: Agreement) {
-    const minimalAgrData: Partial<MinimalAgreement> = {
-      agreement_number: '',
-      agreement_number_status: '',
-      agreement_type: '',
-      end: '',
-      id: null,
-      partner: null,
-      partner_name: '',
-      signed_by: null,
-      signed_by_partner_date: '',
-      signed_by_unicef_date: '',
-      start: '',
-      status: ''
-    };
-    let propName: string;
-    for (propName in minimalAgrData) {
-      if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
-        EtoolsLogger.warn('Mapping property not found');
-      } else {
-        // @ts-ignore
-        minimalAgrData[propName] = detail[propName];
-      }
-    }
-    return minimalAgrData;
-  }
-
-  _hasFiles(list: InterventionAttachment[], property: string) {
-    if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
-      return false;
-    }
-    let hasF = false;
-    let i: number;
-    for (i = 0; i < list.length; i++) {
-      if (list[i][property] instanceof File) {
-        hasF = true;
-      } else {
-        delete list[i][property];
-      }
-    }
-    return hasF;
-  }
-
-  _fileField(intervention: Intervention, property: keyof Intervention) {
-    // TODO
-    return intervention[property] instanceof File;
   }
 
   /**
@@ -335,93 +242,8 @@ class InterventionItemData extends connect(store)(
     }
   }
 
-  _formatResponseDataForDexie(responseDetail: Intervention) {
-    const dexieObject = new ListItemIntervention();
-    dexieObject.cp_outputs = [];
-    dexieObject.unicef_budget = 0;
-    dexieObject.cso_contribution = 0;
-
-    dexieObject.id = responseDetail.id;
-    dexieObject.country_programmes = responseDetail.country_programmes;
-    dexieObject.end = responseDetail.end;
-    dexieObject.title = responseDetail.title;
-    dexieObject.start = responseDetail.start || '';
-    dexieObject.status = responseDetail.status;
-    dexieObject.number = responseDetail.number;
-    dexieObject.offices = responseDetail.offices;
-    dexieObject.partner_name = responseDetail.partner;
-    dexieObject.document_type = responseDetail.document_type;
-    dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
-    dexieObject.contingency_pd = responseDetail.contingency_pd;
-    dexieObject.cfei_number = responseDetail.cfei_number;
-    dexieObject.partner_accepted = responseDetail.partner_accepted;
-    dexieObject.unicef_accepted = responseDetail.unicef_accepted;
-    dexieObject.unicef_court = responseDetail.unicef_court;
-    dexieObject.date_sent_to_partner = responseDetail.date_sent_to_partner;
-
-    this._updateSections(dexieObject, responseDetail);
-    this._updatePlannedBudgetInfo(dexieObject, responseDetail);
-    this._updateOffices(dexieObject, responseDetail);
-    this._updateFrInfo(
-      dexieObject,
-      responseDetail.frs_details,
-      responseDetail.planned_budget && (responseDetail.planned_budget!.currency as string)
-    );
-
-    responseDetail.result_links.forEach(function (elem: ExpectedResult) {
-      dexieObject.cp_outputs.push(elem.cp_output);
-    });
-
-    return dexieObject;
-  }
-
-  _updateSections(dexieObject: ListItemIntervention, intervention: Intervention) {
-    const selectedSections = this._getSelectedSections(intervention);
-    dexieObject.sections = selectedSections.sectionIds;
-    dexieObject.section_names = selectedSections.section_names;
-  }
-
-  _updatePlannedBudgetInfo(dexieObject: ListItemIntervention, intervention: Intervention) {
-    if (!intervention.planned_budget) {
-      return;
-    }
-    dexieObject.unicef_budget =
-      parseFloat(intervention.planned_budget!.unicef_cash_local as string) +
-      parseFloat(intervention.planned_budget!.in_kind_amount_local as string);
-    dexieObject.cso_contribution = parseFloat(intervention.planned_budget!.partner_contribution_local as string);
-    dexieObject.total_budget = dexieObject.unicef_budget + dexieObject.cso_contribution;
-    dexieObject.unicef_cash = parseFloat(intervention.planned_budget!.unicef_cash_local as string);
-    dexieObject.budget_currency = intervention.planned_budget!.currency;
-  }
-
-  _updateFrInfo(dexieObject: ListItemIntervention, intervFrDetails: FrsDetails, plannedBudgetCurrency: string) {
-    if (this._noFrOnIntervention(intervFrDetails)) {
-      dexieObject.fr_currency = null;
-      dexieObject.fr_currencies_are_consistent = null;
-      dexieObject.all_currencies_are_consistent = null;
-      return;
-    }
-    dexieObject.frs_total_frs_amt = intervFrDetails.total_frs_amt;
-    dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
-    dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
-    dexieObject.fr_currency = intervFrDetails.currencies_match ? intervFrDetails.frs[0].currency : null;
-    dexieObject.fr_currencies_are_consistent = intervFrDetails.currencies_match;
-    dexieObject.all_currencies_are_consistent = intervFrDetails.currencies_match
-      ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
-      : false;
-  }
-
   _noFrOnIntervention(intervFrDetails: FrsDetails) {
     return !intervFrDetails || !intervFrDetails.earliest_start_date;
-  }
-
-  _updateOffices(dexieObject: ListItemIntervention, responseDetail: any) {
-    if (!responseDetail.offices || !responseDetail.offices.length) {
-      dexieObject.offices_names = [];
-      return;
-    }
-
-    dexieObject.offices_names = this._getSelectedOfficesNames(responseDetail);
   }
 
   _getSelectedOfficesNames(responseDetail: any) {
@@ -436,28 +258,6 @@ class InterventionItemData extends connect(store)(
     });
   }
 
-  _getSelectedSections(responseDetail: any) {
-    let selectedSections = {
-      sectionIds: [],
-      section_names: [] as string[]
-    };
-
-    const sections = responseDetail.sections;
-
-    if (sections) {
-      const sectionNames: string[] = [];
-      const interventionSectionIds = sections.map((sectionId: string) => parseInt(sectionId, 10));
-
-      this.sections.forEach(function (section: any) {
-        if (interventionSectionIds.indexOf(parseInt(section.id, 10)) > -1) {
-          sectionNames.push(section.name);
-        }
-      });
-      selectedSections = {sectionIds: interventionSectionIds, section_names: sectionNames};
-    }
-    return selectedSections;
-  }
-
   deleteIntervention(id: string) {
     if (!id) {
       return;
@@ -465,51 +265,15 @@ class InterventionItemData extends connect(store)(
     const reqMethod = 'DELETE';
     this.fireRequest(this.pdEndpoints.DELETE as any, {id: id}, {method: reqMethod})
       .then(() => {
-        this._handleInterventionDeleteSuccess(id);
+        fireEvent(this, 'toast', {
+          text: getTranslation('PD_DELETE_SUCCCESS')
+        });
+        // go to pd list after delete
+        fireEvent(this, 'update-main-path', {path: 'interventions/list'});
       })
       .catch((reqError: any) => {
         this.handleErrorResponse(reqError, reqMethod, false);
       });
-  }
-
-  deleteInterventionFromDexie(id: string) {
-    window.EtoolsPmpApp.DexieDb.interventions
-      .where('id')
-      .equals(parseInt(id, 10))
-      .delete()
-      .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr));
-  }
-
-  _handleInterventionDeleteSuccess(id: string) {
-    window.EtoolsPmpApp.DexieDb.interventions
-      .where('id')
-      .equals(parseInt(id, 10))
-      .delete()
-      .then((deleteCount: any) => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
-      .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
-      .then(() => {
-        // go to pd/ssfa list after delete
-        fireEvent(this, 'update-main-path', {path: 'interventions/list'});
-      });
-  }
-
-  _handleInterventionDeleteFromDexieSuccess(deleteCount: number) {
-    if (deleteCount === 1) {
-      fireEvent(this, 'reload-list');
-      fireEvent(this, 'toast', {
-        text: getTranslation('PD_DELETE_SUCCCESS')
-      });
-    } else {
-      throw new Error('Intervention was not deleted from dexie!');
-    }
-  }
-
-  _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
-    // Agreement dexie deleted issue
-    EtoolsLogger.error('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
-    fireEvent(this, 'toast', {
-      text: getTranslation('PLEASE_REFRESH_DATA')
-    });
   }
 }
 
