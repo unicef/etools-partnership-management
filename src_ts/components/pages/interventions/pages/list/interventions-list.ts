@@ -296,7 +296,7 @@ export class InterventionsList extends connect(store)(
 
   @property({type: Object})
   prevQueryStringObj: GenericObject = {
-    size: 10,
+    page_size: 10,
     page: 1,
     ordering: '-start'
   };
@@ -383,8 +383,8 @@ export class InterventionsList extends connect(store)(
       this.paginator.page = 1;
     }
 
-    if (queryParams.size) {
-      this.paginator.page_size = Number(queryParams.size);
+    if (queryParams.page_size) {
+      this.paginator.page_size = Number(queryParams.page_size);
     }
   }
 
@@ -427,7 +427,7 @@ export class InterventionsList extends connect(store)(
     // update filter selection and assign the result to etools-filters(trigger render)
     const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
     this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
-      omit(currentParams, ['page', 'size', 'ordering']),
+      omit(currentParams, ['page', 'page_size', 'ordering']),
       availableFilters
     );
   }
@@ -494,6 +494,9 @@ export class InterventionsList extends connect(store)(
         'ordering=' +
         queryParams.ordering;
     }
+    if (!qs.includes('page=')) {
+      qs += '&page=1';
+    }
 
     return qs;
   }
@@ -520,7 +523,7 @@ export class InterventionsList extends connect(store)(
     };
     if (!forExport) {
       exportParams.page = queryStringObj.page;
-      exportParams.page_size = queryStringObj.size;
+      exportParams.page_size = queryStringObj.page_size;
     }
     return this._buildListRetrivalQueryString(exportParams, forExport);
   }
@@ -540,13 +543,13 @@ export class InterventionsList extends connect(store)(
   }
 
   paginatorChanged() {
-    this.updateCurrentParams({page: this.paginator.page, size: this.paginator.page_size});
+    this.updateCurrentParams({page: this.paginator.page, page_size: this.paginator.page_size});
   }
 
   private updateCurrentParams(paramsToUpdate: GenericObject<any>, reset = false): void {
     let currentParams = this.routeDetails ? this.routeDetails.queryParams : this.prevQueryStringObj;
     if (reset) {
-      currentParams = pick(currentParams, ['ordering', 'size', 'page']);
+      currentParams = pick(currentParams, ['ordering', 'page_size', 'page']);
     }
     this.prevQueryStringObj = cloneDeep({...currentParams, ...paramsToUpdate});
 
