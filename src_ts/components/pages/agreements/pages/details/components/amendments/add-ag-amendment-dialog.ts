@@ -35,6 +35,9 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
           margin-left: 0 !important;
           margin-right: 0 !important;
         }
+        .p-static.col {
+          position: static;
+        }
       </style>
       <etools-dialog
         no-padding
@@ -50,7 +53,7 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         .disableDismissBtn="${this.uploadInProgress}"
       >
         <div class="row">
-          <div class="col col-md-4 col-12">
+          <div class="col col-md-4 col-12 p-static">
             <!-- Signed Date -->
             <datepicker-lite
               id="signedDate"

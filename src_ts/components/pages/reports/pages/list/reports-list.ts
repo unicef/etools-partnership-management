@@ -119,7 +119,7 @@ class ReportsList extends connect(store)(
       </style>
 
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1167px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
