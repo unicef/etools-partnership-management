@@ -62,18 +62,16 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
             <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
             <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
           </etools-radio-group>
-          <div>
-            <etools-input
-              id="comment"
-              label="${translate('COMMENT')}"
-              .value="${this.acceptedComment}"
-              @value-changed="${({detail}: CustomEvent) => {
-                this.acceptedComment = detail.value;
-              }}"
-              placeholder="&#8212;"
-              maxlength="50"
-            ></etools-input>
-          </div>
+          <etools-input
+            id="comment"
+            label="${translate('COMMENT')}"
+            .value="${this.acceptedComment}"
+            @value-changed="${({detail}: CustomEvent) => {
+              this.acceptedComment = detail.value;
+            }}"
+            placeholder="&#8212;"
+            maxlength="50"
+          ></etools-input>
         </div>
       </etools-dialog>
     `;
