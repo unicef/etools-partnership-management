@@ -51,6 +51,15 @@ export class ReportOverall extends LitElement {
           >
           </etools-textarea>
         </div>
+        <div class="col col-12">
+          <etools-textarea
+            readonly
+            placeholder="—"
+            label="${translate('COMMENT')}"
+            .value="${this.latestIndicator.accepted_comment}"
+          >
+          </etools-textarea>
+        </div>
       </div>
     `;
   }
