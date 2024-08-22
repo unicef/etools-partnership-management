@@ -637,5 +637,7 @@
   "REPORT_FOR": "تقرير لـ",
   "RATE_ACCEPT_REPORT": "تقدير وقبول التقرير",
   "SENDING_RATING": "إرسال التقييم...",
-  "NO_REPORTING_PERIOD": "فترة تقرير غير متاحة"
+  "NO_REPORTING_PERIOD": "فترة تقرير غير متاحة",
+  "ACHIEVED_AS_PLANNED": "تحقق كما هو مخطط",
+  "NOT_ACHIEVED_AS_PLANNED": "لم يتحقق كما هو مخطط"
 }

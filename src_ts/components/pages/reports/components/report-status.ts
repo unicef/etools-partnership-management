@@ -110,6 +110,7 @@ export class ReportStatus extends LitElement {
       case 'OnT':
       case 'Com':
       case 'Acc':
+      case 'AchievedAsP':
         return 'success';
       case 'Sub':
         return 'submitted';
@@ -125,6 +126,7 @@ export class ReportStatus extends LitElement {
       case 'Rej':
       case 'Con':
       case 'Pla':
+      case 'NotAchievedAsP':
         return 'warning';
       case 'NoS':
         return 'no-status';
@@ -149,6 +151,12 @@ export class ReportStatus extends LitElement {
         break;
       case 'Sub':
         label = 'Submitted';
+        break;
+      case 'AchievedAsP':
+        label = 'Achieved as planned';
+        break;
+      case 'NotAchievedAsP':
+        label = 'Not achieved as planned';
         break;
       case 'Rej':
         label = 'Rejected';

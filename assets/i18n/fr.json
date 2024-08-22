@@ -637,5 +637,7 @@
   "REPORT_FOR": "Rapport pour",
   "RATE_ACCEPT_REPORT": "Noter et accepter le rapport",
   "SENDING_RATING": "Envoi de la notation...",
-  "NO_REPORTING_PERIOD": "Pas de période de déclaration"
+  "NO_REPORTING_PERIOD": "Pas de période de déclaration",
+  "ACHIEVED_AS_PLANNED": "Réalisé comme prévu",
+  "NOT_ACHIEVED_AS_PLANNED": "Non réalisé comme prévu"
 }

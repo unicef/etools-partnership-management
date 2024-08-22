@@ -637,5 +637,7 @@
   "REPORT_FOR": "Report for",
   "RATE_ACCEPT_REPORT": "Rate & Accept Report",
   "SENDING_RATING": "Sending rating...",
-  "NO_REPORTING_PERIOD": "No reporting period"
+  "NO_REPORTING_PERIOD": "No reporting period",
+  "ACHIEVED_AS_PLANNED": "Achieved as planned",
+  "NOT_ACHIEVED_AS_PLANNED": "Not achieved as planned"
 }

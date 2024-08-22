@@ -57,10 +57,17 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
               this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <sl-radio value="Met"> ${translate('MET')}</sl-radio>
-            <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
-            <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
-            <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+            ${this.isFinalReport
+              ? html`
+                  <sl-radio value="AchievedAsP"> ${translate('ACHIEVED_AS_PLANNED')}</sl-radio>
+                  <sl-radio value="NotAchievedAsP"> ${translate('NOT_ACHIEVED_AS_PLANNED')}</sl-radio>
+                `
+              : html`
+                  <sl-radio value="Met"> ${translate('MET')}</sl-radio>
+                  <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
+                  <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
+                  <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+                `}
           </etools-radio-group>
           <etools-input
             id="comment"
@@ -95,6 +102,9 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   @property({type: Boolean})
   showSpinner = false;
 
+  @property({type: Boolean})
+  isFinalReport = false;
+
   set dialogData(data: any) {
     const {report}: any = data;
     this.report = report;
@@ -107,8 +117,10 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
 
   init() {
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
-    this.selectedOverallStatus = this.isSRReport ? 'Met' : '';
-    this.okBtnText = this.isSRReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
+    this.isFinalReport = this.report.is_final;
+    this.selectedOverallStatus = this.isSRReport && !this.isFinalReport ? 'Met' : '';
+    this.okBtnText =
+      this.isSRReport && !this.isFinalReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
   }
 
   _onClose(): void {

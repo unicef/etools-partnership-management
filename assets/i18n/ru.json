@@ -637,5 +637,7 @@
   "REPORT_FOR": "Отчет для",
   "RATE_ACCEPT_REPORT": "Оценить и принять отчет",
   "SENDING_RATING": "Отправка оценки...",
-  "NO_REPORTING_PERIOD": "Нет периода отчетности"
+  "NO_REPORTING_PERIOD": "Нет периода отчетности",
+  "ACHIEVED_AS_PLANNED": "Достигнуто по плану",
+  "NOT_ACHIEVED_AS_PLANNED": "Не достигнуто по плану"
 }
