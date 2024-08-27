@@ -59,8 +59,8 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
           >
             ${this.isFinalReport
               ? html`
-                  <sl-radio value="AchievedAsP"> ${translate('ACHIEVED_AS_PLANNED')}</sl-radio>
-                  <sl-radio value="NotAchievedAsP"> ${translate('NOT_ACHIEVED_AS_PLANNED')}</sl-radio>
+                  <sl-radio value="Met"> ${translate('ACHIEVED_AS_PLANNED')}</sl-radio>
+                  <sl-radio value="Con"> ${translate('NOT_ACHIEVED_AS_PLANNED')}</sl-radio>
                 `
               : html`
                   <sl-radio value="Met"> ${translate('MET')}</sl-radio>
