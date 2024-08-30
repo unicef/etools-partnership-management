@@ -637,5 +637,7 @@
   "REPORT_FOR": "Informe para",
   "RATE_ACCEPT_REPORT": "Calificar y aceptar informe",
   "SENDING_RATING": "Enviando calificación...",
-  "NO_REPORTING_PERIOD": "Sin período de informe"
+  "NO_REPORTING_PERIOD": "Sin período de informe",
+  "ACHIEVED_AS_PLANNED": "Logrado según lo planeado",
+  "NOT_ACHIEVED_AS_PLANNED": "No logrado según lo planeado"
 }
