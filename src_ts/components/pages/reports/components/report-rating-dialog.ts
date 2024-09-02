@@ -72,9 +72,9 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
           <etools-input
             id="comment"
             label="${translate('COMMENT')}"
-            .value="${this.acceptedComment}"
+            .value="${this.comment}"
             @value-changed="${({detail}: CustomEvent) => {
-              this.acceptedComment = detail.value;
+              this.comment = detail.value;
             }}"
             placeholder="&#8212;"
             maxlength="50"
@@ -91,7 +91,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   selectedOverallStatus = '';
 
   @property({type: String})
-  acceptedComment = '';
+  comment = '';
 
   @property({type: String})
   okBtnText = '';
@@ -142,7 +142,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
       overall_status: this.selectedOverallStatus,
       reviewed_by_name: this.currentUser.name,
       review_date: this.getCurrentDate(),
-      accepted_comment: this.acceptedComment
+      comment: this.comment
     };
     this.showSpinner = true;
     this.fireRequest(pmpEdpoints, 'reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
