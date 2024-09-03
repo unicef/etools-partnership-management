@@ -116,6 +116,9 @@ class ReportsList extends connect(store)(
         #list {
           position: relative;
         }
+        etools-filters::part(filter-dropdown) {
+          width: 240px !important;
+        }
       </style>
 
       <etools-media-query
