@@ -5,6 +5,7 @@ import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.js';
 
 import './sent-bk-comments.js';
+import './accepted-comments.js';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
@@ -109,8 +110,8 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
             </etools-input>
             <etools-icon
               name="speaker-notes"
-              @click="${this._seeSentBackComments}"
-              ?hidden="${!this.statusIs(this.report.status, 'Sen')}"
+              @click="${this._seeComments}"
+              ?hidden="${!(this.statusIs(this.report.status, 'Sen') || this.statusIs(this.report.status, 'Acc'))}"
             ></etools-icon>
           </div>
           <div class="col col-2" ?hidden="${this.statusIs(this.report.status, 'Sub')}">
@@ -395,9 +396,9 @@ export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
     return getTranslatedValue(this.getDisplayValue(value) as string, 'OVERALL_SATISFACTION_RATINGS');
   }
 
-  _seeSentBackComments() {
+  _seeComments() {
     openDialog({
-      dialog: 'sent-bk-comments',
+      dialog: this.report.status === 'Acc' ? 'accepted-comments' : 'sent-bk-comments',
       dialogData: {
         report: cloneDeep(this.report)
       }

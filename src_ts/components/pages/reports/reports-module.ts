@@ -101,7 +101,7 @@ export class ReportsModule extends connect(store)(
           ${this.tabsActive
             ? html`
                 <div class="secondary-title">
-                  <a target="_blank" href="${this.rootPath}partners/${this.report?.partner_org_id}/details">
+                  <a target="_blank" href="${Environment.basePath}partners/${this.report?.partner_org_id}/details">
                     ${this.report?.partner_org_name} - ${this.report?.partner_vendor_number}
                   </a>
                 </div>
@@ -142,6 +142,7 @@ export class ReportsModule extends connect(store)(
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
             <report-status
+              .final="${this.report?.is_final}"
               .status="${this.report?.status}"
               ?hidden="${this.statusIs(this.report?.status, 'Sub')}"
               tabindex="-1"
@@ -233,9 +234,6 @@ export class ReportsModule extends connect(store)(
 
   @property({type: Object})
   permissions!: GenericObject;
-
-  @property({type: String})
-  rootPath!: string;
 
   @property({type: String})
   moduleName = 'reports';
@@ -409,7 +407,7 @@ export class ReportsModule extends connect(store)(
   }
 
   _getTitleLink(report: any) {
-    return `${this.rootPath}interventions/${report?.programme_document?.external_id}/reports`;
+    return `${Environment.basePath}interventions/${report?.programme_document?.external_id}/reports`;
   }
 
   _exportIndicatorsPDF(e: CustomEvent) {

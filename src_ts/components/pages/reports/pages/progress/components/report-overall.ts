@@ -39,7 +39,11 @@ export class ReportOverall extends LitElement {
         </div>
         <div class="col col-md-2 col-12 status-column">
           <etools-input readonly placeholder="" label="${translate('OVERALL_STATUS')}">
-            <report-status .status="${this.latestIndicator.overall_status}" slot="prefix"></report-status>
+            <report-status
+              .final="${this.final}"
+              .status="${this.latestIndicator.overall_status}"
+              slot="prefix"
+            ></report-status>
           </etools-input>
         </div>
         <div class="col col-md-5 col-12">
@@ -54,6 +58,9 @@ export class ReportOverall extends LitElement {
       </div>
     `;
   }
+
+  @property({type: Boolean})
+  final = false;
 
   @property({type: Object})
   lowerResultTitle!: GenericObject;

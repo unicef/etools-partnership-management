@@ -83,7 +83,7 @@ export class ReportRejectDialog extends connect(store)(EndpointsLitMixin(LitElem
   }
 
   getCurrentDate() {
-    return dayjs(new Date()).format('D-MMM-YYYY');
+    return dayjs(new Date()).format('YYYY-MM-DD');
   }
   translateReportingPeriodText(periodText: string) {
     if (periodText === 'No reporting period') {

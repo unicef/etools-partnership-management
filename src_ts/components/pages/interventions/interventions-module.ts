@@ -302,7 +302,6 @@ export class InterventionsModule extends connect(store)(
     } else {
       const currentPD = get(state, 'interventions.current');
       if (!isJsonStrMatch(this.intervention, currentPD) && currentPD) {
-        this.updateDexieData(currentPD);
         this.intervention = currentPD;
       }
     }
@@ -378,12 +377,6 @@ export class InterventionsModule extends connect(store)(
     if (['list', 'new'].includes(page)) {
       this.reportsPrevParams = {};
     }
-  }
-
-  updateDexieData(intervention: Intervention) {
-    (this.shadowRoot?.querySelector('#interventionData') as InterventionItemData).updateInterventionsListInDexieDb(
-      intervention
-    );
   }
 
   _isNewIntervention() {
