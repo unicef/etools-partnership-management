@@ -192,7 +192,7 @@ class ReportsList extends connect(store)(
                       </sl-tooltip>
                     </span>
                     <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
-                      <report-status .status="${report.status}"></report-status>
+                      <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
                     </span>
                     <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}

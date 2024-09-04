@@ -132,6 +132,7 @@ export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
                   ${result.ll_outputs.map(
                     (lowerResult: any, lowerResultIndex: number) => html`
                       <report-overall
+                        .final="${this.report.is_final}"
                         .lowerResultTitle="${lowerResult.title}"
                         .latestIndicator="${this._getLowerResultLatestIndicator(lowerResult.id)}"
                       ></report-overall>
