@@ -142,6 +142,7 @@ export class ReportsModule extends connect(store)(
 
           <div ?hidden="${this._hideActionBtns(this.tabsActive, this.report)}">
             <report-status
+              .final="${this.report?.is_final}"
               .status="${this.report?.status}"
               ?hidden="${this.statusIs(this.report?.status, 'Sub')}"
               tabindex="-1"
