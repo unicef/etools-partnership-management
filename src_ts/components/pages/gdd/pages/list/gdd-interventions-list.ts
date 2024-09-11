@@ -18,7 +18,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.util';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {translate} from 'lit-translate';
@@ -30,20 +30,25 @@ import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-re
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
-import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelper} from './interventions-filters';
+import {
+  getGDDInterventionFilters,
+  GDDInterventionFilterKeys,
+  GDDInterventionsFiltersHelper
+} from './gdd-interventions-filters';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
-import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
+// TODO change this import after intervention tab pages location is changed
+import {setShouldReGetList} from '../../../interventions/pages/intervention-tab-pages/common/actions/interventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {
   EtoolsRouteDetails,
   EtoolsRouteQueryParams
 } from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-@customElement('interventions-list')
-export class InterventionsList extends connect(store)(
+@customElement('gdd-interventions-list')
+export class GddInterventionsList extends connect(store)(
   ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
@@ -128,11 +133,8 @@ export class InterventionsList extends connect(store)(
           <etools-data-table-column class="col-2" field="number" sortable>
             ${translate('INTERVENTIONS_LIST.REFERENCE_NO')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-3" field="partner_name" sortable>
-            ${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}
-          </etools-data-table-column>
-          <etools-data-table-column class="col-1" field="document_type">
-            ${translate('INTERVENTIONS_LIST.DOC_TYPE')}
+          <etools-data-table-column class="col-4" field="partner_name" sortable>
+            ${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="status">
             ${translate('GENERAL.STATUS')}
@@ -157,21 +159,18 @@ export class InterventionsList extends connect(store)(
               <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
                 <a
                   class="text-btn-style pd-ref truncate"
-                  href="interventions/${intervention.id}/metadata"
+                  href="gdd/${intervention.id}/metadata"
                   title="${this.getDisplayValue(intervention.number)}"
                 >
                   ${this.getDisplayValue(intervention.number)}
                 </a>
               </span>
               <span
-                class="col-data col-3"
-                data-col-header-label="${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}"
+                class="col-data col-4"
+                data-col-header-label="${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}"
                 title="${this.getDisplayValue(intervention.partner_name)}"
               >
                 <span>${this.getDisplayValue(intervention.partner_name)}</span>
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
-                ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
               </span>
               <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
                 <div>${this.getStatusCellText(intervention)}</div>
@@ -417,7 +416,7 @@ export class InterventionsList extends connect(store)(
     let availableFilters = [];
 
     if (!this.allFilters) {
-      availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
+      availableFilters = JSON.parse(JSON.stringify(getGDDInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
     } else {
       // Avoid setting this.allFilters twice, as the already selected filters will be reset
@@ -426,7 +425,7 @@ export class InterventionsList extends connect(store)(
 
     // update filter selection and assign the result to etools-filters(trigger render)
     const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
-    this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
+    this.allFilters = GDDInterventionsFiltersHelper.updateFiltersSelectedValues(
       omit(currentParams, ['page', 'page_size', 'ordering']),
       availableFilters
     );
@@ -434,25 +433,24 @@ export class InterventionsList extends connect(store)(
 
   populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {
     [
-      [InterventionFilterKeys.type, state.commonData!.documentTypes],
-      [InterventionFilterKeys.status, state.commonData!.interventionStatuses],
-      [InterventionFilterKeys.section, state.commonData!.sections],
-      [InterventionFilterKeys.offices, state.commonData!.offices],
-      [InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
-      [InterventionFilterKeys.donors, state.commonData!.donors],
-      [InterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
-      [InterventionFilterKeys.grants, state.commonData!.grants],
-      [InterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
-      [InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
-      [InterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes],
+      [GDDInterventionFilterKeys.status, state.commonData!.interventionStatuses],
+      [GDDInterventionFilterKeys.section, state.commonData!.sections],
+      [GDDInterventionFilterKeys.offices, state.commonData!.offices],
+      [GDDInterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
+      [GDDInterventionFilterKeys.donors, state.commonData!.donors],
+      [GDDInterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
+      [GDDInterventionFilterKeys.grants, state.commonData!.grants],
+      [GDDInterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
+      [GDDInterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
+      [GDDInterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes],
       [
-        InterventionFilterKeys.editable_by,
+        GDDInterventionFilterKeys.editable_by,
         [
           {label: 'UNICEF', value: 'unicef'},
           {label: this._getTranslation('PARTNER'), value: 'partner'}
         ]
       ]
-    ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
+    ].forEach(([key, data]) => GDDInterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
     this.partners = partnersDropdownDataSelector(state);
   }
 
@@ -556,7 +554,7 @@ export class InterventionsList extends connect(store)(
     fireEvent(this, 'csv-download-url-changed', this.getListQueryString(this.prevQueryStringObj, true) as any);
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
-    EtoolsRouter.replaceAppLocation(`interventions/list?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`gdd/list?${stringParams}`);
   }
 
   _triggerInterventionLoadingMsg() {

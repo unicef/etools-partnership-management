@@ -7,7 +7,7 @@ import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit'
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
 import '../../common/components/etools-error-messages-box.js';
-import './data/intervention-item-data.js';
+import './data/gdd-intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
@@ -15,8 +15,9 @@ import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-compari
 import {store, RootState} from '../../../redux/store';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import InterventionItemData from './data/intervention-item-data.js';
-import './pages/intervention-tab-pages/intervention-tabs';
+import GddInterventionItemData from './data/gdd-intervention-item-data.js';
+// TODO Update this import
+import '../interventions/pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
@@ -28,7 +29,8 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
-import './pages/new/ecn-import-dialog';
+// TODO remove this if not needed
+import '../interventions/pages/new/ecn-import-dialog';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
@@ -50,8 +52,8 @@ setStore(store);
  * @appliesMixin SaveInterventionMixin
  */
 
-@customElement('interventions-module')
-export class InterventionsModule extends connect(store)(
+@customElement('gdd-interventions-module')
+export class GddInterventionsModule extends connect(store)(
   MatomoMixin(
     ScrollControlMixinLit(
       ModuleMainElCommonFunctionalityMixinLit(
@@ -137,9 +139,9 @@ export class InterventionsModule extends connect(store)(
       <div ?hidden="${this.showNewPMP(this.activePage)}">
         <page-content-header ?with-tabs-visible="${this.tabsActive}">
           <div slot="page-title">
-            <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> ${translate('PD_SPDS')} </span>
+            <span ?hidden="${!this._pageEquals(this.activePage, 'list')}"> ${translate('GDD_LIST.NAME')} </span>
             <span ?hidden="${!this._pageEquals(this.activePage, 'new')}">
-              <span class="no-capitalization">${translate('INTERVENTIONS_LIST.ADD_PROGRAMME_DOCUMENT')}</span>
+              <span class="no-capitalization">${translate('GDD_LIST.ADD_GDD')}</span>
             </span>
           </div>
 
@@ -175,7 +177,7 @@ export class InterventionsModule extends connect(store)(
                 ?hidden="${this.listLoadingActive}"
               >
                 <etools-icon name="add" slot="prefix"></etools-icon>
-                <span style="padding: 0 10px 0 0">${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
+                <span style="padding: 0 10px 0 0">${translate('GDD_LIST.ADD_NEW_GDD')}</span>
                 <sl-dropdown id="importEcn">
                   <etools-icon
                     slot="trigger"
@@ -209,7 +211,7 @@ export class InterventionsModule extends connect(store)(
               .errors="${this.serverErrors}"
             ></etools-error-messages-box>
 
-            <interventions-list
+            <gdd-interventions-list
               id="list"
               name="list"
               ?hidden="${!this._pageEquals(this.activePage, 'list')}"
@@ -217,10 +219,10 @@ export class InterventionsModule extends connect(store)(
               @csv-download-url-changed="${this.csvDownloadUrlChanged}"
               @list-loading-active="${(ev: CustomEvent) => (this.listLoadingActive = ev.detail.value)}"
             >
-            </interventions-list>
+            </gdd-interventions-list>
 
             ${this._pageEquals(this.activePage, 'new')
-              ? html`<intervention-new @create-intervention="${this.onCreateIntervention}"></intervention-new>`
+              ? html`<gdd-intervention-new @create-intervention="${this.onCreateIntervention}"></gdd-intervention-new>`
               : html``}
           </div>
 
@@ -229,7 +231,7 @@ export class InterventionsModule extends connect(store)(
       </div>
       <intervention-tabs ?hidden="${!this.showNewPMP(this.activePage)}"></intervention-tabs>
 
-      <intervention-item-data id="interventionData"></intervention-item-data>
+      <gdd-intervention-item-data id="interventionData"></gdd-intervention-item-data>
     `;
   }
 
@@ -281,15 +283,15 @@ export class InterventionsModule extends connect(store)(
   stateChanged(state: RootState) {
     this.envStateChanged(state);
 
-    if (get(state, 'app.routeDetails.routeName') !== 'interventions') {
+    if (get(state, 'app.routeDetails.routeName') !== 'gdd') {
       return;
     } else {
-      const routeDetials = state.app?.routeDetails;
-      if (!isJsonStrMatch(this.prevRouteDetails, routeDetials) || this.activePage !== routeDetials!.subRouteName) {
-        this.prevRouteDetails = routeDetials;
-        this.tabsActive = !['list', 'new'].includes(routeDetials!.subRouteName!);
-        this.activePage = routeDetials!.subRouteName!;
-        this.pageChanged(routeDetials!.subRouteName!);
+      const routeDetails = state.app?.routeDetails;
+      if (!isJsonStrMatch(this.prevRouteDetails, routeDetails) || this.activePage !== routeDetails!.subRouteName) {
+        this.prevRouteDetails = routeDetails;
+        this.tabsActive = !['list', 'new'].includes(routeDetails!.subRouteName!);
+        this.activePage = routeDetails!.subRouteName!;
+        this.pageChanged(routeDetails!.subRouteName!);
       }
       if (this.isInitialLoading) {
         this.isInitialLoading = false;
@@ -384,7 +386,7 @@ export class InterventionsModule extends connect(store)(
   }
 
   _deleteIntervention(e: CustomEvent) {
-    (this.shadowRoot?.querySelector('#interventionData') as InterventionItemData).deleteIntervention(e.detail.id);
+    (this.shadowRoot?.querySelector('#interventionData') as GddInterventionItemData).deleteIntervention(e.detail.id);
   }
 
   _userHasEditPermissions(permissions: UserPermissions) {
@@ -414,7 +416,7 @@ export class InterventionsModule extends connect(store)(
     if (!this._hasEditPermissions(this.userPermissions)) {
       return;
     }
-    history.pushState(window.history.state, '', `${Environment.basePath}interventions/new`);
+    history.pushState(window.history.state, '', `${Environment.basePath}gdd/new`);
     window.dispatchEvent(new CustomEvent('popstate'));
     fireEvent(this, 'global-loading', {
       active: true,
@@ -430,7 +432,7 @@ export class InterventionsModule extends connect(store)(
    * Go to details page once the new intervention has been saved
    */
   _newInterventionSaved(intervention: Intervention) {
-    history.pushState(window.history.state, '', `${Environment.basePath}interventions/${intervention.id}/metadata`);
+    history.pushState(window.history.state, '', `${Environment.basePath}gdd/${intervention.id}/metadata`);
     window.dispatchEvent(new CustomEvent('popstate'));
     this.requestUpdate();
   }
@@ -487,7 +489,7 @@ export class InterventionsModule extends connect(store)(
 
   onCreateIntervention({detail}: CustomEvent) {
     const intervention = this.cleanUpBeforeSave(detail.intervention);
-    (this.shadowRoot?.querySelector('#interventionData') as InterventionItemData)
+    (this.shadowRoot?.querySelector('#interventionData') as GddInterventionItemData)
       // @ts-ignore
       .saveIntervention(intervention, this._newInterventionSaved.bind(this));
   }

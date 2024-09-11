@@ -191,7 +191,15 @@ class AppShell extends connect(store)(
                 >
                 </interventions-module>`
               : ``}
-
+            ${this.GDDinterventionsLoaded
+              ? html`<gdd-interventions-module
+                  id="gdd"
+                  class="main-page"
+                  .userPermissions="${this.permissions}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'gdd')}"
+                >
+                </gdd-interventions-module>`
+              : ``}
             <reports-module
               id="reports"
               class="main-page"
@@ -244,6 +252,9 @@ class AppShell extends connect(store)(
     if (val !== this._module) {
       if (!this.interventionsLoaded) {
         this.interventionsLoaded = val === 'interventions';
+      }
+      if (!this.GDDinterventionsLoaded) {
+        this.GDDinterventionsLoaded = val === 'gdd';
       }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);
@@ -306,6 +317,7 @@ class AppShell extends connect(store)(
   @query('#drawer') private drawer!: LitElement;
 
   @state() interventionsLoaded = false;
+  @state() GDDinterventionsLoaded = false;
 
   constructor() {
     super();
@@ -335,7 +347,6 @@ class AppShell extends connect(store)(
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);
     };
-
     if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.

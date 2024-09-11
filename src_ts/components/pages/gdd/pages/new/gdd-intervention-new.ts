@@ -7,10 +7,10 @@ import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
-import {template} from './intervention-new.template';
+import {template} from './gdd-intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
-import {NewInterventionStyles} from './intervention-new.styles';
+import {NewGDDInterventionStyles} from './gdd-intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
@@ -22,8 +22,8 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 
-@customElement('intervention-new')
-export class InterventionNew extends connect(store)(LitElement) {
+@customElement('gdd-intervention-new')
+export class GddInterventionNew extends connect(store)(LitElement) {
   newIntervention: Partial<Intervention> = this.getDefaultNewIntervention();
   @property({type: Boolean}) windowWidthIsSmall = false;
   @property() offices: Office[] = [];
@@ -254,7 +254,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   static get styles(): CSSResultArray {
-    return [layoutStyles, NewInterventionStyles];
+    return [layoutStyles, NewGDDInterventionStyles];
   }
 
   cancel() {
@@ -262,7 +262,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.selectedAgreement = null;
     this.selectedPartner = null;
     this.requestUpdate();
-    EtoolsRouter.updateAppLocation('interventions/list');
+    EtoolsRouter.updateAppLocation('gdd/list');
   }
 
   getDefaultNewIntervention() {

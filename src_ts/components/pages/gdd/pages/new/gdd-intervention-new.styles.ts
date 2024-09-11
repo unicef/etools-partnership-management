@@ -1,7 +1,7 @@
 import {css, CSSResult} from 'lit';
 
 // language=css
-export const NewInterventionStyles: CSSResult = css`
+export const NewGDDInterventionStyles: CSSResult = css`
   :host {
     position: relative;
     display: block;

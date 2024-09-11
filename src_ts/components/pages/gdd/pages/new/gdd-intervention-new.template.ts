@@ -1,7 +1,7 @@
 /* eslint no-invalid-this: 0 */
 import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import {TemplateResult, html} from 'lit';
-import {InterventionNew} from './intervention-new';
+import {GddInterventionNew} from './gdd-intervention-new';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from 'lit-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
@@ -10,24 +10,23 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
 import {sharedStyles} from '../../../../styles/shared-styles-lit';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
-import {SlSwitch} from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
-export function template(this: InterventionNew): TemplateResult {
+export function template(this: GddInterventionNew): TemplateResult {
   return html`
     ${sharedStyles}
     <style>
       label[required] {
-          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
-          width: auto !important;
-          max-width: 100%;
-          right: auto;
-          padding-inline-end: 15px;
+        background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
+        width: auto !important;
+        max-width: 100%;
+        right: auto;
+        padding-inline-end: 15px;
       }
 
-      :host-context([dir='rtl'])  label[required] {
-          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
+      :host-context([dir='rtl']) label[required] {
+        background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
       paper-input#unppNumber {
@@ -45,8 +44,9 @@ export function template(this: InterventionNew): TemplateResult {
         --iit-margin: 0 0 4px 4px;
         --iit-max-width: auto;
       }
-      etools-dropdown#documentType::part(form-control), etools-dropdown-multi#partnerFocalPoints::part(form-control) {
-        padding-top:0;
+      etools-dropdown#documentType::part(form-control),
+      etools-dropdown-multi#partnerFocalPoints::part(form-control) {
+        padding-top: 0;
       }
     </style>
 
@@ -64,7 +64,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-8 col-12">
           <etools-dropdown
             id="partner"
-            label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
+            label=${translate('NEW_GDD.GOVERNMENT')}
             placeholder="&#8212;"
             .options="${this.partnersDropdownData}"
             option-value="id"
@@ -74,28 +74,6 @@ export function template(this: InterventionNew): TemplateResult {
             error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
-            @focus="${this.resetError}"
-            @click="${this.resetError}"
-          >
-          </etools-dropdown>
-        </div>
-
-        <!--   Agreement   -->
-        <div class="col-md-6 col-lg-4 col-12">
-          <etools-dropdown
-            id="agreements"
-            label=${translate('AGREEMENT')}
-            placeholder="&#8212;"
-            .readonly="${!this.newIntervention?.partner}"
-            .options="${this.filteredAgreements}"
-            option-value="id"
-            option-label="agreement_number_status"
-            required
-            .selected="${this.newIntervention?.agreement}"
-            trigger-value-change-event
-            @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
-            auto-validate
-            error-message=${translate('NEW_INTERVENTION.AGREEMENT_REQUIRED')}
             @focus="${this.resetError}"
             @click="${this.resetError}"
           >
@@ -114,28 +92,17 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-input>
         </div>
-
-        <!--   Agreement Authorized Officers   -->
-        <div class="col-md-6 col-lg-4 col-12">
-          <etools-input
-            readonly
-            placeholder="—"
-            label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
-            .value="${this.authorizedOfficers}"
-          >
-          </etools-input>
-        </div>
       </div>
 
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-md-6 col-lg-8 col-12">
-        <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
-        <info-icon-tooltip
-              position="top"
-              offset="48"
-              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
-            ></info-icon-tooltip>
+          <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
+          <info-icon-tooltip
+            position="top"
+            offset="48"
+            .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+          ></info-icon-tooltip>
           <etools-dropdown-multi
             id="partnerFocalPoints"
             no-label-float
@@ -151,108 +118,9 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-
-          </etools-dropdown-multi>
-        </div>
-        <div class="col-md-6 col-lg-4 col-12">
-          <etools-dropdown-multi
-            label=${translate('NEW_INTERVENTION.CP_STRUCTURES')}
-            placeholder="&#8212;"
-            .options="${this.cpStructures}"
-            option-value="id"
-            option-label="name"
-            .selectedValues="${this.newIntervention.country_programmes || []}"
-            @etools-selected-items-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField(
-                'country_programmes',
-                detail.selectedItems.map(({id}: any) => id)
-              )}"
-            trigger-value-change-event
-            auto-validate
-          >
           </etools-dropdown-multi>
         </div>
       </div>
-      <div class="row">
-        <!--   UNPP CFEI Number   -->
-        <div class="col-md-6 col-lg-4 col-12">
-          <etools-input
-            id="unppNumber"
-            pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
-            placeholder="CEF/___/____/___"
-            .value="${this.newIntervention.cfei_number ? this.newIntervention.cfei_number : ''}"
-            error-message="${
-              this.windowWidthIsSmall
-                ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-                : translate('CFEI_EXPECTED_FORMAT')
-            }"
-            @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
-            @value-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('cfei_number', detail && detail.value)}"
-          ></etool-input>
-        </div>
-      </div>
-
-      <div class="row">
-        <!--   Document Type   -->
-        <div class="col-md-6 col-lg-4 col-12">
-        <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
-        <info-icon-tooltip
-              position="top"
-              offset="48"
-              .tooltipText="${this.getDocTypeTooltip()}"
-            ></info-icon-tooltip>
-
-          <etools-dropdown
-            id="documentType"
-            placeholder="&#8212;"
-            no-label-float
-            ?readonly="${!this.documentTypes.length}"
-            required
-            .options="${this.documentTypes}"
-            .selected="${this.newIntervention.document_type}"
-            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
-            @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
-            trigger-value-change-event
-            hide-search
-            @focus="${this.resetError}"
-            @click="${this.resetError}"
-          >
-          </etools-dropdown>
-        </div>
-        <div class="col-md-6 col-lg-8 col-12">
-          <div class="row">
-            <!--   SPD is Humanitarian   -->
-            <div ?hidden="${!this.isSPD}">
-              <sl-switch
-                ?checked="${this.newIntervention.humanitarian_flag}"
-                @sl-change="${(e: CustomEvent) => {
-                  this.setInterventionField('contingency_pd', false);
-                  this.setInterventionField('humanitarian_flag', (e.target! as SlSwitch).checked);
-                }}"
-              >
-                ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
-              </sl-switch>
-            </div>
-
-            <!--   Contingency Document   -->
-            <div ?hidden="${!this.newIntervention.humanitarian_flag}">
-              <sl-switch
-                ?checked="${this.newIntervention.contingency_pd}"
-                @sl-change="${(e: CustomEvent) => {
-                  this.setInterventionField('contingency_pd', (e.target! as SlSwitch).checked);
-                  this.setInterventionField('activation_protocol', '');
-                }}"
-              >
-                ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
-              </sl-switch>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="col-12" ?hidden="${!this.newIntervention.contingency_pd}">
         <etools-input
           label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}

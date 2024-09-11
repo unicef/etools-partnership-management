@@ -639,5 +639,15 @@
   "SENDING_RATING": "Sending rating...",
   "NO_REPORTING_PERIOD": "No reporting period",
   "ACHIEVED_AS_PLANNED": "Achieved as planned",
-  "NOT_ACHIEVED_AS_PLANNED": "Not achieved as planned"
+  "NOT_ACHIEVED_AS_PLANNED": "Not achieved as planned",
+  "GDD": "Government Digital Document",
+  "GDD_LIST": {
+    "NAME": "Government Digital Document",
+    "ADD_NEW_GDD": "Add new GDD",
+    "ADD_GDD": "Add Government Digital Document",
+    "GOVERNMENT_ORG_NAME": "Government Org Name"
+  },
+  "NEW_GDD": {
+    "GOVERNMENT": "Government"
+  }
 }

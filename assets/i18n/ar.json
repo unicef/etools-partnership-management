@@ -639,5 +639,15 @@
   "SENDING_RATING": "إرسال التقييم...",
   "NO_REPORTING_PERIOD": "فترة تقرير غير متاحة",
   "ACHIEVED_AS_PLANNED": "تحقق كما هو مخطط",
-  "NOT_ACHIEVED_AS_PLANNED": "لم يتحقق كما هو مخطط"
+  "NOT_ACHIEVED_AS_PLANNED": "لم يتحقق كما هو مخطط",
+  "GDD": "الوثيقة الرقمية الحكومية",
+  "GDD_LIST": {
+    "NAME": "الوثيقة الرقمية الحكومية",
+    "ADD_NEW_GDD": "إضافة وثيقة رقمية حكومية جديدة",
+    "ADD_GDD": "إضافة وثيقة رقمية حكومية",
+    "GOVERNMENT_ORG_NAME": "اسم المنظمة الحكومية"
+  },
+  "NEW_GDD": {
+    "GOVERNMENT": "الحكومة"
+  }
 }

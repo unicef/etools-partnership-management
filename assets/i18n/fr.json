@@ -639,5 +639,15 @@
   "SENDING_RATING": "Envoi de la notation...",
   "NO_REPORTING_PERIOD": "Pas de période de déclaration",
   "ACHIEVED_AS_PLANNED": "Réalisé comme prévu",
-  "NOT_ACHIEVED_AS_PLANNED": "Non réalisé comme prévu"
+  "NOT_ACHIEVED_AS_PLANNED": "Non réalisé comme prévu",
+  "GDD": "Document Numérique Gouvernemental",
+  "GDD_LIST": {
+    "NAME": "Document Numérique Gouvernemental",
+    "ADD_NEW_GDD": "Ajouter un nouveau GDD",
+    "ADD_GDD": "Ajouter un Document Numérique Gouvernemental",
+    "GOVERNMENT_ORG_NAME": "Nom de l'Organisation Gouvernementale"
+  },
+  "NEW_GDD": {
+    "GOVERNMENT": "Gouvernement"
+  }
 }
