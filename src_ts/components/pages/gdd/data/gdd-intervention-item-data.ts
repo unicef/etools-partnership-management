@@ -20,7 +20,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import pmpEdpoints from '../../../endpoints/endpoints';
 import {get as getTranslation} from 'lit-translate';
 // TODO change this import after intervention tab pages location is changed
-import {setShouldReGetList} from '../../interventions/pages/intervention-tab-pages/common/actions/interventions';
+import {setShouldReGetList} from '../pages/intervention-tab-pages/common/actions/interventions';
 
 /**
  * @LitElement

@@ -40,7 +40,7 @@ import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/cur
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 // TODO change this import after intervention tab pages location is changed
-import {setShouldReGetList} from '../../../interventions/pages/intervention-tab-pages/common/actions/interventions';
+import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/interventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {
   EtoolsRouteDetails,
