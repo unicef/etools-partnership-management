@@ -229,7 +229,7 @@ export class GddInterventionsModule extends connect(store)(
           <!-- main page content end -->
         </div>
       </div>
-      <intervention-tabs ?hidden="${!this.showNewPMP(this.activePage)}"></intervention-tabs>
+      <gdd-intervention-tabs ?hidden="${!this.showNewPMP(this.activePage)}"></gdd-intervention-tabs>
 
       <gdd-intervention-item-data id="interventionData"></gdd-intervention-item-data>
     `;
