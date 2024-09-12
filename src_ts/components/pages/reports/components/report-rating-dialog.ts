@@ -57,11 +57,28 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
               this.selectedOverallStatus = e.target.value;
             }}"
           >
-            <sl-radio value="Met"> ${translate('MET')}</sl-radio>
-            <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
-            <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
-            <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+            ${this.isFinalReport
+              ? html`
+                  <sl-radio value="Met"> ${translate('ACHIEVED_AS_PLANNED')}</sl-radio>
+                  <sl-radio value="Con"> ${translate('NOT_ACHIEVED_AS_PLANNED')}</sl-radio>
+                `
+              : html`
+                  <sl-radio value="Met"> ${translate('MET')}</sl-radio>
+                  <sl-radio value="OnT"> ${translate('ON_TRACK')}</sl-radio>
+                  <sl-radio value="NoP"> ${translate('NO_PROGRESS')}</sl-radio>
+                  <sl-radio value="Con"> ${translate('CONSTRAINED')}</sl-radio>
+                `}
           </etools-radio-group>
+          <etools-input
+            id="comment"
+            label="${translate('COMMENT')}"
+            .value="${this.comment}"
+            @value-changed="${({detail}: CustomEvent) => {
+              this.comment = detail.value;
+            }}"
+            placeholder="&#8212;"
+            maxlength="50"
+          ></etools-input>
         </div>
       </etools-dialog>
     `;
@@ -74,6 +91,9 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   selectedOverallStatus = '';
 
   @property({type: String})
+  comment = '';
+
+  @property({type: String})
   okBtnText = '';
 
   @property({type: Boolean})
@@ -81,6 +101,9 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
 
   @property({type: Boolean})
   showSpinner = false;
+
+  @property({type: Boolean})
+  isFinalReport = false;
 
   set dialogData(data: any) {
     const {report}: any = data;
@@ -94,8 +117,10 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
 
   init() {
     this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
-    this.selectedOverallStatus = this.isSRReport ? 'Met' : '';
-    this.okBtnText = this.isSRReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
+    this.isFinalReport = this.report.is_final;
+    this.selectedOverallStatus = this.isSRReport && !this.isFinalReport ? 'Met' : '';
+    this.okBtnText =
+      this.isSRReport && !this.isFinalReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
   }
 
   _onClose(): void {
@@ -103,7 +128,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
   }
 
   getCurrentDate() {
-    return dayjs(new Date()).format('D-MMM-YYYY');
+    return dayjs(new Date()).format('YYYY-MM-DD');
   }
   translateReportingPeriodText(periodText: string) {
     if (periodText === 'No reporting period') {
@@ -116,7 +141,8 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
       status: 'Acc',
       overall_status: this.selectedOverallStatus,
       reviewed_by_name: this.currentUser.name,
-      review_date: this.getCurrentDate()
+      review_date: this.getCurrentDate(),
+      comment: this.comment
     };
     this.showSpinner = true;
     this.fireRequest(pmpEdpoints, 'reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})

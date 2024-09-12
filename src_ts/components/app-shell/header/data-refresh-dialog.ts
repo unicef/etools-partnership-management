@@ -35,18 +35,11 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
         [hidden] {
           display: none !important;
         }
-
-        #content-box {
-          max-height: 600px;
-          min-height: 160px;
-          overflow-y: auto;
-          height: 100%;
-        }
-        .row-indent {
-          padding-inline-start: 40px;
+        .col-12 {
+          padding-left: 40px !important;
         }
         .title-indent {
-          padding: 0 24px;
+          padding: 0 24px 18px 24px;
           font-size: var(--etools-font-size-16, 16px);
         }
       </style>
@@ -60,10 +53,10 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
         .disableConfirmBtn="${!this.anySelected}"
         @close="${this._handleDialogClosed}"
       >
-        <div id="content-box">
+        <div class="container-dialog">
           <div class="title-indent">${translate('SELECT_DATA_TO_REFRESH')}</div>
-          <div class="row-h row-indent">
-            <div class="col col-6">
+          <div class="row row-indent">
+            <div class="col-12">
               <etools-checkbox
                 ?checked="${this.partnersSelected}"
                 @sl-change="${(e: any) => {
@@ -73,19 +66,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
                 >${translate('PARTNERS_GOVERNMENT')}</etools-checkbox
               >
             </div>
-            <div class="col col-6">
-              <etools-checkbox
-                ?checked="${this.interventionsSelected}"
-                @sl-change="${(e: any) => {
-                  this.interventionsSelected = e.target.checked;
-                  this._singleSectionChanged();
-                }}"
-                >${translate('PD_SPD')}</etools-checkbox
-              >
-            </div>
-          </div>
-          <div class="row-h row-indent">
-            <div class="col col-6">
+            <div class="col-12">
               <etools-checkbox
                 ?checked="${this.agreementsSelected}"
                 @sl-change="${(e: any) => {
@@ -95,24 +76,21 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
                 >${translate('AGREEMENTS')}</etools-checkbox
               >
             </div>
-            <div class="col col-6">
+            <div class="col-12">
               <etools-checkbox
                 ?checked="${this.allSelected}"
                 @sl-change="${(e: any) => {
                   this.allSelected = e.target.checked;
                   this._allSelectedChanged();
                 }}"
-                >${translate('ALL')}</etools-checkbox
-              >
+                >${translate('ALL')}
+              </etools-checkbox>
             </div>
           </div>
         </div>
       </etools-dialog>
     `;
   }
-
-  @property({type: Boolean})
-  interventionsSelected = false;
 
   @property({type: Boolean})
   partnersSelected = false;
@@ -146,15 +124,14 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
       return;
     }
 
-    this.interventionsSelected = true;
     this.partnersSelected = true;
     this.agreementsSelected = true;
     this.anySelected = true;
   }
 
   _singleSectionChanged() {
-    const allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
-    const anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
+    const allSelected = this.partnersSelected && this.agreementsSelected;
+    const anySelected = this.partnersSelected || this.agreementsSelected;
 
     this.allSelected = allSelected;
     this.anySelected = anySelected;
@@ -188,30 +165,22 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
 
     const endpointNames: string[] = [];
     // clear only data sets
-    window.EtoolsPmpApp.DexieDb.transaction(
-      'rw',
-      'listsExpireMapTable',
-      'partners',
-      'agreements',
-      'interventions',
-      () => {
-        if (this.partnersSelected) {
-          window.EtoolsPmpApp.DexieDb.partners.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
-          endpointNames.push('partners');
-        }
-        if (this.agreementsSelected) {
-          window.EtoolsPmpApp.DexieDb.agreements.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
-          endpointNames.push('agreements');
-        }
-        if (this.interventionsSelected) {
-          window.EtoolsPmpApp.DexieDb.interventions.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
-          endpointNames.push('interventions');
-        }
+    window.EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', () => {
+      if (this.partnersSelected) {
+        window.EtoolsPmpApp.DexieDb.partners.clear();
+        window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
+        endpointNames.push('partners');
       }
-    )
+      if (this.agreementsSelected) {
+        window.EtoolsPmpApp.DexieDb.agreements.clear();
+        window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
+        endpointNames.push('agreements');
+      }
+      if (window.EtoolsPmpApp.DexieDb.interventions) {
+        window.EtoolsPmpApp.DexieDb.interventions.clear();
+        window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+      }
+    })
       .then(() => {
         // transaction succeeded
         this.reloadData(endpointNames).then(() => {
@@ -290,16 +259,12 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
     if (this.agreementsSelected) {
       return 'agreements';
     }
-    if (this.interventionsSelected) {
-      return 'interventions';
-    }
     return this.page;
   }
 
   _resetRefreshSelection() {
     this.partnersSelected = false;
     this.agreementsSelected = false;
-    this.interventionsSelected = false;
   }
 }
 

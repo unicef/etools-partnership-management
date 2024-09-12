@@ -31,9 +31,8 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
     return html`
       ${sharedStyles}
       <style>
-        .row {
-          margin-left: 0 !important;
-          margin-right: 0 !important;
+        .p-static.col {
+          position: static;
         }
       </style>
       <etools-dialog
@@ -49,83 +48,85 @@ export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
         .disableConfirmBtn="${this.uploadInProgress}"
         .disableDismissBtn="${this.uploadInProgress}"
       >
-        <div class="row">
-          <div class="col col-md-4 col-12">
-            <!-- Signed Date -->
-            <datepicker-lite
-              id="signedDate"
-              label="${translate('SIGNED_DATE')}"
-              .value="${this.amendment.signed_date}"
-              required-error-msg="${translate('PLEASE_SELECT_SIGNED_DATE')}"
-              max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
-              .open="${this.datePickerOpen}"
-              .autoValidate="${this.autoValidate}"
-              max-date="${this.getCurrentDate()}"
-              min-date="${this.agreementStart}"
-              required
-              selected-date-display-format="D MMM YYYY"
-              fire-date-has-changed
-              @date-has-changed="${(e: CustomEvent) => (this.amendment.signed_date = e.detail.date)}"
-            >
-            </datepicker-lite>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Signed Agreement -->
-          <etools-upload
-            class="col col-md-4 col-12"
-            id="signedAmendment"
-            label="${translate('SIGNED_AMENDMENT')}"
-            accept=".doc,.docx,.pdf,.jpg,.png"
-            .fileUrl="${this.amendment.signed_amendment_attachment}"
-            .uploadEndpoint="${this.uploadEndpoint}"
-            @upload-started="${this._uploadStarted}"
-            @upload-finished="${this._uploadFinished}"
-            required
-            .uploadInProgress="${this.uploadInProgress}"
-            .autoValidate="${this.autoValidate}"
-            error-message="${translate('SIGNED_AMENDMENT_FILE_IS_REQUIRED')}"
-          >
-          </etools-upload>
-        </div>
-
-        <div class="row">
-          <etools-dropdown-multi
-            class="col col-12"
-            id="amendmentTypes"
-            label="${translate('AMENDMENT_TYPES')}"
-            .options="${this.amendmentTypes}"
-            .selectedValues="${this.amendment.types}"
-            hide-search
-            error-message="${translate('PLEASE_SELECT_AMENDMENT_TYPE')}"
-            required
-            .autoValidate="${this.autoValidate}"
-            trigger-value-change-event
-            @etools-selected-items-changed="${this.onAmendmentTypesChanged}"
-          >
-          </etools-dropdown-multi>
-        </div>
-
-        ${this._showAuthorizedOfficersField(this.showAuthorizedOfficers, this._aoTypeSelected)
-          ? html` <div class="row">
-              <etools-dropdown-multi
-                class="col col-12"
-                id="officers"
-                label="${translate('AUTHORIZED_OFFICERS')}"
-                placeholder="&#8212;"
-                .options="${this.authorizedOfficersOptions}"
-                option-value="id"
-                option-label="name"
-                .selectedValues="${cloneDeep(this.selAuthorizedOfficers)}"
-                trigger-value-change-event
-                @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
-                error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"
+        <div class="container-dialog">
+          <div class="row">
+            <div class="col col-md-4 col-12 p-static">
+              <!-- Signed Date -->
+              <datepicker-lite
+                id="signedDate"
+                label="${translate('SIGNED_DATE')}"
+                .value="${this.amendment.signed_date}"
+                required-error-msg="${translate('PLEASE_SELECT_SIGNED_DATE')}"
+                max-date-error-msg="${translate('DATE_CAN_NOT_BE_IN_THE_FUTURE')}"
+                .open="${this.datePickerOpen}"
+                .autoValidate="${this.autoValidate}"
+                max-date="${this.getCurrentDate()}"
+                min-date="${this.agreementStart}"
                 required
-                auto-validate
+                selected-date-display-format="D MMM YYYY"
+                fire-date-has-changed
+                @date-has-changed="${(e: CustomEvent) => (this.amendment.signed_date = e.detail.date)}"
               >
-              </etools-dropdown-multi>
-            </div>`
-          : ''}
+              </datepicker-lite>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Signed Agreement -->
+            <etools-upload
+              class="col col-md-4 col-12"
+              id="signedAmendment"
+              label="${translate('SIGNED_AMENDMENT')}"
+              accept=".doc,.docx,.pdf,.jpg,.png"
+              .fileUrl="${this.amendment.signed_amendment_attachment}"
+              .uploadEndpoint="${this.uploadEndpoint}"
+              @upload-started="${this._uploadStarted}"
+              @upload-finished="${this._uploadFinished}"
+              required
+              .uploadInProgress="${this.uploadInProgress}"
+              .autoValidate="${this.autoValidate}"
+              error-message="${translate('SIGNED_AMENDMENT_FILE_IS_REQUIRED')}"
+            >
+            </etools-upload>
+          </div>
+
+          <div class="row">
+            <etools-dropdown-multi
+              class="col col-12"
+              id="amendmentTypes"
+              label="${translate('AMENDMENT_TYPES')}"
+              .options="${this.amendmentTypes}"
+              .selectedValues="${this.amendment.types}"
+              hide-search
+              error-message="${translate('PLEASE_SELECT_AMENDMENT_TYPE')}"
+              required
+              .autoValidate="${this.autoValidate}"
+              trigger-value-change-event
+              @etools-selected-items-changed="${this.onAmendmentTypesChanged}"
+            >
+            </etools-dropdown-multi>
+          </div>
+
+          ${this._showAuthorizedOfficersField(this.showAuthorizedOfficers, this._aoTypeSelected)
+            ? html` <div class="row">
+                <etools-dropdown-multi
+                  class="col col-12"
+                  id="officers"
+                  label="${translate('AUTHORIZED_OFFICERS')}"
+                  placeholder="&#8212;"
+                  .options="${this.authorizedOfficersOptions}"
+                  option-value="id"
+                  option-label="name"
+                  .selectedValues="${cloneDeep(this.selAuthorizedOfficers)}"
+                  trigger-value-change-event
+                  @etools-selected-items-changed="${this.onAuthorizedOfficersChanged}"
+                  error-message="${translate('PLS_ENTER_PARTNER_AUTH_OFFICERS')}"
+                  required
+                  auto-validate
+                >
+                </etools-dropdown-multi>
+              </div>`
+            : ''}
+        </div>
       </etools-dialog>
     `;
   }

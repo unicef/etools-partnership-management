@@ -26,13 +26,15 @@ export class SrDetails extends LitElement {
           font-size: var(--etools-font-size-12, 12px);
           color: var(--secondary-text-color);
         }
-
+        div[elevation] {
+          padding: 15px 20px;
+        }
         .att {
           margin-bottom: 24px;
         }
       </style>
 
-      <div class="paper-material elevation" elevation="1">
+      <div class="elevation" elevation="1">
         <div class="row-h">
           <etools-textarea
             readonly

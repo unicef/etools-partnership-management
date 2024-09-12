@@ -116,10 +116,13 @@ class ReportsList extends connect(store)(
         #list {
           position: relative;
         }
+        etools-filters::part(filter-dropdown) {
+          width: 240px !important;
+        }
       </style>
 
       <etools-media-query
-        query="(max-width: 767px)"
+        query="(max-width: 1167px)"
         .queryMatches="${this.lowResolutionLayout}"
         @query-matches-changed="${(e: CustomEvent) => {
           this.lowResolutionLayout = e.detail.value;
@@ -189,7 +192,7 @@ class ReportsList extends connect(store)(
                       </sl-tooltip>
                     </span>
                     <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
-                      <report-status .status="${report.status}"></report-status>
+                      <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
                     </span>
                     <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
                       ${this._displayOrDefault(formatDateLocalized(report.due_date))}

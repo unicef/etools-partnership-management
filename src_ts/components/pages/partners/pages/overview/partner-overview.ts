@@ -137,6 +137,9 @@ export class PartnerOverview extends PaginationMixin(
           --etools-font-size-13: 16px;
           --list-row-wrapper-padding-inline: 0;
         }
+        .fr-nr-warn {
+          text-align: start;
+        }
       </style>
       <etools-media-query
         query="(max-width: 1100px)"

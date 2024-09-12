@@ -5,7 +5,7 @@ import {FiltersHelper} from '@unicef-polymer/etools-unicef/src/etools-filters/fi
 
 export enum InterventionFilterKeys {
   search = 'search',
-  type = 'type',
+  type = 'document_type',
   status = 'status',
   section = 'section',
   offices = 'offices',
@@ -14,11 +14,11 @@ export enum InterventionFilterKeys {
   partners = 'partners',
   grants = 'grants',
   unicef_focal_points = 'unicef_focal_points',
-  budget_owner = 'budget_owner',
-  cpStructures = 'cpStructures',
+  budget_owner = 'budget_owner__in',
+  cpStructures = 'country_programme',
   start = 'start',
   end = 'end',
-  endAfter = 'endAfter',
+  endAfter = 'end_after',
   contingency_pd = 'contingency_pd',
   editable_by = 'editable_by'
 }
