@@ -87,9 +87,12 @@ function fetchLangFiles(lang: string) {
     fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json()),
     fetch(`src/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
       res.json()
+    ),
+    fetch(`src/components/pages/gdd/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
+      res.json()
     )
   ]).then((response: any) => {
-    return Object.assign(response[0].value, response[1].value);
+    return Object.assign(response[0].value, response[1].value, response[2].value);
   });
 }
 const translationConfig = registerTranslateConfig({
