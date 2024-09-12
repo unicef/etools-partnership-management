@@ -278,6 +278,6 @@ class GddInterventionItemData extends connect(store)(
   }
 }
 
-window.customElements.define('intervention-item-data', GddInterventionItemData);
+window.customElements.define('gdd-intervention-item-data', GddInterventionItemData);
 
 export default GddInterventionItemData;

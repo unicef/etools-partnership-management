@@ -214,6 +214,9 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
       case 'interventions':
         store.dispatch(setShouldReGetList(true));
         break;
+      case 'gdd':
+        store.dispatch(setShouldReGetList(true));
+        break;
       default:
         break;
     }

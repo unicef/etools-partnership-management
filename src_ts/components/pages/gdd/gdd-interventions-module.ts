@@ -17,7 +17,7 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import GddInterventionItemData from './data/gdd-intervention-item-data.js';
 // TODO Update this import
-import '../interventions/pages/intervention-tab-pages/intervention-tabs';
+import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
@@ -30,7 +30,7 @@ import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
 // TODO remove this if not needed
-import '../interventions/pages/new/ecn-import-dialog';
+// import './pages/new/ecn-import-dialog';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
@@ -352,7 +352,7 @@ export class GddInterventionsModule extends connect(store)(
     });
     fireEvent(this, 'global-loading', {
       active: true,
-      loadingSource: 'interv-page'
+      loadingSource: 'gdd-interv-page'
     });
   }
 
@@ -420,7 +420,7 @@ export class GddInterventionsModule extends connect(store)(
     window.dispatchEvent(new CustomEvent('popstate'));
     fireEvent(this, 'global-loading', {
       active: true,
-      loadingSource: 'interv-page'
+      loadingSource: 'gdd-interv-page'
     });
   }
 
@@ -454,7 +454,7 @@ export class GddInterventionsModule extends connect(store)(
 
   // _handleInterventionSelectionLoadingMsg() {
   //   setTimeout(() => {
-  //     this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+  //     this._showTabChangeLoadingMsg(null, 'gdd-interv-page', 'intervention-', 'tabs');
   //   });
   // }
 
@@ -465,7 +465,7 @@ export class GddInterventionsModule extends connect(store)(
   //   fireEvent(this, 'global-loading', {
   //     message: 'Loading...',
   //     active: true,
-  //     loadingSource: 'interv-page'
+  //     loadingSource: 'gdd-interv-page'
   //   });
   // }
 

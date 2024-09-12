@@ -88,7 +88,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     super.connectedCallback();
     fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: 'interv-page'
+      loadingSource: 'gdd-interv-page'
     });
   }
 

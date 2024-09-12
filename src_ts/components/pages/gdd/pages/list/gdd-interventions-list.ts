@@ -319,19 +319,14 @@ export class GddInterventionsList extends connect(store)(
 
     fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: 'interv-page'
+      loadingSource: 'gdd-interv-page'
     });
   }
 
   stateChanged(state: RootState): void {
     const stateRouteDetails = get(state, 'app.routeDetails');
-    if (
-      !(
-        stateRouteDetails &&
-        this.localName.indexOf(stateRouteDetails.routeName?.split('-')[0]) > -1 &&
-        stateRouteDetails?.subRouteName === 'list'
-      )
-    ) {
+
+    if (!(stateRouteDetails && stateRouteDetails.routeName === 'gdd' && stateRouteDetails?.subRouteName === 'list')) {
       return;
     }
 

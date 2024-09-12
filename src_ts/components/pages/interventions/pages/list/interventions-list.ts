@@ -329,7 +329,7 @@ export class InterventionsList extends connect(store)(
     if (
       !(
         stateRouteDetails &&
-        this.localName.indexOf(stateRouteDetails.routeName?.split('-')[0]) > -1 &&
+        stateRouteDetails.routeName === 'interventions' &&
         stateRouteDetails?.subRouteName === 'list'
       )
     ) {
