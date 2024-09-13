@@ -265,7 +265,7 @@ export class GddInterventionsModule extends connect(store)(
   reportsPrevParams!: GenericObject;
 
   @property({type: String})
-  moduleName = 'interventions';
+  moduleName = 'gdd-interventions';
 
   // This shouldn't be neccessary, but the Analyzer isn't picking up
   // Polymer.Element#rootPath
@@ -283,7 +283,7 @@ export class GddInterventionsModule extends connect(store)(
   stateChanged(state: RootState) {
     this.envStateChanged(state);
 
-    if (get(state, 'app.routeDetails.routeName') !== 'gdd') {
+    if (get(state, 'app.routeDetails.routeName') !== 'gdd-interventions') {
       return;
     } else {
       const routeDetails = state.app?.routeDetails;
@@ -416,7 +416,7 @@ export class GddInterventionsModule extends connect(store)(
     if (!this._hasEditPermissions(this.userPermissions)) {
       return;
     }
-    history.pushState(window.history.state, '', `${Environment.basePath}gdd/new`);
+    history.pushState(window.history.state, '', `${Environment.basePath}gdd-interventions/new`);
     window.dispatchEvent(new CustomEvent('popstate'));
     fireEvent(this, 'global-loading', {
       active: true,
@@ -432,7 +432,7 @@ export class GddInterventionsModule extends connect(store)(
    * Go to details page once the new intervention has been saved
    */
   _newInterventionSaved(intervention: Intervention) {
-    history.pushState(window.history.state, '', `${Environment.basePath}gdd/${intervention.id}/metadata`);
+    history.pushState(window.history.state, '', `${Environment.basePath}gdd-interventions/${intervention.id}/metadata`);
     window.dispatchEvent(new CustomEvent('popstate'));
     this.requestUpdate();
   }

@@ -159,7 +159,7 @@ export class GddInterventionsList extends connect(store)(
               <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
                 <a
                   class="text-btn-style pd-ref truncate"
-                  href="gdd/${intervention.id}/metadata"
+                  href="gdd-interventions/${intervention.id}/metadata"
                   title="${this.getDisplayValue(intervention.number)}"
                 >
                   ${this.getDisplayValue(intervention.number)}
@@ -326,7 +326,13 @@ export class GddInterventionsList extends connect(store)(
   stateChanged(state: RootState): void {
     const stateRouteDetails = get(state, 'app.routeDetails');
 
-    if (!(stateRouteDetails && stateRouteDetails.routeName === 'gdd' && stateRouteDetails?.subRouteName === 'list')) {
+    if (
+      !(
+        stateRouteDetails &&
+        stateRouteDetails.routeName === 'gdd-interventions' &&
+        stateRouteDetails?.subRouteName === 'list'
+      )
+    ) {
       return;
     }
 
@@ -549,7 +555,7 @@ export class GddInterventionsList extends connect(store)(
     fireEvent(this, 'csv-download-url-changed', this.getListQueryString(this.prevQueryStringObj, true) as any);
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
-    EtoolsRouter.replaceAppLocation(`gdd/list?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`gdd-interventions/list?${stringParams}`);
   }
 
   _triggerInterventionLoadingMsg() {

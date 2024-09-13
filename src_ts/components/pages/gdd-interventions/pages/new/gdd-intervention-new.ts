@@ -262,7 +262,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     this.selectedAgreement = null;
     this.selectedPartner = null;
     this.requestUpdate();
-    EtoolsRouter.updateAppLocation('gdd/list');
+    EtoolsRouter.updateAppLocation('gdd-interventions/list');
   }
 
   getDefaultNewIntervention() {

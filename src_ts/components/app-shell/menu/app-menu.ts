@@ -87,9 +87,9 @@ class AppMenu extends connect(store)(
             <div class="name">${translate('PD_SPD')}</div>
           </a>
           <a
-            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gdd')}"
-            menu-name="gdd"
-            href="${Environment.basePath}gdd/list"
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gdd-interventions')}"
+            menu-name="gdd-interventions"
+            href="${Environment.basePath}gdd-interventions/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GDD')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>

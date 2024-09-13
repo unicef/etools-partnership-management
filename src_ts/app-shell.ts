@@ -88,8 +88,8 @@ function fetchLangFiles(lang: string) {
     fetch(`src/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
       res.json()
     ),
-    fetch(`src/components/pages/gdd/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
-      res.json()
+    fetch(`src/components/pages/gdd-interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then(
+      (res: any) => res.json()
     )
   ]).then((response: any) => {
     return Object.assign(response[0].value, response[1].value, response[2].value);
@@ -196,10 +196,10 @@ class AppShell extends connect(store)(
               : ``}
             ${this.GDDinterventionsLoaded
               ? html`<gdd-interventions-module
-                  id="gdd"
+                  id="gdd-interventions"
                   class="main-page"
                   .userPermissions="${this.permissions}"
-                  ?hidden="${!this._activeModuleIs(this.module, 'gdd')}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'gdd-interventions')}"
                 >
                 </gdd-interventions-module>`
               : ``}
@@ -257,7 +257,7 @@ class AppShell extends connect(store)(
         this.interventionsLoaded = val === 'interventions';
       }
       if (!this.GDDinterventionsLoaded) {
-        this.GDDinterventionsLoaded = val === 'gdd';
+        this.GDDinterventionsLoaded = val === 'gdd-interventions';
       }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);

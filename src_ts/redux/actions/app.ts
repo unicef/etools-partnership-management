@@ -129,51 +129,63 @@ const importGDDInterventionSubRoutes = (subRouteName: string | null) => {
 
   switch (subRouteName) {
     case 'list':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/list/gdd-interventions-list.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import('../../components/pages/gdd-interventions/pages/list/gdd-interventions-list.js');
       break;
     case 'new':
-      import('../../components/pages/gdd/pages/new/gdd-intervention-new.js');
+      import('../../components/pages/gdd-interventions/pages/new/gdd-intervention-new.js');
       break;
     case 'metadata':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js'
+      );
       break;
     case 'workplan':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js'
+      );
       break;
     case 'workplan-editor':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
       import(
-        '../../components/pages/gdd/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js'
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js'
       );
       break;
     case 'timing':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-timing/intervention-timing.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js'
+      );
       break;
     case 'strategy':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js'
+      );
       break;
     case 'attachments':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
       import(
-        '../../components/pages/gdd/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js'
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js'
       );
       break;
     case 'review':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-review/intervention-review.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js'
+      );
       break;
     case 'progress':
     case 'implementation-status':
     case 'monitoring-activities':
     case 'results-reported':
     case 'reports':
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd/pages/intervention-tab-pages/intervention-progress/intervention-progress.js');
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js'
+      );
       break;
     default:
       console.log(`No file imports configuration found interventions: ${subRouteName} (componentsLazyLoadConfig)!`);
@@ -266,8 +278,8 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
           .then(() => importInterventionSubRoutes(routeDetails.subRouteName))
           .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
         break;
-      case 'gdd':
-        import('../../components/pages/gdd/gdd-interventions-module.js')
+      case 'gdd-interventions':
+        import('../../components/pages/gdd-interventions/gdd-interventions-module.js')
           .then(() => importGDDInterventionSubRoutes(routeDetails.subRouteName))
           .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
         break;
