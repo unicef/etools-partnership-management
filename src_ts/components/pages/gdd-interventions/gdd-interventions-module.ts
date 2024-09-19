@@ -299,10 +299,10 @@ export class GddInterventionsModule extends connect(store)(
       }
     }
 
-    if (!this.intervention || get(this, 'intervention.id') !== get(state, 'interventions.current.id')) {
-      this.intervention = get(state, 'interventions.current');
+    if (!this.intervention || get(this, 'intervention.id') !== get(state, 'gddInterventions.current.id')) {
+      this.intervention = get(state, 'gddInterventions.current');
     } else {
-      const currentPD = get(state, 'interventions.current');
+      const currentPD = get(state, 'gddInterventions.current');
       if (!isJsonStrMatch(this.intervention, currentPD) && currentPD) {
         this.intervention = currentPD;
       }

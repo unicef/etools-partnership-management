@@ -42,6 +42,7 @@ export interface RootState {
   agreements?: AgreementsState;
   user?: UserState;
   interventions?: any;
+  gddInterventions?: any;
   activeLanguage?: ActiveLanguageState;
 }
 

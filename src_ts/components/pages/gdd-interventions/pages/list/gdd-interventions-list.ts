@@ -40,7 +40,7 @@ import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/cur
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 // TODO change this import after intervention tab pages location is changed
-import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/interventions';
+import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/gddInterventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {
   EtoolsRouteDetails,
@@ -406,7 +406,7 @@ export class GddInterventionsList extends connect(store)(
   }
 
   shouldReGetListBecauseOfEditsOnItems(state: RootState) {
-    return state.interventions?.shouldReGetList;
+    return state.gddInterventions?.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
@@ -465,7 +465,7 @@ export class GddInterventionsList extends connect(store)(
 
     sendRequest({
       endpoint: {
-        url: pmpEdpoints.interventions.url + this.getFilteringQueryParams()
+        url: pmpEdpoints.gddInterventions.url + this.getFilteringQueryParams()
       },
       method: 'GET'
     })
@@ -484,12 +484,12 @@ export class GddInterventionsList extends connect(store)(
 
     let qs = this.getListQueryString(queryParams as any, false);
     if (qs) {
-      qs = pmpEdpoints.interventions.url.includes('?') ? '&' + qs : '?' + qs;
+      qs = pmpEdpoints.gddInterventions.url.includes('?') ? '&' + qs : '?' + qs;
     }
     if (queryParams.ordering) {
       qs =
         qs +
-        (qs.includes('?') || pmpEdpoints.interventions.url.includes('?') ? '&' : '?') +
+        (qs.includes('?') || pmpEdpoints.gddInterventions.url.includes('?') ? '&' : '?') +
         'ordering=' +
         queryParams.ordering;
     }
