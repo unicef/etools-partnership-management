@@ -267,7 +267,7 @@ class GddInterventionItemData extends connect(store)(
     this.fireRequest(this.pdEndpoints.DELETE as any, {id: id}, {method: reqMethod})
       .then(() => {
         fireEvent(this, 'toast', {
-          text: getTranslation('PD_DELETE_SUCCCESS')
+          text: getTranslation('GDD_DELETE_SUCCCESS')
         });
         // go to pd list after delete
         fireEvent(this, 'update-main-path', {path: 'gdd-interventions/list'});

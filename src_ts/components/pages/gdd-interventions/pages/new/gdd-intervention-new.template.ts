@@ -121,19 +121,6 @@ export function template(this: GddInterventionNew): TemplateResult {
           </etools-dropdown-multi>
         </div>
       </div>
-      <div class="col-12" ?hidden="${!this.newIntervention.contingency_pd}">
-        <etools-input
-          label=${translate('NEW_INTERVENTION.ACTIVATION_PROTOCOL')}
-          placeholder="&#8212;"
-          ?required="${this.newIntervention.contingency_pd}"
-          error-message=${translate('GENERAL.REQUIRED_FIELD')}
-          value="${this.newIntervention.activation_protocol || ''}"
-          @value-changed="${({detail}: CustomEvent) => this.setInterventionField('activation_protocol', detail.value)}"
-          @focus="${this.resetError}"
-          @click="${this.resetError}"
-        >
-        </etools-input>
-      </div>
 
       <div class="row">
         <!-- Start Date -->

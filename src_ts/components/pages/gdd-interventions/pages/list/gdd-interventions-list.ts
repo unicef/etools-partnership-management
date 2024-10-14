@@ -503,7 +503,6 @@ export class GddInterventionsList extends connect(store)(
   public getListQueryString(queryStringObj: GenericObject<any>, forExport: boolean) {
     const exportParams: AnyObject = {
       status: queryStringObj.status,
-      document_type: queryStringObj.document_type,
       sections: queryStringObj.section,
       office: queryStringObj.offices,
       donors: queryStringObj.donors,
@@ -517,7 +516,6 @@ export class GddInterventionsList extends connect(store)(
       end: queryStringObj.end,
       end_after: queryStringObj.endAfter,
       editable_by: queryStringObj.editable_by,
-      contingency_pd: queryStringObj.contingency_pd,
       search: queryStringObj.search
     };
     if (!forExport) {

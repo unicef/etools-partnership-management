@@ -68,7 +68,7 @@ const pmpEdpoints = {
     url: '/api/pmp/v3/interventions/?show_amendments=true'
   },
   gddInterventions: {
-    url: '/api/pmp/v3/interventions/?show_amendments=true'
+    url: '/api/gdd/gdds/?show_amendments=true'
   },
   interventionDetails: {
     template: '/api/v2/interventions/<%=id%>/'

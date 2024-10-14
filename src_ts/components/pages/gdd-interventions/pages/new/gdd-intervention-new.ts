@@ -157,9 +157,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   documentTypeChanged(type: string): void {
     if (type !== CONSTANTS.DOCUMENT_TYPES.SPD) {
       this.setInterventionField('humanitarian_flag', false);
-      this.setInterventionField('contingency_pd', false);
     }
-    this.setInterventionField('document_type', type);
   }
   getDocTypeTooltip() {
     return (
@@ -221,7 +219,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId) {
       this.selectedAgreement = null;
       this.newIntervention.agreement = undefined;
-      this.newIntervention.document_type = undefined;
     }
 
     this.filteredAgreements = this.agreementsList.filter((agreement: StaticAgreement) => {

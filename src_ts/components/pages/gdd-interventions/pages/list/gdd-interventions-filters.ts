@@ -18,7 +18,6 @@ export enum GDDInterventionFilterKeys {
   start = 'start',
   end = 'end',
   endAfter = 'end_after',
-  contingency_pd = 'contingency_pd',
   editable_by = 'editable_by'
 }
 
@@ -36,7 +35,6 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [GDDInterventionFilterKeys.start]: 'string',
   [GDDInterventionFilterKeys.end]: 'string',
   [GDDInterventionFilterKeys.endAfter]: 'string',
-  [GDDInterventionFilterKeys.contingency_pd]: 'boolean',
   [GDDInterventionFilterKeys.editable_by]: 'string'
 };
 
@@ -203,14 +201,6 @@ export function getGDDInterventionFilters() {
       selectedValue: [],
       selected: false,
       minWidth: '400px'
-    },
-    {
-      filterName: getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
-      filterNameKey: 'INTERVENTIONS_LIST.CONTINGENCY_PD',
-      filterKey: GDDInterventionFilterKeys.contingency_pd,
-      type: EtoolsFilterTypes.Toggle,
-      selectedValue: false,
-      selected: true
     },
     {
       filterName: getTranslation('EDITABLE_BY'),
