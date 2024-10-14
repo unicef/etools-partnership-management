@@ -56,6 +56,11 @@ export const csoPartnersSelector = createSelector(notHiddenPartnersSelector, (pa
   return partners.filter((p: any) => p.partner_type === 'Civil Society Organization');
 });
 
+export const govPartnersSelector = createSelector(notHiddenPartnersSelector, (partners: any) => {
+  return partners.filter((p: any) => p.partner_type === 'Government');
+});
+
+
 export const partnersDropdownDataSelector = createSelector(notHiddenPartnersSelector, (partners: any) => {
   return partners.map((p: any) => {
     return {

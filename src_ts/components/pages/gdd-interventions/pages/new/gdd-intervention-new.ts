@@ -5,7 +5,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
+import {govPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {template} from './gdd-intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
@@ -96,8 +96,8 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.agreementsList, state.agreements!.list)) {
       this.agreementsList = [...state.agreements!.list] as unknown as StaticAgreement[];
     }
-    if (!isJsonStrMatch(this.partnersDropdownData, csoPartnersSelector(state))) {
-      this.partnersDropdownData = [...csoPartnersSelector(state)];
+    if (!isJsonStrMatch(this.partnersDropdownData, govPartnersSelector(state))) {
+      this.partnersDropdownData = [...govPartnersSelector(state)];
     }
     if (!isJsonStrMatch(this.documentTypes, state.commonData!.documentTypes)) {
       this.documentTypes = [...state.commonData!.documentTypes];

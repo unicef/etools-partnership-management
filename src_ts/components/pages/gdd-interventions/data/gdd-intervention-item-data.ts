@@ -39,10 +39,10 @@ class GddInterventionItemData extends connect(store)(
     AGREEMENT_DETAILS: string;
     DELETE: string;
   } = {
-    DETAILS: 'interventionDetails',
-    CREATE: 'interventions',
+    DETAILS: 'gddInterventionDetails',
+    CREATE: 'gddInterventions',
     AGREEMENT_DETAILS: 'agreementDetails',
-    DELETE: 'interventionDelete'
+    DELETE: 'gddInterventionDelete'
   };
 
   @property({type: Object})

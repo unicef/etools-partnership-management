@@ -73,8 +73,14 @@ const pmpEdpoints = {
   interventionDetails: {
     template: '/api/v2/interventions/<%=id%>/'
   },
+  gddInterventionDetails: {
+    template: '/api/gdd/gdds/<%=id%>/'
+  },
   interventionDelete: {
     template: '/api/v2/interventions/delete/<%=id%>/'
+  },
+  gddInterventionDelete: {
+    template: '/api/gdd/gdds/delete/<%=id%>/'
   },
   pdAttachments: {
     template: '/api/v2/interventions/<%=pdId%>/attachments/'
