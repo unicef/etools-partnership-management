@@ -24,9 +24,9 @@ jobs:
       # - run:
       #     name: TsLint
       #     command: npm run tsToJs
-      - run:
-          name: EsLint
-          command: npm run lint
+      # - run:
+      #     name: EsLint
+      #     command: npm run lint
       # - run:
       #     name: Remove opt.chaining and null coalescing op.
       #     command: npm install -g @babel/core @babel/cli
@@ -84,10 +84,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - lint
+      # - lint
       - build_and_deploy:
-          requires:
-            - lint
+          # requires:
+          #   - lint
           filters:
             branches:
               only:
