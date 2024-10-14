@@ -84,10 +84,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      # - lint
+      - lint
       - build_and_deploy:
-          # requires:
-          #   - lint
+          requires:
+            - lint
           filters:
             branches:
               only:
