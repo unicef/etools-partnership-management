@@ -60,7 +60,6 @@ export const govPartnersSelector = createSelector(notHiddenPartnersSelector, (pa
   return partners.filter((p: any) => p.partner_type === 'Government');
 });
 
-
 export const partnersDropdownDataSelector = createSelector(notHiddenPartnersSelector, (partners: any) => {
   return partners.map((p: any) => {
     return {

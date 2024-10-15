@@ -70,7 +70,7 @@ export function template(this: GddInterventionNew): TemplateResult {
             option-value="id"
             option-label="name"
             required
-            .selected="${this.newIntervention?.partner}"
+            .selected="${this.newIntervention?.partner_organization}"
             error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
