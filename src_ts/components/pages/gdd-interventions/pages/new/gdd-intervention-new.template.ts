@@ -210,7 +210,7 @@ export function template(this: GddInterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Office(s)   -->
-        <div class="col-md-6 col-lg-6 col-12">
+        <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefOffices"
             label=${translate('NEW_INTERVENTION.UNICEF_OFFICES')}
@@ -230,7 +230,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Sections   -->
-        <div class="col-md-6 col-lg-6 col-12">
+        <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefSections"
             label=${translate('NEW_INTERVENTION.UNICEF_SECTIONS')}
@@ -248,11 +248,29 @@ export function template(this: GddInterventionNew): TemplateResult {
           >
           </etools-dropdown-multi>
         </div>
+
+        <div class="col-md-4 col-lg-4 col-12">
+          <etools-dropdown
+            id="country_programme"
+            label=${translate('NEW_INTERVENTION.COUNTRY_PROGRAMME')}
+            placeholder="&#8212;"
+            .options="${this.cpStructures}"
+            option-label="name"
+            option-value="id"
+            .selected="${this.newIntervention.country_programme}"
+            @etools-selected-item-changed="${({detail}: CustomEvent) => {
+              this.setInterventionField('country_programme', detail.selectedItem && detail.selectedItem.id);
+              this.populateEWorkplans();
+            }}"
+            trigger-value-change-event
+          >
+          </etools-dropdown>
+        </div>
       </div>
 
       <div class="row">
         <!--   UNICEF Focal Points   -->
-        <div class="col-md-6 col-lg-6 col-12">
+        <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefFocalPoints"
             label=${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}
@@ -272,7 +290,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Budget Owner   -->
-        <div class="col-md-6 col-lg-6 col-12">
+        <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown
             id="unicefBudgetOwner"
             label=${translate('NEW_INTERVENTION.UNICEF_BUDGET_OWNER')}
@@ -286,6 +304,25 @@ export function template(this: GddInterventionNew): TemplateResult {
             trigger-value-change-event
           >
           </etools-dropdown>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-12">
+          <etools-dropdown-multi
+            id="e_workplans"
+            label=${translate('NEW_INTERVENTION.E_WORKPLANS')}
+            placeholder="&#8212;"
+            .options="${this.e_workplans}"
+            option-label="name"
+            option-value="id"
+            .selectedValues="${this.newIntervention.e_workplans}"
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'e_workplans',
+                detail.selectedItems.map(({id}: GenericObject) => id)
+              )}"
+            trigger-value-change-event
+          >
+          </etools-dropdown-multi>
         </div>
       </div>
 

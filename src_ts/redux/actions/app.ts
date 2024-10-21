@@ -147,12 +147,6 @@ const importGDDInterventionSubRoutes = (subRouteName: string | null) => {
         '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js'
       );
       break;
-    case 'workplan-editor':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js'
-      );
-      break;
     case 'timing':
       import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
       import(

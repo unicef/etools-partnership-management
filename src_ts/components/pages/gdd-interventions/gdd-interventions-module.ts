@@ -19,7 +19,7 @@ import GddInterventionItemData from './data/gdd-intervention-item-data.js';
 // TODO Update this import
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
-import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
+import {Agreement, GDD, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
@@ -239,10 +239,10 @@ export class GddInterventionsModule extends connect(store)(
   userPermissions!: UserPermissions;
 
   @property({type: Object})
-  intervention: Partial<Intervention> = {};
+  intervention: Partial<GDD> = {};
 
   @property({type: Object})
-  originalIntervention!: Intervention;
+  originalIntervention!: GDD;
 
   @property({type: Object})
   agreement!: Agreement;
@@ -315,7 +315,6 @@ export class GddInterventionsModule extends connect(store)(
       'overview',
       'timing',
       'workplan',
-      'workplan-editor',
       'strategy',
       'attachments',
       'review',
@@ -395,7 +394,7 @@ export class GddInterventionsModule extends connect(store)(
     );
   }
 
-  _hasEditPermissions(permissions: UserPermissions, intervention?: Intervention) {
+  _hasEditPermissions(permissions: UserPermissions, intervention?: GDD) {
     if (permissions && permissions.editInterventionDetails === true) {
       if (intervention) {
         if (
@@ -431,7 +430,7 @@ export class GddInterventionsModule extends connect(store)(
   /**
    * Go to details page once the new intervention has been saved
    */
-  _newInterventionSaved(intervention: Intervention) {
+  _newInterventionSaved(intervention: GDD) {
     history.pushState(window.history.state, '', `${Environment.basePath}gdd-interventions/${intervention.id}/metadata`);
     window.dispatchEvent(new CustomEvent('popstate'));
     this.requestUpdate();
@@ -494,7 +493,7 @@ export class GddInterventionsModule extends connect(store)(
       .saveIntervention(intervention, this._newInterventionSaved.bind(this));
   }
 
-  private cleanUpBeforeSave(intervention: Partial<Intervention>) {
+  private cleanUpBeforeSave(intervention: Partial<GDD>) {
     if (!intervention.cfei_number) {
       // Errors out on bk otherwise
       delete intervention.cfei_number;

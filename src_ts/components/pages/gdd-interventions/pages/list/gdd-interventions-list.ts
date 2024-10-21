@@ -12,7 +12,7 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {AnyObject, GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
+import {AnyObject, GenericObject, GDDListItem} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -151,7 +151,7 @@ export class GddInterventionsList extends connect(store)(
         </etools-data-table-header>
 
         ${(this.filteredInterventions || []).map(
-          (intervention: ListItemIntervention) => html` <etools-data-table-row
+          (intervention: GDDListItem) => html` <etools-data-table-row
             .lowResolutionLayout="${this.lowResolutionLayout}"
             .detailsOpened="${this.detailsOpened}"
           >
@@ -304,7 +304,7 @@ export class GddInterventionsList extends connect(store)(
   routeDetails!: EtoolsRouteDetails | null;
 
   @property({type: Array})
-  filteredInterventions: ListItemIntervention[] = [];
+  filteredInterventions: GDDListItem[] = [];
 
   @property({type: Array})
   partners = [];
@@ -583,7 +583,7 @@ export class GddInterventionsList extends connect(store)(
     return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
   }
 
-  getStatusCellText(intervention: ListItemIntervention) {
+  getStatusCellText(intervention: GDDListItem) {
     return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
   }
 }

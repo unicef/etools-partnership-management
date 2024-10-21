@@ -11,9 +11,9 @@ import {template} from './gdd-intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewGDDInterventionStyles} from './gdd-intervention-new.styles';
-import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
-import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
+import {LabelAndValue, GenericObject, Office, GDD, EtoolsEndpoint} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
@@ -21,14 +21,17 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
+import {getEndpoint} from '@unicef-polymer/etools-utils/dist/endpoint.util';
+import {gddEndpoints} from '../intervention-tab-pages/utils/intervention-endpoints';
 
 @customElement('gdd-intervention-new')
 export class GddInterventionNew extends connect(store)(LitElement) {
-  newIntervention: Partial<Intervention> = this.getDefaultNewIntervention();
+  newIntervention: Partial<GDD> = this.getDefaultNewIntervention();
   @property({type: Boolean}) windowWidthIsSmall = false;
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
+  @property({type: Array}) e_workplans: GenericObject[] = [];
 
   private _cpStructures: any[] = [];
   @property({type: Array})
@@ -118,6 +121,8 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       this.currencies = [...state.commonData!.currencies];
     }
 
+    this.populateEWorkplans();
+
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
       return el.value !== 'SSFA' && el.label !== 'SSFA';
@@ -151,7 +156,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     this.selectedAgreement = detail.selectedItem;
     this.setInterventionField('agreement', this.selectedAgreement?.id);
     const cp = this.selectedAgreement?.country_programme;
-    this.setInterventionField('country_programmes', cp ? [cp] : []);
+    this.setInterventionField('country_programme', cp ? cp : null);
   }
 
   documentTypeChanged(type: string): void {
@@ -167,7 +172,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     );
   }
 
-  setInterventionField(field: keyof Intervention, value: any): void {
+  setInterventionField(field: keyof GDD, value: any): void {
     if (value === undefined) {
       return;
     }
@@ -267,5 +272,21 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       reference_number_year: `${new Date().getFullYear()}`,
       planned_budget: {currency: 'USD'}
     };
+  }
+
+  populateEWorkplans() {
+    if (this.newIntervention.country_programme) {
+      const endpoint = getEndpoint<EtoolsEndpoint, RequestEndpoint>(gddEndpoints.eWorkPlans, {
+        countryProgrameId: this.newIntervention.country_programme
+      });
+
+      sendRequest({
+        endpoint
+      }).then((eWorkplans: any[]) => {
+        this.e_workplans = [...eWorkplans];
+      });
+    } else {
+      this.e_workplans = [];
+    }
   }
 }

@@ -6,10 +6,10 @@ import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-compari
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {
-  ExpectedResult,
-  FrsDetails,
-  PlannedVisit,
-  Intervention,
+  GDDExpectedResult,
+  GDDFrsDetails,
+  GDDPlannedVisit,
+  GDD,
   Office,
   GenericObject
 } from '@unicef-polymer/etools-types';
@@ -46,10 +46,10 @@ class GddInterventionItemData extends connect(store)(
   };
 
   @property({type: Object})
-  intervention!: Intervention;
+  intervention!: GDD;
 
   @property({type: Object})
-  originalIntervention!: Intervention;
+  originalIntervention!: GDD;
 
   @property({
     type: Number
@@ -165,7 +165,7 @@ class GddInterventionItemData extends connect(store)(
   /**
    * Handle received data from request
    */
-  _handleResponse(response: Intervention, _ajaxMethod: string) {
+  _handleResponse(response: GDD, _ajaxMethod: string) {
     // @ts-ignore
     this.intervention = this._handleDataConversions(response);
 
@@ -180,8 +180,8 @@ class GddInterventionItemData extends connect(store)(
   /**
    * Save intervention data
    */
-  // TODO Intervention | any
-  saveIntervention(intervention: Intervention | any, callback?: any) {
+  // TODO GDD | any
+  saveIntervention(intervention: GDD | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {
         text: getTranslation('INVALID_INTERVENTION_DATA')
@@ -211,12 +211,12 @@ class GddInterventionItemData extends connect(store)(
       }
 
       if (Array.isArray(intervention.result_links)) {
-        intervention.result_links = intervention.result_links.filter(function (elem: ExpectedResult) {
+        intervention.result_links = intervention.result_links.filter(function (elem: GDDExpectedResult) {
           return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
         });
       }
       if (Array.isArray(intervention.planned_visits)) {
-        intervention.planned_visits = intervention.planned_visits.filter(function (elem: PlannedVisit) {
+        intervention.planned_visits = intervention.planned_visits.filter(function (elem: GDDPlannedVisit) {
           return elem.year || elem.programmatic;
         });
       }
@@ -243,7 +243,7 @@ class GddInterventionItemData extends connect(store)(
     }
   }
 
-  _noFrOnIntervention(intervFrDetails: FrsDetails) {
+  _noFrOnIntervention(intervFrDetails: GDDFrsDetails) {
     return !intervFrDetails || !intervFrDetails.earliest_start_date;
   }
 
