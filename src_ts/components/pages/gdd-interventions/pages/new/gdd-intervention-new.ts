@@ -13,16 +13,24 @@ import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewGDDInterventionStyles} from './gdd-intervention-new.styles';
 import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
-import {LabelAndValue, GenericObject, Office, GDD, EtoolsEndpoint} from '@unicef-polymer/etools-types';
+import {
+  LabelAndValue,
+  GenericObject,
+  Office,
+  GDD,
+  EtoolsEndpoint,
+  AsyncAction,
+  AnyObject
+} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
-
-import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {getEndpoint} from '@unicef-polymer/etools-utils/dist/endpoint.util';
 import {gddEndpoints} from '../intervention-tab-pages/utils/intervention-endpoints';
+import {getEWorkPlan} from '../intervention-tab-pages/common/actions/gddInterventions';
+import {EWorkPlan} from '../intervention-tab-pages/common/types/store.types';
 
 @customElement('gdd-intervention-new')
 export class GddInterventionNew extends connect(store)(LitElement) {
@@ -31,7 +39,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
-  @property({type: Array}) e_workplans: GenericObject[] = [];
+  @property({type: Array}) e_workplans: AnyObject[] = [];
 
   private _cpStructures: any[] = [];
   @property({type: Array})
@@ -52,6 +60,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
+  @property({type: Array}) allEWorkplans!: EWorkPlan[];
 
   @property() partnerStaffMembers: PartnerStaffMember[] = [];
   get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
@@ -120,8 +129,11 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
       this.currencies = [...state.commonData!.currencies];
     }
+    if (!isJsonStrMatch(this.allEWorkplans, state.gddInterventions?.eWorkPlans)) {
+      this.allEWorkplans = [...state.gddInterventions?.eWorkPlans];
 
-    this.populateEWorkplans();
+      this.populateEWorkplans();
+    }
 
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
@@ -175,10 +187,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   setInterventionField(field: keyof GDD, value: any): void {
     if (value === undefined) {
       return;
-    }
-
-    if (value && value.length === 16) {
-      this.validateCFEI();
     }
 
     if (areEqual(this.newIntervention[field], value)) {
@@ -235,11 +243,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     });
   }
 
-  validateCFEI(e?: CustomEvent) {
-    const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
-    elem.validate();
-  }
-
   private validate(): boolean {
     let valid = true;
     this.shadowRoot!.querySelectorAll('*[required]').forEach((element: any) => {
@@ -248,10 +251,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
         valid = valid && fieldValid;
       }
     });
-    const unppEL = this.shadowRoot!.querySelector<EtoolsInput>('#unppNumber');
-    if (unppEL) {
-      valid = valid && unppEL.validate();
-    }
     return valid;
   }
 
@@ -276,17 +275,29 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   populateEWorkplans() {
     if (this.newIntervention.country_programme) {
-      const endpoint = getEndpoint<EtoolsEndpoint, RequestEndpoint>(gddEndpoints.eWorkPlans, {
-        countryProgrameId: this.newIntervention.country_programme
-      });
-
-      sendRequest({
-        endpoint
-      }).then((eWorkplans: any[]) => {
-        this.e_workplans = [...eWorkplans];
-      });
+      const foundWorkPlan = (this.allEWorkplans || [])[this.newIntervention.country_programme];
+      if (foundWorkPlan) {
+        this.e_workplans = [...foundWorkPlan];
+        return;
+      }
+      store.dispatch<AsyncAction>(getEWorkPlan(this.newIntervention.country_programme));
     } else {
       this.e_workplans = [];
     }
+
+    // store.dispatch<AsyncAction>(getEWorkPlan(this.newIntervention.country_programme!));
+    // if (this.newIntervention.country_programme) {
+    //   const endpoint = getEndpoint<EtoolsEndpoint, RequestEndpoint>(gddEndpoints.eWorkPlans, {
+    //     countryProgrameId: this.newIntervention.country_programme
+    //   });
+
+    //   sendRequest({
+    //     endpoint
+    //   }).then((eWorkplans: any[]) => {
+    //     this.e_workplans = [...eWorkplans];
+    //   });
+    // } else {
+    //   this.e_workplans = [];
+    // }
   }
 }

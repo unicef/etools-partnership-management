@@ -259,8 +259,10 @@ export function template(this: GddInterventionNew): TemplateResult {
             option-value="id"
             .selected="${this.newIntervention.country_programme}"
             @etools-selected-item-changed="${({detail}: CustomEvent) => {
-              this.setInterventionField('country_programme', detail.selectedItem && detail.selectedItem.id);
-              this.populateEWorkplans();
+              if (detail.selectedItem?.id !== this.newIntervention.country_programme) {
+                this.setInterventionField('country_programme', detail.selectedItem && detail.selectedItem.id);
+                this.populateEWorkplans();
+              }
             }}"
             trigger-value-change-event
           >
