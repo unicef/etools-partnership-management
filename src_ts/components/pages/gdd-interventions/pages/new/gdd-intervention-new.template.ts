@@ -79,6 +79,27 @@ export function template(this: GddInterventionNew): TemplateResult {
           >
           </etools-dropdown>
         </div>
+        <!--   Agreement   -->
+        <div class="col-md-6 col-lg-4 col-12">
+          <etools-dropdown
+            id="agreements"
+            label=${translate('AGREEMENT')}
+            placeholder="&#8212;"
+            .readonly="${!this.newIntervention?.partner}"
+            .options="${this.filteredAgreements}"
+            option-value="id"
+            option-label="agreement_number_status"
+            required
+            .selected="${this.newIntervention?.agreement}"
+            trigger-value-change-event
+            @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
+            auto-validate
+            error-message=${translate('NEW_INTERVENTION.AGREEMENT_REQUIRED')}
+            @focus="${this.resetError}"
+            @click="${this.resetError}"
+          >
+          </etools-dropdown>
+        </div>
       </div>
 
       <div class="row">

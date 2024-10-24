@@ -11,24 +11,14 @@ import {template} from './gdd-intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import {NewGDDInterventionStyles} from './gdd-intervention-new.styles';
-import {RequestEndpoint, sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
-import {
-  LabelAndValue,
-  GenericObject,
-  Office,
-  GDD,
-  EtoolsEndpoint,
-  AsyncAction,
-  AnyObject
-} from '@unicef-polymer/etools-types';
+import {LabelAndValue, GenericObject, Office, GDD, AsyncAction, AnyObject} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
 import {get as getTranslation} from 'lit-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
-import {getEndpoint} from '@unicef-polymer/etools-utils/dist/endpoint.util';
-import {gddEndpoints} from '../intervention-tab-pages/utils/intervention-endpoints';
 import {getEWorkPlan} from '../intervention-tab-pages/common/actions/gddInterventions';
 import {EWorkPlan} from '../intervention-tab-pages/common/types/store.types';
 
@@ -238,7 +228,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       return (
         agreement.partner === partnerId &&
         ['suspended', 'terminated'].indexOf(agreement.status!) === -1 &&
-        agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU
+        agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.GTC
       );
     });
   }
