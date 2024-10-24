@@ -111,7 +111,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     private formatResponse(response: any[]) {
       const data: Partial<CommonDataState> = {};
       data.countryProgrammes = this.getValue(response[0]);
-
       this.setStaticAndDynamicData(data, this.getValue(response[1]), this.getValue(response[2]));
 
       data.locations = this.getValue(response[3]);
@@ -151,6 +150,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
       data.assessmentTypes = dropdownsStatic.assessment_types;
       data.interventionAmendmentTypes = dropdownsStatic.intervention_amendment_types;
+      data.gddAmendmentTypes = dropdownsPmpRespose.gdd_amendment_types;
       data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
@@ -322,6 +322,11 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
             commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types)
           );
         }
+        // set gdd intervention ammendment data
+        if (this._validReqResponseData(response.gdd_amendment_types)) {
+          store.dispatch(commonDataActions.updateGDDInterventionAmendmentTypes((response as any).gdd_amendment_types));
+        }
+
         // set admin level/location types
         if (this._validReqResponseData(response.location_types)) {
           store.dispatch(commonDataActions.updateLocationTypes((response as any).location_types));

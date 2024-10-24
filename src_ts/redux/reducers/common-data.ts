@@ -13,6 +13,7 @@ import {
   UPDATE_PARTNER_RISK_RATINGS,
   UPDATE_LOCATION_TYPES,
   UPDATE_INTERVENTION_AMENDMENT_TYPES,
+  UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES,
   UPDATE_ASSESSMENT_TYPES,
   UPDATE_PARTNER_TYPES,
   UPDATE_CSO_TYPES,
@@ -100,6 +101,7 @@ export class CommonDataState {
   cashTransferModalities: LabelAndValue[] = [];
   sites: [] = [];
   loadedTimestamp = 0;
+  gddAmendmentTypes: LabelAndValue[] = [];
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -243,6 +245,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         interventionAmendmentTypes: action.intAmendTypes
+      };
+
+    case UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES:
+      return {
+        ...state,
+        gddAmendmentTypes: action.gddAmendmentTypes
       };
 
     case UPDATE_USER_COUNTRY_DATA:

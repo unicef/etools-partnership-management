@@ -33,6 +33,7 @@ export const UPDATE_PARTNER_TYPES = 'UPDATE_PARTNER_TYPES';
 export const UPDATE_SEA_RISK_RATINGS = 'UPDATE_SEA_RISK_RATINGS';
 export const UPDATE_ASSESSMENT_TYPES = 'UPDATE_ASSESSMENT_TYPES';
 export const UPDATE_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_INTERVENTION_AMENDMENT_TYPES';
+export const UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES';
 export const UPDATE_LOCATION_TYPES = 'UPDATE_LOCATION_TYPES';
 export const UPDATE_PARTNER_RISK_RATINGS = 'UPDATE_PARTNER_RISK_RATINGS';
 export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
@@ -134,6 +135,11 @@ export interface CommonDataActionUpdateInterventionAmendmentTypes
   intAmendTypes: GenericObject[];
 }
 
+export interface CommonDataActionUpdateGDDInterventionAmendmentTypes
+  extends Action<'UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES'> {
+  gddAmendmentTypes: GenericObject[];
+}
+
 export interface CommonDataActionUpdateLocationTypes extends Action<'UPDATE_LOCATION_TYPES'> {
   locationTypes: GenericObject[];
 }
@@ -196,6 +202,7 @@ export type CommonDataAction =
   | CommonDataActionUpdatePartnerTypes
   | CommonDataActionUpdateAssessmentTypes
   | CommonDataActionUpdateInterventionAmendmentTypes
+  | CommonDataActionUpdateGDDInterventionAmendmentTypes
   | CommonDataActionUpdateLocationTypes
   | CommonDataActionUpdatePartnerRiskRatings
   | CommonDataActionUpdateLocations
@@ -382,6 +389,15 @@ export const updateInterventionAmendmentTypes: ActionCreator<CommonDataActionUpd
   return {
     type: UPDATE_INTERVENTION_AMENDMENT_TYPES,
     intAmendTypes
+  };
+};
+
+export const updateGDDInterventionAmendmentTypes: ActionCreator<CommonDataActionUpdateGDDInterventionAmendmentTypes> = (
+  gddAmendmentTypes: GenericObject[]
+) => {
+  return {
+    type: UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES,
+    gddAmendmentTypes
   };
 };
 
