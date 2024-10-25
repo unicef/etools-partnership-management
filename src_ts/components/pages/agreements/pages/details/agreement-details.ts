@@ -35,6 +35,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
+import './components/generate-GTC-dialog';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -482,6 +483,28 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </div>
           </div>
           <div
+            class="generate-pca col-12 col-md-6 col-lg-3"
+            ?hidden="${!this.showGenerateGTCBtn(
+              this.agreement.agreement_type,
+              this.isNewAgreement,
+              this.agreement.status
+            )}"
+          >
+            <!-- Generate GTC -->
+            <div style="display:flex;flex-direction:column;">
+              <label class="paper-label" aria-hidden="true">${translate('GTC_AGREEMENT_TO_SIGN')}</label>
+              <etools-button
+                variant="text"
+                class="no-pad no-marg"
+                id="generateMyPca"
+                @click="${this._openGenerateGTCDialog}"
+              >
+                <etools-icon name="refresh"></etools-icon>
+                ${translate('GENERATE')}
+              </etools-button>
+            </div>
+          </div>
+          <div
             class="generate-pca col-12 col-md-6 col-lg-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
@@ -755,6 +778,10 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     return type === CONSTANTS.AGREEMENT_TYPES.PCA && ((this._isDraft() && !isNewAgreement) || status === 'signed');
   }
 
+  showGenerateGTCBtn(type: string, isNewAgreement: boolean, status: string) {
+    return type === CONSTANTS.AGREEMENT_TYPES.GTC && ((this._isDraft() && !isNewAgreement) || status === 'signed');
+  }
+
   _showGeneratePcaWarning(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean) {
     if (type !== CONSTANTS.AGREEMENT_TYPES.PCA) {
       return false;
@@ -851,6 +878,16 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     const agreementId = this.agreement && this.agreement.id ? this.agreement.id : null;
     openDialog({
       dialog: 'generate-pca-dialog',
+      dialogData: {
+        agreementId: agreementId
+      }
+    });
+  }
+
+  _openGenerateGTCDialog() {
+    const agreementId = this.agreement && this.agreement.id ? this.agreement.id : null;
+    openDialog({
+      dialog: 'generate-gtc-dialog',
       dialogData: {
         agreementId: agreementId
       }
@@ -1041,7 +1078,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onCountryProgrammeObjectChanged(e: CustomEvent) {
-    this.agreement.end = e.detail.value.to_date;
+    this.agreement.end = e.detail.value?.to_date;
     this.requestUpdate();
   }
 
