@@ -42,7 +42,7 @@ export class GenerateGtcDialog extends LitElement {
         @confirm-btn-clicked="${this._onConfirm}"
       >
         <div>
-          <div class="terms_wrapper">${translateUnsafeHTML('PCA_TERMS_AND_CONDITIONS')}</div>
+          <div class="terms_wrapper">${translateUnsafeHTML('GTC_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
             <div class="col col-12">
               <etools-checkbox
