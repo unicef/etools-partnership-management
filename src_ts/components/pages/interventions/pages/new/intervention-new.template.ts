@@ -90,6 +90,7 @@ export function template(this: InterventionNew): TemplateResult {
             .options="${this.filteredAgreements}"
             option-value="id"
             option-label="agreement_number_status"
+            required
             .selected="${this.newIntervention?.agreement}"
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
