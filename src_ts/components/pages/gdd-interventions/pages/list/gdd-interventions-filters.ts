@@ -64,8 +64,8 @@ export function getGDDInterventionFilters() {
       hideSearch: true
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT'),
-      filterNameKey: 'INTERVENTIONS_LIST.COUNTRY_PROGRAMME_OUTPUT',
+      filterName: getTranslation('GDD_LIST.COUNTRY_PROGRAMME_OUTPUT'),
+      filterNameKey: 'GDD_LIST.COUNTRY_PROGRAMME_OUTPUT',
       filterKey: GDDInterventionFilterKeys.cp_outputs,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -76,8 +76,8 @@ export function getGDDInterventionFilters() {
       minWidth: '400px'
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.DONORS'),
-      filterNameKey: 'INTERVENTIONS_LIST.DONORS',
+      filterName: getTranslation('GDD_LIST.DONORS'),
+      filterNameKey: 'GDD_LIST.DONORS',
       filterKey: GDDInterventionFilterKeys.donors,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -88,8 +88,8 @@ export function getGDDInterventionFilters() {
       minWidth: '400px'
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.PARTNERS'),
-      filterNameKey: 'INTERVENTIONS_LIST.PARTNERS',
+      filterName: getTranslation('GDD_LIST.PARTNERS'),
+      filterNameKey: 'GDD_LIST.PARTNERS',
       filterKey: GDDInterventionFilterKeys.partners,
       type: EtoolsFilterTypes.DropdownMulti,
       selectionOptions: [],
@@ -101,8 +101,8 @@ export function getGDDInterventionFilters() {
       hideSearch: false
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.ENDS_BEFORE'),
-      filterNameKey: 'INTERVENTIONS_LIST.ENDS_BEFORE',
+      filterName: getTranslation('GDD_LIST.ENDS_BEFORE'),
+      filterNameKey: 'GDD_LIST.ENDS_BEFORE',
       filterKey: GDDInterventionFilterKeys.end,
       type: EtoolsFilterTypes.Date, // datepicker-lite
       path: 'endDate',
@@ -110,8 +110,8 @@ export function getGDDInterventionFilters() {
       selected: false
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.GRANTS'),
-      filterNameKey: 'INTERVENTIONS_LIST.GRANTS',
+      filterName: getTranslation('GDD_LIST.GRANTS'),
+      filterNameKey: 'GDD_LIST.GRANTS',
       filterKey: GDDInterventionFilterKeys.grants,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'value',
@@ -122,8 +122,8 @@ export function getGDDInterventionFilters() {
       minWidth: '400px'
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.OFFICES'),
-      filterNameKey: 'INTERVENTIONS_LIST.OFFICES',
+      filterName: getTranslation('GDD_LIST.OFFICES'),
+      filterNameKey: 'GDD_LIST.OFFICES',
       filterKey: GDDInterventionFilterKeys.offices,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -135,8 +135,8 @@ export function getGDDInterventionFilters() {
       hideSearch: true
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.SECTIONS'),
-      filterNameKey: 'INTERVENTIONS_LIST.SECTIONS',
+      filterName: getTranslation('GDD_LIST.SECTIONS'),
+      filterNameKey: 'GDD_LIST.SECTIONS',
       filterKey: GDDInterventionFilterKeys.section,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -148,8 +148,8 @@ export function getGDDInterventionFilters() {
       hideSearch: true
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.STARTS_AFTER'),
-      filterNameKey: 'INTERVENTIONS_LIST.STARTS_AFTER',
+      filterName: getTranslation('GDD_LIST.STARTS_AFTER'),
+      filterNameKey: 'GDD_LIST.STARTS_AFTER',
       filterKey: GDDInterventionFilterKeys.start,
       type: EtoolsFilterTypes.Date, // datepicker-lite
       path: 'startDate',
@@ -157,8 +157,8 @@ export function getGDDInterventionFilters() {
       selected: false
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.ENDS_AFTER'),
-      filterNameKey: 'INTERVENTIONS_LIST.ENDS_AFTER',
+      filterName: getTranslation('GDD_LIST.ENDS_AFTER'),
+      filterNameKey: 'GDD_LIST.ENDS_AFTER',
       filterKey: GDDInterventionFilterKeys.endAfter,
       type: EtoolsFilterTypes.Date,
       selectedValue: '',
@@ -179,8 +179,8 @@ export function getGDDInterventionFilters() {
       hideSearch: true
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.UNICEF_FOCAL_POINT'),
-      filterNameKey: 'INTERVENTIONS_LIST.UNICEF_FOCAL_POINT',
+      filterName: getTranslation('GDD_LIST.UNICEF_FOCAL_POINT'),
+      filterNameKey: 'GDD_LIST.UNICEF_FOCAL_POINT',
       filterKey: GDDInterventionFilterKeys.unicef_focal_points,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',
@@ -191,8 +191,8 @@ export function getGDDInterventionFilters() {
       minWidth: '400px'
     },
     {
-      filterName: getTranslation('INTERVENTIONS_LIST.BUDGET_OWNER'),
-      filterNameKey: 'INTERVENTIONS_LIST.BUDGET_OWNER',
+      filterName: getTranslation('GDD_LIST.BUDGET_OWNER'),
+      filterNameKey: 'GDD_LIST.BUDGET_OWNER',
       filterKey: GDDInterventionFilterKeys.budget_owner,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',

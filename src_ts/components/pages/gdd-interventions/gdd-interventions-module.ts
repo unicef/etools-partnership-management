@@ -154,13 +154,13 @@ export class GddInterventionsModule extends connect(store)(
                 </etools-button>
                 <sl-menu>
                   <sl-menu-item @click="${this._exportPdBudget}" tracker="Export PD Budget"
-                    >${translate('INTERVENTIONS_LIST.GDD_BUDGET_EXPORT')}</sl-menu-item
+                    >${translate('GDD_LIST.GDD_BUDGET_EXPORT')}</sl-menu-item
                   >
                   <sl-menu-item @click="${this._exportPdResult}" tracker="Export PD Result"
-                    >${translate('INTERVENTIONS_LIST.GDD_RESULT_EXPORT')}</sl-menu-item
+                    >${translate('GDD_LIST.GDD_RESULT_EXPORT')}</sl-menu-item
                   >
                   <sl-menu-item @click="${this._exportPdLocations}" tracker="Export PD Locations"
-                    >${translate('INTERVENTIONS_LIST.GDD_LOCATIONS_EXPORT')}</sl-menu-item
+                    >${translate('GDD_LIST.GDD_LOCATIONS_EXPORT')}</sl-menu-item
                   >
                 </sl-menu>
               </sl-dropdown>

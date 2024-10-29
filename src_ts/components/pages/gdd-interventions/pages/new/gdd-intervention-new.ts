@@ -203,7 +203,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   createIntervention(): void {
     if (!this.validate()) {
-      fireEvent(this, 'toast', {text: getTranslation('NEW_INTERVENTION.ON_SAVE_VALIDATION')});
+      fireEvent(this, 'toast', {text: getTranslation('NEW_GDD.ON_SAVE_VALIDATION')});
       return;
     }
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});

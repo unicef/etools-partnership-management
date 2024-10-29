@@ -131,7 +131,7 @@ export class GddInterventionsList extends connect(store)(
           })}"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
-            ${translate('INTERVENTIONS_LIST.REFERENCE_NO')}
+            ${translate('GDD_LIST.REFERENCE_NO')}
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="partner_name" sortable>
             ${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}
@@ -140,13 +140,13 @@ export class GddInterventionsList extends connect(store)(
             ${translate('GENERAL.STATUS')}
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
-            ${translate('INTERVENTIONS_LIST.TITLE')}
+            ${translate('GDD_LIST.TITLE')}
           </etools-data-table-column>
           <etools-data-table-column class="col-1" field="start" sortable>
-            ${translate('INTERVENTIONS_LIST.START_DATE')}
+            ${translate('GDD_LIST.START_DATE')}
           </etools-data-table-column>
           <etools-data-table-column class="col-1" field="end" sortable>
-            ${translate('INTERVENTIONS_LIST.END_DATE')}
+            ${translate('GDD_LIST.END_DATE')}
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -156,7 +156,7 @@ export class GddInterventionsList extends connect(store)(
             .detailsOpened="${this.detailsOpened}"
           >
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
+              <span class="col-data col-2" data-col-header-label="${translate('GDD_LIST.REFERENCE_NO')}">
                 <a
                   class="text-btn-style pd-ref truncate"
                   href="gdd-interventions/${intervention.id}/metadata"
@@ -177,12 +177,12 @@ export class GddInterventionsList extends connect(store)(
               </div>
               <span
                 class="col-data col-2 break-word"
-                data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
+                data-col-header-label="${translate('GDD_LIST.TITLE')}"
                 title="${this.getDisplayValue(intervention.title)}"
               >
                 ${this.getDisplayValue(intervention.title)}
               </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('GDD_LIST.START_DATE')}">
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon
@@ -198,7 +198,7 @@ export class GddInterventionsList extends connect(store)(
                   <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                 </etools-info-tooltip>
               </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
+              <span class="col-data col-1" data-col-header-label="${translate('GDD_LIST.END_DATE')}">
                 <etools-info-tooltip
                   class="fr-nr-warn"
                   custom-icon

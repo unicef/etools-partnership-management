@@ -7,7 +7,7 @@ import {store, RootState} from '../../../redux/store';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from 'lit-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
@@ -28,6 +28,17 @@ class AppMenu extends connect(store)(
     // language=HTML
     return html`
       ${navMenuStyles}
+
+      <style>
+        .menu-header {
+          background: ${this.menuHeaderBgColor};
+        }
+
+        .nav-menu-item.selected .name,
+        .nav-menu-item.selected etools-icon {
+          color: ${this.menuItemColor};
+        }
+      </style>
 
       <div class="menu-header">
         <span id="app-name">
@@ -198,8 +209,22 @@ class AppMenu extends connect(store)(
   @property({type: Boolean, attribute: 'small-menu'})
   smallMenu = false;
 
+  @state()
+  menuHeaderBgColor = 'var(--primary-color)';
+
+  @state()
+  menuItemColor = 'var(--primary-color)';
+
   stateChanged(state: RootState) {
     this.envFlagsStateChanged(state);
+
+    if (state.app?.routeDetails.routeName === 'gdd-interventions') {
+      this.menuHeaderBgColor = 'var(--header-bg-color)';
+      this.menuItemColor = 'var(--ternary-color)';
+    } else {
+      this.menuHeaderBgColor = 'var(--primary-color)';
+      this.menuItemColor = 'var(--primary-color)';
+    }
   }
 
   getItemClass(selectedValue: string, itemValue: string) {
