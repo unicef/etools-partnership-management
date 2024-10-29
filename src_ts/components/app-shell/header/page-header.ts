@@ -26,8 +26,6 @@ import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environme
 import {appLanguages} from '../../../config/app-constants';
 import UploadsMixin from '../../common/mixins/uploads-mixin';
 import {get as getTranslation} from 'lit-translate';
-import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import get from 'lodash-es/get';
 
 store.addReducers({
   activeLanguage
