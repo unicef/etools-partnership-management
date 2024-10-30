@@ -167,11 +167,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     }
   }
   getDocTypeTooltip() {
-    return (
-      getTranslation('PROGRAMME_DOCUMENT_TOOLTIP') +
-      '<br><br>' +
-      getTranslation('SIMPLIFIED_PROGRAMME_DOCUMENT_TOOLTIP')
-    );
+    return getTranslation('GDD_TOOLTIP');
   }
 
   setInterventionField(field: keyof GDD, value: any): void {
