@@ -159,6 +159,9 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     this.setInterventionField('agreement', this.selectedAgreement?.id);
     const cp = this.selectedAgreement?.country_programme;
     this.setInterventionField('country_programme', cp ? cp : null);
+    setTimeout(() => {
+      this.populateEWorkplans();
+    }, 100);
   }
 
   documentTypeChanged(type: string): void {
