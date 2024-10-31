@@ -34,7 +34,7 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         endpoint: pmpEdpoints.myProfile
       })
         .then((res: any) => {
-          if (this.redirectToEPDIfNeccessary(res)) {
+          if (this.redirectToEPDOrGDDIfNeccessary(res)) {
             return;
           }
           // TODO: check response to make sure it contains a valid user
@@ -56,13 +56,22 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
         });
     }
 
-    redirectToEPDIfNeccessary(user: EtoolsUser) {
+    redirectToEPDOrGDDIfNeccessary(user: EtoolsUser) {
       if (!user.is_unicef_user) {
-        if (window.location.href.includes('/interventions')) {
-          // preserve url
-          window.location.href = window.location.href.replace('pmp', 'epd');
+        if (user.organization?.is_government){
+          if (window.location.href.includes('/gdd-interventions')) {
+            // preserve url
+            window.location.href = window.location.href.replace('/pmp/', '/government/');
+          } else {
+            window.location.href = window.location.origin + '/government/';
+          }
         } else {
-          window.location.href = window.location.origin + '/epd/';
+          if (window.location.href.includes('/interventions')) {
+            // preserve url
+            window.location.href = window.location.href.replace('/pmp/', '/epd/');
+          } else {
+            window.location.href = window.location.origin + '/epd/';
+          }
         }
         return true;
       }
