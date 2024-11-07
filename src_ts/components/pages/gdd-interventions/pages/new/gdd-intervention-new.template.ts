@@ -56,7 +56,7 @@ export function template(this: GddInterventionNew): TemplateResult {
     ></etools-media-query>
 
     <!--   Header   -->
-    <div class="title">${translate('NEW_INTERVENTION.INITIAL_DETAILS')}</div>
+    <div class="title">${translate('NEW_GDD.INITIAL_DETAILS')}</div>
 
     <div class="form">
       <div class="row">
@@ -71,7 +71,7 @@ export function template(this: GddInterventionNew): TemplateResult {
             option-label="name"
             required
             .selected="${this.newIntervention?.partner}"
-            error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
+            error-message=${translate('NEW_GDD.PARTNER_REQUIRED')}
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
             @focus="${this.resetError}"
@@ -93,7 +93,7 @@ export function template(this: GddInterventionNew): TemplateResult {
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
             auto-validate
-            error-message=${translate('NEW_INTERVENTION.AGREEMENT_REQUIRED')}
+            error-message=${translate('NEW_GDD.AGREEMENT_REQUIRED')}
             @focus="${this.resetError}"
             @click="${this.resetError}"
           >
@@ -107,7 +107,7 @@ export function template(this: GddInterventionNew): TemplateResult {
           <etools-input
             readonly
             placeholder="—"
-            label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
+            label=${translate('NEW_GDD.PARTNER_VENDOR_NUMBER')}
             .value="${this.selectedPartner?.vendor_number}"
           >
           </etools-input>
@@ -117,11 +117,11 @@ export function template(this: GddInterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-md-6 col-lg-8 col-12">
-          <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
+          <label class="paper-label"> ${translate('NEW_GDD.DOC_PARTNER_FOCAL_POINTS')}</label>
           <info-icon-tooltip
             position="top"
             offset="48"
-            .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+            .tooltipText="${translate('NEW_GDD.PARTNER_FOCAL_POINTS_TOOLTIP')}"
           ></info-icon-tooltip>
           <etools-dropdown-multi
             id="partnerFocalPoints"
@@ -147,7 +147,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-4 col-12">
           <datepicker-lite
             id="startDate"
-            label=${translate('NEW_INTERVENTION.START_DATE_ESTIMATED')}
+            label=${translate('NEW_GDD.START_DATE_ESTIMATED')}
             .value="${this.newIntervention.start}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -160,7 +160,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-4 col-12">
           <datepicker-lite
             id="endDate"
-            label=${translate('NEW_INTERVENTION.END_DATE_ESTIMATED')}
+            label=${translate('NEW_GDD.END_DATE_ESTIMATED')}
             .value="${this.newIntervention.end}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -176,7 +176,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="yearSelector"
-            label=${translate('NEW_INTERVENTION.REF_NUM_YEAR')}
+            label=${translate('NEW_GDD.REF_NUM_YEAR')}
             required
             .options="${this.availableYears}"
             .selected="${this.newIntervention.reference_number_year}"
@@ -195,7 +195,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="currency"
-            label=${translate('NEW_INTERVENTION.DOCUMENT_CURRENCY')}
+            label=${translate('NEW_GDD.DOCUMENT_CURRENCY')}
             placeholder="&#8212;"
             .options="${this.currencies}"
             .selected="${this.newIntervention?.planned_budget?.currency}"
@@ -214,7 +214,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-12">
           <etools-input
             id="title"
-            label=${translate('NEW_INTERVENTION.DOC_TITLE')}
+            label=${translate('NEW_GDD.DOC_TITLE')}
             char-counter
             maxlength="256"
             placeholder="&#8212;"
@@ -233,7 +233,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefOffices"
-            label=${translate('NEW_INTERVENTION.UNICEF_OFFICES')}
+            label=${translate('NEW_GDD.UNICEF_OFFICES')}
             placeholder="&#8212;"
             .options="${this.offices}"
             option-label="name"
@@ -253,7 +253,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefSections"
-            label=${translate('NEW_INTERVENTION.UNICEF_SECTIONS')}
+            label=${translate('NEW_GDD.UNICEF_SECTIONS')}
             placeholder="&#8212;"
             .options="${this.sections}"
             option-label="name"
@@ -272,7 +272,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown
             id="country_programme"
-            label=${translate('NEW_INTERVENTION.COUNTRY_PROGRAMME')}
+            label=${translate('NEW_GDD.COUNTRY_PROGRAMME')}
             placeholder="&#8212;"
             .options="${this.cpStructures}"
             option-label="name"
@@ -295,7 +295,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="unicefFocalPoints"
-            label=${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}
+            label=${translate('NEW_GDD.UNICEF_FOCAL_POINTS')}
             placeholder="&#8212;"
             .options="${this.unicefUsersData}"
             option-label="name"
@@ -315,7 +315,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown
             id="unicefBudgetOwner"
-            label=${translate('NEW_INTERVENTION.UNICEF_BUDGET_OWNER')}
+            label=${translate('NEW_GDD.UNICEF_BUDGET_OWNER')}
             placeholder="&#8212;"
             .options="${this.unicefUsersData}"
             option-label="name"
@@ -331,7 +331,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
             id="e_workplans"
-            label=${translate('NEW_INTERVENTION.E_WORKPLANS')}
+            label=${translate('NEW_GDD.E_WORKPLANS')}
             placeholder="&#8212;"
             .options="${this.e_workplans}"
             option-label="name"
