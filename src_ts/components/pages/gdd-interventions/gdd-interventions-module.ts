@@ -469,15 +469,15 @@ export class GddInterventionsModule extends connect(store)(
   // }
 
   _exportPdBudget(e: CustomEvent) {
-    this._exportPD(e, pmpEdpoints.interventions.url);
+    this._exportPD(e, `${pmpEdpoints.gddInterventions.url}`);
   }
 
   _exportPdResult(e: CustomEvent) {
-    this._exportPD(e, pmpEdpoints.resultExports.url);
+    this._exportPD(e, pmpEdpoints.gddResultExports.url);
   }
 
   _exportPdLocations(e: CustomEvent) {
-    this._exportPD(e, pmpEdpoints.pdLocationsExport.url);
+    this._exportPD(e, pmpEdpoints.gddLocationsExport.url);
   }
 
   _exportPD(e: CustomEvent, url: string) {

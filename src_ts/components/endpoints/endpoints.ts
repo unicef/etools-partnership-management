@@ -280,8 +280,14 @@ const pmpEdpoints = {
   resultExports: {
     url: '/api/v2/reports/applied-indicators/intervention/'
   },
+  gddResultExports: {
+    url: '/api/gdd/gdds/results/'
+  },
   pdLocationsExport: {
     url: '/api/v2/interventions/locations/'
+  },
+  gddLocationsExport: {
+    url: '/api/gdd/gdds/locations/?format=csv'
   },
   attachmentsUpload: {
     url: '/api/v2/attachments/upload/'
