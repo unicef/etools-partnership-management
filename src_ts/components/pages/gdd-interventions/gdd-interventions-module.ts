@@ -27,15 +27,11 @@ import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from 'lit-translate';
-// TODO remove this if not needed
-// import './pages/new/ecn-import-dialog';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 // @ts-ignore
@@ -178,26 +174,6 @@ export class GddInterventionsModule extends connect(store)(
               >
                 <etools-icon name="add" slot="prefix"></etools-icon>
                 <span style="padding: 0 10px 0 0">${translate('GDD_LIST.ADD_NEW_GDD')}</span>
-                <sl-dropdown id="importEcn">
-                  <etools-icon
-                    slot="trigger"
-                    name="expand-more"
-                    @click="${(event: MouseEvent) => {
-                      event.stopImmediatePropagation();
-                      ((event.currentTarget as any)!.parentElement as SlDropdown).show();
-                    }}"
-                  ></etools-icon>
-                  <sl-menu>
-                    <sl-menu-item
-                      @click="${(e: CustomEvent) => {
-                        e.stopImmediatePropagation();
-                        this.openEcnImportDialog();
-                      }}"
-                    >
-                      ${translate('IMPORT_ECN')}
-                    </sl-menu-item>
-                  </sl-menu>
-                </sl-dropdown>
               </etools-button>
             </div>
           </div>
@@ -325,12 +301,6 @@ export class GddInterventionsModule extends connect(store)(
       'monitoring-activities',
       'results-reported'
     ].includes(activePage);
-  }
-
-  openEcnImportDialog() {
-    openDialog({
-      dialog: 'ecn-import-dialog'
-    });
   }
 
   connectedCallback() {
