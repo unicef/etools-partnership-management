@@ -649,11 +649,11 @@
   "NO_REPORTING_PERIOD": "Sem período de relatório",
   "ACHIEVED_AS_PLANNED": "Alcançado como planejado",
   "NOT_ACHIEVED_AS_PLANNED": "Não alcançado como planejado",
-  "GDD": "Documento Digital Governamental",
+  "GDD": "Documento do Programa Governamental",
   "GDD_LIST": {
-    "NAME": "Documento Digital Governamental",
-    "ADD_NEW_GDD": "Adicionar novo GDD",
-    "ADD_GDD": "Adicionar Documento Digital Governamental",
+    "NAME": "Documento do Programa Governamental",
+    "ADD_NEW_GDD": "Adicionar novo GPD",
+    "ADD_GDD": "Adicionar Documento do Programa Governamental",
     "GOVERNMENT_ORG_NAME": "Nome da Organização Governamental"
   },
   "NEW_GDD": {

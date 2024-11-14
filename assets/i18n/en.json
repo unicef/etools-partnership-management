@@ -649,11 +649,11 @@
   "NO_REPORTING_PERIOD": "No reporting period",
   "ACHIEVED_AS_PLANNED": "Achieved as planned",
   "NOT_ACHIEVED_AS_PLANNED": "Not achieved as planned",
-  "GDD": "Government Digital Document",
+  "GDD": "Government Programme Document",
   "GDD_LIST": {
-    "NAME": "Government Digital Document",
-    "ADD_NEW_GDD": "Add new GDD",
-    "ADD_GDD": "Add Government Digital Document",
+    "NAME": "Government Programme Document",
+    "ADD_NEW_GDD": "Add new GPD",
+    "ADD_GDD": "Add Government Programme Document",
     "GOVERNMENT_ORG_NAME": "Government Org Name"
   },
   "NEW_GDD": {
