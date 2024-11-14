@@ -102,11 +102,11 @@ class AppMenu extends connect(store)(
             menu-name="gdd-interventions"
             href="${Environment.basePath}gdd-interventions/list"
           >
-            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GDD')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GDDS')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
             </sl-tooltip>
 
-            <div class="name">${translate('GDD')}</div>
+            <div class="name">${translate('GDDS')}</div>
           </a>
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"
