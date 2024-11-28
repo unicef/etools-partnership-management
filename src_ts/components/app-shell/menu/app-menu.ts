@@ -98,9 +98,9 @@ class AppMenu extends connect(store)(
             <div class="name">${translate('PD_SPD')}</div>
           </a>
           <a
-            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gdd-interventions')}"
-            menu-name="gdd-interventions"
-            href="${Environment.basePath}gdd-interventions/list"
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gpd-interventions')}"
+            menu-name="gpd-interventions"
+            href="${Environment.basePath}gpd-interventions/list"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GDDS')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
@@ -218,7 +218,7 @@ class AppMenu extends connect(store)(
   stateChanged(state: RootState) {
     this.envFlagsStateChanged(state);
 
-    if (state.app?.routeDetails.routeName === 'gdd-interventions') {
+    if (state.app?.routeDetails.routeName === 'gpd-interventions') {
       this.menuHeaderBgColor = 'var(--header-bg-color)';
       this.menuItemColor = 'var(--ternary-color)';
     } else {

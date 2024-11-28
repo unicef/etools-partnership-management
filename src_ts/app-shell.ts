@@ -199,7 +199,7 @@ class AppShell extends connect(store)(
                   id="gdd-interventions"
                   class="main-page"
                   .userPermissions="${this.permissions}"
-                  ?hidden="${!this._activeModuleIs(this.module, 'gdd-interventions')}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'gpd-interventions')}"
                 >
                 </gdd-interventions-module>`
               : ``}
@@ -257,7 +257,7 @@ class AppShell extends connect(store)(
         this.interventionsLoaded = val === 'interventions';
       }
       if (!this.GDDinterventionsLoaded) {
-        this.GDDinterventionsLoaded = val === 'gdd-interventions';
+        this.GDDinterventionsLoaded = val === 'gpd-interventions';
       }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);

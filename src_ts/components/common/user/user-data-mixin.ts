@@ -58,8 +58,8 @@ function UserDataMixin<T extends Constructor<any>>(baseClass: T) {
 
     redirectToEPDOrGDDIfNeccessary(user: EtoolsUser) {
       if (!user.is_unicef_user) {
-        if (user.organization?.is_government){
-          if (window.location.href.includes('/gdd-interventions')) {
+        if (user.organization?.is_government) {
+          if (window.location.href.includes('/gpd-interventions')) {
             // preserve url
             window.location.href = window.location.href.replace('/pmp/', '/government/');
           } else {

@@ -270,7 +270,7 @@ class GddInterventionItemData extends connect(store)(
           text: getTranslation('GDD_DELETE_SUCCCESS')
         });
         // go to pd list after delete
-        fireEvent(this, 'update-main-path', {path: 'gdd-interventions/list'});
+        fireEvent(this, 'update-main-path', {path: 'gpd-interventions/list'});
       })
       .catch((reqError: any) => {
         this.handleErrorResponse(reqError, reqMethod, false);

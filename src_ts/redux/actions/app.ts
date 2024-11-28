@@ -272,7 +272,7 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
           .then(() => importInterventionSubRoutes(routeDetails.subRouteName))
           .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
         break;
-      case 'gdd-interventions':
+      case 'gpd-interventions':
         import('../../components/pages/gdd-interventions/gdd-interventions-module.js')
           .then(() => importGDDInterventionSubRoutes(routeDetails.subRouteName))
           .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));

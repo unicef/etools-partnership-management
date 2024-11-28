@@ -185,7 +185,7 @@ class PageHeader extends connect(store)(
       this.activeLanguage = state.activeLanguage?.activeLanguage;
     }
 
-    this.textUnderLogo = state.app?.routeDetails.routeName === 'gdd-interventions' ? getTranslation('GOVERNMENT') : '';
+    this.textUnderLogo = state.app?.routeDetails.routeName === 'gpd-interventions' ? getTranslation('GOVERNMENT') : '';
   }
 
   public menuBtnClicked() {
