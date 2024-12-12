@@ -13,7 +13,7 @@ import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-compari
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import {property} from 'lit/decorators.js';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -37,10 +37,7 @@ store.addReducers({
  * @appliesMixin ProfileOperationsMixin
  */
 
-class PageHeader extends connect(store)(
-  // eslint-disable-next-line new-cap
-  UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))
-) {
+class PageHeader extends connect(store)(UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))) {
   @property({type: Array})
   offices: any[] = [];
 

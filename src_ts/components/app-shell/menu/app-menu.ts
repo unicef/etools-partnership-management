@@ -9,7 +9,7 @@ import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
@@ -19,10 +19,7 @@ import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environme
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends connect(store)(
-  // eslint-disable-next-line new-cap
-  MatomoMixin(EnvironmentFlagsMixin(LitElement))
-) {
+class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElement))) {
   render() {
     // main template
     // language=HTML

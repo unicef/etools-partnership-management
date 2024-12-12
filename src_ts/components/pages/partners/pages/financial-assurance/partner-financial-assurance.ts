@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
@@ -35,7 +34,7 @@ import clone from 'lodash-es/clone';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import './components/monitoring-activities/monitoring-activities';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints.js';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';

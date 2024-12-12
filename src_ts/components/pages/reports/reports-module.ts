@@ -27,7 +27,7 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../redux/store';
 import {ReportsListEl} from './pages/list/reports-list';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../endpoints/endpoints';
 import cloneDeep from 'lodash-es/cloneDeep';
 

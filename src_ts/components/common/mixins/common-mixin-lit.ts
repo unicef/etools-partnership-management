@@ -1,7 +1,7 @@
 import {prettyDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {LitElement} from 'lit';
 import {Constructor, ListItemIntervention, GenericObject} from '@unicef-polymer/etools-types';
-import {get as getTranslation, translate} from 'lit-translate';
+import {get as getTranslation, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**

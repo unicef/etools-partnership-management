@@ -11,7 +11,7 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {formatServerErrorAsText} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

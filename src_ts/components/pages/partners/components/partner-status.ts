@@ -8,7 +8,7 @@ import {GenericObject} from '@unicef-polymer/etools-types';
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
-import {get as getTranslation, listenForLangChanged} from 'lit-translate';
+import {get as getTranslation, listenForLangChanged} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @customElement
@@ -25,7 +25,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
           --etools-status-label-style: {
             font-weight: normal;
             width: 120px;
-          }
+          };
         }
         /* HD res: 1360/1366 x 768 */
         @media only screen and (max-width: 1359px) {
@@ -33,7 +33,7 @@ export class PartnerStatus extends EtoolsStatusCommonMixin(LitElement) {
             --etools-status-label-style: {
               font-weight: normal;
               width: 100%;
-            }
+            };
           }
         }
       </style>

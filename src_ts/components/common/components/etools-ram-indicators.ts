@@ -8,7 +8,7 @@ import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

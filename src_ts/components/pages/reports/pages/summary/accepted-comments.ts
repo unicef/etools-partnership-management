@@ -4,7 +4,7 @@ import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AnyObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /*
  * @customElement

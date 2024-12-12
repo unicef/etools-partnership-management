@@ -3,7 +3,7 @@ import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query'
 import {TemplateResult, html} from 'lit';
 import {InterventionNew} from './intervention-new';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
-import {langChanged, translate} from 'lit-translate';
+import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';

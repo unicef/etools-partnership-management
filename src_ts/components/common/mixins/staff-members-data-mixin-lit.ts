@@ -7,7 +7,7 @@ import {MinimalStaffMember} from '../../../models/partners.models';
 import {Constructor} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

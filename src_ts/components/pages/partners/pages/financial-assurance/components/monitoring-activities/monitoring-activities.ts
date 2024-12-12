@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
@@ -19,7 +18,7 @@ import {Partner} from '../../../../../../../models/partners.models';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../../endpoints/endpoints';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
@@ -86,54 +85,56 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
               <etools-data-table-column class="col-4">${translate('LOCATION_SITE')}</etools-data-table-column>
             </etools-data-table-header>`}
         ${(this.mappedGroups || []).map(
-          (item: AnyObject) => html` <div
-            class="activities ${this.groupedClass(item.activities.length)}"
-            data-group-id="${item.id}"
-          >
-            <div class="braces">
-              <div class="description">${translate('COUNT_AS_ONE')}</div>
-            </div>
-            <div class="remove" data-is-remove>
-              <div class="remove-button">
-                <div class="description">${translate('REMOVE_FROM_GROUP')}</div>
+          (item: AnyObject) =>
+            html` <div class="activities ${this.groupedClass(item.activities.length)}" data-group-id="${item.id}">
+              <div class="braces">
+                <div class="description">${translate('COUNT_AS_ONE')}</div>
               </div>
-            </div>
-            ${(item.activities || []).map(
-              (activity: AnyObject) => html`
-                <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}"
-                  ><div
-                    class="row layout-horizontal"
-                    slot="row-data"
-                    data-group-id="${item.id}"
-                    data-activity-id="${activity.id}"
+              <div class="remove" data-is-remove>
+                <div class="remove-button">
+                  <div class="description">${translate('REMOVE_FROM_GROUP')}</div>
+                </div>
+              </div>
+              ${(item.activities || []).map(
+                (activity: AnyObject) => html`
+                  <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}"
+                    ><div
+                      class="row layout-horizontal"
+                      slot="row-data"
+                      data-group-id="${item.id}"
+                      data-activity-id="${activity.id}"
+                    >
+                      <div class="col-data col-4" data-col-header-label="${translate('REFERENCE')}">
+                        <etools-icon
+                          ?hidden="${!this.editMode}"
+                          class="flex-none"
+                          name="editor:drag-handle"
+                          @mousedown="${this.startDrag}"
+                        ></etools-icon>
+                        ${this.editMode
+                          ? html`${activity.reference_number}`
+                          : html` <a
+                              target="_blank"
+                              title="${activity.id}"
+                              href="/fm/activities/${activity.id}/details"
+                            >
+                              ${activity.reference_number}
+                            </a>`}
+                      </div>
+                      <div class="col-data col-2" data-col-header-label="${translate('START_DATE')}">
+                        ${activity.start_date}
+                      </div>
+                      <div class="col-data col-2" data-col-header-label="${translate('END_DATE')}">
+                        ${activity.end_date}
+                      </div>
+                      <div class="col-data col-4" data-col-header-label="${translate('LOCATION_SITE')}">
+                        ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
+                      </div>
+                    </div></etools-data-table-row
                   >
-                    <div class="col-data col-4" data-col-header-label="${translate('REFERENCE')}">
-                      <etools-icon
-                        ?hidden="${!this.editMode}"
-                        class="flex-none"
-                        name="editor:drag-handle"
-                        @mousedown="${this.startDrag}"
-                      ></etools-icon>
-                      ${this.editMode
-                        ? html`${activity.reference_number}`
-                        : html` <a target="_blank" title="${activity.id}" href="/fm/activities/${activity.id}/details">
-                            ${activity.reference_number}
-                          </a>`}
-                    </div>
-                    <div class="col-data col-2" data-col-header-label="${translate('START_DATE')}">
-                      ${activity.start_date}
-                    </div>
-                    <div class="col-data col-2" data-col-header-label="${translate('END_DATE')}">
-                      ${activity.end_date}
-                    </div>
-                    <div class="col-data col-4" data-col-header-label="${translate('LOCATION_SITE')}">
-                      ${this.locationAndSite(activity.location.name, activity.location_site?.name)}
-                    </div>
-                  </div></etools-data-table-row
-                >
-              `
-            )}
-          </div>`
+                `
+              )}
+            </div>`
         )}
 
         <div class="actions" ?hidden="${!this.editMode || !(this.activities || []).length}">

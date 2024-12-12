@@ -2,7 +2,7 @@ import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

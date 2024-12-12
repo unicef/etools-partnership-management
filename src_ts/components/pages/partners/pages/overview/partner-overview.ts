@@ -17,7 +17,7 @@ import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/style
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {Partner, PartnerIntervention} from '../../../../../models/partners.models';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';

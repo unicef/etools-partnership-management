@@ -12,7 +12,7 @@ import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 /**
  * @LitElement
  * @customElement

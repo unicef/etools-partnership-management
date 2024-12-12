@@ -23,7 +23,7 @@ import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
