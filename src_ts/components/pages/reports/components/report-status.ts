@@ -2,7 +2,7 @@ import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
-import {listenForLangChanged} from 'lit-translate';
+import {listenForLangChanged} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

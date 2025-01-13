@@ -21,7 +21,7 @@ import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.uti
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
 import CONSTANTS from '../../../../../config/app-constants';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -149,130 +149,131 @@ export class InterventionsList extends connect(store)(
         </etools-data-table-header>
 
         ${(this.filteredInterventions || []).map(
-          (intervention: ListItemIntervention) => html` <etools-data-table-row
-            .lowResolutionLayout="${this.lowResolutionLayout}"
-            .detailsOpened="${this.detailsOpened}"
-          >
-            <div slot="row-data" class="p-relative">
-              <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
-                <a
-                  class="text-btn-style pd-ref truncate"
-                  href="interventions/${intervention.id}/metadata"
-                  title="${this.getDisplayValue(intervention.number)}"
-                >
-                  ${this.getDisplayValue(intervention.number)}
-                </a>
-              </span>
-              <span
-                class="col-data col-3"
-                data-col-header-label="${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}"
-                title="${this.getDisplayValue(intervention.partner_name)}"
-              >
-                <span>${this.getDisplayValue(intervention.partner_name)}</span>
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
-                ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
-              </span>
-              <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
-                <div>${this.getStatusCellText(intervention)}</div>
-              </div>
-              <span
-                class="col-data col-2 break-word"
-                data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
-                title="${this.getDisplayValue(intervention.title)}"
-              >
-                ${this.getDisplayValue(intervention.title)}
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
-                <etools-info-tooltip
-                  class="fr-nr-warn"
-                  custom-icon
-                  icon-first
-                  ?hide-tooltip="${this._hideDateFrsWarningTooltip(
-                    intervention.start,
-                    intervention.frs_earliest_start_date!,
-                    intervention.status
-                  )}"
-                >
-                  <span slot="field">${this.getDateDisplayValue(intervention.start)}</span>
-                  <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
-                  <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
-                </etools-info-tooltip>
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
-                <etools-info-tooltip
-                  class="fr-nr-warn"
-                  custom-icon
-                  icon-first
-                  ?hide-tooltip="${this._hideDateFrsWarningTooltip(
-                    intervention.end,
-                    intervention.frs_latest_end_date!,
-                    intervention.status
-                  )}"
-                >
-                  <span slot="field">${this.getDateDisplayValue(intervention.end)}</span>
-                  <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
-                  <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
-                </etools-info-tooltip>
-              </span>
-            </div>
-
-            <div slot="row-data-details" class="p-relative">
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('OFFICES')}</span>
-                <span>${this.getDisplayValue(intervention.offices_names)}</span>
-              </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('SECTION')}</span>
+          (intervention: ListItemIntervention) =>
+            html` <etools-data-table-row
+              .lowResolutionLayout="${this.lowResolutionLayout}"
+              .detailsOpened="${this.detailsOpened}"
+            >
+              <div slot="row-data" class="p-relative">
+                <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
+                  <a
+                    class="text-btn-style pd-ref truncate"
+                    href="interventions/${intervention.id}/metadata"
+                    title="${this.getDisplayValue(intervention.number)}"
+                  >
+                    ${this.getDisplayValue(intervention.number)}
+                  </a>
+                </span>
                 <span
-                  >${this.getDisplayValue(
-                    intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
-                  )}</span
+                  class="col-data col-3"
+                  data-col-header-label="${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}"
+                  title="${this.getDisplayValue(intervention.partner_name)}"
                 >
-              </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('UNICEF_CASH_CONTRIBUTION')}</span>
-                <etools-info-tooltip
-                  class="fr-nr-warn
-                            ${this.getCurrencyMismatchClass(
-                    intervention.all_currencies_are_consistent
-                  )} interventions-list"
-                  icon-first
-                  custom-icon
-                  ?hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
-                    intervention.all_currencies_are_consistent,
-                    intervention.unicef_cash,
-                    intervention.frs_total_frs_amt,
-                    intervention as any
-                  )}"
+                  <span>${this.getDisplayValue(intervention.partner_name)}</span>
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
+                  ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
+                </span>
+                <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
+                  <div>${this.getStatusCellText(intervention)}</div>
+                </div>
+                <span
+                  class="col-data col-2 break-word"
+                  data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
+                  title="${this.getDisplayValue(intervention.title)}"
                 >
-                  <span slot="field">
-                    <span class="amount-currency">${intervention.budget_currency}</span>
-                    <span>${displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
-                  </span>
-                  <etools-icon
-                    name="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
-                    slot="custom-icon"
-                  ></etools-icon>
-                  <span slot="message">
-                    <span
-                      >${this.getIntListUnicefCashAmountTooltipMsg(
-                        intervention.all_currencies_are_consistent,
-                        intervention.fr_currencies_are_consistent
-                      )}</span
-                    >
-                  </span>
-                </etools-info-tooltip>
-              </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('TOTAL_BUDGET')}</span>
-                <span>
-                  <span class="amount-currency">${intervention.budget_currency}</span>
-                  <span>${displayCurrencyAmount(intervention.total_budget, '0.00')}</span>
+                  ${this.getDisplayValue(intervention.title)}
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
+                  <etools-info-tooltip
+                    class="fr-nr-warn"
+                    custom-icon
+                    icon-first
+                    ?hide-tooltip="${this._hideDateFrsWarningTooltip(
+                      intervention.start,
+                      intervention.frs_earliest_start_date!,
+                      intervention.status
+                    )}"
+                  >
+                    <span slot="field">${this.getDateDisplayValue(intervention.start)}</span>
+                    <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
+                    <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
+                  </etools-info-tooltip>
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
+                  <etools-info-tooltip
+                    class="fr-nr-warn"
+                    custom-icon
+                    icon-first
+                    ?hide-tooltip="${this._hideDateFrsWarningTooltip(
+                      intervention.end,
+                      intervention.frs_latest_end_date!,
+                      intervention.status
+                    )}"
+                  >
+                    <span slot="field">${this.getDateDisplayValue(intervention.end)}</span>
+                    <etools-icon name="not-equal" slot="custom-icon"></etools-icon>
+                    <span slot="message">${this.getFrsEndDateValidationMsg()}</span>
+                  </etools-info-tooltip>
                 </span>
               </div>
-            </div>
-          </etools-data-table-row>`
+
+              <div slot="row-data-details" class="p-relative">
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('OFFICES')}</span>
+                  <span>${this.getDisplayValue(intervention.offices_names)}</span>
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('SECTION')}</span>
+                  <span
+                    >${this.getDisplayValue(
+                      intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
+                    )}</span
+                  >
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('UNICEF_CASH_CONTRIBUTION')}</span>
+                  <etools-info-tooltip
+                    class="fr-nr-warn
+                            ${this.getCurrencyMismatchClass(
+                      intervention.all_currencies_are_consistent
+                    )} interventions-list"
+                    icon-first
+                    custom-icon
+                    ?hide-tooltip="${this.hideIntListUnicefCashAmountTooltip(
+                      intervention.all_currencies_are_consistent,
+                      intervention.unicef_cash,
+                      intervention.frs_total_frs_amt,
+                      intervention as any
+                    )}"
+                  >
+                    <span slot="field">
+                      <span class="amount-currency">${intervention.budget_currency}</span>
+                      <span>${displayCurrencyAmount(intervention.unicef_cash, '0.00')}</span>
+                    </span>
+                    <etools-icon
+                      name="${this.getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)}"
+                      slot="custom-icon"
+                    ></etools-icon>
+                    <span slot="message">
+                      <span
+                        >${this.getIntListUnicefCashAmountTooltipMsg(
+                          intervention.all_currencies_are_consistent,
+                          intervention.fr_currencies_are_consistent
+                        )}</span
+                      >
+                    </span>
+                  </etools-info-tooltip>
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('TOTAL_BUDGET')}</span>
+                  <span>
+                    <span class="amount-currency">${intervention.budget_currency}</span>
+                    <span>${displayCurrencyAmount(intervention.total_budget, '0.00')}</span>
+                  </span>
+                </div>
+              </div>
+            </etools-data-table-row>`
         )}
         <etools-data-table-footer
           .lowResolutionLayout="${this.lowResolutionLayout}"

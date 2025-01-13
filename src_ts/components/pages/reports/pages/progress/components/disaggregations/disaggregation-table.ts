@@ -9,7 +9,7 @@ import './table-content/zero-disaggregations';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.

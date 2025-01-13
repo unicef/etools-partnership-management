@@ -6,7 +6,9 @@ export const NewInterventionStyles: CSSResult = css`
     position: relative;
     display: block;
     background-color: var(--primary-background-color);
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.24),
+      0 0 2px rgba(0, 0, 0, 0.12);
     border-radius: 2px;
   }
 
