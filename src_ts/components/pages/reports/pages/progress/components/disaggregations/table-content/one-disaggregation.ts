@@ -4,7 +4,7 @@ import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 import '../../../components/report-status.js';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
 
 /**

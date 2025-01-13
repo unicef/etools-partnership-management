@@ -5,7 +5,7 @@ import {LitElement, PropertyValues} from 'lit';
 import {property} from 'lit/decorators.js';
 import {Status, StatusAction} from '../../../../typings/etools-status.types';
 import {Constructor} from '@unicef-polymer/etools-types';
-import {get as getTranslation, translate} from 'lit-translate';
+import {get as getTranslation, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';

@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import '../disaggregation-table-row';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

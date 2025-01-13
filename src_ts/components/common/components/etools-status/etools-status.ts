@@ -8,7 +8,7 @@ import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-pa
 import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -23,19 +23,20 @@ export class EtoolsStatus extends connect(store)(LitElement) {
       <etools-content-panel panel-title="${translate('STATUS')}">
         <div class="top-container">
           ${(this.availableStatuses || []).map(
-            (status, index) => html` <div class="divider-line"></div>
-              <div class="status-container ${this._getStatusCssClass(status, index)}">
-                <div class="status-icon">
-                  <span class="icon-wrapper" style="${status.iconContainerStyles}">
-                    <span>${this._getTrueIndex(index)}</span>
-                    <etools-icon class="done-icon" name="done"></etools-icon>
-                    <etools-icon class="custom-icon" name="${status.icon}" style="${status.iconStyles}"></etools-icon>
-                  </span>
-                </div>
-                <div class="status">
-                  <span>${status.label}</span>
-                </div>
-              </div>`
+            (status, index) =>
+              html` <div class="divider-line"></div>
+                <div class="status-container ${this._getStatusCssClass(status, index)}">
+                  <div class="status-icon">
+                    <span class="icon-wrapper" style="${status.iconContainerStyles}">
+                      <span>${this._getTrueIndex(index)}</span>
+                      <etools-icon class="done-icon" name="done"></etools-icon>
+                      <etools-icon class="custom-icon" name="${status.icon}" style="${status.iconStyles}"></etools-icon>
+                    </span>
+                  </div>
+                  <div class="status">
+                    <span>${status.label}</span>
+                  </div>
+                </div>`
           )}
         </div>
         <div class="bottom-container" ?hidden="${this.hideActions}">

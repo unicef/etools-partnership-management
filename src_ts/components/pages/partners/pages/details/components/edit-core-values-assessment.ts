@@ -9,7 +9,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
 
 /**

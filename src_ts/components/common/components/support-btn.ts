@@ -1,10 +1,8 @@
-/* eslint-disable lit/attribute-value-entities */
 import {css, CSSResult, html, LitElement, TemplateResult} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
-/* eslint-disable max-len */
 
 /**
  * @LitElement

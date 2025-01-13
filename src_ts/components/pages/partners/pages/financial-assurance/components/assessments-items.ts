@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
@@ -20,7 +19,7 @@ import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../.
 import {PartnerAssessment} from '../../../../../../models/partners.models';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import cloneDeep from 'lodash-es/cloneDeep.js';
 import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';

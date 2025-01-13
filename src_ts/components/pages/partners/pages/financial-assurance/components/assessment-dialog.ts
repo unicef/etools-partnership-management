@@ -22,7 +22,7 @@ import {LabelAndValue} from '@unicef-polymer/etools-types';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {SlCheckbox} from '@shoelace-style/shoelace';
 
 /**
@@ -146,7 +146,8 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 
   set dialogData(data: any) {
-    let {assessment, partnerId}: any = data;
+    const {assessment: assessmentData, partnerId}: any = data;
+    let assessment = assessmentData;
     if (!assessment) {
       assessment = new PartnerAssessment();
       assessment.partner = partnerId;

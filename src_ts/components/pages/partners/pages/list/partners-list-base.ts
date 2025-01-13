@@ -22,7 +22,7 @@ import {partnerStatusStyles} from '../../../../styles/partner-status-styles-lit'
 import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {Partner} from '../../../../../models/partners.models';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -167,88 +167,89 @@ export class PartnersListBase extends CommonMixin(
         </etools-data-table-header>
 
         ${this.filteredPartners.map(
-          (partner: Partner) => html` <etools-data-table-row
-            .lowResolutionLayout="${this.lowResolutionLayout}"
-            .detailsOpened="${this.detailsOpened}"
-          >
-            <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label="${translate('VENDOR_NO')}">
-                <a
-                  class="text-btn-style vendor-nr truncate"
-                  href="${this.currentModule}/${partner.id}/details"
-                  title="${this.getDisplayValue(partner.vendor_number, ',', false)}"
-                  @click="${this._triggerPartnerLoadingMsg}"
+          (partner: Partner) =>
+            html` <etools-data-table-row
+              .lowResolutionLayout="${this.lowResolutionLayout}"
+              .detailsOpened="${this.detailsOpened}"
+            >
+              <div slot="row-data">
+                <span class="col-data col-2" data-col-header-label="${translate('VENDOR_NO')}">
+                  <a
+                    class="text-btn-style vendor-nr truncate"
+                    href="${this.currentModule}/${partner.id}/details"
+                    title="${this.getDisplayValue(partner.vendor_number, ',', false)}"
+                    @click="${this._triggerPartnerLoadingMsg}"
+                  >
+                    ${this.getDisplayValue(partner.vendor_number, ',', false)}
+                  </a>
+                </span>
+                <span class="col-data col-5" data-col-header-label="${translate('NAME_SHORT_FULL')}">
+                  <span>${this._computeName(partner.name, partner.short_name)}</span>
+
+                  <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
+                    <etools-info-tooltip class="marked-for-deletion" custom-icon ?hidden="${!partner.deleted_flag}">
+                      <etools-icon name="delete" slot="custom-icon"></etools-icon>
+                      <span slot="message">${translate('MARKED_FOR_DELETION')}</span>
+                    </etools-info-tooltip>
+                  </span>
+
+                  <span class="sm-status-wrapper" ?hidden="${!partner.blocked}">
+                    <etools-info-tooltip class="blocked" custom-icon ?hidden="${!partner.blocked}">
+                      <etools-icon name="block" slot="custom-icon"></etools-icon>
+                      <span slot="message">${translate('BLOCKED')}</span>
+                    </etools-info-tooltip>
+                  </span>
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('PARTNER_TYPE')}">
+                  ${this._computeType(partner.cso_type, partner.partner_type)}
+                </span>
+                <span
+                  class="col-data col-1"
+                  data-col-header-label="${translate('HACT_RISK_RATING')}"
+                  style="text-transform: capitalize"
                 >
-                  ${this.getDisplayValue(partner.vendor_number, ',', false)}
-                </a>
-              </span>
-              <span class="col-data col-5" data-col-header-label="${translate('NAME_SHORT_FULL')}">
-                <span>${this._computeName(partner.name, partner.short_name)}</span>
-
-                <span class="sm-status-wrapper" ?hidden="${!partner.deleted_flag}">
-                  <etools-info-tooltip class="marked-for-deletion" custom-icon ?hidden="${!partner.deleted_flag}">
-                    <etools-icon name="delete" slot="custom-icon"></etools-icon>
-                    <span slot="message">${translate('MARKED_FOR_DELETION')}</span>
-                  </etools-info-tooltip>
+                  ${translateValue(
+                    this.getDisplayValue(partner.rating, ',', false) as string,
+                    'COMMON_DATA.PARTNERRISKRATINGS'
+                  )}
                 </span>
-
-                <span class="sm-status-wrapper" ?hidden="${!partner.blocked}">
-                  <etools-info-tooltip class="blocked" custom-icon ?hidden="${!partner.blocked}">
-                    <etools-icon name="block" slot="custom-icon"></etools-icon>
-                    <span slot="message">${translate('BLOCKED')}</span>
-                  </etools-info-tooltip>
+                <span
+                  class="col-data col-2"
+                  data-col-header-label="${translate('SEA_RISK_RATING')}"
+                  style="text-transform: capitalize"
+                >
+                  ${translateValue(
+                    this.getDisplayValue(partner.sea_risk_rating_name, ',', false) as string,
+                    'COMMON_DATA.SEARISKRATINGS'
+                  )}
                 </span>
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('PARTNER_TYPE')}">
-                ${this._computeType(partner.cso_type, partner.partner_type)}
-              </span>
-              <span
-                class="col-data col-1"
-                data-col-header-label="${translate('HACT_RISK_RATING')}"
-                style="text-transform: capitalize"
-              >
-                ${translateValue(
-                  this.getDisplayValue(partner.rating, ',', false) as string,
-                  'COMMON_DATA.PARTNERRISKRATINGS'
-                )}
-              </span>
-              <span
-                class="col-data col-2"
-                data-col-header-label="${translate('SEA_RISK_RATING')}"
-                style="text-transform: capitalize"
-              >
-                ${translateValue(
-                  this.getDisplayValue(partner.sea_risk_rating_name, ',', false) as string,
-                  'COMMON_DATA.SEARISKRATINGS'
-                )}
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
-                ${this.getDateDisplayValue(partner.psea_assessment_date)}
-              </span>
-            </div>
-            <div slot="row-data-details">
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('SHARED_PARTNER')}</span>
-                <span>${this.getDisplayValue(partner.shared_with, ',', false)}</span>
+                <span class="col-data col-1" data-col-header-label="${translate('LAST_PSEA_ASSESS_DATE')}">
+                  ${this.getDateDisplayValue(partner.psea_assessment_date)}
+                </span>
               </div>
-              <div class="row-details-content col-3">
-                <span class="rdc-title">${translate('EMAIL')}</span>
-                <span>${this.getDisplayValue(partner.email, ',', false)}</span>
+              <div slot="row-data-details">
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('SHARED_PARTNER')}</span>
+                  <span>${this.getDisplayValue(partner.shared_with, ',', false)}</span>
+                </div>
+                <div class="row-details-content col-3">
+                  <span class="rdc-title">${translate('EMAIL')}</span>
+                  <span>${this.getDisplayValue(partner.email, ',', false)}</span>
+                </div>
+                <div class="row-details-content col-1">
+                  <span class="rdc-title">${translate('PHONE_NUMBER')}</span>
+                  <span>${this.getDisplayValue(partner.phone_number, ',', false)}</span>
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CP')}</span>
+                  <span>$ ${displayCurrencyAmount(partner.total_ct_cp, '0')}</span>
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR')}</span>
+                  <span>$ ${displayCurrencyAmount(partner.total_ct_ytd, '0')}</span>
+                </div>
               </div>
-              <div class="row-details-content col-1">
-                <span class="rdc-title">${translate('PHONE_NUMBER')}</span>
-                <span>${this.getDisplayValue(partner.phone_number, ',', false)}</span>
-              </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CP')}</span>
-                <span>$ ${displayCurrencyAmount(partner.total_ct_cp, '0')}</span>
-              </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('ACTUAL_CASH_TRANSFER_FOR_CURRENT_YEAR')}</span>
-                <span>$ ${displayCurrencyAmount(partner.total_ct_ytd, '0')}</span>
-              </div>
-            </div>
-          </etools-data-table-row>`
+            </etools-data-table-row>`
         )}
 
         <etools-data-table-footer
