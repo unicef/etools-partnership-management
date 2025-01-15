@@ -124,21 +124,6 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
         </div>
 
         <a
-          class="nav-menu-item lighter-item no-transform"
-          href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
-          target="_blank"
-        >
-          <sl-tooltip
-            placement="right"
-            ?disabled="${!this.smallMenu}"
-            content="${translate('IMPLEMENTATION_INTELLIGENCE')}"
-          >
-            <etools-icon id="power-bi-icon" name="power-bi"></etools-icon>
-          </sl-tooltip>
-          <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
-        </a>
-
-        <a
           class="nav-menu-item lighter-item"
           href="http://etools.zendesk.com"
           target="_blank"
