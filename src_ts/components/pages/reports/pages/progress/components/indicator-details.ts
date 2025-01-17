@@ -12,7 +12,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../../../endpoints/endpoints.js';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 
@@ -44,7 +44,7 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
           --paper-tabs: {
             padding-inline-start: 13px;
             border-bottom: 1px solid var(--dark-divider-color);
-          }
+          };
         }
 
         :host([is-cluster-indicator]) {
@@ -120,14 +120,11 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
       ${!this.loading
         ? html`<sl-tab-group @sl-tab-show="${this.onSelectedTabChanged}">
             ${(this.locationData || []).map(
-              (topLevelLocation: any, index: number) => html` <sl-tab
-                slot="nav"
-                panel="tab_${index}"
-                ?active="${this.selectedTab === `tab_${index}`}"
-              >
-                <report-status .status="${this._computeLocationStatus(topLevelLocation)}" no-label></report-status>
-                ${topLevelLocation.title}
-              </sl-tab>`
+              (topLevelLocation: any, index: number) =>
+                html` <sl-tab slot="nav" panel="tab_${index}" ?active="${this.selectedTab === `tab_${index}`}">
+                  <report-status .status="${this._computeLocationStatus(topLevelLocation)}" no-label></report-status>
+                  ${topLevelLocation.title}
+                </sl-tab>`
             )}
           </sl-tab-group>`
         : ''}

@@ -15,7 +15,7 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles-
 import {validateRequiredFields} from '@unicef-polymer/etools-modules-common/dist/utils/validation-helper';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import CONSTANTS from '../../../../config/app-constants';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

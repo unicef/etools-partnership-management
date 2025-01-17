@@ -12,8 +12,8 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../redux/store';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {translate} from 'lit-translate';
-import {get as getTranslation} from 'lit-translate/util';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate/util';
 
 /**
  * @LitElement

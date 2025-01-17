@@ -10,7 +10,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-table/styles/data-table-styles';
 
 import '../../../../../common/components/icons-actions';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
 import {User} from '@unicef-polymer/etools-types/dist/user.types';
@@ -98,43 +98,44 @@ export class StaffMembers extends LitElement {
           </etools-data-table-header>
 
           ${this.dataItems?.map(
-            (item) => html`<etools-data-table-row
-              secondary-bg-on-hover
-              no-collapse
-              ?hidden="${!this._isVisible(item.has_active_realm, this.showInactive)}"
-              .lowResolutionLayout="${this.lowResolutionLayout}"
-            >
-              <div slot="row-data" class="p-relative">
-                <span class="col-data col-2" data-col-header-label="${translate('POSITION')}"
-                  >${this._displayValue(item.title)}</span
-                >
-                <span class="col-data col-2" data-col-header-label="${translate('FIRST_NAME')}"
-                  >${this._displayValue(item.first_name)}</span
-                >
-                <span class="col-data col-2" data-col-header-label="${translate('LAST_NAME')}"
-                  >${this._displayValue(item.last_name)}</span
-                >
-                <span class="col-data col-2" data-col-header-label="${translate('PHONE_NUMBER')}"
-                  >${this._displayValue(item.phone)}</span
-                >
-                <span class="col-data col-2" data-col-header-label="${translate('EMAIL_ADDRESS')}"
-                  >${this._displayValue(item.email)}</span
-                >
-                <span
-                  class="col-data col-2 ${!this.lowResolutionLayout ? 'center-align' : ''}"
-                  data-col-header-label="${translate('ACTIVE_STAFF')}"
-                >
-                  <span ?hidden="${item.has_active_realm}" class="placeholder-style"
-                    >${!item.active
-                      ? translate('INACTIVE')
-                      : !item.has_active_realm
-                      ? translate('NO_ACCESS')
-                      : ''}</span
+            (item) =>
+              html`<etools-data-table-row
+                secondary-bg-on-hover
+                no-collapse
+                ?hidden="${!this._isVisible(item.has_active_realm, this.showInactive)}"
+                .lowResolutionLayout="${this.lowResolutionLayout}"
+              >
+                <div slot="row-data" class="p-relative">
+                  <span class="col-data col-2" data-col-header-label="${translate('POSITION')}"
+                    >${this._displayValue(item.title)}</span
                   >
-                  <etools-icon name="check" ?hidden="${!item.has_active_realm}"></etools-icon>
-                </span>
-              </div>
-            </etools-data-table-row>`
+                  <span class="col-data col-2" data-col-header-label="${translate('FIRST_NAME')}"
+                    >${this._displayValue(item.first_name)}</span
+                  >
+                  <span class="col-data col-2" data-col-header-label="${translate('LAST_NAME')}"
+                    >${this._displayValue(item.last_name)}</span
+                  >
+                  <span class="col-data col-2" data-col-header-label="${translate('PHONE_NUMBER')}"
+                    >${this._displayValue(item.phone)}</span
+                  >
+                  <span class="col-data col-2" data-col-header-label="${translate('EMAIL_ADDRESS')}"
+                    >${this._displayValue(item.email)}</span
+                  >
+                  <span
+                    class="col-data col-2 ${!this.lowResolutionLayout ? 'center-align' : ''}"
+                    data-col-header-label="${translate('ACTIVE_STAFF')}"
+                  >
+                    <span ?hidden="${item.has_active_realm}" class="placeholder-style"
+                      >${!item.active
+                        ? translate('INACTIVE')
+                        : !item.has_active_realm
+                          ? translate('NO_ACCESS')
+                          : ''}</span
+                    >
+                    <etools-icon name="check" ?hidden="${!item.has_active_realm}"></etools-icon>
+                  </span>
+                </div>
+              </etools-data-table-row>`
           )}
         </div>
 

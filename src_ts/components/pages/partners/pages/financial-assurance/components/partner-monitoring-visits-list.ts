@@ -14,7 +14,7 @@ import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styl
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEndpoints from '../../../../../endpoints/endpoints';
 import {repeat} from 'lit/directives/repeat.js';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import dayjs from 'dayjs';
 
 /**
@@ -85,104 +85,106 @@ export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixi
 
           ${repeat(
             this.monitoringVisits || [],
-            (visit: any) => html` <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
-              <div slot="row-data">
-                <span class="col-data col-2" data-col-header-label="${translate('REFERENCE')}">
-                  <a
-                    class="truncate"
-                    href="/t2f/edit-travel/${visit.trip_id}"
-                    title="${visit.reference_number}"
-                    target="_blank"
+            (visit: any) =>
+              html` <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
+                <div slot="row-data">
+                  <span class="col-data col-2" data-col-header-label="${translate('REFERENCE')}">
+                    <a
+                      class="truncate"
+                      href="/t2f/edit-travel/${visit.trip_id}"
+                      title="${visit.reference_number}"
+                      target="_blank"
+                    >
+                      ${visit.reference_number}
+                    </a>
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('TRAVELER')}"
+                    title="${visit.primary_traveler}"
                   >
-                    ${visit.reference_number}
-                  </a>
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('TRAVELER')}"
-                  title="${visit.primary_traveler}"
-                >
-                  <span class="truncate"> ${visit.primary_traveler} </span>
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('TRAVEL_TYPE')}"
-                  title="${visit.travel_type}"
-                  >${visit.travel_type}</span
-                >
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('END_DATE')}"
-                  title="${this.getDateDisplayValue(visit.travel_latest_date)}"
-                >
-                  ${this.getDateDisplayValue(visit.travel_latest_date)}
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('LOCATIONS')}"
-                  title="${this.getDisplayValue(visit.locations)}"
-                >
-                  ${this.getDisplayValue(visit.locations)}
-                </span>
-                <span
-                  class="col-data col-2 capitalize"
-                  data-col-header-label="${translate('STATUS')}"
-                  title="${visit.status}"
-                  >${visit.status}</span
-                >
-              </div>
-            </etools-data-table-row>`
+                    <span class="truncate"> ${visit.primary_traveler} </span>
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('TRAVEL_TYPE')}"
+                    title="${visit.travel_type}"
+                    >${visit.travel_type}</span
+                  >
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('END_DATE')}"
+                    title="${this.getDateDisplayValue(visit.travel_latest_date)}"
+                  >
+                    ${this.getDateDisplayValue(visit.travel_latest_date)}
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('LOCATIONS')}"
+                    title="${this.getDisplayValue(visit.locations)}"
+                  >
+                    ${this.getDisplayValue(visit.locations)}
+                  </span>
+                  <span
+                    class="col-data col-2 capitalize"
+                    data-col-header-label="${translate('STATUS')}"
+                    title="${visit.status}"
+                    >${visit.status}</span
+                  >
+                </div>
+              </etools-data-table-row>`
           )}
           ${repeat(
             this.tpmActivities || [],
-            (visit: any) => html` <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
-              <div slot="row-data">
-                <span class="col-data col-2" data-col-header-label="${translate('REFERENCE')}">
-                  <a
-                    class="truncate"
-                    href="/tpm/visits/${visit.tpm_visit}/details"
-                    title="${visit.visit_reference}"
-                    target="_blank"
+            (visit: any) =>
+              html` <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
+                <div slot="row-data">
+                  <span class="col-data col-2" data-col-header-label="${translate('REFERENCE')}">
+                    <a
+                      class="truncate"
+                      href="/tpm/visits/${visit.tpm_visit}/details"
+                      title="${visit.visit_reference}"
+                      target="_blank"
+                    >
+                      ${visit.visit_reference}
+                    </a>
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('TRAVELER')}"
+                    title="${visit.tpm_partner_name}"
                   >
-                    ${visit.visit_reference}
-                  </a>
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('TRAVELER')}"
-                  title="${visit.tpm_partner_name}"
-                >
-                  <span class="truncate"> ${visit.tpm_partner_name} </span>
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('TRAVEL_TYPE')}"
-                  title="${this.getDisplayType(visit.is_pv)}"
-                >
-                  ${this.getDisplayType(visit.is_pv)}
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('END_DATE')}"
-                  title="${this.getDateDisplayValue(visit.date)}"
-                >
-                  ${this.getDateDisplayValue(visit.date)}
-                </span>
-                <span
-                  class="col-data col-2"
-                  data-col-header-label="${translate('LOCATIONS')}"
-                  title="${this.getLocNames(visit.locations_details)}"
-                >
-                  ${this.getLocNames(visit.locations_details)}
-                </span>
-                <span
-                  class="col-data col-2 capitalize"
-                  data-col-header-label="${translate('STATUS')}"
-                  title="${visit.status}"
-                  >${visit.status}</span
-                >
-              </div>
-            </etools-data-table-row>`
+                    <span class="truncate"> ${visit.tpm_partner_name} </span>
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('TRAVEL_TYPE')}"
+                    title="${this.getDisplayType(visit.is_pv)}"
+                  >
+                    ${this.getDisplayType(visit.is_pv)}
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('END_DATE')}"
+                    title="${this.getDateDisplayValue(visit.date)}"
+                  >
+                    ${this.getDateDisplayValue(visit.date)}
+                  </span>
+                  <span
+                    class="col-data col-2"
+                    data-col-header-label="${translate('LOCATIONS')}"
+                    title="${this.getLocNames(visit.locations_details)}"
+                  >
+                    ${this.getLocNames(visit.locations_details)}
+                  </span>
+                  <span
+                    class="col-data col-2 capitalize"
+                    data-col-header-label="${translate('STATUS')}"
+                    title="${visit.status}"
+                    >${visit.status}</span
+                  >
+                </div>
+              </etools-data-table-row>`
           )}
         </div>
         <div

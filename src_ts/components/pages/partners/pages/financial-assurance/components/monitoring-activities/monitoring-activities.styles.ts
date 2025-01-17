@@ -8,7 +8,7 @@ export const monitoringActivitiesStyles = html`<style>
     --paper-input-container-input-webkit-spinner: {
       -webkit-appearance: none;
       margin: 0;
-    }
+    };
   }
 
   etools-content-panel::part(ecp-content) {

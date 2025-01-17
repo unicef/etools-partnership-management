@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 
@@ -31,7 +30,11 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data';
 import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {translate, get as getTranslation, listenForLangChanged} from 'lit-translate';
+import {
+  translate,
+  get as getTranslation,
+  listenForLangChanged
+} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
 import './pages/list/partners-list';
@@ -56,7 +59,6 @@ export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   MatomoMixin(
     CommonMixinLit(
-      // eslint-disable-next-line new-cap
       ScrollControlMixinLit(
         ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
       )

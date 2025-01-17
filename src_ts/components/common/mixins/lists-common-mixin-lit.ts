@@ -6,7 +6,7 @@ import get from 'lodash-es/get';
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {EtoolsDataTableRow} from '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table-row';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {AnyObject} from '@unicef-polymer/etools-types/dist/global.types';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 

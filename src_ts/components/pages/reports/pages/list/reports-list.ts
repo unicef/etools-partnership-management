@@ -32,7 +32,7 @@ import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import {langChanged, translate} from 'lit-translate';
+import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import dayjs from 'dayjs';
@@ -63,7 +63,7 @@ class ReportsList extends connect(store)(
             text-align: center;
             line-height: 1.4;
             font-size: var(--etools-font-size-12, 12px);
-          }
+          };
         }
 
         .pd-ref,
@@ -167,60 +167,61 @@ class ReportsList extends connect(store)(
               </etools-data-table-header>
 
               ${this.reports.map(
-                (report: any) => html` <etools-data-table-row .lowResolutionLayout="${this.lowResolutionLayout}">
-                  <div slot="row-data">
-                    <span class="col-data col-2" data-col-header-label="${translate('REPORT_NUM')}">
-                      <sl-tooltip content="${report.programme_document.title}" placement="right">
-                        <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
-                          <a
-                            class="view-report"
-                            href="reports/${report.id}/progress"
-                            ?hidden="${!this._canViewReport(report.status)}"
-                          >
-                            ${this._getReportTitle(report)}
-                          </a>
-                          <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
-                          ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
-                        </span>
-                      </sl-tooltip>
-                    </span>
-                    <span class="col-data col-3" data-col-header-label="${translate('PARTNER')}">
-                      <sl-tooltip content="${report.partner_vendor_number}" placement="right">
-                        <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
-                          ${this._displayOrDefault(report.partner_name)}
-                        </span>
-                      </sl-tooltip>
-                    </span>
-                    <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
-                      <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
-                    </span>
-                    <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
-                      ${this._displayOrDefault(formatDateLocalized(report.due_date))}
-                    </span>
-                    <span class="col-data col-2" data-col-header-label="${translate('REPORTING_PERIOD')}">
-                      ${this.displayLocalizedReportingPeriod(report.reporting_period)}
-                    </span>
+                (report: any) =>
+                  html` <etools-data-table-row .lowResolutionLayout="${this.lowResolutionLayout}">
+                    <div slot="row-data">
+                      <span class="col-data col-2" data-col-header-label="${translate('REPORT_NUM')}">
+                        <sl-tooltip content="${report.programme_document.title}" placement="right">
+                          <span id="tooltip-trigger-${report.id}" class="tooltip-trigger">
+                            <a
+                              class="view-report"
+                              href="reports/${report.id}/progress"
+                              ?hidden="${!this._canViewReport(report.status)}"
+                            >
+                              ${this._getReportTitle(report)}
+                            </a>
+                            <span ?hidden="${this._canViewReport(report.status)}">${this._getReportTitle(report)}</span>
+                            ${report.is_final ? html`<span class="final-badge">${translate('FINAL')}</span>` : ``}
+                          </span>
+                        </sl-tooltip>
+                      </span>
+                      <span class="col-data col-3" data-col-header-label="${translate('PARTNER')}">
+                        <sl-tooltip content="${report.partner_vendor_number}" placement="right">
+                          <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
+                            ${this._displayOrDefault(report.partner_name)}
+                          </span>
+                        </sl-tooltip>
+                      </span>
+                      <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
+                        <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
+                      </span>
+                      <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
+                        ${this._displayOrDefault(formatDateLocalized(report.due_date))}
+                      </span>
+                      <span class="col-data col-2" data-col-header-label="${translate('REPORTING_PERIOD')}">
+                        ${this.displayLocalizedReportingPeriod(report.reporting_period)}
+                      </span>
 
-                    ${!this.noPdSsfaRef
-                      ? html` <span class="col-data col-3" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
-                          <a
-                            class="pd-ref truncate"
-                            href="interventions/${report.programme_document?.external_id}/reports"
-                            title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
-                          >
-                            ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
-                          </a>
-                        </span>`
-                      : ``}
-                  </div>
-
-                  <div slot="row-data-details">
-                    <div class="row-details-content">
-                      <span class="rdc-title flex-c">${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}</span>
-                      <span>${this.getDisplayValue(report.unicef_focal_points, ', ', false)}</span>
+                      ${!this.noPdSsfaRef
+                        ? html` <span class="col-data col-3" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
+                            <a
+                              class="pd-ref truncate"
+                              href="interventions/${report.programme_document?.external_id}/reports"
+                              title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
+                            >
+                              ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
+                            </a>
+                          </span>`
+                        : ``}
                     </div>
-                  </div>
-                </etools-data-table-row>`
+
+                    <div slot="row-data-details">
+                      <div class="row-details-content">
+                        <span class="rdc-title flex-c">${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}</span>
+                        <span>${this.getDisplayValue(report.unicef_focal_points, ', ', false)}</span>
+                      </div>
+                    </div>
+                  </etools-data-table-row>`
               )}
               <etools-data-table-footer
                 .lowResolutionLayout="${this.lowResolutionLayout}"

@@ -8,7 +8,7 @@ import '../../../../common/components/etools-status/etools-status-common-mixin-l
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import '../../data/agreement-termination';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {get as getTranslation, listenForLangChanged} from 'lit-translate';
+import {get as getTranslation, listenForLangChanged} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 /**
