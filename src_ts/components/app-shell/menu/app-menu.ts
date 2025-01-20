@@ -99,11 +99,11 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
             menu-name="gpd-interventions"
             href="${Environment.basePath}gpd-interventions/list"
           >
-            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GDDS')}">
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GPD')}">
               <etools-icon id="interventions-icon" name="description"></etools-icon>
             </sl-tooltip>
 
-            <div class="name">${translate('GDDS')}</div>
+            <div class="name">${translate('GPD')}</div>
           </a>
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"

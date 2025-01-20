@@ -649,7 +649,7 @@
   "NO_REPORTING_PERIOD": "فترة تقرير غير متاحة",
   "ACHIEVED_AS_PLANNED": "تحقق كما هو مخطط",
   "NOT_ACHIEVED_AS_PLANNED": "لم يتحقق كما هو مخطط",
-  "GDDS": "GPDs",
+  "GPD": "GPD",
   "GDD_LIST": {
     "NAME": "وثيقة برنامج الحكومة",
     "ADD_NEW_GDD": "إضافة GPD جديد",
@@ -657,6 +657,6 @@
     "GOVERNMENT_ORG_NAME": "اسم المنظمة الحكومية"
   },
   "NEW_GDD": {
-    "GOVERNMENT": "الحكومة"
+    "GOVERNMENT": "الجهة الحكومية"
   }
 }

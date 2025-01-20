@@ -35,7 +35,7 @@ import {
   GDDInterventionFilterKeys,
   GDDInterventionsFiltersHelper
 } from './gdd-interventions-filters';
-import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
+import {govPartnersSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
@@ -307,9 +307,6 @@ export class GddInterventionsList extends connect(store)(
   @property({type: Array})
   filteredInterventions: GDDListItem[] = [];
 
-  @property({type: Array})
-  partners = [];
-
   @property({type: Boolean})
   listLoadingActive = false;
 
@@ -440,7 +437,7 @@ export class GddInterventionsList extends connect(store)(
       [GDDInterventionFilterKeys.offices, state.commonData!.offices],
       [GDDInterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
       [GDDInterventionFilterKeys.donors, state.commonData!.donors],
-      [GDDInterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
+      [GDDInterventionFilterKeys.partners, govPartnersSelector(state)],
       [GDDInterventionFilterKeys.grants, state.commonData!.grants],
       [GDDInterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
       [GDDInterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
@@ -453,7 +450,6 @@ export class GddInterventionsList extends connect(store)(
         ]
       ]
     ].forEach(([key, data]) => GDDInterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
-    this.partners = partnersDropdownDataSelector(state);
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {

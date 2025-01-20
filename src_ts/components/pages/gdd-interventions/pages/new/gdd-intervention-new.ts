@@ -1,6 +1,6 @@
 /* eslint no-invalid-this: 0 */
 import {LitElement, CSSResultArray, TemplateResult} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
@@ -21,6 +21,8 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {getEWorkPlan} from '../intervention-tab-pages/common/actions/gddInterventions';
 import {EWorkPlan} from '../intervention-tab-pages/common/types/store.types';
+import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
+import dayjs from 'dayjs';
 
 @customElement('gdd-intervention-new')
 export class GddInterventionNew extends connect(store)(LitElement) {
@@ -51,6 +53,8 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
   @property({type: Array}) allEWorkplans!: EWorkPlan[];
+  @state() minDate = new Date();
+  @state() user: any;
 
   @property() partnerStaffMembers: PartnerStaffMember[] = [];
   get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
@@ -95,6 +99,9 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   }
 
   stateChanged(state: RootState): void {
+    if (!isJsonStrMatch(this.user, state.user?.data)) {
+      this.user = cloneDeep(state.user?.data);
+    }
     if (!isJsonStrMatch(this.agreementsList, state.agreements!.list)) {
       this.agreementsList = [...state.agreements!.list] as unknown as StaticAgreement[];
     }
@@ -162,6 +169,14 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     setTimeout(() => {
       this.populateEWorkplans();
     }, 100);
+  }
+
+  getDefaultTitle(intervention: Partial<GDD>) {
+    if (!this.selectedPartner?.name || !this.newIntervention.reference_number_year) {
+      return ``;
+    }
+    // eslint-disable-next-line max-len
+    return `${this.selectedPartner!.name} - UNICEF - ${this.user.country.name} Programme Document ${intervention.reference_number_year}`;
   }
 
   documentTypeChanged(type: string): void {
@@ -258,7 +273,9 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   getDefaultNewIntervention() {
     return {
       reference_number_year: `${new Date().getFullYear()}`,
-      planned_budget: {currency: 'USD'}
+      planned_budget: {currency: 'USD'},
+      start: dayjs(new Date()).format('YYYY-MM-DD'),
+      end: dayjs(new Date(new Date().getFullYear(), 11, 31)).format('YYYY-MM-DD')
     };
   }
 

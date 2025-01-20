@@ -5,6 +5,7 @@ import {GddInterventionNew} from './gdd-intervention-new';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';
+import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/info-icon-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi';
@@ -83,7 +84,7 @@ export function template(this: GddInterventionNew): TemplateResult {
         <div class="col-md-6 col-lg-4 col-12">
           <etools-dropdown
             id="agreements"
-            label=${translate('AGREEMENT')}
+            label=${translate('NEW_GDD.AGREEMENT')}
             placeholder="&#8212;"
             .readonly="${!this.newIntervention?.partner}"
             .options="${this.filteredAgreements}"
@@ -148,6 +149,7 @@ export function template(this: GddInterventionNew): TemplateResult {
           <datepicker-lite
             id="startDate"
             label=${translate('NEW_GDD.START_DATE_ESTIMATED')}
+            .minDate="${this.minDate}"
             .value="${this.newIntervention.start}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -161,6 +163,7 @@ export function template(this: GddInterventionNew): TemplateResult {
           <datepicker-lite
             id="endDate"
             label=${translate('NEW_GDD.END_DATE_ESTIMATED')}
+            .minDate="${this.minDate}"
             .value="${this.newIntervention.end}"
             fire-date-has-changed
             @date-has-changed="${({detail}: CustomEvent) =>
@@ -220,7 +223,9 @@ export function template(this: GddInterventionNew): TemplateResult {
             placeholder="&#8212;"
             required
             error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
-            .value="${this.newIntervention?.title ? this.newIntervention?.title : ''}"
+            .value="${this.newIntervention?.title
+              ? this.newIntervention?.title
+              : this.getDefaultTitle(this.newIntervention)}"
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
             @click="${this.resetError}"

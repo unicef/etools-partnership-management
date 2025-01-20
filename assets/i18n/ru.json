@@ -649,7 +649,7 @@
   "NO_REPORTING_PERIOD": "Нет периода отчетности",
   "ACHIEVED_AS_PLANNED": "Достигнуто по плану",
   "NOT_ACHIEVED_AS_PLANNED": "Не достигнуто по плану",
-  "GDDS": "GPDs",
+  "GPD": "GPD",
   "GDD_LIST": {
     "NAME": "Документ правительственной программы",
     "ADD_NEW_GDD": "Добавить новый GPD",
@@ -657,6 +657,6 @@
     "GOVERNMENT_ORG_NAME": "Название правительственной организации"
   },
   "NEW_GDD": {
-    "GOVERNMENT": "Правительство"
+    "GOVERNMENT": "Государственное учреждение"
   }
 }
