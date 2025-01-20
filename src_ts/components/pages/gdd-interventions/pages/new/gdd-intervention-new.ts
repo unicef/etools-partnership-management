@@ -15,7 +15,7 @@ import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-re
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, GDD, AsyncAction, AnyObject} from '@unicef-polymer/etools-types';
 import orderBy from 'lodash-es/orderBy';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
@@ -120,7 +120,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       this.currencies = [...state.commonData!.currencies];
     }
     if (!isJsonStrMatch(this.allEWorkplans, state.gddInterventions?.eWorkPlans)) {
-      this.allEWorkplans = [...state.gddInterventions?.eWorkPlans];
+      this.allEWorkplans = [...state.gddInterventions.eWorkPlans];
 
       this.populateEWorkplans();
     }

@@ -18,7 +18,7 @@ import {property} from 'lit/decorators.js';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 // TODO change this import after intervention tab pages location is changed
 import {setShouldReGetList} from '../pages/intervention-tab-pages/common/actions/gddInterventions';
 

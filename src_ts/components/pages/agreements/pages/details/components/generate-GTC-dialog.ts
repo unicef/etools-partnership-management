@@ -5,7 +5,8 @@ import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-import {translate, get as getTranslation, translateUnsafeHTML} from 'lit-translate';
+// @dci check GTC_TERMS_AND_CONDITIONS import {translateUnsafeHTML} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 
@@ -42,7 +43,7 @@ export class GenerateGtcDialog extends LitElement {
         @confirm-btn-clicked="${this._onConfirm}"
       >
         <div>
-          <div class="terms_wrapper">${translateUnsafeHTML('GTC_TERMS_AND_CONDITIONS')}</div>
+          <div class="terms_wrapper">${translate('GTC_TERMS_AND_CONDITIONS')}</div>
           <div class="layout-horizontal flex-c">
             <div class="col col-12">
               <etools-checkbox

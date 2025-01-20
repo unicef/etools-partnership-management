@@ -27,7 +27,7 @@ import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import pmpEdpoints from '../../endpoints/endpoints';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
