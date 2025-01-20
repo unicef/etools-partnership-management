@@ -71,7 +71,12 @@ import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-compari
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import {registerTranslateConfig, use, translate, get as getTranslation} from 'lit-translate';
+import {
+  registerTranslateConfig,
+  use,
+  translate,
+  get as getTranslation
+} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, query, state} from 'lit/decorators.js';
@@ -115,10 +120,7 @@ initializeIcons();
  * @appliesMixin UtilsMixin
  */
 class AppShell extends connect(store)(
-  UploadsMixin(
-    // eslint-disable-next-line new-cap
-    ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement)))))
-  )
+  UploadsMixin(ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement))))))
 ) {
   render() {
     // main template
@@ -138,7 +140,7 @@ class AppShell extends connect(store)(
 
       <app-drawer-layout
         id="layout"
-        responsive-width="850px"
+        responsive-width="880px"
         fullbleed
         ?narrow="${this.narrow}"
         ?small-menu="${this.smallMenu}"
@@ -346,7 +348,7 @@ class AppShell extends connect(store)(
     }
 
     // Override ajax error parser inside @unicef-polymer/etools-utils/dist/etools-ajax
-    // for string translation using lit-translate
+    // for string translation using @unicef-polymer/etools-unicef/src/etools-translate
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);
     };

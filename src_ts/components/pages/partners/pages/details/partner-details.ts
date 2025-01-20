@@ -1,4 +1,3 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
@@ -32,7 +31,7 @@ import {Partner} from '../../../../../models/partners.models';
 import {LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -296,40 +295,41 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
           </etools-data-table-header>
 
           ${this.partner?.core_values_assessments?.map(
-            (item: any) => html` <etools-data-table-row
-              no-collapse
-              ?secondary-bg-on-hover="${this._canEditCVA(item.attachment, item.archived)}"
-              ?hidden="${!this._shouldShowCVA(item.archived, this.showArchivedAssessments)}"
-              .lowResolutionLayout="${this.lowResolutionLayout}"
-            >
-              <div slot="row-data" class="p-relative">
-                <span
-                  class="col-data col-4"
-                  data-col-header-label="${translate('DATE_LAST_ASSESSED')} ${translate('FROM_VISION')}"
-                >
-                  <span ?hidden="${this._isEmptyDate(item.date)}">${this.getDateDisplayValue(item.date)}</span>
-                  <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
-                </span>
-                <span class="col-data col-6" data-col-header-label="${translate('CORE_VALUES_ASSESSMENTS')}">
-                  <etools-icon name="attachment" ?hidden="${!item.attachment}"></etools-icon>
-                  <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
-                  <a class="cvs-file" href="${item.attachment}" target="_blank" download
-                    >${this.getFileNameFromURL(item.attachment)}</a
+            (item: any) =>
+              html` <etools-data-table-row
+                no-collapse
+                ?secondary-bg-on-hover="${this._canEditCVA(item.attachment, item.archived)}"
+                ?hidden="${!this._shouldShowCVA(item.archived, this.showArchivedAssessments)}"
+                .lowResolutionLayout="${this.lowResolutionLayout}"
+              >
+                <div slot="row-data" class="p-relative">
+                  <span
+                    class="col-data col-4"
+                    data-col-header-label="${translate('DATE_LAST_ASSESSED')} ${translate('FROM_VISION')}"
                   >
-                </span>
-                <span class="col-data col-2" data-col-header-label="${translate('ARCHIVED')}">
-                  <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
-                  <etools-icon name="check" ?hidden="${!item.archived}"></etools-icon>
-                </span>
-                <icons-actions2
-                  .item="${item}"
-                  .showEdit="${this._canEditCVA(item.attachment, item.archived)}"
-                  .showDelete="${this.showDelete}"
-                  @edit="${this._editCoreValuesAssessment}"
-                >
-                </icons-actions2>
-              </div>
-            </etools-data-table-row>`
+                    <span ?hidden="${this._isEmptyDate(item.date)}">${this.getDateDisplayValue(item.date)}</span>
+                    <span ?hidden="${!this._isEmptyDate(item.date)}" class="placeholder-style">&#8212;</span>
+                  </span>
+                  <span class="col-data col-6" data-col-header-label="${translate('CORE_VALUES_ASSESSMENTS')}">
+                    <etools-icon name="attachment" ?hidden="${!item.attachment}"></etools-icon>
+                    <span ?hidden="${item.attachment}" class="placeholder-style">&#8212;</span>
+                    <a class="cvs-file" href="${item.attachment}" target="_blank" download
+                      >${this.getFileNameFromURL(item.attachment)}</a
+                    >
+                  </span>
+                  <span class="col-data col-2" data-col-header-label="${translate('ARCHIVED')}">
+                    <span ?hidden="${item.archived}" class="placeholder-style">&#8212;</span>
+                    <etools-icon name="check" ?hidden="${!item.archived}"></etools-icon>
+                  </span>
+                  <icons-actions2
+                    .item="${item}"
+                    .showEdit="${this._canEditCVA(item.attachment, item.archived)}"
+                    .showDelete="${this.showDelete}"
+                    @edit="${this._editCoreValuesAssessment}"
+                  >
+                  </icons-actions2>
+                </div>
+              </etools-data-table-row>`
           )}
         </div>
         <div class="row no-data" ?hidden="${this._shouldDisplayCVAList()}">

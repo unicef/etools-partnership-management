@@ -29,7 +29,7 @@ import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partne
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
@@ -158,58 +158,59 @@ export class AgreementsList extends connect(store)(
         </etools-data-table-header>
 
         ${this.filteredAgreements.map(
-          (agreement: any) => html` <etools-data-table-row
-            .lowResolutionLayout="${this.lowResolutionLayout}"
-            .detailsOpened="${this.detailsOpened}"
-          >
-            <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
-                <a
-                  class="text-btn-style ag-ref truncate"
-                  href="agreements/${agreement.id}/details"
-                  title="${this.getDisplayValue(agreement.agreement_number, ',', false)}"
-                  @click="${this._triggerAgreementLoadingMsg}"
+          (agreement: any) =>
+            html` <etools-data-table-row
+              .lowResolutionLayout="${this.lowResolutionLayout}"
+              .detailsOpened="${this.detailsOpened}"
+            >
+              <div slot="row-data">
+                <span class="col-data col-2" data-col-header-label="${translate('AGREEMENT_REFERENCE_NUMBER')}">
+                  <a
+                    class="text-btn-style ag-ref truncate"
+                    href="agreements/${agreement.id}/details"
+                    title="${this.getDisplayValue(agreement.agreement_number, ',', false)}"
+                    @click="${this._triggerAgreementLoadingMsg}"
+                  >
+                    ${this.getDisplayValue(agreement.agreement_number, ',', false)}
+                  </a>
+                </span>
+                <span
+                  class="col-data col-6"
+                  data-col-header-label="${translate('PARTNER_FULL_NAME')}"
+                  title="${this.getDisplayValue(agreement.partner_name, ',', false)}"
                 >
-                  ${this.getDisplayValue(agreement.agreement_number, ',', false)}
-                </a>
-              </span>
-              <span
-                class="col-data col-6"
-                data-col-header-label="${translate('PARTNER_FULL_NAME')}"
-                title="${this.getDisplayValue(agreement.partner_name, ',', false)}"
-              >
-                <span> ${this.getDisplayValue(agreement.partner_name, ',', false)} </span>
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('TYPE')}">
-                ${translateValue(
-                  this.getDisplayValue(agreement.agreement_type, ',', false) as string,
-                  'AGREEMENT_TYPES'
-                )}
-              </span>
-              <span class="col-data col-1 capitalize" data-col-header-label="${translate('STATUS')}">
-                ${translateValue(
-                  this.getDisplayValue(agreement.status, ',', false) as string,
-                  'COMMON_DATA.AGREEMENTSTATUSES'
-                )}
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('START_DATE')}">
-                ${this._checkAndShowAgreementDate(agreement.start)}
-              </span>
-              <span class="col-data col-1" data-col-header-label="${translate('END_DATE')}">
-                ${this._checkAndShowAgreementDate(agreement.end)}
-              </span>
-            </div>
-            <div slot="row-data-details">
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('SIGNED_BY_PARTNER_DATE')}</span>
-                <span>${this._checkAndShowAgreementDate(agreement.signed_by_partner_date)}</span>
+                  <span> ${this.getDisplayValue(agreement.partner_name, ',', false)} </span>
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('TYPE')}">
+                  ${translateValue(
+                    this.getDisplayValue(agreement.agreement_type, ',', false) as string,
+                    'AGREEMENT_TYPES'
+                  )}
+                </span>
+                <span class="col-data col-1 capitalize" data-col-header-label="${translate('STATUS')}">
+                  ${translateValue(
+                    this.getDisplayValue(agreement.status, ',', false) as string,
+                    'COMMON_DATA.AGREEMENTSTATUSES'
+                  )}
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('START_DATE')}">
+                  ${this._checkAndShowAgreementDate(agreement.start)}
+                </span>
+                <span class="col-data col-1" data-col-header-label="${translate('END_DATE')}">
+                  ${this._checkAndShowAgreementDate(agreement.end)}
+                </span>
               </div>
-              <div class="row-details-content col-2">
-                <span class="rdc-title">${translate('SIGNED_BY_UNICEF_DATE')}</span>
-                <span>${this._checkAndShowAgreementDate(agreement.signed_by_unicef_date)}</span>
+              <div slot="row-data-details">
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('SIGNED_BY_PARTNER_DATE')}</span>
+                  <span>${this._checkAndShowAgreementDate(agreement.signed_by_partner_date)}</span>
+                </div>
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">${translate('SIGNED_BY_UNICEF_DATE')}</span>
+                  <span>${this._checkAndShowAgreementDate(agreement.signed_by_unicef_date)}</span>
+                </div>
               </div>
-            </div>
-          </etools-data-table-row>`
+            </etools-data-table-row>`
         )}
         <etools-data-table-footer
           .lowResolutionLayout="${this.lowResolutionLayout}"

@@ -13,7 +13,7 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import pmpEdpoints from '../../../endpoints/endpoints';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /*
   status: 'accepted'/'sent back'

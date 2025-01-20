@@ -8,7 +8,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-/* eslint-disable new-cap */
+
 class EtoolsErrorMessagesBox extends LitElement {
   render() {
     // language=HTML

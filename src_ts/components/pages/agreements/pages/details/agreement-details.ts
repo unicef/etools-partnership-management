@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
@@ -45,7 +44,7 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdow
 import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import get from 'lodash-es/get';
@@ -79,7 +78,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           width: 100%;
           --esmm-list-wrapper: {
             max-height: 400px;
-          }
+          };
         }
 
         .type-warning {

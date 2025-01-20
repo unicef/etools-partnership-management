@@ -62,7 +62,7 @@ function ScrollControlMixinLit<T extends Constructor<LitElement>>(baseClass: T) 
           .querySelector('app-shell')
           .shadowRoot.querySelector('#appHeadLayout')
           .shadowRoot.querySelector('#contentContainer');
-      } catch (error) {
+      } catch {
         return null;
       }
     }

@@ -10,7 +10,7 @@ export const requiredFieldStarredStyles = html` <style>
       max-width: 100%;
       right: auto;
       padding-inline-end: 15px;
-    }
+    };
   }
 
   :host-context([dir='rtl']) > * {
@@ -20,6 +20,6 @@ export const requiredFieldStarredStyles = html` <style>
       max-width: 100%;
       right: auto;
       padding-inline-end: 15px;
-    }
+    };
   }
 </style>`;

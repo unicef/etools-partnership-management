@@ -9,7 +9,7 @@ import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
 import {property, state} from 'lit/decorators.js';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
@@ -19,10 +19,7 @@ import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environme
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends connect(store)(
-  // eslint-disable-next-line new-cap
-  MatomoMixin(EnvironmentFlagsMixin(LitElement))
-) {
+class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElement))) {
   render() {
     // main template
     // language=HTML
@@ -146,21 +143,6 @@ class AppMenu extends connect(store)(
         <div class="nav-menu-item section-title">
           <span>${translate('ETOOLS_COMMUNITY_CHANNELS')}</span>
         </div>
-
-        <a
-          class="nav-menu-item lighter-item no-transform"
-          href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/9726e9e7-c72f-4153-9fd2-7b418a1e426c/ReportSection?ctid=77410195-14e1-4fb8-904b-ab1892023667"
-          target="_blank"
-        >
-          <sl-tooltip
-            placement="right"
-            ?disabled="${!this.smallMenu}"
-            content="${translate('IMPLEMENTATION_INTELLIGENCE')}"
-          >
-            <etools-icon id="power-bi-icon" name="power-bi"></etools-icon>
-          </sl-tooltip>
-          <div class="name">${translate('IMPLEMENTATION_INTELLIGENCE')}</div>
-        </a>
 
         <a
           class="nav-menu-item lighter-item"

@@ -10,7 +10,7 @@ import {Constructor} from '@unicef-polymer/etools-types';
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 /**
  * @LitElement

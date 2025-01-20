@@ -1,6 +1,6 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {ModelsCommon} from './models.common';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 export class PartnerAssessment {
   id: number | null = null;

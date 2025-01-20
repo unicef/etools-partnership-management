@@ -12,8 +12,8 @@ import ProfileOperationsMixin from '../../common/user/profile-operations-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
-import {property, state} from 'lit/decorators.js';
-import {translate} from 'lit-translate';
+import {property} from 'lit/decorators.js';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {activeLanguage} from '../../../redux/reducers/active-language.js';
 import {html, LitElement} from 'lit';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -25,7 +25,6 @@ import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-re
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {appLanguages} from '../../../config/app-constants';
 import UploadsMixin from '../../common/mixins/uploads-mixin';
-import {get as getTranslation} from 'lit-translate';
 
 store.addReducers({
   activeLanguage
@@ -38,10 +37,7 @@ store.addReducers({
  * @appliesMixin ProfileOperationsMixin
  */
 
-class PageHeader extends connect(store)(
-  // eslint-disable-next-line new-cap
-  UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))
-) {
+class PageHeader extends connect(store)(UploadsMixin(MatomoMixin(ProfileOperationsMixin(LitElement)))) {
   @property({type: Array})
   offices: any[] = [];
 
@@ -72,9 +68,6 @@ class PageHeader extends connect(store)(
   @property({type: String})
   activeLanguage?: string;
 
-  @state()
-  textUnderLogo?: string;
-
   render() {
     // main template
     // language=HTML
@@ -82,7 +75,6 @@ class PageHeader extends connect(store)(
       <app-toolbar
         @menu-button-clicked="${this.menuBtnClicked}"
         .profile=${this.profile}
-        .textUnderLogo=${this.textUnderLogo}
         responsive-width="850.9px"
         sticky
         class="content-align header"
@@ -163,16 +155,16 @@ class PageHeader extends connect(store)(
     if (!state.commonData) {
       return;
     }
-    if (!isJsonStrMatch(state.commonData?.offices, this.offices)) {
-      this.offices = [...state.commonData?.offices];
+    if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
+      this.offices = [...state.commonData.offices];
       this.allOffices = this._convertCollection(this.offices);
     }
-    if (!isJsonStrMatch(state.commonData?.sections, this.sections)) {
-      this.sections = [...state.commonData?.sections];
+    if (!isJsonStrMatch(state.commonData.sections, this.sections)) {
+      this.sections = [...state.commonData.sections];
       this.allSections = this._convertCollection(this.sections);
     }
-    if (!isJsonStrMatch(state.commonData?.unicefUsersData, this.users)) {
-      this.users = [...state.commonData?.unicefUsersData];
+    if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
+      this.users = [...state.commonData.unicefUsersData];
       this.allUsers = this._convertUsers(this.users);
     }
 
@@ -184,8 +176,6 @@ class PageHeader extends connect(store)(
     if (this.activeLanguage !== state.activeLanguage?.activeLanguage) {
       this.activeLanguage = state.activeLanguage?.activeLanguage;
     }
-
-    this.textUnderLogo = state.app?.routeDetails.routeName === 'gpd-interventions' ? getTranslation('GOVERNMENT') : '';
   }
 
   public menuBtnClicked() {

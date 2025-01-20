@@ -16,7 +16,7 @@ export const pageCommonStyles = html` <style>
       border: 1px solid var(--list-divider-color);
       --paper-material-elevation-1: {
         box-shadow: none;
-      }
+      };
     }
   }
 </style>`;
