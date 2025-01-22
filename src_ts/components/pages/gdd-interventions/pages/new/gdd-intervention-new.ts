@@ -133,6 +133,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   partnerChanged({detail}: CustomEvent): void {
     this.selectedPartner = detail.selectedItem;
+    this.getDefaultTitle(this.newIntervention);
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
     this.setInterventionField('partner', id);
     this.filterAgreements(id);
