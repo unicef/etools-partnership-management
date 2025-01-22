@@ -135,8 +135,8 @@ export function getGDDInterventionFilters() {
       hideSearch: true
     },
     {
-      filterName: getTranslation('GDD_LIST.SECTIONS'),
-      filterNameKey: 'GDD_LIST.SECTIONS',
+      filterName: getTranslation('CONTRIBUTING_SECTIONS'),
+      filterNameKey: 'CONTRIBUTING_SECTIONS',
       filterKey: GDDInterventionFilterKeys.section,
       type: EtoolsFilterTypes.DropdownMulti,
       optionValue: 'id',

@@ -223,7 +223,7 @@ export class GddInterventionsList extends connect(store)(
                   <span>${this.getDisplayValue(intervention.offices_names)}</span>
                 </div>
                 <div class="row-details-content col-2">
-                  <span class="rdc-title">${translate('SECTION')}</span>
+                  <span class="rdc-title">${translate('CONTRIBUTING_SECTIONS')}</span>
                   <span
                     >${this.getDisplayValue(
                       intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
