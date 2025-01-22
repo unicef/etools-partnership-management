@@ -286,7 +286,6 @@ export function template(this: GddInterventionNew): TemplateResult {
             @etools-selected-item-changed="${({detail}: CustomEvent) => {
               if (detail.selectedItem?.id !== this.newIntervention.country_programme) {
                 this.setInterventionField('country_programme', detail.selectedItem && detail.selectedItem.id);
-                this.populateEWorkplans();
               }
             }}"
             trigger-value-change-event
@@ -331,25 +330,6 @@ export function template(this: GddInterventionNew): TemplateResult {
             trigger-value-change-event
           >
           </etools-dropdown>
-        </div>
-
-        <div class="col-md-4 col-lg-4 col-12">
-          <etools-dropdown-multi
-            id="e_workplans"
-            label=${translate('NEW_GDD.E_WORKPLANS')}
-            placeholder="&#8212;"
-            .options="${this.e_workplans}"
-            option-label="name"
-            option-value="id"
-            .selectedValues="${this.newIntervention.e_workplans}"
-            @etools-selected-items-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField(
-                'e_workplans',
-                detail.selectedItems.map(({id}: GenericObject) => id)
-              )}"
-            trigger-value-change-event
-          >
-          </etools-dropdown-multi>
         </div>
       </div>
 

@@ -31,7 +31,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
-  @property({type: Array}) e_workplans: AnyObject[] = [];
 
   private _cpStructures: any[] = [];
   @property({type: Array})
@@ -126,11 +125,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
       this.currencies = [...state.commonData!.currencies];
     }
-    if (!isJsonStrMatch(this.allEWorkplans, state.gddInterventions?.eWorkPlans)) {
-      this.allEWorkplans = [...state.gddInterventions.eWorkPlans];
-
-      this.populateEWorkplans();
-    }
 
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
@@ -166,9 +160,6 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     this.setInterventionField('agreement', this.selectedAgreement?.id);
     const cp = this.selectedAgreement?.country_programme;
     this.setInterventionField('country_programme', cp ? cp : null);
-    setTimeout(() => {
-      this.populateEWorkplans();
-    }, 100);
   }
 
   getDefaultTitle(intervention: Partial<GDD>) {
@@ -288,33 +279,5 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       start: dayjs(new Date()).format('YYYY-MM-DD'),
       end: dayjs(new Date(new Date().getFullYear(), 11, 31)).format('YYYY-MM-DD')
     };
-  }
-
-  populateEWorkplans() {
-    if (this.newIntervention.country_programme) {
-      const foundWorkPlan = (this.allEWorkplans || [])[this.newIntervention.country_programme];
-      if (foundWorkPlan) {
-        this.e_workplans = [...foundWorkPlan];
-        return;
-      }
-      store.dispatch<AsyncAction>(getEWorkPlan(this.newIntervention.country_programme));
-    } else {
-      this.e_workplans = [];
-    }
-
-    // store.dispatch<AsyncAction>(getEWorkPlan(this.newIntervention.country_programme!));
-    // if (this.newIntervention.country_programme) {
-    //   const endpoint = getEndpoint<EtoolsEndpoint, RequestEndpoint>(gddEndpoints.eWorkPlans, {
-    //     countryProgrameId: this.newIntervention.country_programme
-    //   });
-
-    //   sendRequest({
-    //     endpoint
-    //   }).then((eWorkplans: any[]) => {
-    //     this.e_workplans = [...eWorkplans];
-    //   });
-    // } else {
-    //   this.e_workplans = [];
-    // }
   }
 }
