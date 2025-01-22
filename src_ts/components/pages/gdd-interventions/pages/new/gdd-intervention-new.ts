@@ -173,10 +173,13 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   getDefaultTitle(intervention: Partial<GDD>) {
     if (!this.selectedPartner?.name || !this.newIntervention.reference_number_year) {
-      return ``;
+      return;
     }
-    // eslint-disable-next-line max-len
-    return `${this.selectedPartner!.name} - UNICEF - ${this.user.country.name} Programme Document ${intervention.reference_number_year}`;
+    this.newIntervention = {
+      ...this.newIntervention,
+      // eslint-disable-next-line max-len
+      title: `${this.selectedPartner!.name} - UNICEF - ${this.user.country.name} Programme Document ${intervention.reference_number_year}`
+    };
   }
 
   documentTypeChanged(type: string): void {
@@ -220,6 +223,14 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: getTranslation('NEW_GDD.ON_SAVE_VALIDATION')});
       return;
     }
+    if (
+      this.newIntervention.budget_owner &&
+      (this.newIntervention.unicef_focal_points || []).includes(this.newIntervention.budget_owner)
+    ) {
+      fireEvent(this, 'toast', {text: getTranslation('BUDGET_OWNER_DIFFERENT_FOCAL_POINT')});
+      return;
+    }
+
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
   }
 
