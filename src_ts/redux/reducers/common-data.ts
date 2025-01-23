@@ -38,7 +38,8 @@ import {
   UPDATE_CASH_TRANSFER_MODALITIES,
   UPDATE_PROVIDED_BY,
   SET_ALL_STATIC_DATA,
-  SET_COMMON_DATA_IS_LOADED
+  SET_COMMON_DATA_IS_LOADED,
+  UPDATE_GPD_RISK_TYPES
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
@@ -98,6 +99,7 @@ export class CommonDataState {
   partnerRiskRatings: LabelAndValue[] = [];
   envFlags: EnvFlags | null = null;
   riskTypes: LabelAndValue[] = [];
+  gpdRiskTypes: LabelAndValue[] = [];
   cashTransferModalities: LabelAndValue[] = [];
   sites: [] = [];
   loadedTimestamp = 0;
@@ -337,6 +339,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         riskTypes: action.riskTypes
+      };
+
+    case UPDATE_GPD_RISK_TYPES:
+      return {
+        ...state,
+        gpdRiskTypes: action.gpdRiskTypes
       };
 
     case UPDATE_CASH_TRANSFER_MODALITIES:

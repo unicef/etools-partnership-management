@@ -154,6 +154,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
+      data.gpdRiskTypes = dropdownsStatic.gpd_risk_types;
       data.cashTransferModalities = dropdownsStatic.cash_transfer_modalities;
 
       data.reportStatuses = translateLabelAndValueArray(this.reportStatuses, 'COMMON_DATA.REPORTSTATUSES');
@@ -342,6 +343,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // set risk types
         if (this._validReqResponseData(response.risk_types)) {
           store.dispatch(commonDataActions.updateRiskTypes((response as any).risk_types));
+        }
+        // set gpd risk types
+        if (this._validReqResponseData(response.gpd_risk_types)) {
+          store.dispatch(commonDataActions.updateGpdRiskTypes((response as any).gpd_risk_types));
         }
         // set cash transfer options
         if (this._validReqResponseData(response.cash_transfer_modalities)) {
