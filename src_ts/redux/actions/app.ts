@@ -13,6 +13,7 @@ import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {enableCommentMode} from '../../components/pages/interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
+import {enableCommentMode as gddEnableCommentMode} from '../../components/pages/gdd-interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
@@ -327,8 +328,14 @@ export const handleUrlChange = (path: string) => (dispatch: any, getState: any) 
   if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
     dispatch(resetCurrentItem());
   }
+
   if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
     dispatch(updateStoreRouteDetails(routeDetails));
-    dispatch(enableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    if (routeDetails?.routeName === 'interventions') {
+      dispatch(enableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    }
+    if (routeDetails?.routeName === 'gpd-interventions') {
+      dispatch(gddEnableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    }
   }
 };
