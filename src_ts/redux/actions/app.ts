@@ -13,6 +13,7 @@ import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {enableCommentMode} from '../../components/pages/interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
+import {enableCommentMode as gddEnableCommentMode} from '../../components/pages/gdd-interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
@@ -122,6 +123,71 @@ const importInterventionSubRoutes = (subRouteName: string | null) => {
   }
 };
 
+const importGDDInterventionSubRoutes = (subRouteName: string | null) => {
+  if (!subRouteName) {
+    return;
+  }
+
+  switch (subRouteName) {
+    case 'list':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import('../../components/pages/gdd-interventions/pages/list/gdd-interventions-list.js');
+      break;
+    case 'new':
+      import('../../components/pages/gdd-interventions/pages/new/gdd-intervention-new.js');
+      break;
+    case 'metadata':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js'
+      );
+      break;
+    case 'workplan':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js'
+      );
+      break;
+    case 'timing':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js'
+      );
+      break;
+    case 'strategy':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js'
+      );
+      break;
+    case 'attachments':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js'
+      );
+      break;
+    case 'review':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js'
+      );
+      break;
+    case 'progress':
+    case 'implementation-status':
+    case 'monitoring-activities':
+    case 'results-reported':
+    case 'reports':
+      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
+      import(
+        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js'
+      );
+      break;
+    default:
+      console.log(`No file imports configuration found interventions: ${subRouteName} (componentsLazyLoadConfig)!`);
+      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
+      break;
+  }
+};
 const importReportsSubRoutes = (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
@@ -207,6 +273,11 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
           .then(() => importInterventionSubRoutes(routeDetails.subRouteName))
           .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
         break;
+      case 'gpd-interventions':
+        import('../../components/pages/gdd-interventions/gdd-interventions-module.js')
+          .then(() => importGDDInterventionSubRoutes(routeDetails.subRouteName))
+          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
+        break;
       case 'agreements':
         import('../../components/pages/agreements/agreements-module.js')
           .then(() => importAgreementsSubRoutes(routeDetails.subRouteName))
@@ -257,8 +328,14 @@ export const handleUrlChange = (path: string) => (dispatch: any, getState: any) 
   if (currentRouteDetails?.params?.id && routeDetails?.params?.id !== currentRouteDetails.params.id) {
     dispatch(resetCurrentItem());
   }
+
   if (!isJsonStrMatch(routeDetails, currentRouteDetails)) {
     dispatch(updateStoreRouteDetails(routeDetails));
-    dispatch(enableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    if (routeDetails?.routeName === 'interventions') {
+      dispatch(enableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    }
+    if (routeDetails?.routeName === 'gpd-interventions') {
+      dispatch(gddEnableCommentMode(Boolean(routeDetails?.queryParams?.comment_mode)));
+    }
   }
 };

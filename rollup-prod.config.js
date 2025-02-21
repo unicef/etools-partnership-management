@@ -50,6 +50,10 @@ const copyConfig = {
       src: 'src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n',
       dest: 'src/src/components/pages/interventions/pages/intervention-tab-pages/assets'
     },
+    {
+      src: 'src_ts/components/pages/gdd-interventions/pages/intervention-tab-pages/assets/i18n',
+      dest: 'src/src/components/pages/gdd-interventions/pages/intervention-tab-pages/assets'
+    },
     { src: 'assets', dest: 'src' },
     { src: 'index.html', dest: 'src' }
   ]

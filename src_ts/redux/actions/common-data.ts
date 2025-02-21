@@ -33,6 +33,7 @@ export const UPDATE_PARTNER_TYPES = 'UPDATE_PARTNER_TYPES';
 export const UPDATE_SEA_RISK_RATINGS = 'UPDATE_SEA_RISK_RATINGS';
 export const UPDATE_ASSESSMENT_TYPES = 'UPDATE_ASSESSMENT_TYPES';
 export const UPDATE_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_INTERVENTION_AMENDMENT_TYPES';
+export const UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES';
 export const UPDATE_LOCATION_TYPES = 'UPDATE_LOCATION_TYPES';
 export const UPDATE_PARTNER_RISK_RATINGS = 'UPDATE_PARTNER_RISK_RATINGS';
 export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
@@ -45,6 +46,7 @@ export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_GENDER_EQUITY = 'UPDATE_GENDER_EQUITY';
 export const UPDATE_RISK_TYPES = 'UPDATE_RISK_TYPES';
+export const UPDATE_GPD_RISK_TYPES = 'UPDATE_GPD_RISK_TYPES';
 export const UPDATE_CASH_TRANSFER_MODALITIES = 'UPDATE_CASH_TRANSFER_MODALITIES';
 export const SET_ALL_STATIC_DATA = 'SET_ALL_STATIC_DATA';
 export const SET_COMMON_DATA_IS_LOADED = 'SET_COMMON_DATA_IS_LOADED';
@@ -134,6 +136,11 @@ export interface CommonDataActionUpdateInterventionAmendmentTypes
   intAmendTypes: GenericObject[];
 }
 
+export interface CommonDataActionUpdateGDDInterventionAmendmentTypes
+  extends Action<'UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES'> {
+  gddAmendmentTypes: GenericObject[];
+}
+
 export interface CommonDataActionUpdateLocationTypes extends Action<'UPDATE_LOCATION_TYPES'> {
   locationTypes: GenericObject[];
 }
@@ -196,6 +203,7 @@ export type CommonDataAction =
   | CommonDataActionUpdatePartnerTypes
   | CommonDataActionUpdateAssessmentTypes
   | CommonDataActionUpdateInterventionAmendmentTypes
+  | CommonDataActionUpdateGDDInterventionAmendmentTypes
   | CommonDataActionUpdateLocationTypes
   | CommonDataActionUpdatePartnerRiskRatings
   | CommonDataActionUpdateLocations
@@ -385,6 +393,15 @@ export const updateInterventionAmendmentTypes: ActionCreator<CommonDataActionUpd
   };
 };
 
+export const updateGDDInterventionAmendmentTypes: ActionCreator<CommonDataActionUpdateGDDInterventionAmendmentTypes> = (
+  gddAmendmentTypes: GenericObject[]
+) => {
+  return {
+    type: UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES,
+    gddAmendmentTypes
+  };
+};
+
 export const updateLocationTypes: ActionCreator<CommonDataActionUpdateLocationTypes> = (
   locationTypes: GenericObject[]
 ) => {
@@ -476,6 +493,13 @@ export const updateRiskTypes = (riskTypes: LabelAndValue[]) => {
   return {
     type: UPDATE_RISK_TYPES,
     riskTypes
+  };
+};
+
+export const updateGpdRiskTypes = (gpdRiskTypes: LabelAndValue[]) => {
+  return {
+    type: UPDATE_GPD_RISK_TYPES,
+    gpdRiskTypes
   };
 };
 

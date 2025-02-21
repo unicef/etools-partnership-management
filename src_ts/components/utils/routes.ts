@@ -13,7 +13,7 @@ EtoolsRouter.init({
     notFound: '/not-found',
     default: '/partners/list'
   },
-  redirectedPathsToSubpageLists: ['interventions', 'partners', 'reports', 'government-partners']
+  redirectedPathsToSubpageLists: ['interventions', 'partners', 'reports', 'government-partners', 'gpd-interventions']
 });
 
 EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
@@ -25,6 +25,15 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCa
     params: null
   };
 })
+  .addRoute(new RegExp('^gpd-interventions/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+    return {
+      routeName: 'gpd-interventions',
+      subRouteName: 'list',
+      path: params.matchDetails[0],
+      queryParams: params.queryParams,
+      params: null
+    };
+  })
   .addRoute(new RegExp('^partners/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'partners',
@@ -55,6 +64,15 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCa
   .addRoute(new RegExp('^interventions/new$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
     return {
       routeName: 'interventions',
+      subRouteName: 'new',
+      path: params.matchDetails[0],
+      queryParams: params.queryParams,
+      params: null
+    };
+  })
+  .addRoute(new RegExp('^gpd-interventions/new$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+    return {
+      routeName: 'gpd-interventions',
       subRouteName: 'new',
       path: params.matchDetails[0],
       queryParams: params.queryParams,
@@ -95,6 +113,21 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCa
     }
   )
   .addRoute(
+    new RegExp(`^gpd-interventions\\/${routeParamRegex}\\/${routeParamRegex}$`),
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+      return {
+        routeName: 'gpd-interventions',
+        subRouteName: params.matchDetails[2], // tab name
+        path: params.matchDetails[0],
+        queryParams: params.queryParams,
+        params: {
+          interventionId: params.matchDetails[1],
+          id: params.matchDetails[1]
+        }
+      };
+    }
+  )
+  .addRoute(
     new RegExp(`^agreements\\/${routeParamRegex}\\/${routeParamRegex}$`),
     (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
@@ -122,6 +155,22 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCa
     (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: 'interventions',
+        subRouteName: params.matchDetails[2], // tab name
+        subSubRouteName: params.matchDetails[3], // sub tab name
+        path: params.matchDetails[0],
+        queryParams: params.queryParams,
+        params: {
+          interventionId: params.matchDetails[1],
+          id: params.matchDetails[1]
+        }
+      };
+    }
+  )
+  .addRoute(
+    new RegExp(`^gpd-interventions\\/${routeParamRegex}\\/${routeParamRegex}\\/${routeParamRegex}$`),
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+      return {
+        routeName: 'gpd-interventions',
         subRouteName: params.matchDetails[2], // tab name
         subSubRouteName: params.matchDetails[3], // sub tab name
         path: params.matchDetails[0],

@@ -13,6 +13,7 @@ import {
   UPDATE_PARTNER_RISK_RATINGS,
   UPDATE_LOCATION_TYPES,
   UPDATE_INTERVENTION_AMENDMENT_TYPES,
+  UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES,
   UPDATE_ASSESSMENT_TYPES,
   UPDATE_PARTNER_TYPES,
   UPDATE_CSO_TYPES,
@@ -37,7 +38,8 @@ import {
   UPDATE_CASH_TRANSFER_MODALITIES,
   UPDATE_PROVIDED_BY,
   SET_ALL_STATIC_DATA,
-  SET_COMMON_DATA_IS_LOADED
+  SET_COMMON_DATA_IS_LOADED,
+  UPDATE_GPD_RISK_TYPES
 } from '../actions/common-data';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
@@ -97,9 +99,11 @@ export class CommonDataState {
   partnerRiskRatings: LabelAndValue[] = [];
   envFlags: EnvFlags | null = null;
   riskTypes: LabelAndValue[] = [];
+  gpdRiskTypes: LabelAndValue[] = [];
   cashTransferModalities: LabelAndValue[] = [];
   sites: [] = [];
   loadedTimestamp = 0;
+  gddAmendmentTypes: LabelAndValue[] = [];
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -245,6 +249,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         interventionAmendmentTypes: action.intAmendTypes
       };
 
+    case UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES:
+      return {
+        ...state,
+        gddAmendmentTypes: action.gddAmendmentTypes
+      };
+
     case UPDATE_USER_COUNTRY_DATA:
       return {
         ...state,
@@ -329,6 +339,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         riskTypes: action.riskTypes
+      };
+
+    case UPDATE_GPD_RISK_TYPES:
+      return {
+        ...state,
+        gpdRiskTypes: action.gpdRiskTypes
       };
 
     case UPDATE_CASH_TRANSFER_MODALITIES:

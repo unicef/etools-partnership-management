@@ -1,5 +1,5 @@
 import {html, LitElement, PropertyValues} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 
@@ -34,6 +34,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
+import './components/generate-GTC-dialog';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -155,7 +156,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                 id="agreementType"
                 label="${translate('AGREEMENT_TYPE')}"
                 placeholder="&#8212;"
-                ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}"
+                ?hidden="${this._typeMatches(this.agreement.agreement_type, ['SSFA'])}"
                 .options="${this.agreementTypes}"
                 .selected="${this.agreement.agreement_type}"
                 trigger-value-change-event
@@ -168,7 +169,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                 required
               >
               </etools-dropdown>
-              <div ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+              <div ?hidden="${!this._typeMatches(this.agreement.agreement_type, ['SSFA'])}">
                 <label class="paper-label ssfa-text">${translate('AGREEMENT_TYPE')}</label>
                 <label class="paper-label ssfa-value">${this.ssfaTypeText}</label>
               </div>
@@ -195,7 +196,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             >
             </etools-input>
           </div>
-          ${this._typeMatches(this.agreement.agreement_type, 'PCA')
+          ${this._typeMatches(this.agreement.agreement_type, ['PCA', 'GTC'])
             ? html` <div class="col-12 col-md-6 col-lg-3">
                 <etools-input
                   placeholder="—"
@@ -240,7 +241,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </etools-input>
           </div>
 
-          ${this._typeMatches(this.agreement.agreement_type, 'MOU')
+          ${this._typeMatches(this.agreement.agreement_type, ['MOU'])
             ? html` <div class="col-12 col-md-6 col-lg-3">
                   <datepicker-lite
                     id="startDateField"
@@ -276,7 +277,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
                   </datepicker-lite>
                 </div>`
             : ''}
-          ${this._typeMatches(this.agreement.agreement_type, 'PCA')
+          ${this._typeMatches(this.agreement.agreement_type, ['PCA', 'GTC'])
             ? html`
                 <div class="col-12 col-md-6">
                   <etools-cp-structure
@@ -295,7 +296,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             : ''}
         </div>
 
-        <div ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+        <div ?hidden="${this._typeMatches(this.agreement.agreement_type, ['SSFA'])}">
           <div class="row ">
             <div class="col-12 col-md-6">
               <!-- Signed By Partner -->
@@ -362,7 +363,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           </div>
         </div>
 
-        <div class="row " ?hidden="${this._typeMatches(this.agreement.agreement_type, 'MOU')}">
+        <div class="row " ?hidden="${this._typeMatches(this.agreement.agreement_type, ['MOU'])}">
           <!-- Partner Authorized Officers (partner staff members) -->
           <etools-dropdown-multi
             class="col-12"
@@ -444,15 +445,17 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </etools-input>
           </div>
         </div>
-        <div class="row ">
-          <sl-switch
-            ?checked="${this.agreement.special_conditions_pca}"
-            @sl-change="${this.onSpecialConditionsPCAChanged}"
-            ?hidden="${!this._typeMatches(this.agreement.agreement_type, 'PCA')}"
-            ?disabled="${!this.agreement.permissions?.edit.special_conditions_pca}"
-          >
-            ${translate('SPECIAL_CONDITIONS_PCA')}
-          </sl-switch>
+        <div class="row">
+          <div class="col-12">
+            <sl-switch
+              ?checked="${this.agreement.special_conditions_pca}"
+              @sl-change="${this.onSpecialConditionsPCAChanged}"
+              ?hidden="${!this._typeMatches(this.agreement.agreement_type, ['PCA'])}"
+              ?disabled="${!this.agreement.permissions?.edit.special_conditions_pca}"
+            >
+              ${translate('SPECIAL_CONDITIONS_PCA')}
+            </sl-switch>
+          </div>
         </div>
         <div class="row  ${this._getTBorderClassIfApplicable(this.agreement.agreement_type)}">
           <div
@@ -479,6 +482,28 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             </div>
           </div>
           <div
+            class="generate-pca col-12 col-md-6 col-lg-3"
+            ?hidden="${!this.showGenerateGTCBtn(
+              this.agreement.agreement_type,
+              this.isNewAgreement,
+              this.agreement.status
+            )}"
+          >
+            <!-- Generate GTC -->
+            <div style="display:flex;flex-direction:column;">
+              <label class="paper-label" aria-hidden="true">${translate('GTC_AGREEMENT_TO_SIGN')}</label>
+              <etools-button
+                variant="text"
+                class="no-pad no-marg"
+                id="generateMyPca"
+                @click="${this._openGenerateGTCDialog}"
+              >
+                <etools-icon name="refresh"></etools-icon>
+                ${translate('GENERATE')}
+              </etools-button>
+            </div>
+          </div>
+          <div
             class="generate-pca col-12 col-md-6 col-lg-3 align-items-center"
             ?hidden="${!this._showGeneratePcaWarning(
               this.agreement.agreement_type,
@@ -488,7 +513,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
           >
             <span class="type-warning">${this.generatePCAMessage}</span>
           </div>
-          <div class="col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, 'SSFA')}">
+          <div class="col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, ['SSFA'])}">
             <etools-upload
               label=" ${translate('SIGNED_AGREEMENT')}"
               .fileUrl="${this.agreement.attachment}"
@@ -531,7 +556,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
             .agreementStart="${this.agreement.start}"
             .agreementType="${this.agreement.agreement_type}"
             .editMode="${this.agreement.permissions?.edit.amendments}"
-            .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, 'MOU')}"
+            .showAuthorizedOfficers="${!this._typeMatches(this.agreement.agreement_type, ['MOU'])}"
             .authorizedOfficers="${this._getAvailableAuthOfficers(
               this.staffMembers,
               this.agreement.authorized_officers
@@ -583,14 +608,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   @property({type: Array})
   amendedPartnersDropdownData!: any[];
 
-  get filteredPartnerDropdownData() {
-    return this.amendedPartnersDropdownData.filter(
-      (partner) =>
-        !partner.type ||
-        !this._typeMatches(this.agreement.agreement_type, 'PCA') ||
-        partner.type === 'Civil Society Organization'
-    );
-  }
+  @state() filteredPartnerDropdownData: any[] = [];
 
   @property({type: Array})
   agreementTypes!: LabelAndValue[];
@@ -732,6 +750,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       active: false,
       loadingSource: 'ag-data'
     });
+    this.setPartnersDropdownData();
   }
 
   // Verify if agreement status is 'draft'
@@ -756,6 +775,10 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
       return false;
     }
     return type === CONSTANTS.AGREEMENT_TYPES.PCA && ((this._isDraft() && !isNewAgreement) || status === 'signed');
+  }
+
+  showGenerateGTCBtn(type: string, isNewAgreement: boolean, status: string) {
+    return type === CONSTANTS.AGREEMENT_TYPES.GTC && ((this._isDraft() && !isNewAgreement) || status === 'signed');
   }
 
   _showGeneratePcaWarning(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean) {
@@ -846,14 +869,24 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   // Check if agreement type is expected type
-  _typeMatches(agreementType: string, expectedType: string) {
-    return agreementType === expectedType;
+  _typeMatches(agreementType: string, expectedType: string[]) {
+    return (expectedType || []).includes(agreementType);
   }
 
   _openGeneratePCADialog() {
     const agreementId = this.agreement && this.agreement.id ? this.agreement.id : null;
     openDialog({
       dialog: 'generate-pca-dialog',
+      dialogData: {
+        agreementId: agreementId
+      }
+    });
+  }
+
+  _openGenerateGTCDialog() {
+    const agreementId = this.agreement && this.agreement.id ? this.agreement.id : null;
+    openDialog({
+      dialog: 'generate-gtc-dialog',
       dialogData: {
         agreementId: agreementId
       }
@@ -998,7 +1031,23 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
     this.agreement.agreement_type = e.detail.selectedItem ? e.detail.selectedItem.value : null;
     this._handleSpecialConditionsPca(this.agreement.special_conditions_pca, this.agreement.agreement_type);
     this.afterAgreementTypeChanged();
+    this.setPartnersDropdownData();
     this.requestUpdate();
+  }
+
+  setPartnersDropdownData() {
+    if (this.agreement.agreement_type === 'GTC') {
+      this.filteredPartnerDropdownData = this.amendedPartnersDropdownData.filter(
+        (partner) => partner.type === 'Government'
+      );
+    } else {
+      this.filteredPartnerDropdownData = this.amendedPartnersDropdownData.filter(
+        (partner) =>
+          !partner.type ||
+          !this._typeMatches(this.agreement.agreement_type, ['PCA']) ||
+          partner.type === 'Civil Society Organization'
+      );
+    }
   }
 
   afterAgreementTypeChanged() {
@@ -1028,7 +1077,7 @@ export class AgreementDetails extends connect(store)(CommonMixinLit(UploadsMixin
   }
 
   onCountryProgrammeObjectChanged(e: CustomEvent) {
-    this.agreement.end = e.detail.value.to_date;
+    this.agreement.end = e.detail.value?.to_date;
     this.requestUpdate();
   }
 

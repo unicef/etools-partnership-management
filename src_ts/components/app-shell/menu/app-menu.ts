@@ -7,7 +7,7 @@ import {store, RootState} from '../../../redux/store';
 import EnvironmentFlagsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/environment-flags-mixin';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import {html, LitElement} from 'lit';
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
@@ -25,6 +25,17 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
     // language=HTML
     return html`
       ${navMenuStyles}
+
+      <style>
+        .menu-header {
+          background: ${this.menuHeaderBgColor};
+        }
+
+        .nav-menu-item.selected .name,
+        .nav-menu-item.selected etools-icon {
+          color: ${this.menuItemColor};
+        }
+      </style>
 
       <div class="menu-header">
         <span id="app-name">
@@ -83,7 +94,18 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
 
             <div class="name">${translate('PD_SPD')}</div>
           </a>
+          <a
+            ?hidden="${!this.user?.show_gpd}"
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gpd-interventions')}"
+            menu-name="gpd-interventions"
+            href="${Environment.basePath}gpd-interventions/list"
+          >
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GPD')}">
+              <etools-icon id="interventions-icon" name="description"></etools-icon>
+            </sl-tooltip>
 
+            <div class="name">${translate('GPD')}</div>
+          </a>
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"
             menu-name="government-partners"
@@ -164,14 +186,31 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
     `;
   }
 
+  @property({type: Object})
+  user!: any;
+
   @property({type: String})
   selectedOption = '';
 
   @property({type: Boolean, attribute: 'small-menu'})
   smallMenu = false;
 
+  @state()
+  menuHeaderBgColor = 'var(--primary-color)';
+
+  @state()
+  menuItemColor = 'var(--primary-color)';
+
   stateChanged(state: RootState) {
     this.envFlagsStateChanged(state);
+
+    if (state.app?.routeDetails.routeName === 'gpd-interventions') {
+      this.menuHeaderBgColor = 'var(--header-bg-color)';
+      this.menuItemColor = 'var(--ternary-color)';
+    } else {
+      this.menuHeaderBgColor = 'var(--primary-color)';
+      this.menuItemColor = 'var(--primary-color)';
+    }
   }
 
   getItemClass(selectedValue: string, itemValue: string) {
