@@ -19,7 +19,7 @@ import GddInterventionItemData from './data/gdd-intervention-item-data.js';
 // TODO Update this import
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
-import {Agreement, GDD, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
+import {Agreement, GDD, UserPermissions, GenericObject, EtoolsUser} from '@unicef-polymer/etools-types';
 import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
@@ -215,7 +215,7 @@ export class GddInterventionsModule extends connect(store)(
   userPermissions!: UserPermissions;
 
   @property({type: Object})
-  user!: any;
+  user!: EtoolsUser;
 
   @property({type: Object})
   intervention: Partial<GDD> = {};

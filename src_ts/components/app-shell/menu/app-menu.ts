@@ -12,6 +12,7 @@ import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {EtoolsUser} from '@unicef-polymer/etools-types';
 
 /**
  * PMP main menu
@@ -187,7 +188,7 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
   }
 
   @property({type: Object})
-  user!: any;
+  user!: EtoolsUser;
 
   @property({type: String})
   selectedOption = '';
