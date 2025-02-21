@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import CONSTANTS from '../../../config/app-constants';
@@ -215,6 +215,9 @@ export class GddInterventionsModule extends connect(store)(
   userPermissions!: UserPermissions;
 
   @property({type: Object})
+  user!: any;
+
+  @property({type: Object})
   intervention: Partial<GDD> = {};
 
   @property({type: Object})
@@ -281,6 +284,15 @@ export class GddInterventionsModule extends connect(store)(
       const currentPD = get(state, 'gddInterventions.current');
       if (!isJsonStrMatch(this.intervention, currentPD) && currentPD) {
         this.intervention = currentPD;
+      }
+    }
+  }
+
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('user') && this.user!.user) {
+      if (!this.user.show_gpd) {
+        // if gpd not allowed redirect to pmp root
+        window.location.href = window.location.origin + '/pmp/';
       }
     }
   }

@@ -12,6 +12,7 @@ import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {User} from '@unicef-polymer/etools-types/dist/user.types';
 
 /**
  * PMP main menu
@@ -95,6 +96,7 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
             <div class="name">${translate('PD_SPD')}</div>
           </a>
           <a
+            ?hidden="${!this.user?.show_gpd}"
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gpd-interventions')}"
             menu-name="gpd-interventions"
             href="${Environment.basePath}gpd-interventions/list"
@@ -184,6 +186,9 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
       </div>
     `;
   }
+
+  @property({type: Object})
+  user!: any;
 
   @property({type: String})
   selectedOption = '';
