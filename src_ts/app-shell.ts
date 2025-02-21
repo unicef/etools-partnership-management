@@ -160,6 +160,7 @@ class AppShell extends connect(store)(
             .rootPath="${this.rootPath}"
             .selectedOption="${this.module}"
             ?small-menu="${this.smallMenu}"
+            .user="${this.user}"
           ></app-menu>
         </app-drawer>
 
@@ -201,6 +202,7 @@ class AppShell extends connect(store)(
                   id="gdd-interventions"
                   class="main-page"
                   .userPermissions="${this.permissions}"
+                  .user="${this.user}"
                   ?hidden="${!this._activeModuleIs(this.module, 'gpd-interventions')}"
                 >
                 </gdd-interventions-module>`

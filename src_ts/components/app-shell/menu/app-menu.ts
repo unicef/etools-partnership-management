@@ -95,6 +95,7 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
             <div class="name">${translate('PD_SPD')}</div>
           </a>
           <a
+            ?hidden="${!this.user?.show_gpd}"
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'gpd-interventions')}"
             menu-name="gpd-interventions"
             href="${Environment.basePath}gpd-interventions/list"
@@ -184,6 +185,9 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
       </div>
     `;
   }
+
+  @property({type: Object})
+  user!: any;
 
   @property({type: String})
   selectedOption = '';
