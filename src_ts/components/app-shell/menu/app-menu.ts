@@ -12,7 +12,6 @@ import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
-import {User} from '@unicef-polymer/etools-types/dist/user.types';
 
 /**
  * PMP main menu
