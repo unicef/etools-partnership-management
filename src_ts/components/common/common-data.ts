@@ -111,7 +111,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
     private formatResponse(response: any[]) {
       const data: Partial<CommonDataState> = {};
       data.countryProgrammes = this.getValue(response[0]);
-
       this.setStaticAndDynamicData(data, this.getValue(response[1]), this.getValue(response[2]));
 
       data.locations = this.getValue(response[3]);
@@ -151,9 +150,11 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.seaRiskRatings = dropdownsStatic.sea_risk_ratings;
       data.assessmentTypes = dropdownsStatic.assessment_types;
       data.interventionAmendmentTypes = dropdownsStatic.intervention_amendment_types;
+      data.gddAmendmentTypes = dropdownsPmpRespose.gdd_amendment_types;
       data.partnerRiskRatings = dropdownsStatic.partner_risk_rating;
       data.genderEquityRatings = dropdownsStatic.gender_equity_sustainability_ratings;
       data.riskTypes = dropdownsStatic.risk_types;
+      data.gpdRiskTypes = dropdownsStatic.gpd_risk_types;
       data.cashTransferModalities = dropdownsStatic.cash_transfer_modalities;
 
       data.reportStatuses = translateLabelAndValueArray(this.reportStatuses, 'COMMON_DATA.REPORTSTATUSES');
@@ -322,6 +323,11 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
             commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types)
           );
         }
+        // set gdd intervention ammendment data
+        if (this._validReqResponseData(response.gdd_amendment_types)) {
+          store.dispatch(commonDataActions.updateGDDInterventionAmendmentTypes((response as any).gdd_amendment_types));
+        }
+
         // set admin level/location types
         if (this._validReqResponseData(response.location_types)) {
           store.dispatch(commonDataActions.updateLocationTypes((response as any).location_types));
@@ -337,6 +343,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // set risk types
         if (this._validReqResponseData(response.risk_types)) {
           store.dispatch(commonDataActions.updateRiskTypes((response as any).risk_types));
+        }
+        // set gpd risk types
+        if (this._validReqResponseData(response.gpd_risk_types)) {
+          store.dispatch(commonDataActions.updateGpdRiskTypes((response as any).gpd_risk_types));
         }
         // set cash transfer options
         if (this._validReqResponseData(response.cash_transfer_modalities)) {

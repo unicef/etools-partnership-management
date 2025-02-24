@@ -67,11 +67,20 @@ const pmpEdpoints = {
   interventions: {
     url: '/api/pmp/v3/interventions/?show_amendments=true'
   },
+  gddInterventions: {
+    url: '/api/gdd/gdds/?show_amendments=true'
+  },
   interventionDetails: {
     template: '/api/v2/interventions/<%=id%>/'
   },
+  gddInterventionDetails: {
+    template: '/api/gdd/gdds/<%=id%>/'
+  },
   interventionDelete: {
     template: '/api/v2/interventions/delete/<%=id%>/'
+  },
+  gddInterventionDelete: {
+    template: '/api/gdd/gdds/delete/<%=id%>/'
   },
   pdAttachments: {
     template: '/api/v2/interventions/<%=pdId%>/attachments/'
@@ -271,8 +280,14 @@ const pmpEdpoints = {
   resultExports: {
     url: '/api/v2/reports/applied-indicators/intervention/'
   },
+  gddResultExports: {
+    url: '/api/gdd/gdds/results/'
+  },
   pdLocationsExport: {
     url: '/api/v2/interventions/locations/'
+  },
+  gddLocationsExport: {
+    url: '/api/gdd/gdds/locations/?format=csv'
   },
   attachmentsUpload: {
     url: '/api/v2/attachments/upload/'

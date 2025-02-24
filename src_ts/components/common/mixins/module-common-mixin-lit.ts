@@ -103,6 +103,10 @@ function ModuleMainElCommonFunctionalityMixinLit<T extends Constructor<LitElemen
           // intervention-tabs tab element already loaded, no need for loading messages
           return;
         }
+        if (selector === 'gdd-intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-metadata') !== null) {
+          // intervention-tabs tab element already loaded, no need for loading messages
+          return;
+        }
       }
       fireEvent(this, 'global-loading', {
         active: true,
