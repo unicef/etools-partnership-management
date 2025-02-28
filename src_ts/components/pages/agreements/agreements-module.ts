@@ -433,6 +433,10 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       newAgreement.country_programme = agreement.country_programme;
       newAgreement.special_conditions_pca = agreement.special_conditions_pca;
     }
+
+    if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.GTC) {
+      newAgreement.country_programme = agreement.country_programme;
+    }
     return newAgreement;
   }
 

@@ -12,13 +12,13 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles-lit';
 import {frWarningsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/fr-warnings-styles';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {AnyObject, GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
+import {AnyObject, GenericObject, GDDListItem} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.util';
-import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
@@ -30,20 +30,25 @@ import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-re
 import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import omit from 'lodash-es/omit';
-import {getInterventionFilters, InterventionFilterKeys, InterventionsFiltersHelper} from './interventions-filters';
-import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
+import {
+  getGDDInterventionFilters,
+  GDDInterventionFilterKeys,
+  GDDInterventionsFiltersHelper
+} from './gdd-interventions-filters';
+import {govPartnersSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
-import {setShouldReGetList} from '../intervention-tab-pages/common/actions/interventions';
+// TODO change this import after intervention tab pages location is changed
+import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/gddInterventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {
   EtoolsRouteDetails,
   EtoolsRouteQueryParams
 } from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-@customElement('interventions-list')
-export class InterventionsList extends connect(store)(
+@customElement('gdd-interventions-list')
+export class GddInterventionsList extends connect(store)(
   ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
@@ -126,65 +131,59 @@ export class InterventionsList extends connect(store)(
           })}"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
-            ${translate('INTERVENTIONS_LIST.REFERENCE_NO')}
+            ${translate('GDD_LIST.REFERENCE_NO')}
           </etools-data-table-column>
-          <etools-data-table-column class="col-3" field="partner_name" sortable>
-            ${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}
-          </etools-data-table-column>
-          <etools-data-table-column class="col-1" field="document_type">
-            ${translate('INTERVENTIONS_LIST.DOC_TYPE')}
+          <etools-data-table-column class="col-4" field="partner_name" sortable>
+            ${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="status">
             ${translate('GENERAL.STATUS')}
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="title">
-            ${translate('INTERVENTIONS_LIST.TITLE')}
+            ${translate('GDD_LIST.TITLE')}
           </etools-data-table-column>
           <etools-data-table-column class="col-1" field="start" sortable>
-            ${translate('INTERVENTIONS_LIST.START_DATE')}
+            ${translate('GDD_LIST.START_DATE')}
           </etools-data-table-column>
           <etools-data-table-column class="col-1" field="end" sortable>
-            ${translate('INTERVENTIONS_LIST.END_DATE')}
+            ${translate('GDD_LIST.END_DATE')}
           </etools-data-table-column>
         </etools-data-table-header>
 
         ${(this.filteredInterventions || []).map(
-          (intervention: ListItemIntervention) =>
+          (intervention: GDDListItem) =>
             html` <etools-data-table-row
               .lowResolutionLayout="${this.lowResolutionLayout}"
               .detailsOpened="${this.detailsOpened}"
             >
               <div slot="row-data" class="p-relative">
-                <span class="col-data col-2" data-col-header-label="${translate('INTERVENTIONS_LIST.REFERENCE_NO')}">
+                <span class="col-data col-2" data-col-header-label="${translate('GDD_LIST.REFERENCE_NO')}">
                   <a
                     class="text-btn-style pd-ref truncate"
-                    href="interventions/${intervention.id}/metadata"
+                    href="gpd-interventions/${intervention.id}/metadata"
                     title="${this.getDisplayValue(intervention.number)}"
                   >
                     ${this.getDisplayValue(intervention.number)}
                   </a>
                 </span>
                 <span
-                  class="col-data col-3"
-                  data-col-header-label="${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}"
+                  class="col-data col-4"
+                  data-col-header-label="${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}"
                   title="${this.getDisplayValue(intervention.partner_name)}"
                 >
                   <span>${this.getDisplayValue(intervention.partner_name)}</span>
-                </span>
-                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
-                  ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
                 </span>
                 <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
                   <div>${this.getStatusCellText(intervention)}</div>
                 </div>
                 <span
                   class="col-data col-2 break-word"
-                  data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
+                  data-col-header-label="${translate('GDD_LIST.TITLE')}"
                   title="${this.getDisplayValue(intervention.title)}"
                 >
                   ${this.getDisplayValue(intervention.title)}
                 </span>
-                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
+                <span class="col-data col-1" data-col-header-label="${translate('GDD_LIST.START_DATE')}">
                   <etools-info-tooltip
                     class="fr-nr-warn"
                     custom-icon
@@ -200,7 +199,7 @@ export class InterventionsList extends connect(store)(
                     <span slot="message">${this.getFrsStartDateValidationMsg()}</span>
                   </etools-info-tooltip>
                 </span>
-                <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.END_DATE')}">
+                <span class="col-data col-1" data-col-header-label="${translate('GDD_LIST.END_DATE')}">
                   <etools-info-tooltip
                     class="fr-nr-warn"
                     custom-icon
@@ -224,7 +223,7 @@ export class InterventionsList extends connect(store)(
                   <span>${this.getDisplayValue(intervention.offices_names)}</span>
                 </div>
                 <div class="row-details-content col-2">
-                  <span class="rdc-title">${translate('SECTION')}</span>
+                  <span class="rdc-title">${translate('CONTRIBUTING_SECTIONS')}</span>
                   <span
                     >${this.getDisplayValue(
                       intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
@@ -306,10 +305,7 @@ export class InterventionsList extends connect(store)(
   routeDetails!: EtoolsRouteDetails | null;
 
   @property({type: Array})
-  filteredInterventions: ListItemIntervention[] = [];
-
-  @property({type: Array})
-  partners = [];
+  filteredInterventions: GDDListItem[] = [];
 
   @property({type: Boolean})
   listLoadingActive = false;
@@ -321,16 +317,17 @@ export class InterventionsList extends connect(store)(
 
     fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: 'interv-page'
+      loadingSource: 'gdd-interv-page'
     });
   }
 
   stateChanged(state: RootState): void {
     const stateRouteDetails = get(state, 'app.routeDetails');
+
     if (
       !(
         stateRouteDetails &&
-        stateRouteDetails.routeName === 'interventions' &&
+        stateRouteDetails.routeName === 'gpd-interventions' &&
         stateRouteDetails?.subRouteName === 'list'
       )
     ) {
@@ -407,7 +404,7 @@ export class InterventionsList extends connect(store)(
   }
 
   shouldReGetListBecauseOfEditsOnItems(state: RootState) {
-    return state.interventions?.shouldReGetList;
+    return state.gddInterventions?.shouldReGetList;
   }
 
   dataRequiredByFiltersHasBeenLoaded(state: RootState) {
@@ -418,7 +415,7 @@ export class InterventionsList extends connect(store)(
     let availableFilters = [];
 
     if (!this.allFilters) {
-      availableFilters = JSON.parse(JSON.stringify(getInterventionFilters()));
+      availableFilters = JSON.parse(JSON.stringify(getGDDInterventionFilters()));
       this.populateDropdownFilterOptionsFromCommonData(state, availableFilters);
     } else {
       // Avoid setting this.allFilters twice, as the already selected filters will be reset
@@ -427,7 +424,7 @@ export class InterventionsList extends connect(store)(
 
     // update filter selection and assign the result to etools-filters(trigger render)
     const currentParams: EtoolsRouteQueryParams = this.routeDetails!.queryParams || {};
-    this.allFilters = InterventionsFiltersHelper.updateFiltersSelectedValues(
+    this.allFilters = GDDInterventionsFiltersHelper.updateFiltersSelectedValues(
       omit(currentParams, ['page', 'page_size', 'ordering']),
       availableFilters
     );
@@ -435,26 +432,24 @@ export class InterventionsList extends connect(store)(
 
   populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {
     [
-      [InterventionFilterKeys.type, state.commonData!.documentTypes],
-      [InterventionFilterKeys.status, state.commonData!.interventionStatuses],
-      [InterventionFilterKeys.section, state.commonData!.sections],
-      [InterventionFilterKeys.offices, state.commonData!.offices],
-      [InterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
-      [InterventionFilterKeys.donors, state.commonData!.donors],
-      [InterventionFilterKeys.partners, partnersDropdownDataSelector(state)],
-      [InterventionFilterKeys.grants, state.commonData!.grants],
-      [InterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
-      [InterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
-      [InterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes],
+      [GDDInterventionFilterKeys.status, state.commonData!.interventionStatuses],
+      [GDDInterventionFilterKeys.section, state.commonData!.sections],
+      [GDDInterventionFilterKeys.offices, state.commonData!.offices],
+      [GDDInterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
+      [GDDInterventionFilterKeys.donors, state.commonData!.donors],
+      [GDDInterventionFilterKeys.partners, govPartnersSelector(state)],
+      [GDDInterventionFilterKeys.grants, state.commonData!.grants],
+      [GDDInterventionFilterKeys.unicef_focal_points, state.commonData!.unicefUsersData],
+      [GDDInterventionFilterKeys.budget_owner, state.commonData!.unicefUsersData],
+      [GDDInterventionFilterKeys.cpStructures, state.commonData!.countryProgrammes],
       [
-        InterventionFilterKeys.editable_by,
+        GDDInterventionFilterKeys.editable_by,
         [
           {label: 'UNICEF', value: 'unicef'},
           {label: this._getTranslation('PARTNER'), value: 'partner'}
         ]
       ]
-    ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
-    this.partners = partnersDropdownDataSelector(state);
+    ].forEach(([key, data]) => GDDInterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
   }
 
   protected getSelectedPartnerTypes(_selectedPartnerTypes: string): string[] {
@@ -467,7 +462,7 @@ export class InterventionsList extends connect(store)(
 
     sendRequest({
       endpoint: {
-        url: pmpEdpoints.interventions.url + this.getFilteringQueryParams()
+        url: pmpEdpoints.gddInterventions.url + this.getFilteringQueryParams()
       },
       method: 'GET'
     })
@@ -486,12 +481,12 @@ export class InterventionsList extends connect(store)(
 
     let qs = this.getListQueryString(queryParams as any, false);
     if (qs) {
-      qs = pmpEdpoints.interventions.url.includes('?') ? '&' + qs : '?' + qs;
+      qs = pmpEdpoints.gddInterventions.url.includes('?') ? '&' + qs : '?' + qs;
     }
     if (queryParams.ordering) {
       qs =
         qs +
-        (qs.includes('?') || pmpEdpoints.interventions.url.includes('?') ? '&' : '?') +
+        (qs.includes('?') || pmpEdpoints.gddInterventions.url.includes('?') ? '&' : '?') +
         'ordering=' +
         queryParams.ordering;
     }
@@ -505,7 +500,6 @@ export class InterventionsList extends connect(store)(
   public getListQueryString(queryStringObj: GenericObject<any>, forExport: boolean) {
     const exportParams: AnyObject = {
       status: queryStringObj.status,
-      document_type: queryStringObj.document_type,
       sections: queryStringObj.section,
       office: queryStringObj.offices,
       donors: queryStringObj.donors,
@@ -519,7 +513,6 @@ export class InterventionsList extends connect(store)(
       end: queryStringObj.end,
       end_after: queryStringObj.endAfter,
       editable_by: queryStringObj.editable_by,
-      contingency_pd: queryStringObj.contingency_pd,
       search: queryStringObj.search
     };
     if (!forExport) {
@@ -557,7 +550,7 @@ export class InterventionsList extends connect(store)(
     fireEvent(this, 'csv-download-url-changed', this.getListQueryString(this.prevQueryStringObj, true) as any);
 
     const stringParams: string = buildUrlQueryString(this.prevQueryStringObj);
-    EtoolsRouter.replaceAppLocation(`interventions/list?${stringParams}`);
+    EtoolsRouter.replaceAppLocation(`gpd-interventions/list?${stringParams}`);
   }
 
   _triggerInterventionLoadingMsg() {
@@ -587,7 +580,7 @@ export class InterventionsList extends connect(store)(
     return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
   }
 
-  getStatusCellText(intervention: ListItemIntervention) {
+  getStatusCellText(intervention: GDDListItem) {
     return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
   }
 }

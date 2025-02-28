@@ -92,9 +92,12 @@ function fetchLangFiles(lang: string) {
     fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json()),
     fetch(`src/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
       res.json()
+    ),
+    fetch(`src/components/pages/gdd-interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then(
+      (res: any) => res.json()
     )
   ]).then((response: any) => {
-    return Object.assign(response[0].value, response[1].value);
+    return Object.assign(response[0].value, response[1].value, response[2].value);
   });
 }
 const translationConfig = registerTranslateConfig({
@@ -157,6 +160,7 @@ class AppShell extends connect(store)(
             .rootPath="${this.rootPath}"
             .selectedOption="${this.module}"
             ?small-menu="${this.smallMenu}"
+            .user="${this.user}"
           ></app-menu>
         </app-drawer>
 
@@ -193,7 +197,16 @@ class AppShell extends connect(store)(
                 >
                 </interventions-module>`
               : ``}
-
+            ${this.GDDinterventionsLoaded
+              ? html`<gdd-interventions-module
+                  id="gdd-interventions"
+                  class="main-page"
+                  .userPermissions="${this.permissions}"
+                  .user="${this.user}"
+                  ?hidden="${!this._activeModuleIs(this.module, 'gpd-interventions')}"
+                >
+                </gdd-interventions-module>`
+              : ``}
             <reports-module
               id="reports"
               class="main-page"
@@ -246,6 +259,9 @@ class AppShell extends connect(store)(
     if (val !== this._module) {
       if (!this.interventionsLoaded) {
         this.interventionsLoaded = val === 'interventions';
+      }
+      if (!this.GDDinterventionsLoaded) {
+        this.GDDinterventionsLoaded = val === 'gpd-interventions';
       }
       this._module = val;
       this._scrollToTopOnModuleChange(this._module);
@@ -308,6 +324,7 @@ class AppShell extends connect(store)(
   @query('#drawer') private drawer!: LitElement;
 
   @state() interventionsLoaded = false;
+  @state() GDDinterventionsLoaded = false;
 
   constructor() {
     super();
@@ -337,7 +354,6 @@ class AppShell extends connect(store)(
     window.ajaxErrorParserTranslateFunction = (key: string) => {
       return getTranslatedValue(key);
     };
-
     if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.
