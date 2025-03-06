@@ -483,7 +483,14 @@ export class PartnersModule extends connect(store)(
   }
 
   public _getModifiedData(partner: any) {
-    const updatableFields = ['alternate_name', 'shared_with', 'planned_engagement', 'basis_for_risk_rating'];
+    const updatableFields = [
+      'alternate_name',
+      'shared_with',
+      'planned_engagement',
+      'basis_for_risk_rating',
+      'lead_section',
+      'lead_office'
+    ];
     const changes: any = {};
     updatableFields.forEach((fieldName) => {
       if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {
@@ -496,6 +503,7 @@ export class PartnersModule extends connect(store)(
         }
       }
     });
+    console.log(changes, partner);
     return changes;
   }
 

@@ -658,5 +658,7 @@
   },
   "NEW_GDD": {
     "GOVERNMENT": "Entidad Gubernamental"
-  }
+  },
+  "LEAD_SECTION": "Sección principal",
+  "LEAD_OFFICE": "Oficina principal"
 }
