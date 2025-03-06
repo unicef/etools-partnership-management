@@ -503,7 +503,6 @@ export class PartnersModule extends connect(store)(
         }
       }
     });
-    console.log(changes, partner);
     return changes;
   }
 
