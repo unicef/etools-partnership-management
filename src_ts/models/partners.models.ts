@@ -115,6 +115,8 @@ export class Partner extends ModelsCommon {
   type_of_assessment = '';
   vendor_number = '';
   vision_synced = false;
+  lead_section = '';
+  lead_office = '';
   [key: string]: any;
 
   constructor(partnerDataObj: GenericObject) {

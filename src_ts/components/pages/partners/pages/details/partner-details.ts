@@ -28,7 +28,7 @@ import './components/staff-members';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {convertDate} from '@unicef-polymer/etools-utils/dist/date.util';
 import {Partner} from '../../../../../models/partners.models';
-import {LabelAndValue, User} from '@unicef-polymer/etools-types';
+import {AnyObject, LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
@@ -38,6 +38,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import dayjs from 'dayjs';
+import get from 'lodash-es/get';
 
 /**
  * @LitElement
@@ -174,16 +175,55 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
         </div>
 
         <div class="row">
-          <etools-input
-            class="col-12 col-md-4"
-            readonly
-            placeholder="—"
-            label="${translate('ADDRESS')}"
-            title="${this.partner.address}"
-            .value="${this.partner.address}"
-          >
-            <etools-icon slot="prefix" name="communication:location-on"></etools-icon>
-          </etools-input>
+          <div class="col-12 col-md-4">
+            <etools-input
+              class="w-100"
+              readonly
+              placeholder="—"
+              label="${translate('ADDRESS')}"
+              title="${this.partner.address}"
+              .value="${this.partner.address}"
+            >
+              <etools-icon slot="prefix" name="communication:location-on"></etools-icon>
+            </etools-input>
+          </div>
+          <div class="col-12 col-md-4">
+            <etools-dropdown
+              id="leadOffice"
+              label=${translate('LEAD_OFFICE')}
+              .options="${this.office_list}"
+              option-label="name"
+              option-value="id"
+              .selected="${this.partner.lead_office}"
+              ?readonly="${!this.editMode}"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => {
+                if (detail.selectedItem?.id !== this.partner.lead_office) {
+                  this.selectedItemChanged(detail, 'lead_office', 'id', 'partner');
+                }
+              }}"
+              trigger-value-change-event
+            >
+            </etools-dropdown>
+          </div>
+          <div class="col-12 col-md-4">
+            <etools-dropdown
+              id="leadSection"
+              label=${translate('LEAD_SECTION')}
+              .options="${this.section_list}"
+              class="w100"
+              option-label="name"
+              option-value="id"
+              .selected="${this.partner.lead_section}"
+              ?readonly="${!this.editMode}"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => {
+                if (detail.selectedItem?.id !== this.partner.lead_section) {
+                  this.selectedItemChanged(detail, 'lead_section', 'id', 'partner');
+                }
+              }}"
+              trigger-value-change-event
+            >
+            </etools-dropdown>
+          </div>
         </div>
         <div class="row">
           <div class="col-12 col-md-4">
@@ -377,6 +417,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
   @property({type: Boolean})
   lowResolutionLayout = false;
 
+  @property({type: Array})
+  office_list!: AnyObject[];
+
+  @property({type: Array})
+  section_list!: AnyObject[];
+
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
       this.csoTypes = state.commonData!.csoTypes;
@@ -389,6 +435,12 @@ export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixi
     }
     if (state.user && state.user.data && !isJsonStrMatch(this.user, state.user.data)) {
       this.user = state.user.data;
+    }
+    if (get(state, 'commonData.sections.length')) {
+      this.section_list = [...state.commonData!.sections];
+    }
+    if (get(state, 'commonData.offices.length')) {
+      this.office_list = [...state.commonData!.offices];
     }
   }
 

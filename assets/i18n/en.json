@@ -658,5 +658,7 @@
   },
   "NEW_GDD": {
     "GOVERNMENT": "Government Entity"
-  }
+  },
+  "LEAD_SECTION": "Lead Section",
+  "LEAD_OFFICE": "Lead Office"
 }

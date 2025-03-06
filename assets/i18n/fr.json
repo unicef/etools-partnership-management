@@ -658,5 +658,7 @@
   },
   "NEW_GDD": {
     "GOVERNMENT": "Entité gouvernementale"
-  }
+  },
+  "LEAD_SECTION": "Section principale",
+  "LEAD_OFFICE": "Bureau de tête"
 }
