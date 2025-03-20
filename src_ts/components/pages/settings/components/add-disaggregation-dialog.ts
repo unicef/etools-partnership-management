@@ -11,8 +11,6 @@ import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/commo
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
-import {actionIconBtnsStyles} from '@unicef-polymer/etools-modules-common/dist/styles/action-icon-btns-styles';
-
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store} from '../../../../redux/store';
 import {addDisaggregation} from '../../../../redux/actions/common-data';
@@ -44,7 +42,7 @@ export class AddDisaggregationDialog extends connect(store)(
   render() {
     // language=HTML
     return html`
-      ${sharedStyles} ${actionIconBtnsStyles}
+      ${sharedStyles}
       <style>
         .groups {
           align-items: center;
@@ -65,7 +63,16 @@ export class AddDisaggregationDialog extends connect(store)(
             padding-inline-start: 0px !important;
           }
         }
+        .action {
+          color: var(--medium-icon-color);
+          width: 36px;
+          height: 36px;
+        }
 
+        .action.delete {
+          color: var(--icon-delete-color);
+          --sl-color-primary-600: var(--error-color);
+        }
         .action.delete.no-padding {
           padding-top: 0 !important;
           padding-bottom: 0 !important;
