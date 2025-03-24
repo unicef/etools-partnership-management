@@ -74,8 +74,8 @@ const importInterventionSubRoutes = async (subRouteName: string | null) => {
         `../../components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
     }
-  } catch (error) {
-    console.log(`No file imports configuration found interventions: ${subRouteName}!`, error);
+  } catch {
+    console.log(`No file imports configuration found interventions: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
@@ -103,8 +103,8 @@ const importGDDInterventionSubRoutes = async (subRouteName: string | null) => {
         `../../components/pages/gpd-interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
     }
-  } catch (error) {
-    console.log(`No file imports configuration found gpd-interventions: ${subRouteName}!`, error);
+  } catch {
+    console.log(`No file imports configuration found gpd-interventions: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
@@ -115,7 +115,7 @@ const importReportsSubRoutes = async (subRouteName: string | null) => {
 
   try {
     await import(`../../components/pages/reports/pages/${subRouteName}/report-${subRouteName}.ts`);
-  } catch (error) {
+  } catch {
     console.log(`No file imports configuration found reports: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
@@ -132,8 +132,8 @@ const importPartnerSubRoutes = async (subRouteName: string | null, routeName: st
     } else {
       await import(`../../components/pages/partners/pages/${subRouteName}/partner-${subRouteName}.ts`);
     }
-  } catch (error) {
-    console.log(`No file imports configuration found reports: ${subRouteName}!`);
+  } catch {
+    console.log(`No file imports configuration found partners: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
@@ -145,7 +145,7 @@ const importAgreementsSubRoutes = async (subRouteName: string | null) => {
 
   try {
     await import(`../../components/pages/agreements/pages/${subRouteName}/agreement-${subRouteName}.ts`);
-  } catch (error) {
+  } catch {
     console.log(`No file imports configuration found agreements: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
@@ -177,7 +177,7 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
       if (Object.keys(subRouteImportFunctions).includes(routeName)) {
         await subRouteImportFunctions[routeName](routeDetails.subRouteName, routeDetails.routeName);
       }
-    } catch (error) {
+    } catch {
       console.log(`No file imports configuration found for module: ${routeDetails.routeName}!`);
       EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
     }
