@@ -254,6 +254,25 @@ export function template(this: GddInterventionNew): TemplateResult {
           </etools-dropdown-multi>
         </div>
 
+        <div class="col-md-4 col-lg-4 col-12">
+          <etools-dropdown
+            id="leadSection"
+            label=${translate('LEAD_SECTION')}
+            .options="${this.sections}"
+            class="w100"
+            option-label="name"
+            option-value="id"
+            .selected="${this.newIntervention.lead_section}"
+            @etools-selected-item-changed="${({detail}: CustomEvent) => {
+              if (detail.selectedItem?.id !== this.newIntervention.lead_section) {
+                this.setInterventionField('lead_section', detail.selectedItem && detail.selectedItem.id);
+              }
+            }}"
+            trigger-value-change-event
+          >
+          </etools-dropdown>
+        </div>
+
         <!--   UNICEF Sections   -->
         <div class="col-md-4 col-lg-4 col-12">
           <etools-dropdown-multi
@@ -273,25 +292,7 @@ export function template(this: GddInterventionNew): TemplateResult {
           >
           </etools-dropdown-multi>
         </div>
-
-        <div class="col-md-4 col-lg-4 col-12">
-          <etools-dropdown
-            id="leadSection"
-            label=${translate('LEAD_SECTION')}
-            .options="${this.sections}"
-            class="w100"
-            option-label="name"
-            option-value="id"
-            .selected="${this.newIntervention.lead_section}"
-            @etools-selected-item-changed="${({detail}: CustomEvent) => {
-              if (detail.selectedItem?.id !== this.newIntervention.lead_section) {
-                this.setInterventionField('lead_section', detail.selectedItem && detail.selectedItem.id);
-              }
-            }}"
-            trigger-value-change-event
-          >
-          </etools-dropdown>
-        </div>
+          
       </div>
 
       <div class="row">
