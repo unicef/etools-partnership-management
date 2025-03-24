@@ -34,14 +34,14 @@ const terserConfig = {
 // Extra files to copy in src directory ./src
 const copyConfig = {
   targets: [
-    { src: 'manifest.json', dest: 'src' },
-    { src: 'version.json', dest: 'src' },
-    { src: 'node_modules/leaflet/dist/', dest: 'src/node_modules/leaflet/' },
-    { src: 'node_modules/esri-leaflet/dist/esri-leaflet.js', dest: 'src/node_modules/esri-leaflet/dist' },
+    {src: 'manifest.json', dest: 'src'},
+    {src: 'version.json', dest: 'src'},
+    {src: 'node_modules/leaflet/dist/', dest: 'src/node_modules/leaflet/'},
+    {src: 'node_modules/esri-leaflet/dist/esri-leaflet.js', dest: 'src/node_modules/esri-leaflet/dist'},
     {
       src: 'node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js',
       dest: 'src/node_modules/@mapbox/leaflet-omnivore/'
-    },    
+    },
     {
       src: 'node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
       dest: 'src/node_modules/leaflet.markercluster/dist'
@@ -51,11 +51,11 @@ const copyConfig = {
       dest: 'src/src/components/pages/interventions/pages/intervention-tab-pages/assets'
     },
     {
-      src: 'src_ts/components/pages/gdd-interventions/pages/intervention-tab-pages/assets/i18n',
-      dest: 'src/src/components/pages/gdd-interventions/pages/intervention-tab-pages/assets'
+      src: 'src_ts/components/pages/gpd-interventions/pages/intervention-tab-pages/assets/i18n',
+      dest: 'src/src/components/pages/gpd-interventions/pages/intervention-tab-pages/assets'
     },
-    { src: 'assets', dest: 'src' },
-    { src: 'index.html', dest: 'src' }
+    {src: 'assets', dest: 'src'},
+    {src: 'index.html', dest: 'src'}
   ]
 };
 

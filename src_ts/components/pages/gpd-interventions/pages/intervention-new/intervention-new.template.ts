@@ -1,7 +1,7 @@
 /* eslint no-invalid-this: 0 */
 import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 import {TemplateResult, html} from 'lit';
-import {GddInterventionNew} from './gdd-intervention-new';
+import {GddInterventionNew} from './intervention-new';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {formatDate} from '@unicef-polymer/etools-utils/dist/date.util';

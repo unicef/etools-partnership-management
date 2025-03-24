@@ -1,32 +1,32 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import CONSTANTS from '../../../config/app-constants';
-import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
-import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
+import CONSTANTS from '../../../config/app-constants.js';
+import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit.js';
+import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 import '../../common/components/page-content-header.js';
 import '../../common/components/etools-error-messages-box.js';
 import './data/gdd-intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
-import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
+import {pageLayoutStyles} from '../../styles/page-layout-styles-lit.js';
+import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit.js';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
-import {store, RootState} from '../../../redux/store';
+import {store, RootState} from '../../../redux/store.js';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import GddInterventionItemData from './data/gdd-intervention-item-data.js';
 // TODO Update this import
-import './pages/intervention-tab-pages/intervention-tabs';
+import './pages/intervention-tab-pages/intervention-tabs.js';
 import get from 'lodash-es/get';
 import {Agreement, GDD, UserPermissions, GenericObject, EtoolsUser} from '@unicef-polymer/etools-types';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixinLit from '../../common/mixins/common-mixin-lit.js';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
-import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
-import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
+import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit.js';
+import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import pmpEdpoints from '../../endpoints/endpoints';
+import pmpEdpoints from '../../endpoints/endpoints.js';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
@@ -48,7 +48,7 @@ setStore(store);
  * @appliesMixin SaveInterventionMixin
  */
 
-@customElement('gdd-interventions-module')
+@customElement('gpd-interventions-module')
 export class GddInterventionsModule extends connect(store)(
   MatomoMixin(
     ScrollControlMixinLit(
@@ -187,7 +187,7 @@ export class GddInterventionsModule extends connect(store)(
               .errors="${this.serverErrors}"
             ></etools-error-messages-box>
 
-            <gdd-interventions-list
+            <gpd-interventions-list
               id="list"
               name="list"
               ?hidden="${!this._pageEquals(this.activePage, 'list')}"
@@ -195,7 +195,7 @@ export class GddInterventionsModule extends connect(store)(
               @csv-download-url-changed="${this.csvDownloadUrlChanged}"
               @list-loading-active="${(ev: CustomEvent) => (this.listLoadingActive = ev.detail.value)}"
             >
-            </gdd-interventions-list>
+            </gpd-interventions-list>
 
             ${this._pageEquals(this.activePage, 'new')
               ? html`<gdd-intervention-new @create-intervention="${this.onCreateIntervention}"></gdd-intervention-new>`

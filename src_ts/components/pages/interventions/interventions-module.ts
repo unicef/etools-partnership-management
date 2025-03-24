@@ -28,7 +28,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import pmpEdpoints from '../../endpoints/endpoints';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
-import './pages/new/ecn-import-dialog';
+import './pages/intervention-new/ecn-import-dialog.js';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';

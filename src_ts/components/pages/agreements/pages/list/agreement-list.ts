@@ -30,7 +30,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
-import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreements-filters';
+import {AgreementsFilterKeys, getAgreementFilters, AgreementsFiltersHelper} from './agreement-filters.js';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import get from 'lodash-es/get';
 import {buildUrlQueryString, cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';

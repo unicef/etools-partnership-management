@@ -2,9 +2,9 @@ import {customElement} from 'lit/decorators.js';
 import {store, RootState} from '../../../../../redux/store';
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {PartnersListBase} from './partners-list-base';
+import {PartnersListBase} from './partner-list-base';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
-import {getPartnerFilters, PartnersFiltersHelper} from './partners-filters';
+import {getPartnerFilters, PartnersFiltersHelper} from './partner-filters';
 
 /**
  * @LitElement
