@@ -12,7 +12,7 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit.js';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import AjaxServerErrorsMixin from '../../../../common/mixins/ajax-server-errors-mixin-lit.js';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit.js';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin.js';
 
