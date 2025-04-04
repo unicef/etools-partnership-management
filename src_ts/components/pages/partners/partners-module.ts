@@ -9,7 +9,7 @@ import {RootState, store} from '../../../redux/store';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
@@ -58,7 +58,7 @@ import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environme
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   MatomoMixin(
-    CommonMixinLit(
+    CommonMixin(
       ScrollControlMixinLit(
         ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
       )

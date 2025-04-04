@@ -4,7 +4,7 @@ import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
 /**
  * @LitElement
@@ -12,7 +12,7 @@ import CommonMixinLit from '../../common/mixins/common-mixin-lit';
  */
 
 @customElement('settings-module')
-export class SettingsModule extends CommonMixinLit(LitElement) {
+export class SettingsModule extends CommonMixin(LitElement) {
   render() {
     // language=HTML
     return html`

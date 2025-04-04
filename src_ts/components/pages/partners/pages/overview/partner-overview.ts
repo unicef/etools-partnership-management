@@ -7,7 +7,7 @@ import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table';
 import '@unicef-polymer/etools-unicef/src/etools-media-query/etools-media-query';
 
 import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
@@ -33,7 +33,7 @@ import {dataTableStylesLit} from '@unicef-polymer/etools-unicef/src/etools-data-
  */
 @customElement('partner-overview')
 export class PartnerOverview extends PaginationMixin(
-  EtoolsCurrency(CommonMixinLit(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement))))
+  EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(LitElement))))
 ) {
   static get styles() {
     return [layoutStyles, frWarningsStyles];

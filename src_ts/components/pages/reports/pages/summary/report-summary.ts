@@ -6,7 +6,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-unicef/src/mixins/currency.
 
 import './sent-bk-comments.js';
 import './accepted-comments.js';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
@@ -27,7 +27,7 @@ import '@unicef-polymer/etools-unicef/src/etools-input/etools-textarea';
  * @appliesMixin EtoolsCurrency
  */
 @customElement('report-summary')
-export class ReportSummary extends CommonMixinLit(EtoolsCurrency(LitElement)) {
+export class ReportSummary extends CommonMixin(EtoolsCurrency(LitElement)) {
   static get styles() {
     return [layoutStyles, elevationStyles];
   }
