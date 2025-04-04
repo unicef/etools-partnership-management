@@ -22,7 +22,7 @@ import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
@@ -41,10 +41,11 @@ import {
   EtoolsRouteDetails,
   EtoolsRouteQueryParams
 } from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {mapStatus, getDevelopementStatusDetails} from '../../../../utils/utils';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
-  ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
+  ListsCommonMixin(CommonMixin(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
     return [layoutStyles, frWarningsStyles];
@@ -588,6 +589,6 @@ export class InterventionsList extends connect(store)(
   }
 
   getStatusCellText(intervention: ListItemIntervention) {
-    return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
+    return `${mapStatus(intervention)} ${getDevelopementStatusDetails(intervention)}`;
   }
 }
