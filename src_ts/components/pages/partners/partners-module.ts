@@ -403,7 +403,7 @@ export class PartnersModule extends connect(store)(
       loadingSource: 'partner-data'
     });
     fireEvent(this, 'toast', {
-      text: this._getTranslation('PARTNER_SUCCESSFULLY_DELETED')
+      text: getTranslation('PARTNER_SUCCESSFULLY_DELETED')
     });
     fireEvent(this, 'update-main-path', {
       path: 'partners/list'

@@ -21,7 +21,7 @@ import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.uti
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
@@ -447,7 +447,7 @@ export class GddInterventionsList extends connect(store)(
         GDDInterventionFilterKeys.editable_by,
         [
           {label: 'UNICEF', value: 'unicef'},
-          {label: this._getTranslation('PARTNER'), value: 'partner'}
+          {label: getTranslation('PARTNER'), value: 'partner'}
         ]
       ]
     ].forEach(([key, data]) => GDDInterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
