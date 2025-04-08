@@ -5,7 +5,7 @@ import {RootState, store} from '../../../redux/store';
 
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import CONSTANTS from '../../../config/app-constants.js';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
@@ -40,7 +40,7 @@ import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins = MatomoMixin(
-  ScrollControlMixin(CommonMixinLit(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(LitElement))))
+  ScrollControlMixin(CommonMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(LitElement))))
 );
 
 /**
@@ -392,7 +392,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     }
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
-        text: this._getTranslation('PLEASE_FILL_IN_REQUIRED_DATA')
+        text: getTranslation('PLEASE_FILL_IN_REQUIRED_DATA')
       });
       return false;
     }

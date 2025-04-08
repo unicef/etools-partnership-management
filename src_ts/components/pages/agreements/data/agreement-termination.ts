@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import EnvironmentFlagsPolymerMixin from '../../../common/environment-flags/environment-flags-mixin-lit';
-import CommonMixinLit from '../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
@@ -23,7 +23,7 @@ import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
  * @appliesMixin EnvironmentFlagsPolymerMixin
  */
 @customElement('agreement-termination')
-export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixinLit(LitElement)) {
+export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMixin(LitElement)) {
   static get styles() {
     return [layoutStyles];
   }

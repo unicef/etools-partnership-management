@@ -3,7 +3,7 @@ import {property, customElement} from 'lit/decorators.js';
 import '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import RiskRatingMixin from '../../../../common/mixins/risk-rating-mixin-lit';
 
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
@@ -49,7 +49,7 @@ import get from 'lodash-es/get';
  */
 
 @customElement('partner-details')
-export class PartnerDetails extends connect(store)(CommonMixinLit(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
+export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(ComponentBaseMixin(LitElement)))) {
   static get styles() {
     return [layoutStyles];
   }

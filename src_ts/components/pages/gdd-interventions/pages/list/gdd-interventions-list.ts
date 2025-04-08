@@ -1,7 +1,7 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
@@ -21,8 +21,8 @@ import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.uti
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
@@ -42,6 +42,7 @@ import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 // TODO change this import after intervention tab pages location is changed
 import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/gddInterventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
+import {mapStatus, getDevelopementStatusDetails} from '../../../../utils/utils';
 import {
   EtoolsRouteDetails,
   EtoolsRouteQueryParams
@@ -49,7 +50,7 @@ import {
 
 @customElement('gdd-interventions-list')
 export class GddInterventionsList extends connect(store)(
-  ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
+  ListsCommonMixin(CommonMixin(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
     return [layoutStyles, frWarningsStyles];
@@ -446,7 +447,7 @@ export class GddInterventionsList extends connect(store)(
         GDDInterventionFilterKeys.editable_by,
         [
           {label: 'UNICEF', value: 'unicef'},
-          {label: this._getTranslation('PARTNER'), value: 'partner'}
+          {label: getTranslation('PARTNER'), value: 'partner'}
         ]
       ]
     ].forEach(([key, data]) => GDDInterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
@@ -581,6 +582,6 @@ export class GddInterventionsList extends connect(store)(
   }
 
   getStatusCellText(intervention: GDDListItem) {
-    return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
+    return `${mapStatus(intervention)} ${getDevelopementStatusDetails(intervention)}`;
   }
 }
