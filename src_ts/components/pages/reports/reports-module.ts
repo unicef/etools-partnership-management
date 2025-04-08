@@ -14,7 +14,7 @@ import {GenericObject, User} from '@unicef-polymer/etools-types';
 import ModuleMainElCommonFunctionalityMixin from '../../common/mixins/module-common-mixin-lit';
 import ModuleRoutingMixin from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixin from '../../common/mixins/scroll-control-mixin-lit';
-import CommonMixin from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';

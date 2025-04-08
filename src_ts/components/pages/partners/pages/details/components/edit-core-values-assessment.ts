@@ -7,7 +7,7 @@ import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styl
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etools-upload';
@@ -18,7 +18,7 @@ import {EtoolsUpload} from '@unicef-polymer/etools-unicef/src/etools-upload/etoo
  * @appliesMixin CommonMixin
  */
 @customElement('edit-core-values-assessment')
-export class EditCoreValuesAssessment extends CommonMixinLit(LitElement) {
+export class EditCoreValuesAssessment extends CommonMixin(LitElement) {
   static get styles() {
     return [layoutStyles];
   }

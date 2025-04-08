@@ -4,15 +4,15 @@ import '../../common/components/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
-
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 /**
  * @LitElement
  * @customElement
  */
 
 @customElement('settings-module')
-export class SettingsModule extends CommonMixinLit(LitElement) {
+export class SettingsModule extends CommonMixin(LitElement) {
   render() {
     // language=HTML
     return html`
@@ -20,7 +20,7 @@ export class SettingsModule extends CommonMixinLit(LitElement) {
       <style></style>
 
       <page-content-header>
-        <div slot="page-title">${this._getTranslation('SETTINGS')}</div>
+        <div slot="page-title">${translate('SETTINGS')}</div>
       </page-content-header>
 
       <div id="main">

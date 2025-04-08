@@ -12,7 +12,7 @@ import './components/indicator-details';
 import './components/sr-details';
 
 import UtilsMixin from '../../../../common/mixins/utils-mixin';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
@@ -30,7 +30,7 @@ import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-bu
  * @appliesMixin UtilsMixin
  */
 @customElement('report-progress')
-export class ReportProgress extends CommonMixinLit(UtilsMixin(LitElement)) {
+export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
   static get styles() {
     return [layoutStyles];
   }

@@ -19,7 +19,7 @@ import InterventionItemData from './data/intervention-item-data.js';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
@@ -55,7 +55,7 @@ export class InterventionsModule extends connect(store)(
   MatomoMixin(
     ScrollControlMixinLit(
       ModuleMainElCommonFunctionalityMixinLit(
-        ModuleRoutingMixinLit(CommonMixinLit(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement))))
+        ModuleRoutingMixinLit(CommonMixin(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement))))
       )
     )
   )

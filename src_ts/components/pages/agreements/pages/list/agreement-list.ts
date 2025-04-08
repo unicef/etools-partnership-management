@@ -13,7 +13,7 @@ import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins
 import pmpEdpoints from '../../../../endpoints/endpoints';
 
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';

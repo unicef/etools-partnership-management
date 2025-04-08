@@ -11,14 +11,14 @@ import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 
 @customElement('hact-edit-dialog')
-export class HactEditDialog extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
+export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [layoutStyles];
   }

@@ -6,7 +6,7 @@ import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import '../../components/report-status';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
 
