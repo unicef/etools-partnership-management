@@ -31,7 +31,7 @@ const config = {
     format: 'es',
     sourcemap: true,
     entryFileNames: '[name].js',
-    chunkFileNames: '[name].js',
+    chunkFileNames: '[name].js'
   },
   watch: {
     include: ['src_ts/**', 'node_modules/**']
@@ -48,9 +48,9 @@ const config = {
       port: liveReloadPort,
       verbose: true,
       delay: 1000,
-      watch: ['src'],
-    }),
+      watch: ['src']
+    })
   ]
-}
+};
 
 export default config;
