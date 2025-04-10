@@ -94,5 +94,3 @@ workflows:
                 - master
                 - staging
                 - develop
-                - gdd
-                - node_20.18.0_shoelace_2.18.0

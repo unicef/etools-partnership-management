@@ -1,7 +1,7 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import ListsCommonMixin from '../../../../common/mixins/lists-common-mixin-lit';
-import PaginationMixin from '@unicef-polymer/etools-modules-common/dist/mixins/pagination-mixin';
+import PaginationMixin from '@unicef-polymer/etools-unicef/src/mixins/pagination-mixin';
 import FrNumbersConsistencyMixin from '@unicef-polymer/etools-modules-common/dist/mixins/fr-numbers-consistency-mixin';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
@@ -21,8 +21,8 @@ import {buildUrlQueryString} from '@unicef-polymer/etools-utils/dist/general.uti
 import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
-import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
-import CommonMixinLit from '../../../../common/mixins/common-mixin-lit';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import '@unicef-polymer/etools-unicef/src/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip.js';
@@ -41,10 +41,11 @@ import {
   EtoolsRouteDetails,
   EtoolsRouteQueryParams
 } from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {mapStatus, getDevelopementStatusDetails} from '../../../../utils/utils';
 
 @customElement('interventions-list')
 export class InterventionsList extends connect(store)(
-  ListsCommonMixin(CommonMixinLit(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
+  ListsCommonMixin(CommonMixin(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {
   static get styles() {
     return [layoutStyles, frWarningsStyles];
@@ -450,7 +451,7 @@ export class InterventionsList extends connect(store)(
         InterventionFilterKeys.editable_by,
         [
           {label: 'UNICEF', value: 'unicef'},
-          {label: this._getTranslation('PARTNER'), value: 'partner'}
+          {label: getTranslation('PARTNER'), value: 'partner'}
         ]
       ]
     ].forEach(([key, data]) => InterventionsFiltersHelper.updateFilterSelectionOptions(allFilters, key, data));
@@ -588,6 +589,6 @@ export class InterventionsList extends connect(store)(
   }
 
   getStatusCellText(intervention: ListItemIntervention) {
-    return `${this.mapStatus(intervention)} ${this.getDevelopementStatusDetails(intervention)}`;
+    return `${mapStatus(intervention)} ${getDevelopementStatusDetails(intervention)}`;
   }
 }

@@ -2,7 +2,7 @@ import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
-import CommonMixinLit from '../../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
@@ -25,7 +25,7 @@ import dayjs from 'dayjs';
  * @appliesMixin CommonMixin
  */
 @customElement('partner-monitoring-visits-list')
-export class PartnerMonitoringVisitsList extends CommonMixinLit(EndpointsLitMixin(LitElement)) {
+export class PartnerMonitoringVisitsList extends CommonMixin(EndpointsLitMixin(LitElement)) {
   static get styles() {
     return [layoutStyles];
   }

@@ -8,7 +8,6 @@ import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {html, LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-import CommonMixinLit from '../mixins/common-mixin-lit';
 import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
@@ -16,7 +15,7 @@ import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
  * @LitElement
  * @customElement
  */
-export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)) {
+export class EtoolsCpStructure extends connect(store)(LitElement) {
   render() {
     return html`
       ${sharedStyles}
@@ -187,7 +186,7 @@ export class EtoolsCpStructure extends connect(store)(CommonMixinLit(LitElement)
         msg = 'PD/SPD ' + this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
-    return msg + this._getTranslation('HAS_AN_OLD_EXPIRED_CP_STRUCTURE');
+    return msg + getTranslation('HAS_AN_OLD_EXPIRED_CP_STRUCTURE');
   }
 
   resetCpDropdownInvalidState() {

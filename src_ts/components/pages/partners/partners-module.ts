@@ -9,7 +9,7 @@ import {RootState, store} from '../../../redux/store';
 import ModuleRoutingMixinLit from '../../common/mixins/module-routing-mixin-lit';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import ModuleMainElCommonFunctionalityMixinLit from '../../common/mixins/module-common-mixin-lit';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 import '../../common/components/page-content-header';
@@ -58,7 +58,7 @@ import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environme
 export class PartnersModule extends connect(store)(
   // eslint-disable new-cap
   MatomoMixin(
-    CommonMixinLit(
+    CommonMixin(
       ScrollControlMixinLit(
         ModuleRoutingMixinLit(ModuleMainElCommonFunctionalityMixinLit(StaffMembersDataMixinLit(LitElement)))
       )
@@ -403,7 +403,7 @@ export class PartnersModule extends connect(store)(
       loadingSource: 'partner-data'
     });
     fireEvent(this, 'toast', {
-      text: this._getTranslation('PARTNER_SUCCESSFULLY_DELETED')
+      text: getTranslation('PARTNER_SUCCESSFULLY_DELETED')
     });
     fireEvent(this, 'update-main-path', {
       path: 'partners/list'
@@ -483,7 +483,14 @@ export class PartnersModule extends connect(store)(
   }
 
   public _getModifiedData(partner: any) {
-    const updatableFields = ['alternate_name', 'shared_with', 'planned_engagement', 'basis_for_risk_rating'];
+    const updatableFields = [
+      'alternate_name',
+      'shared_with',
+      'planned_engagement',
+      'basis_for_risk_rating',
+      'lead_section',
+      'lead_office'
+    ];
     const changes: any = {};
     updatableFields.forEach((fieldName) => {
       if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {

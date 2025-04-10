@@ -13,7 +13,7 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util.js';
 import {AgreementAmendment} from '@unicef-polymer/etools-types';
-import CommonMixinLit from '../../../../../../common/mixins/common-mixin-lit';
+import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util.js';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -23,7 +23,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
  * @customElement
  */
 @customElement('add-ag-amendment-dialog')
-export class AddAgAmendmentDialog extends CommonMixinLit(LitElement) {
+export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
   static get styles() {
     return [layoutStyles];
   }

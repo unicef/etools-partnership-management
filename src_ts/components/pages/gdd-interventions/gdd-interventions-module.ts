@@ -20,7 +20,6 @@ import GddInterventionItemData from './data/gdd-intervention-item-data.js';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {Agreement, GDD, UserPermissions, GenericObject, EtoolsUser} from '@unicef-polymer/etools-types';
-import CommonMixinLit from '../../common/mixins/common-mixin-lit';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import ScrollControlMixinLit from '../../common/mixins/scroll-control-mixin-lit';
 import EnvironmentFlagsMixinLit from '../../common/environment-flags/environment-flags-mixin-lit';
@@ -53,7 +52,7 @@ export class GddInterventionsModule extends connect(store)(
   MatomoMixin(
     ScrollControlMixinLit(
       ModuleMainElCommonFunctionalityMixinLit(
-        ModuleRoutingMixinLit(CommonMixinLit(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement))))
+        ModuleRoutingMixinLit(EnvironmentFlagsMixinLit(EndpointsLitMixin(LitElement)))
       )
     )
   )
