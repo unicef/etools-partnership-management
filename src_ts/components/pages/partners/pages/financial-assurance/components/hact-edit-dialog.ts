@@ -274,8 +274,8 @@ export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
   @property({type: Array})
   auditOptions = [
     {
-       label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
-       value: 'Scheduled Audit'
+      label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
+      value: 'Scheduled Audit'
     },
     {
       label: getTranslatedValue('Special Audit', 'AUDIT_OPTIONS'),
