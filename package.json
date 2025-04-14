@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@mapbox/leaflet-omnivore": "^0.3.4",
+    "@rollup/plugin-dynamic-import-vars": "^2.1.5",
     "@shoelace-style/shoelace": "2.18.0",
     "@types/leaflet": "^1.9.3",
     "@types/lodash-es": "^4.17.7",
