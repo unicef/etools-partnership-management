@@ -459,7 +459,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           <etools-data-table-column class="col-2"> ${translate('DATE')} </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('AMOUNT_TESTED')} <br />(USD) </etools-data-table-column>
           <etools-data-table-column class="col-2 col">
-            ${translate('OUTSTANDING_FINDINGS')} <br />(USD)
+            ${translate('FINANCIAL_FINDINGS')} <br />(USD)
           </etools-data-table-column>
           <etools-data-table-column class="col-2 col">
             ${translate('PENDING_UNSUPPORTED_AMOUNT')} <br />(USD)
