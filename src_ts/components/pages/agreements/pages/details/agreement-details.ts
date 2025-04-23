@@ -341,7 +341,27 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           <div class="row ">
             <div class="col-12 col-md-6">
               <!-- Signed By UNICEF -->
-              <etools-input readonly placeholder="—" .value="${translate('SIGNED_BY_UNICEF_AUTHORIZED_OFFICER')}">
+              <etools-dropdown
+                id="signedByUnicefRepresentative"
+                label="${translate('SIGNED_BY_UNICEF_REPRESENTATIVE')}"
+                placeholder="&#8212;"
+                .options="${this.unicefRepresentatives}"
+                option-value="id"
+                option-label="name"
+                .selected="${this.agreement.signed_by?.id}"
+                trigger-value-change-event
+                @etools-selected-item-changed="${({detail}: CustomEvent) =>
+                  (this.agreement.signed_by = detail.selectedItem)}"
+                ?hidden="${!this.agreement.permissions?.edit.signed_by}"
+              >
+              </etools-dropdown>
+              <etools-input
+                readonly
+                placeholder="—"
+                label="${translate('SIGNED_BY_UNICEF_REPRESENTATIVE')}"
+                ?hidden="${this.agreement.permissions?.edit.signed_by}"
+                .value="${this.agreement.signed_by?.name}"
+              >
               </etools-input>
             </div>
 
@@ -616,6 +636,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   @property({type: Array})
   staffMembers: [] = [];
 
+  @property({type: Array})
+  unicefRepresentatives: UnicefRepresentative[] = [];
+
   @property({type: Object})
   originalAgreementData: Agreement | null = null;
 
@@ -669,6 +692,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     const ssfaOption = (state.commonData!.agreementTypes || []).find((x) => x.value === 'SSFA');
     if (ssfaOption) {
       this.ssfaTypeText = ssfaOption.label;
+    }
+
+    if (!isJsonStrMatch(state.agreements?.unicefRepresentatives, this.unicefRepresentatives)) {
+      this.unicefRepresentatives = cloneDeep(state.agreements?.unicefRepresentatives || []);
     }
 
     this.uploadsStateChanged(state);

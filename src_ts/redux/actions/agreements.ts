@@ -3,6 +3,7 @@ import {MinimalAgreement} from '@unicef-polymer/etools-types';
 export const SET_AGREEMENTS = 'SET_AGREEMENTS';
 export const ADD_EDIT_AGREEMENT = 'ADD_EDIT_AGREEMENT';
 export const SET_SHOULD_RELOAD_AGREEMENTS = 'SET_SHOULD_RELOAD_AGREEMENTS';
+export const SET_UNICEF_REPRESENTATIVES = 'SET_UNICEF_REPRESENTATIVES';
 
 export const setAgreements = (agreements: MinimalAgreement[]) => {
   return {
@@ -22,5 +23,12 @@ export const setShouldReloadAgreements = (shouldReloadList: boolean) => {
   return {
     type: SET_SHOULD_RELOAD_AGREEMENTS,
     shouldReloadList
+  };
+};
+
+export const setUnicefRepresentatives = (rep: UnicefRepresentative[]) => {
+  return {
+    type: SET_UNICEF_REPRESENTATIVES,
+    rep
   };
 };
