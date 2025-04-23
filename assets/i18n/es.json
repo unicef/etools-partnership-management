@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Otras Evaluaciones",
   "OTHER_INFO": "Otra información",
   "OUTSTANDING_FINDINGS": "Hallazgos Destacados",
+  "FINANCIAL_FINDINGS": "Hallazgos financieros",
+  "PENDING_UNSUPPORTED_AMOUNT": "Monto pendiente no admitido",
   "OVERALL_SATISFACTION": "En general, ¿cuál fue el grado de satisfacción de su organización con su asociación con UNICEF en este documento de programa?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutral",

@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Прочие оценки",
   "OTHER_INFO": "Другая информация",
   "OUTSTANDING_FINDINGS": "Невыполненные рекомендации",
+  "FINANCIAL_FINDINGS": "Финансовые результаты",
+  "PENDING_UNSUPPORTED_AMOUNT": "Ожидаемая неподдерживаемая сумма",
   "OVERALL_SATISFACTION": "В целом, насколько удовлетворена ваша организация своим партнерством с ЮНИСЕФ по данному программному документу?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Нейтрально",

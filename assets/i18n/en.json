@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Other Assessments",
   "OTHER_INFO": "Other Info",
   "OUTSTANDING_FINDINGS": "Outstanding Findings",
+  "FINANCIAL_FINDINGS": "Financial Findings",
+  "PENDING_UNSUPPORTED_AMOUNT": "Pending Unsupported Amount",
   "OVERALL_SATISFACTION": "Overall, how satisfied was your organization with its partnership with UNICEF on this Programme Document?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutral",
