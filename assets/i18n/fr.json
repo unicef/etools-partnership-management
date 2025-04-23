@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Autres évaluations",
   "OTHER_INFO": "Autre info",
   "OUTSTANDING_FINDINGS": "Constatations en suspens",
+  "FINANCIAL_FINDINGS": "Résultats financiers",
+  "PENDING_UNSUPPORTED_AMOUNT": "Montant en attente non pris en charge",
   "OVERALL_SATISFACTION": "Dans l'ensemble, dans quelle mesure votre organisation était-elle satisfaite de son partenariat avec l'UNICEF sur ce document de programme ?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutre",
