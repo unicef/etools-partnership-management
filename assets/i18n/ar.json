@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "تقييمات أخرى",
   "OTHER_INFO": "معلومات اخرى",
   "OUTSTANDING_FINDINGS": "النتائج المعلقة",
+  "FINANCIAL_FINDINGS": "النتائج المالية",
+  "PENDING_UNSUPPORTED_AMOUNT": "المبلغ المعلق غير المدعوم",
   "OVERALL_SATISFACTION": "بشكل عام ، ما مدى رضا منظمتك عن شراكتها مع اليونيسف في وثيقة البرنامج هذه؟",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "محايد",

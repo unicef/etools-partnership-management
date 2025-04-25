@@ -455,11 +455,14 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         panel-title="${translate('ASSESSMENTS_AND_ASSURANCE')} (${this.allEngagements.length})"
       >
         <etools-data-table-header no-title no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
-          <etools-data-table-column class="col-3">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>
+          <etools-data-table-column class="col-2">${translate('ENGAGEMENT_TYPE')} </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('DATE')} </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('AMOUNT_TESTED')} <br />(USD) </etools-data-table-column>
-          <etools-data-table-column class="col-3 col">
-            ${translate('OUTSTANDING_FINDINGS')} <br />(USD)
+          <etools-data-table-column class="col-2 col">
+            ${translate('FINANCIAL_FINDINGS')} <br />(USD)
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2 col">
+            ${translate('PENDING_UNSUPPORTED_AMOUNT')} <br />(USD)
           </etools-data-table-column>
           <etools-data-table-column class="col-2"> ${translate('REPORT')} </etools-data-table-column>
         </etools-data-table-header>
@@ -467,7 +470,7 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           (item) => html`
             <etools-data-table-row no-collapse .lowResolutionLayout="${this.lowResolutionLayout}">
               <div slot="row-data" class="layout-horizontal">
-                <div class="col-data col-3" data-col-header-label="${translate('ENGAGEMENT_TYPE')}">
+                <div class="col-data col-2" data-col-header-label="${translate('ENGAGEMENT_TYPE')}">
                   ${this._displayType(item.engagement_type)}
                 </div>
                 <div class="col-data col-2" data-col-header-label="${translate('DATE')}">
@@ -476,8 +479,11 @@ export class PartnerFinancialAssurance extends PaginationMixin(
                 <div class="col-data col-2" data-col-header-label="${translate('AMOUNT_TESTED')}">
                   ${this.displayCurrencyAmount(item.amount_tested, 0, 0)}
                 </div>
-                <div class="col-data col-3 col" data-col-header-label="${translate('OUTSTANDING_FINDINGS')}">
+                <div class="col-data col-2 col" data-col-header-label="${translate('FINANCIAL_FINDINGS')}">
                   ${this.displayCurrencyAmount(item.outstanding_findings, 0, 0)}
+                </div>
+                <div class="col-data col-2 col" data-col-header-label="${translate('PENDING_UNSUPPORTED_AMOUNT')}">
+                  ${this.displayCurrencyAmount(item.pending_unsupported_amount, 0, 0)}
                 </div>
                 <a
                   class="col-data ${this.lowResolutionLayout ? '' : 'report'} col-2"
@@ -502,15 +508,6 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           @page-number-changed="${this.pageNumberChanged}"
         >
         </etools-data-table-footer>
-      </etools-content-panel>
-
-      <etools-content-panel
-        id="monitoring-visits-panel"
-        class="content-section"
-        panel-title=" ${translate('PROGRAMMATIC_VISITS_S_CASE')}"
-      >
-        <partner-monitoring-visits-list .partnerId="${this.partner.id}" show-tpm-visits>
-        </partner-monitoring-visits-list>
       </etools-content-panel>
 
       <monitoring-activities
