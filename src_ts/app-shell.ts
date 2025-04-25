@@ -93,7 +93,7 @@ function fetchLangFiles(lang: string) {
     fetch(`src/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then((res: any) =>
       res.json()
     ),
-    fetch(`src/components/pages/gdd-interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then(
+    fetch(`src/components/pages/gpd-interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`).then(
       (res: any) => res.json()
     )
   ]).then((response: any) => {
@@ -198,14 +198,14 @@ class AppShell extends connect(store)(
                 </interventions-module>`
               : ``}
             ${this.GDDinterventionsLoaded
-              ? html`<gdd-interventions-module
-                  id="gdd-interventions"
+              ? html`<gpd-interventions-module
+                  id="gpd-interventions"
                   class="main-page"
                   .userPermissions="${this.permissions}"
                   .user="${this.user}"
                   ?hidden="${!this._activeModuleIs(this.module, 'gpd-interventions')}"
                 >
-                </gdd-interventions-module>`
+                </gpd-interventions-module>`
               : ``}
             <reports-module
               id="reports"

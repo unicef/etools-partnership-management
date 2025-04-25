@@ -36,7 +36,7 @@ import {getTranslatedValue, translateValue} from '@unicef-polymer/etools-modules
 import pick from 'lodash-es/pick';
 import debounce from 'lodash-es/debounce';
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {PartnerFilterKeys} from './partners-filters';
+import {PartnerFilterKeys} from './partner-filters.js';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {RootState, store} from '../../../../../redux/store';
 import get from 'lodash-es/get';
