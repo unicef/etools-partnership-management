@@ -119,7 +119,10 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       this.sections = [...state.commonData!.sections];
     }
     if (!isJsonStrMatch(this.cpStructures, state.commonData!.countryProgrammes)) {
-      this.cpStructures = [...state.commonData!.countryProgrammes];
+      this.cpStructures = this.removeFutureCountryProgrammes(state.commonData!.countryProgrammes);
+      if (this.cpStructures?.length) {
+        this.newIntervention.country_programme = this.cpStructures[0].id;
+      }
     }
     if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
       this.currencies = [...state.commonData!.currencies];
@@ -153,6 +156,16 @@ export class GddInterventionNew extends connect(store)(LitElement) {
             `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
         ))
     );
+  }
+
+  removeFutureCountryProgrammes(countryProgrammes: any[]) {
+    if (countryProgrammes && countryProgrammes.length) {
+      const currentDate = new Date();
+      countryProgrammes = countryProgrammes.filter(
+        (cp) => dayjs(cp.from_date).toDate() <= currentDate && dayjs(cp.to_date).toDate() >= currentDate
+      );
+    }
+    return countryProgrammes;
   }
 
   agreementChanged({detail}: CustomEvent): void {
