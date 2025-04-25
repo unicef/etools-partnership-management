@@ -694,7 +694,10 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
       this.ssfaTypeText = ssfaOption.label;
     }
 
-    if (!isJsonStrMatch(state.agreements?.unicefRepresentatives, this.unicefRepresentatives)) {
+    if (
+      state.agreements?.unicefRepresentatives &&
+      !isJsonStrMatch(state.agreements?.unicefRepresentatives, this.unicefRepresentatives)
+    ) {
       this.unicefRepresentatives = cloneDeep(state.agreements?.unicefRepresentatives || []);
     }
 

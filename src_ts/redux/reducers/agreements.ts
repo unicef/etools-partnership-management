@@ -36,6 +36,7 @@ const agreements = (state = INITIAL_STATE, action: any) => {
         agreementsCopy.push(action.agreement);
       }
       return {
+        ...state,
         list: agreementsCopy,
         listIsLoaded: true,
         shouldReloadList: true
