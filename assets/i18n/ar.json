@@ -662,5 +662,6 @@
     "GOVERNMENT": "الجهة الحكومية"
   },
   "LEAD_SECTION": "قسم الرصاص",
-  "LEAD_OFFICE": "مكتب القيادة"
+  "LEAD_OFFICE": "مكتب القيادة",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "يمكن لموظفي L3 فقط تغيير متطلبات التدقيق المجدولة ، يرجى تسجيل الطلب."
 }

@@ -46,7 +46,7 @@ export function userIsHQorRSS(user: any) {
     return false;
   }
   return !!user.groups.find((grp: any) => {
-    return ['UNICEF_USER', 'RSS'].includes(grp.name);
+    return ['RSS'].includes(grp.name);
   });
 }
 

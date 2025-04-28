@@ -662,5 +662,6 @@
     "GOVERNMENT": "Entidad Gubernamental"
   },
   "LEAD_SECTION": "Sección principal",
-  "LEAD_OFFICE": "Oficina principal"
+  "LEAD_OFFICE": "Oficina principal",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Solo el personal de L3 puede cambiar los requisitos de auditoría programados, por favor registre una solicitud."
 }

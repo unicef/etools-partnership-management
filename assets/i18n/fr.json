@@ -662,5 +662,6 @@
     "GOVERNMENT": "Entité gouvernementale"
   },
   "LEAD_SECTION": "Section principale",
-  "LEAD_OFFICE": "Bureau de tête"
+  "LEAD_OFFICE": "Bureau de tête",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Seul le personnel de L3 peut modifier les exigences d'audit planifiées, veuillez enregistrer une demande."
 }
