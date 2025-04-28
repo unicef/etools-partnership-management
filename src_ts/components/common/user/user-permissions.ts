@@ -40,7 +40,6 @@ export function userIsPme(user: any) {
   });
 }
 
-
 export function userIsHQorRSS(user: any) {
   if (!user || !Array.isArray(user.groups)) {
     return false;
@@ -49,4 +48,3 @@ export function userIsHQorRSS(user: any) {
     return ['RSS'].includes(grp.name);
   });
 }
-
