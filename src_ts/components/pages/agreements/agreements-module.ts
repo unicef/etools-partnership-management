@@ -21,7 +21,7 @@ import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {AgreementItemDataEl} from './data/agreement-item-data.js';
-import {GenericObject, UserPermissions, EtoolsTab, Agreement} from '@unicef-polymer/etools-types';
+import {GenericObject, UserPermissions, EtoolsTab, Agreement, AsyncAction} from '@unicef-polymer/etools-types';
 import cloneDeep from 'lodash-es/cloneDeep';
 import {translate, get as getTranslation, langChanged} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -30,6 +30,10 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import pmpEdpoints from '../../endpoints/endpoints';
+import {setUnicefRepresentatives} from '../../../redux/actions/agreements';
+import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 
 /**
  * @LitElement
@@ -216,12 +220,14 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       // Useful when refreshing the page
       this.agreement = new Agreement();
     }
+    this._getUnicefRepresentatives();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeListeners();
   }
+
   stateChanged(state: RootState) {
     if (get(state, 'app.routeDetails.routeName') != 'agreements') {
       return;
@@ -437,6 +443,11 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.GTC) {
       newAgreement.country_programme = agreement.country_programme;
     }
+
+    if (agreement.signed_by) {
+      newAgreement.signed_by = agreement.signed_by?.id;
+    }
+
     return newAgreement;
   }
 
@@ -496,6 +507,12 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
       //     );
       //   }
       // }
+    }
+
+    if (currentAgreement.signed_by) {
+      if (String(currentAgreement.signed_by?.id) !== String(this.originalAgreementData.signed_by?.id)) {
+        changes.signed_by = currentAgreement.signed_by?.id;
+      }
     }
 
     return changes;
@@ -562,6 +579,14 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     // keep a copy of the agreement before changes are made and use it later to save only the changes
     this.originalAgreementData = JSON.parse(JSON.stringify(agreement));
     fireEvent(this, 'clear-server-errors');
+  }
+
+  _getUnicefRepresentatives() {
+    sendRequest({
+      endpoint: pmpEdpoints.unicefRepresentatives
+    }).then((res: any) => {
+      getStore().dispatch<AsyncAction>(setUnicefRepresentatives(res || []));
+    });
   }
 
   onErrorsChanged(e: CustomEvent) {
