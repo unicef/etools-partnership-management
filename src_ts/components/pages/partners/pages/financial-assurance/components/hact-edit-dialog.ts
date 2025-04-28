@@ -10,12 +10,14 @@ import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/sh
 import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
-import {GenericObject} from '@unicef-polymer/etools-types';
+import {EtoolsUser, GenericObject, User} from '@unicef-polymer/etools-types';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import pmpEdpoints from '../../../../../endpoints/endpoints';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
+import {userIsHQorRSS} from '../../../../../common/user/user-permissions';
+import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 
 @customElement('hact-edit-dialog')
 export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
@@ -271,17 +273,12 @@ export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
   @property({type: Array})
   selectedAudits!: string[];
 
+  @property({type: Object})
+  currentUser!: User;
+
   @property({type: Array})
-  auditOptions = [
-    {
-      label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
-      value: 'Scheduled Audit'
-    },
-    {
-      label: getTranslatedValue('Special Audit', 'AUDIT_OPTIONS'),
-      value: 'Special Audit'
-    }
-  ];
+  auditOptions: any[] = [];
+
   @property({type: Array})
   auditMap = [
     {
@@ -298,7 +295,25 @@ export class HactEditDialog extends CommonMixin(EndpointsLitMixin(LitElement)) {
     const {partner}: any = data;
 
     this.partner = partner;
+    this.currentUser = getStore().getState().user.data;
+    this.auditOptions = [...this.auditOptions];
+    this.setAuditOptions();
     this._partnerChanged(this.partner);
+  }
+
+  setAuditOptions() {
+    this.auditOptions = [
+      {
+        label: getTranslatedValue('Scheduled Audit', 'AUDIT_OPTIONS'),
+        value: 'Scheduled Audit',
+        disabled: !userIsHQorRSS(this.currentUser),
+        disabledTooltip: 'Only L3 staff may change Scheduled Audit requirements, please log a request.'
+      },
+      {
+        label: getTranslatedValue('Special Audit', 'AUDIT_OPTIONS'),
+        value: 'Special Audit'
+      }
+    ];
   }
 
   _partnerChanged(partner: any) {

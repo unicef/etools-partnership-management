@@ -39,3 +39,14 @@ export function userIsPme(user: any) {
     return grp.name === 'PME';
   });
 }
+
+
+export function userIsHQorRSS(user: any) {
+  if (!user || !Array.isArray(user.groups)) {
+    return false;
+  }
+  return !!user.groups.find((grp: any) => {
+    return ['UNICEF_USER', 'RSS'].includes(grp.name);
+  });
+}
+
