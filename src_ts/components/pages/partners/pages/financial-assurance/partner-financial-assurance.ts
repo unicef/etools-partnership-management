@@ -28,7 +28,7 @@ import {AP_DOMAIN} from '../../../../../config/config';
 import './components/assessments-items.js';
 import './components/partner-monitoring-visits-list';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {PartnerAssessment} from '../../../../../models/partners.models';
+import {Partner, PartnerAssessment} from '../../../../../models/partners.models';
 import './components/hact-edit-dialog';
 import clone from 'lodash-es/clone';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
@@ -607,6 +607,13 @@ export class PartnerFinancialAssurance extends PaginationMixin(
         return;
       }
       this._refreshPartner(response);
+      this.dispatchEvent(
+        new CustomEvent('update-partner', {
+          bubbles: true,
+          composed: true,
+          detail: new Partner(response)
+        })
+      );
     });
   }
 

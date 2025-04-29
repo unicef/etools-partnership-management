@@ -662,5 +662,6 @@
     "GOVERNMENT": "Government Entity"
   },
   "LEAD_SECTION": "Lead Section",
-  "LEAD_OFFICE": "Lead Office"
+  "LEAD_OFFICE": "Lead Office",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT":"Only L3 staff may change Scheduled Audit requirements, please log a request."
 }
