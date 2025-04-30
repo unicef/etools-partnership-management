@@ -37,8 +37,6 @@ import {
 } from '@unicef-polymer/etools-unicef/src/etools-translate';
 import cloneDeep from 'lodash-es/cloneDeep';
 import StaffMembersDataMixinLit from '../../common/mixins/staff-members-data-mixin-lit';
-import './pages/list/partners-list';
-import './pages/list/governments-list';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';

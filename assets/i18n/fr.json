@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Autres évaluations",
   "OTHER_INFO": "Autre info",
   "OUTSTANDING_FINDINGS": "Constatations en suspens",
+  "FINANCIAL_FINDINGS": "Résultats financiers",
+  "PENDING_UNSUPPORTED_AMOUNT": "Montant en attente non pris en charge",
   "OVERALL_SATISFACTION": "Dans l'ensemble, dans quelle mesure votre organisation était-elle satisfaite de son partenariat avec l'UNICEF sur ce document de programme ?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutre",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "Le fichier d'amendement signé est requis",
   "SIGNED_BY_PARTNER": "Signé par le partenaire",
   "SIGNED_BY_PARTNER_DATE": "Date de signature partenaire",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "Signé par l'agent autorisé de l'UNICEF",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "Signé par le représentant de l'UNICEF",
   "SIGNED_BY_UNICEF_DATE": "Date de signature UNICEF",
   "SIGNED_DATE": "Date de signature",
   "SPANISH": "Espagnol",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "Entité gouvernementale"
   },
   "LEAD_SECTION": "Section principale",
-  "LEAD_OFFICE": "Bureau de tête"
+  "LEAD_OFFICE": "Bureau de tête",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Seul le personnel de L3 peut modifier les exigences d'audit planifiées, veuillez enregistrer une demande."
 }

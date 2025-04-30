@@ -13,7 +13,7 @@ import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
 export const RESET_CURRENT_ITEM = 'RESET_CURRENT_ITEM';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {enableCommentMode} from '../../components/pages/interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
-import {enableCommentMode as gddEnableCommentMode} from '../../components/pages/gdd-interventions/pages/intervention-tab-pages/common/components/comments/comments.actions';
+import {enableCommentMode as gddEnableCommentMode} from '../../components/pages/gpd-interventions/pages/intervention-tab-pages/common/components/comments/comments.actions.js';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
@@ -51,203 +51,103 @@ export const resetCurrentItem: any = () => {
   };
 };
 
-const importInterventionSubRoutes = (subRouteName: string | null) => {
+const importInterventionSubRoutes = async (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
   }
 
-  switch (subRouteName) {
-    case 'list':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/interventions/pages/list/interventions-list.js');
-      break;
-    case 'new':
-      import('../../components/pages/interventions/pages/new/intervention-new.js');
-      break;
-    case 'metadata':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js'
+  const progressList = ['progress', 'implementation-status', 'monitoring-activities', 'results-reported', 'reports'];
+  const pagesWithoutTabs = ['list', 'new'];
+
+  try {
+    if (progressList.includes(subRouteName)) {
+      subRouteName = 'progress';
+    }
+
+    if (pagesWithoutTabs.includes(subRouteName)) {
+      await import(
+        `../../components/pages/interventions/pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
-      break;
-    case 'workplan':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js'
+    } else {
+      await import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.ts');
+      await import(
+        `../../components/pages/interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
-      break;
-    case 'workplan-editor':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-workplan-editor/intervention-workplan-editor.js'
-      );
-      break;
-    case 'timing':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js'
-      );
-      break;
-    case 'strategy':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js'
-      );
-      break;
-    case 'attachments':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js'
-      );
-      break;
-    case 'review':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js'
-      );
-      break;
-    case 'progress':
-    case 'implementation-status':
-    case 'monitoring-activities':
-    case 'results-reported':
-    case 'reports':
-      import('../../components/pages/interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js'
-      );
-      break;
-    default:
-      console.log(`No file imports configuration found interventions: ${subRouteName} (componentsLazyLoadConfig)!`);
-      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
-      break;
+    }
+  } catch {
+    console.log(`No file imports configuration found interventions: ${subRouteName}!`);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
 
-const importGDDInterventionSubRoutes = (subRouteName: string | null) => {
+const importGDDInterventionSubRoutes = async (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
   }
 
-  switch (subRouteName) {
-    case 'list':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import('../../components/pages/gdd-interventions/pages/list/gdd-interventions-list.js');
-      break;
-    case 'new':
-      import('../../components/pages/gdd-interventions/pages/new/gdd-intervention-new.js');
-      break;
-    case 'metadata':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-metadata/intervention-metadata.js'
+  const progressList = ['progress', 'implementation-status', 'monitoring-activities', 'results-reported', 'reports'];
+  const notTabs = ['list', 'new'];
+
+  try {
+    if (progressList.includes(subRouteName)) {
+      subRouteName = 'progress';
+    }
+
+    if (notTabs.includes(subRouteName)) {
+      await import(
+        `../../components/pages/gpd-interventions/pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
-      break;
-    case 'workplan':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-workplan/intervention-workplan.js'
+    } else {
+      await import('../../components/pages/gpd-interventions/pages/intervention-tab-pages/intervention-tabs.ts');
+      await import(
+        `../../components/pages/gpd-interventions/pages/intervention-tab-pages/intervention-${subRouteName}/intervention-${subRouteName}.ts`
       );
-      break;
-    case 'timing':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js'
-      );
-      break;
-    case 'strategy':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-strategy/intervention-strategy.js'
-      );
-      break;
-    case 'attachments':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js'
-      );
-      break;
-    case 'review':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js'
-      );
-      break;
-    case 'progress':
-    case 'implementation-status':
-    case 'monitoring-activities':
-    case 'results-reported':
-    case 'reports':
-      import('../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-tabs.js');
-      import(
-        '../../components/pages/gdd-interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js'
-      );
-      break;
-    default:
-      console.log(`No file imports configuration found interventions: ${subRouteName} (componentsLazyLoadConfig)!`);
-      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
-      break;
+    }
+  } catch {
+    console.log(`No file imports configuration found gpd-interventions: ${subRouteName}!`);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
-const importReportsSubRoutes = (subRouteName: string | null) => {
+const importReportsSubRoutes = async (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
   }
-  switch (subRouteName) {
-    case 'list':
-      import('../../components/pages/reports/pages/list/reports-list.js');
-      break;
-    case 'progress':
-      import('../../components/pages/reports/pages/progress/report-progress.js');
-      break;
-    case 'summary':
-      import('../../components/pages/reports/pages/summary/report-summary.js');
-      break;
-    default:
-      console.log(`No file imports configuration found agreements: ${subRouteName} (componentsLazyLoadConfig)!`);
-      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
-      break;
+
+  try {
+    await import(`../../components/pages/reports/pages/${subRouteName}/report-${subRouteName}.ts`);
+  } catch {
+    console.log(`No file imports configuration found reports: ${subRouteName}!`);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
 
-const importPartnerSubRoutes = (subRouteName: string | null) => {
+const importPartnerSubRoutes = async (subRouteName: string | null, routeName: string | null) => {
   if (!subRouteName) {
     return;
   }
-  switch (subRouteName) {
-    case 'list':
-      import('../../components/pages/partners/pages/list/partners-list.js');
-      break;
-    case 'details':
-      import('../../components/pages/partners/pages/details/partner-details.js');
-      break;
-    case 'overview':
-      import('../../components/pages/partners/pages/overview/partner-overview.js');
-      break;
-    case 'financial-assurance':
-      import('../../components/pages/partners/pages/financial-assurance/partner-financial-assurance.js');
-      break;
-    default:
-      console.log(`No file imports configuration found partners: ${subRouteName} (componentsLazyLoadConfig)!`);
-      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
-      break;
+
+  try {
+    if (routeName === 'government-partners' && subRouteName === 'list') {
+      await import(`../../components/pages/partners/pages/${subRouteName}/governments-${subRouteName}.ts`);
+    } else {
+      await import(`../../components/pages/partners/pages/${subRouteName}/partner-${subRouteName}.ts`);
+    }
+  } catch {
+    console.log(`No file imports configuration found partners: ${subRouteName}!`);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
 
-const importAgreementsSubRoutes = (subRouteName: string | null) => {
+const importAgreementsSubRoutes = async (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
   }
-  switch (subRouteName) {
-    case 'list':
-      import('../../components/pages/agreements/pages/list/agreements-list.js');
-      break;
-    case 'details':
-      import('../../components/pages/agreements/pages/details/agreement-details.js');
-      break;
-    default:
-      console.log(`No file imports configuration found agreements: ${subRouteName} (componentsLazyLoadConfig)!`);
-      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
-      break;
+
+  try {
+    await import(`../../components/pages/agreements/pages/${subRouteName}/agreement-${subRouteName}.ts`);
+  } catch {
+    console.log(`No file imports configuration found agreements: ${subRouteName}!`);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
   }
 };
 
@@ -258,43 +158,30 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
     return;
   }
 
-  if (routeDetails.routeName === 'not-found') {
-    import('../../components/pages/not-found/not-found.js');
-  } else {
-    switch (routeDetails.routeName) {
-      case 'government-partners':
-      case 'partners':
-        import('../../components/pages/partners/partners-module.js')
-          .then(() => importPartnerSubRoutes(routeDetails.subRouteName))
-          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
-        break;
-      case 'interventions':
-        import('../../components/pages/interventions/interventions-module.js')
-          .then(() => importInterventionSubRoutes(routeDetails.subRouteName))
-          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
-        break;
-      case 'gpd-interventions':
-        import('../../components/pages/gdd-interventions/gdd-interventions-module.js')
-          .then(() => importGDDInterventionSubRoutes(routeDetails.subRouteName))
-          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
-        break;
-      case 'agreements':
-        import('../../components/pages/agreements/agreements-module.js')
-          .then(() => importAgreementsSubRoutes(routeDetails.subRouteName))
-          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
-        break;
-      case 'reports':
-        import('../../components/pages/reports/reports-module.js')
-          .then(() => importReportsSubRoutes(routeDetails.subRouteName))
-          .catch(() => EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND)));
-        break;
-      case 'settings':
-        import('../../components/pages/settings/settings-module.js').catch(() =>
-          EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND))
-        );
-        break;
+  (async () => {
+    let routeName = routeDetails.routeName;
+    const subRouteImportFunctions: any = {
+      partners: importPartnerSubRoutes,
+      interventions: importInterventionSubRoutes,
+      'gpd-interventions': importGDDInterventionSubRoutes,
+      agreements: importAgreementsSubRoutes,
+      reports: importReportsSubRoutes
+    };
+
+    if (routeName === 'government-partners') {
+      routeName = 'partners';
     }
-  }
+
+    try {
+      await import(`../../components/pages/${routeName}/${routeName}-module.ts`);
+      if (Object.keys(subRouteImportFunctions).includes(routeName)) {
+        await subRouteImportFunctions[routeName](routeDetails.subRouteName, routeDetails.routeName);
+      }
+    } catch {
+      console.log(`No file imports configuration found for module: ${routeDetails.routeName}!`);
+      EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
+    }
+  })();
 };
 
 /** Update Redux route details and import lazy loaded pages */

@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Other Assessments",
   "OTHER_INFO": "Other Info",
   "OUTSTANDING_FINDINGS": "Outstanding Findings",
+  "FINANCIAL_FINDINGS": "Financial Findings",
+  "PENDING_UNSUPPORTED_AMOUNT": "Pending Unsupported Amount",
   "OVERALL_SATISFACTION": "Overall, how satisfied was your organization with its partnership with UNICEF on this Programme Document?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutral",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "Signed Amendment file is required",
   "SIGNED_BY_PARTNER": "Signed By Partner",
   "SIGNED_BY_PARTNER_DATE": "Signed By Partner Date",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "Signed by UNICEF Authorized Officer",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "Signed by UNICEF Representative",
   "SIGNED_BY_UNICEF_DATE": "Signed By UNICEF Date",
   "SIGNED_DATE": "Signed Date",
   "SPANISH": "Spanish",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "Government Entity"
   },
   "LEAD_SECTION": "Lead Section",
-  "LEAD_OFFICE": "Lead Office"
+  "LEAD_OFFICE": "Lead Office",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT":"Only L3 staff may change Scheduled Audit requirements, please log a request."
 }

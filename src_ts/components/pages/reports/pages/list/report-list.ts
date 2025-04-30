@@ -19,7 +19,7 @@ import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {store, RootState} from '../../../../../redux/store';
 import {CommonDataState} from '../../../../../redux/reducers/common-data';
 import {partnersDropdownDataSelector} from '../../../../../redux/reducers/partners';
-import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './reports-filters';
+import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './report-filters';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {abortRequestByKey} from '@unicef-polymer/etools-utils/dist/etools-ajax/request';

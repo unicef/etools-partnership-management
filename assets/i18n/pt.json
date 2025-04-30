@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Outras avaliações",
   "OTHER_INFO": "Outras informações",
   "OUTSTANDING_FINDINGS": "Apontamentos Importantes",
+  "FINANCIAL_FINDINGS": "Descobertas Financeiras",
+  "PENDING_UNSUPPORTED_AMOUNT": "Valor pendente não suportado",
   "OVERALL_SATISFACTION": "No geral, quão satisfeita sua organização ficou com a parceria junto ao UNICEF para realização dete Documento do Programa?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutro",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "Obrigatório inserir aditivo assinado",
   "SIGNED_BY_PARTNER": "Assinado pelo parceiro",
   "SIGNED_BY_PARTNER_DATE": "Data da assinatura do parceiro",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "Assinado pelo oficial autorizado do UNICEF",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "Assinado pelo Representante do UNICEF",
   "SIGNED_BY_UNICEF_DATE": "Data de assinatura do UNICEF",
   "SIGNED_DATE": "Data de assinatura",
   "SPANISH": "Espanhol",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "Entidade Governamental"
   },
   "LEAD_SECTION": "Seção de chumbo",
-  "LEAD_OFFICE": "Escritório principal"
+  "LEAD_OFFICE": "Escritório principal",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Somente a equipe do L3 pode alterar os requisitos de auditoria programados, registre uma solicitação."
 }

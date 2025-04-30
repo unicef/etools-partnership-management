@@ -7,10 +7,10 @@ import {RootState, store} from '../../../../../redux/store';
 import {isJsonStrMatch, areEqual} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {govPartnersSelector} from '../../../../../redux/reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
-import {template} from './gdd-intervention-new.template';
+import {template} from './intervention-new.template';
 import '@unicef-polymer/etools-unicef/src/etools-info-tooltip/etools-info-tooltip';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
-import {NewGDDInterventionStyles} from './gdd-intervention-new.styles';
+import {NewGDDInterventionStyles} from './intervention-new.styles';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {LabelAndValue, GenericObject, Office, GDD} from '@unicef-polymer/etools-types';
@@ -119,7 +119,10 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       this.sections = [...state.commonData!.sections];
     }
     if (!isJsonStrMatch(this.cpStructures, state.commonData!.countryProgrammes)) {
-      this.cpStructures = [...state.commonData!.countryProgrammes];
+      this.cpStructures = this.removeFutureCountryProgrammes(state.commonData!.countryProgrammes);
+      if (this.cpStructures?.length) {
+        this.newIntervention.country_programme = this.cpStructures[0].id;
+      }
     }
     if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
       this.currencies = [...state.commonData!.currencies];
@@ -153,6 +156,16 @@ export class GddInterventionNew extends connect(store)(LitElement) {
             `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)
         ))
     );
+  }
+
+  removeFutureCountryProgrammes(countryProgrammes: any[]) {
+    if (countryProgrammes && countryProgrammes.length) {
+      const currentDate = new Date();
+      countryProgrammes = countryProgrammes.filter(
+        (cp) => dayjs(cp.from_date).toDate() <= currentDate && dayjs(cp.to_date).toDate() >= currentDate
+      );
+    }
+    return countryProgrammes;
   }
 
   agreementChanged({detail}: CustomEvent): void {

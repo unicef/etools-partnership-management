@@ -309,6 +309,9 @@ const pmpEdpoints = {
   },
   importECN: {
     url: '/api/ecn/v1/interventions/import/ecn/'
+  },
+  unicefRepresentatives: {
+    url: '/api/v3/users/unicef-representatives/'
   }
 };
 

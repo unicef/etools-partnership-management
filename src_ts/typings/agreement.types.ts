@@ -15,3 +15,11 @@ type StaticAgreement = {
   start: string;
   status: string;
 };
+// eslint-disable-next-line
+type UnicefRepresentative = {
+  id: number;
+  name: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+};

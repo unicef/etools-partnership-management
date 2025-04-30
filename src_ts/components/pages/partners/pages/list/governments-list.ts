@@ -3,7 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../../../redux/store';
 import {getGovernmentFilters, GovernmentFiltersHelper} from './governments-filters';
-import {PartnersListBase} from './partners-list-base';
+import {PartnersListBase} from './partner-list-base';
 
 @customElement('governments-list')
 export class GovernmentsList extends connect(store)(PartnersListBase) {

@@ -5,6 +5,7 @@ export class AgreementsState {
   list: MinimalAgreement[] = [];
   listIsLoaded = false;
   shouldReloadList = false;
+  unicefRepresentatives!: UnicefRepresentative[];
 }
 
 const INITIAL_STATE = new AgreementsState();
@@ -35,9 +36,16 @@ const agreements = (state = INITIAL_STATE, action: any) => {
         agreementsCopy.push(action.agreement);
       }
       return {
+        ...state,
         list: agreementsCopy,
         listIsLoaded: true,
         shouldReloadList: true
+      };
+    }
+    case a.SET_UNICEF_REPRESENTATIVES: {
+      return {
+        ...state,
+        unicefRepresentatives: action.rep
       };
     }
 
