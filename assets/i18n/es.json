@@ -663,5 +663,5 @@
   },
   "LEAD_SECTION": "Sección principal",
   "LEAD_OFFICE": "Oficina principal",
-  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Solo el personal de L3 puede cambiar los requisitos de auditoría programados, por favor registre una solicitud."
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Los cambios en los requisitos de auditoría programados deben coordinarse a través de la sede de UNICEF. Registre una solicitud formal a través del Service Gateway para su posterior procesamiento."
 }

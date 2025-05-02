@@ -663,5 +663,5 @@
   },
   "LEAD_SECTION": "Lead Section",
   "LEAD_OFFICE": "Lead Office",
-  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT":"Only L3 staff may change Scheduled Audit requirements, please log a request."
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Changing scheduled audit requirements must be coordinated through UNICEF HQ. Please log a formal request via the Service Gateway for further processing."
 }

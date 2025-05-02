@@ -663,5 +663,5 @@
   },
   "LEAD_SECTION": "Section principale",
   "LEAD_OFFICE": "Bureau de tête",
-  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Seul le personnel de L3 peut modifier les exigences d'audit planifiées, veuillez enregistrer une demande."
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Les modifications des exigences d’audit programmées doivent être coordonnées par le siège de l’UNICEF. Veuillez enregistrer une demande formelle via la passerelle de service pour un traitement ultérieur."
 }
