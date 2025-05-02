@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Otras Evaluaciones",
   "OTHER_INFO": "Otra información",
   "OUTSTANDING_FINDINGS": "Hallazgos Destacados",
+  "FINANCIAL_FINDINGS": "Hallazgos financieros",
+  "PENDING_UNSUPPORTED_AMOUNT": "Monto pendiente no admitido",
   "OVERALL_SATISFACTION": "En general, ¿cuál fue el grado de satisfacción de su organización con su asociación con UNICEF en este documento de programa?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Neutral",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "Se requiere el archivo de la enmienda firmado",
   "SIGNED_BY_PARTNER": "Firmado por el socio",
   "SIGNED_BY_PARTNER_DATE": "Firmado por Fecha del socio",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "Firmado por el funcionario autorizado por UNICEF",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "Firmado por el representante de UNICEF",
   "SIGNED_BY_UNICEF_DATE": "Firmado por Fecha de UNICEF",
   "SIGNED_DATE": "Fecha de firma",
   "SPANISH": "Español",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "Entidad Gubernamental"
   },
   "LEAD_SECTION": "Sección principal",
-  "LEAD_OFFICE": "Oficina principal"
+  "LEAD_OFFICE": "Oficina principal",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Los cambios en los requisitos de auditoría programados deben coordinarse a través de la sede de UNICEF. Registre una solicitud formal a través del Service Gateway para su posterior procesamiento."
 }

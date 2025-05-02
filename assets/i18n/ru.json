@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "Прочие оценки",
   "OTHER_INFO": "Другая информация",
   "OUTSTANDING_FINDINGS": "Невыполненные рекомендации",
+  "FINANCIAL_FINDINGS": "Финансовые результаты",
+  "PENDING_UNSUPPORTED_AMOUNT": "Ожидаемая неподдерживаемая сумма",
   "OVERALL_SATISFACTION": "В целом, насколько удовлетворена ваша организация своим партнерством с ЮНИСЕФ по данному программному документу?",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "Нейтрально",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "Необходим файл подписанной поправки",
   "SIGNED_BY_PARTNER": "Подписано партнером",
   "SIGNED_BY_PARTNER_DATE": "Дата подписания партнером",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "Подписано ЮНИСЕФ",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "Подписано представителем ЮНИСЕФ",
   "SIGNED_BY_UNICEF_DATE": "Дата подписания ЮНИСЕФ",
   "SIGNED_DATE": "Дата подписания",
   "SPANISH": "Испанский",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "Государственное учреждение"
   },
   "LEAD_SECTION": "Ведущий раздел",
-  "LEAD_OFFICE": "Ведущий офис"
+  "LEAD_OFFICE": "Ведущий офис",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "Изменение требований к запланированному аудиту должно координироваться через штаб-квартиру ЮНИСЕФ. Пожалуйста, отправьте официальный запрос через Сервисный шлюз для дальнейшей обработки."
 }

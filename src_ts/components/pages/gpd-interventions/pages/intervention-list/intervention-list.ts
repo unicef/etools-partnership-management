@@ -34,13 +34,13 @@ import {
   getGDDInterventionFilters,
   GDDInterventionFilterKeys,
   GDDInterventionsFiltersHelper
-} from './gdd-interventions-filters';
+} from './intervention-filters';
 import {govPartnersSelector} from '../../../../../redux/reducers/partners';
 import {displayCurrencyAmount} from '@unicef-polymer/etools-unicef/src/utils/currency';
 import {ListFilterOption} from '../../../../../typings/filter.types';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
 // TODO change this import after intervention tab pages location is changed
-import {setShouldReGetList} from '../../pages/intervention-tab-pages/common/actions/gddInterventions';
+import {setShouldReGetList} from '../intervention-tab-pages/common/actions/gddInterventions';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {mapStatus, getDevelopementStatusDetails} from '../../../../utils/utils';
 import {
@@ -48,7 +48,7 @@ import {
   EtoolsRouteQueryParams
 } from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-@customElement('gdd-interventions-list')
+@customElement('gpd-interventions-list')
 export class GddInterventionsList extends connect(store)(
   ListsCommonMixin(CommonMixin(PaginationMixin(EndpointsLitMixin(FrNumbersConsistencyMixin(LitElement)))))
 ) {

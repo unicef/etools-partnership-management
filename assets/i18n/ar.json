@@ -448,6 +448,8 @@
   "OTHER_ASSESSMENTS": "تقييمات أخرى",
   "OTHER_INFO": "معلومات اخرى",
   "OUTSTANDING_FINDINGS": "النتائج المعلقة",
+  "FINANCIAL_FINDINGS": "النتائج المالية",
+  "PENDING_UNSUPPORTED_AMOUNT": "المبلغ المعلق غير المدعوم",
   "OVERALL_SATISFACTION": "بشكل عام ، ما مدى رضا منظمتك عن شراكتها مع اليونيسف في وثيقة البرنامج هذه؟",
   "OVERALL_SATISFACTION_RATINGS": {
     "NEUTRAL": "محايد",
@@ -569,7 +571,7 @@
   "SIGNED_AMENDMENT_FILE_IS_REQUIRED": "مطلوب ملف التعديل الموقع",
   "SIGNED_BY_PARTNER": "وقعه الشريك",
   "SIGNED_BY_PARTNER_DATE": "تاريخ التوقيع الشريك",
-  "SIGNED_BY_UNICEF_AUTHORIZED_OFFICER": "موقعة من قبل موظف اليونيسف المعتمد",
+  "SIGNED_BY_UNICEF_REPRESENTATIVE": "وقعه ممثل اليونيسف",
   "SIGNED_BY_UNICEF_DATE": "موقعة من قبل اليونيسف التاريخ",
   "SIGNED_DATE": "تاريخ التوقيع",
   "SPANISH": "الأسبانية",
@@ -660,5 +662,6 @@
     "GOVERNMENT": "الجهة الحكومية"
   },
   "LEAD_SECTION": "قسم الرصاص",
-  "LEAD_OFFICE": "مكتب القيادة"
+  "LEAD_OFFICE": "مكتب القيادة",
+  "ONLY_HQ_RSS_CAN_EDIT_SCHEDULED_AUDIT": "يجب تنسيق متطلبات المراجعة المجدولة المتغيرة من خلال المقر الرئيسي لليونيسف .يرجى تسجيل طلب رسمي عبر بوابة الخدمة لمزيد من المعالجة."
 }
