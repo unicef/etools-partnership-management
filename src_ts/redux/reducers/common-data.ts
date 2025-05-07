@@ -23,6 +23,7 @@ import {
   UPDATE_AGREEMENT_TYPES,
   UPDATE_CURRENCIES,
   UPDATE_INTERVENTION_STATUSES,
+  UPDATE_GPD_STATUSES,
   UPDATE_INTERVENTION_DOC_TYPES,
   UPDATE_GRANTS,
   UPDATE_DONORS,
@@ -104,6 +105,7 @@ export class CommonDataState {
   sites: [] = [];
   loadedTimestamp = 0;
   gddAmendmentTypes: LabelAndValue[] = [];
+  gpdStatuses: LabelAndValue[] = [];
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -163,6 +165,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         interventionStatuses: action.statuses
+      };
+
+    case UPDATE_GPD_STATUSES:
+      return {
+        ...state,
+        gpdStatuses: action.statuses
       };
 
     case UPDATE_SECTIONS:

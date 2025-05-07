@@ -433,7 +433,7 @@ export class GddInterventionsList extends connect(store)(
 
   populateDropdownFilterOptionsFromCommonData(state: RootState, allFilters: EtoolsFilter[]) {
     [
-      [GDDInterventionFilterKeys.status, state.commonData!.interventionStatuses],
+      [GDDInterventionFilterKeys.status, state.commonData!.gpdStatuses],
       [GDDInterventionFilterKeys.section, state.commonData!.sections],
       [GDDInterventionFilterKeys.offices, state.commonData!.offices],
       [GDDInterventionFilterKeys.cp_outputs, state.commonData!.cpOutputs],
