@@ -138,6 +138,7 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       data.providedBy = dropdownsPmpRespose.supply_item_provided_by;
       data.csoTypes = dropdownsPmpRespose.cso_types;
       data.locationTypes = dropdownsPmpRespose.location_types;
+      data.gpdStatuses = dropdownsPmpRespose.gpd_status;
 
       data.documentTypes = dropdownsStatic.intervention_doc_type;
       data.interventionStatuses = dropdownsStatic.intervention_status;
@@ -266,6 +267,11 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         // set provided by
         if (this._validReqResponseData(response.supply_item_provided_by)) {
           store.dispatch(commonDataActions.updateProvidedBy((response as any).supply_item_provided_by));
+        }
+
+        // set gpd_status values
+        if (this._validReqResponseData(response.gpd_status)) {
+          store.dispatch(commonDataActions.updateGpdStatuses((response as any).gpd_status));
         }
       }
     }

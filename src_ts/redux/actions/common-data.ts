@@ -23,6 +23,7 @@ export const UPDATE_GRANTS = 'UPDATE_GRANTS';
 export const UPDATE_PROVIDED_BY = 'UPDATE_PROVIDED_BY';
 export const UPDATE_INTERVENTION_DOC_TYPES = 'UPDATE_INTERVENTION_DOC_TYPES';
 export const UPDATE_INTERVENTION_STATUSES = 'UPDATE_INTERVENTION_STATUSES';
+export const UPDATE_GPD_STATUSES = 'UPDATE_GPD_STATUSES';
 export const UPDATE_CURRENCIES = 'UPDATE_CURRENCIES';
 export const UPDATE_AGREEMENT_TYPES = 'UPDATE_AGREEMENT_TYPES';
 export const UPDATE_AGREEMENT_STATUSES = 'UPDATE_AGREEMENT_STATUSES';
@@ -96,6 +97,10 @@ export interface CommonDataActionUpdateInterventionDocTypes extends Action<'UPDA
 }
 
 export interface CommonDataActionUpdateInterventionStatuses extends Action<'UPDATE_INTERVENTION_STATUSES'> {
+  statuses: GenericObject[];
+}
+
+export interface CommonDataActionUpdateGpdStatuses extends Action<'UPDATE_GPD_STATUSES'> {
   statuses: GenericObject[];
 }
 
@@ -194,6 +199,7 @@ export type CommonDataAction =
   | CommonDataActionUpdateProvidedBy
   | CommonDataActionUpdateInterventionDocTypes
   | CommonDataActionUpdateInterventionStatuses
+  | CommonDataActionUpdateGpdStatuses
   | CommonDataActionUpdateCurrencies
   | CommonDataActionUpdateAgreementTypes
   | CommonDataActionUpdateAgreementStatuses
@@ -307,6 +313,13 @@ export const updateInterventionStatuses: ActionCreator<CommonDataActionUpdateInt
 ) => {
   return {
     type: UPDATE_INTERVENTION_STATUSES,
+    statuses
+  };
+};
+
+export const updateGpdStatuses: ActionCreator<CommonDataActionUpdateGpdStatuses> = (statuses: GenericObject[]) => {
+  return {
+    type: UPDATE_GPD_STATUSES,
     statuses
   };
 };
