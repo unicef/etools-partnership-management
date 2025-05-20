@@ -4,7 +4,6 @@ import '@unicef-polymer/etools-unicef/src/etools-checkbox/etools-checkbox';
 import '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {store} from '../../../redux/store';
-import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import EtoolsDialog from '@unicef-polymer/etools-unicef/src/etools-dialog/etools-dialog.js';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
@@ -142,8 +141,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
       return;
     }
 
-    store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
-    store.dispatch({type: RESET_UNSAVED_UPLOADS});
+    fireEvent(this, 'upload-status-reset');
 
     fireEvent(this, 'global-loading', {
       message: getTranslation('REFRESHING_DATA'),
