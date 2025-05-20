@@ -56,8 +56,8 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
         dialog-title="${translate('TERMINATE_AGREEMENT')}"
         @close="${this._onClose}"
         @confirm-btn-clicked="${this._triggerAgreementTermination}"
-        ?disableConfirmBtn="${this.uploadInProgress}"
-        ?disableDismissBtn="${this.uploadInProgress}"
+        .disableConfirmBtn="${this.uploadInProgress}"
+        .disableDismissBtn="${this.uploadInProgress}"
       >
         <div class="row">
           <etools-upload
@@ -69,6 +69,7 @@ export class AgreementTermination extends EnvironmentFlagsPolymerMixin(CommonMix
             .uploadEndpoint="${this.uploadEndpoint}"
             @upload-started="${this._uploadStarted}"
             @upload-finished="${this._uploadFinished}"
+            @upload-canceled="${() => (this.uploadInProgress = false)}"
             required
             auto-validation
             .uploadInProgress="${this.uploadInProgress}"

@@ -24,7 +24,7 @@ import {setActiveLanguage} from '../../../redux/actions/active-language';
 import {DexieRefresh} from '@unicef-polymer/etools-utils/dist/singleton/dexie-refresh';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {appLanguages} from '../../../config/app-constants';
-import UploadsMixin from '../../common/mixins/uploads-mixin';
+import {UploadsMixin} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 
 store.addReducers({
   activeLanguage
@@ -144,11 +144,7 @@ class PageHeader extends connect(store)(UploadsMixin(MatomoMixin(ProfileOperatio
   }
 
   public async countrySelectionValidator() {
-    if (this.existsUploadsUnsavedOrInProgress()) {
-      return await this.confirmLeaveUploadInProgress();
-    }
-
-    return true;
+    return await this.confirmLeaveUploadInProgress();
   }
 
   public stateChanged(state: RootState) {

@@ -16,8 +16,6 @@ import '../../common/components/page-content-header';
 import '../../common/components/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 
-import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
-
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
@@ -41,6 +39,7 @@ import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/r
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {UPLOAD_STATUS_KEYS} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 
 /**
  * @LitElement
@@ -375,7 +374,7 @@ export class PartnersModule extends connect(store)(
     if (partnerData) {
       partnerData.savePartner(newPartnerData).then((successful: any) => {
         if (successful) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+          fireEvent(this, 'upload-status-reset', {key: UPLOAD_STATUS_KEYS.UNSAVED});
         }
       });
     }

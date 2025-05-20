@@ -1,7 +1,7 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
-import {store, RootState} from '../../../../redux/store';
+import {store} from '../../../../redux/store';
 import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-content-panel/etools-content-panel';
@@ -9,6 +9,7 @@ import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
 import {StatusAction, Status} from '../../../../typings/etools-status.types';
 import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {UploadsMixin} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -16,7 +17,7 @@ import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/sr
  * @customElement
  */
 @customElement('etools-status')
-export class EtoolsStatus extends connect(store)(LitElement) {
+export class EtoolsStatus extends connect(store)(UploadsMixin(LitElement)) {
   render() {
     return html`
       ${etoolsStatusStyles}
@@ -64,12 +65,6 @@ export class EtoolsStatus extends connect(store)(LitElement) {
   @property({type: Boolean})
   hideActions = true;
 
-  @property({type: Number})
-  uploadsInProgress!: number;
-
-  @property({type: Number})
-  unsavedUploads!: number;
-
   @property({type: Boolean})
   showInfoIcon = false;
 
@@ -86,15 +81,6 @@ export class EtoolsStatus extends connect(store)(LitElement) {
     }
     if (changedProperties.has('actions')) {
       this._handleActionsChanged();
-    }
-  }
-
-  stateChanged(state: RootState) {
-    if (this.uploadsInProgress !== state.uploadStatus!.uploadsInProgress) {
-      this.uploadsInProgress = state.uploadStatus!.uploadsInProgress;
-    }
-    if (this.unsavedUploads !== state.uploadStatus!.unsavedUploads) {
-      this.unsavedUploads = state.uploadStatus!.unsavedUploads;
     }
   }
 

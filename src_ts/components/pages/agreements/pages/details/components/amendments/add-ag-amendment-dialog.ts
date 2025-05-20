@@ -81,6 +81,7 @@ export class AddAgAmendmentDialog extends CommonMixin(LitElement) {
               .uploadEndpoint="${this.uploadEndpoint}"
               @upload-started="${this._uploadStarted}"
               @upload-finished="${this._uploadFinished}"
+              @upload-canceled="${() => (this.uploadInProgress = false)}"
               required
               .uploadInProgress="${this.uploadInProgress}"
               .autoValidate="${this.autoValidate}"

@@ -9,11 +9,6 @@ import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown-multi.
 import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-date-time/datepicker-lite';
 
-import {
-  DECREASE_UPLOADS_IN_PROGRESS,
-  DECREASE_UNSAVED_UPLOADS,
-  INCREASE_UNSAVED_UPLOADS
-} from '../../../../../redux/actions/upload-status';
 import {store, RootState} from '../../../../../redux/store';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import '../../../../common/components/etools-cp-structure';
@@ -21,7 +16,6 @@ import '../../../../common/components/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
-import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
 import StaffMembersDataMixin from '../../../../common/mixins/staff-members-data-mixin-lit';
 
 import '../../../../endpoints/endpoints.js';
@@ -51,6 +45,7 @@ import get from 'lodash-es/get';
 import debounce from 'lodash-es/debounce';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js';
+import {UploadsMixin} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 
 /**
  * @LitElement
@@ -61,7 +56,7 @@ import SlSwitch from '@shoelace-style/shoelace/dist/components/switch/switch.js'
  * @appliesMixin UploadsMixin
  */
 @customElement('agreement-details')
-export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(LitElement)))) {
+export class AgreementDetails extends connect(store)(CommonMixin(StaffMembersDataMixin(UploadsMixin(LitElement)))) {
   static get styles() {
     return [layoutStyles];
   }
@@ -535,6 +530,7 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
           </div>
           <div class="col-6" ?hidden="${this._typeMatches(this.agreement.agreement_type, ['SSFA'])}">
             <etools-upload
+              track-upload-status
               label=" ${translate('SIGNED_AGREEMENT')}"
               .fileUrl="${this.agreement.attachment}"
               .uploadEndpoint="${this.uploadEndpoint}"
@@ -549,8 +545,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
               accept=".doc,.docx,.pdf,.jpg,.png"
               ?readonly="${!this.agreement.permissions?.edit.attachment}"
               ?required="${this.agreement.permissions?.required.attachment}"
-              @upload-started="${this._onUploadStarted}"
-              @change-unsaved-file="${this._onChangeUnsavedFile}"
             >
             </etools-upload>
           </div>
@@ -700,8 +694,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
     ) {
       this.unicefRepresentatives = cloneDeep(state.agreements?.unicefRepresentatives || []);
     }
-
-    this.uploadsStateChanged(state);
   }
 
   updated(changedProperties: PropertyValues) {
@@ -975,11 +967,9 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
   }
 
   _signedAgreementUploadFinished(e: CustomEvent) {
-    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = e.detail.success;
       this.agreement.attachment = response.id;
-      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
@@ -1000,7 +990,6 @@ export class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(St
 
   _signedAgFileDelete() {
     this.agreement.attachment = undefined;
-    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   getCurrentDate() {

@@ -16,7 +16,6 @@ import app, {AppState} from './reducers/app.js';
 import {AppAction} from './actions/app';
 
 import {CommonDataState} from './reducers/common-data';
-import {UploadStatusState} from './reducers/upload-status';
 import {CommonDataAction} from './actions/common-data';
 import {PartnersState} from './reducers/partners';
 import {AgreementsState} from './reducers/agreements';
@@ -37,7 +36,6 @@ declare global {
 export interface RootState {
   app?: AppState;
   commonData?: CommonDataState;
-  uploadStatus?: UploadStatusState;
   partners?: PartnersState;
   agreements?: AgreementsState;
   user?: UserState;
@@ -76,21 +74,6 @@ window.addEventListener('storage', function (e) {
     return;
   }
   store.dispatch(JSON.parse(e.newValue));
-});
-
-window.addEventListener('beforeunload', function (e) {
-  const state = store.getState();
-  if (!(state as any).uploadStatus) {
-    return;
-  }
-  const uploadsInprogressNumber: number = (state as any).uploadStatus.uploadsInProgress;
-  const unsavedUploadsNumber: number = (state as any).uploadStatus.unsavedUploads;
-  if (uploadsInprogressNumber > 0 || unsavedUploadsNumber > 0) {
-    // Cancel the event as stated by the standard.
-    e.preventDefault();
-    // Chrome requires returnValue to be set.
-    e.returnValue = 'Are you sure? Uploads in progress will be lost!';
-  }
 });
 
 /**

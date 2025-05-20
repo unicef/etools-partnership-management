@@ -111,7 +111,9 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
             accept=".doc,.docx,.pdf,.jpg,.png"
             .fileUrl="${this.assessment.report_attachment}"
             .uploadEndpoint="${this.uploadEndpoint}"
+            @upload-started="${() => (this.uploadInProgress = true)}"
             @upload-finished="${this._uploadFinished}"
+            @upload-canceled="${() => (this.uploadInProgress = false)}"
             required
             ?readonly="${this._hasId(this.assessment.id)}"
             .showChange="${!this._hasId(this.assessment.id)}"
@@ -175,6 +177,7 @@ export class AssessmentDialog extends connect(store)(EndpointsLitMixin(LitElemen
       this.assessment.report_attachment = uploadResponse.id;
       this.assessment = {...this.assessment};
     }
+    this.uploadInProgress = false;
   }
 
   resetValidations() {

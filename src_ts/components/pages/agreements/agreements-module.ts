@@ -16,7 +16,6 @@ import '../../common/components/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../styles/page-content-header-slotted-styles-lit';
 import {pageLayoutStyles} from '../../styles/page-layout-styles-lit';
 import {sharedStyles} from '@unicef-polymer/etools-modules-common/dist/styles/shared-styles-lit';
-import {RESET_UNSAVED_UPLOADS} from '../../../redux/actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
@@ -34,6 +33,7 @@ import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-re
 import pmpEdpoints from '../../endpoints/endpoints';
 import {setUnicefRepresentatives} from '../../../redux/actions/agreements';
 import {getStore} from '@unicef-polymer/etools-utils/dist/store.util';
+import {UPLOAD_STATUS_KEYS} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 
 /**
  * @LitElement
@@ -312,7 +312,7 @@ export class AgreementsModule extends connect(store)(AgreementsModuleRequiredMix
     return new Promise((resolve) => {
       this.agreementDataEl.saveAgreement(agreementData, this._newAgreementSaved).then((successfull: boolean) => {
         if (successfull) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+          fireEvent(this, 'upload-status-reset', {key: UPLOAD_STATUS_KEYS.UNSAVED});
         }
         resolve(successfull);
       });
