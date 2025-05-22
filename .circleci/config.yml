@@ -94,4 +94,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - dynamic_import
+                - ezhact-integration
