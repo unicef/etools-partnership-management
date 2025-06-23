@@ -17,7 +17,6 @@ import {
 
 // Lazy loading CommonData reducer.
 import commonData from './redux/reducers/common-data.js';
-import uploadStatus from './redux/reducers/upload-status.js';
 import agreements from './redux/reducers/agreements.js';
 import partners from './redux/reducers/partners.js';
 import user from './redux/reducers/user';
@@ -26,7 +25,6 @@ setStore(store as any);
 store.addReducers({
   // @ts-ignore
   commonData,
-  uploadStatus,
   partners,
   agreements,
   user
@@ -65,7 +63,7 @@ import './config/config.js';
 import './components/utils/routes';
 
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
-import UploadsMixin from './components/common/mixins/uploads-mixin.js';
+import {UploadsMixin} from '@unicef-polymer/etools-unicef/src/etools-upload/uploads-mixin.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
@@ -387,8 +385,6 @@ class AppShell extends connect(store)(
   }
 
   public stateChanged(state: RootState) {
-    this.uploadsStateChanged(state);
-
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
     if (
@@ -524,6 +520,7 @@ class AppShell extends connect(store)(
     // Event trigerred by the app-drawer component
     this.addEventListener('change-drawer-state', this.changeDrawerState);
     this.addEventListener('toggle-small-menu', this.toggleMenu as any);
+    this.addUploadTrackingEvents();
   }
 
   private _removeListeners() {
