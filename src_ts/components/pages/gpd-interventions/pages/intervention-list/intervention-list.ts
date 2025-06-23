@@ -162,17 +162,17 @@ export class GddInterventionsList extends connect(store)(
                   <a
                     class="text-btn-style pd-ref truncate"
                     href="gpd-interventions/${intervention.id}/metadata"
-                    title="${this.getDisplayValue(intervention.number)}"
+                    title="${this.getDisplayValue(intervention.number, '', false)}"
                   >
-                    ${this.getDisplayValue(intervention.number)}
+                    ${this.getDisplayValue(intervention.number, '', false)}
                   </a>
                 </span>
                 <span
                   class="col-data col-4"
                   data-col-header-label="${translate('GDD_LIST.GOVERNMENT_ORG_NAME')}"
-                  title="${this.getDisplayValue(intervention.partner_name)}"
+                  title="${this.getDisplayValue(intervention.partner_name, '', false)}"
                 >
-                  <span>${this.getDisplayValue(intervention.partner_name)}</span>
+                  <span>${this.getDisplayValue(intervention.partner_name, '', false)}</span>
                 </span>
                 <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
                   <div>${this.getStatusCellText(intervention)}</div>
@@ -180,9 +180,9 @@ export class GddInterventionsList extends connect(store)(
                 <span
                   class="col-data col-2 break-word"
                   data-col-header-label="${translate('GDD_LIST.TITLE')}"
-                  title="${this.getDisplayValue(intervention.title)}"
+                  title="${this.getDisplayValue(intervention.title, '', false)}"
                 >
-                  ${this.getDisplayValue(intervention.title)}
+                  ${this.getDisplayValue(intervention.title, '', false)}
                 </span>
                 <span class="col-data col-1" data-col-header-label="${translate('GDD_LIST.START_DATE')}">
                   <etools-info-tooltip
@@ -221,13 +221,15 @@ export class GddInterventionsList extends connect(store)(
               <div slot="row-data-details" class="p-relative">
                 <div class="row-details-content col-2">
                   <span class="rdc-title">${translate('OFFICES')}</span>
-                  <span>${this.getDisplayValue(intervention.offices_names)}</span>
+                  <span>${this.getDisplayValue(intervention.offices_names, '', false)}</span>
                 </div>
                 <div class="row-details-content col-2">
                   <span class="rdc-title">${translate('CONTRIBUTING_SECTIONS')}</span>
                   <span
                     >${this.getDisplayValue(
-                      intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
+                      intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS')),
+                      '',
+                      false
                     )}</span
                   >
                 </div>
