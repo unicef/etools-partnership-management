@@ -95,6 +95,13 @@ export class AgreementAmendments extends connect(store)(CommonMixin(LitElement))
           margin: 0;
           padding: 16px 11px;
         }
+        etools-data-table-column {
+          height: auto;
+        }
+        etools-data-table-header::part(edt-header-columns),
+        etools-data-table-column::part(edt-list-column-label) {
+          height: auto;
+        }
       </style>
       <etools-media-query
         query="(max-width: 1000px)"
