@@ -211,7 +211,7 @@ class ReportsList extends connect(store)(
                         ? html` <span class="col-data col-3" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                             <a
                               class="pd-ref truncate"
-                              href="interventions/${report.programme_document?.external_id}/reports"
+                              href="${this.getRefLink(report)}"
                               title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
                             >
                               ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
@@ -440,6 +440,11 @@ class ReportsList extends connect(store)(
 
   loadListData() {
     this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
+  }
+
+  getRefLink(report: any) {
+    const path = report.is_gpd ? 'gpd-interventions' : 'interventions';
+    return `${path}/${report.programme_document?.external_id}/reports`;
   }
 
   public waitForPrpCountriesToLoad() {
