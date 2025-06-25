@@ -495,7 +495,7 @@ class ReportsList extends connect(store)(
       section: queryParams.section,
       status: queryParams.status,
       year: queryParams.year,
-      document_type: queryParams.document_type,
+      is_gpd: queryParams.is_gpd,
       unicef_focal_points: queryParams.unicef_focal_points,
       report_type: queryParams.report_type,
       page: queryParams.page ? Number(queryParams.page) : 1,
