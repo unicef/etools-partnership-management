@@ -23,7 +23,7 @@ import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './repor
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {abortRequestByKey} from '@unicef-polymer/etools-utils/dist/etools-ajax/request';
-import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
+import {AnyObject, EtoolsUser, GenericObject} from '@unicef-polymer/etools-types';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import CONSTANTS from '../../../../../config/app-constants';
 import get from 'lodash-es/get';
@@ -36,6 +36,7 @@ import {langChanged, translate, get as getTranslation} from '@unicef-polymer/eto
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import dayjs from 'dayjs';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 /**
  * @LitElement
@@ -261,6 +262,9 @@ class ReportsList extends connect(store)(
   allFilters!: EtoolsFilter[];
 
   @property({type: Object})
+  user!: EtoolsUser;
+
+  @property({type: Object})
   routeDetails!: RouteDetails | null;
 
   @property({type: Boolean})
@@ -279,7 +283,9 @@ class ReportsList extends connect(store)(
     if (state.app?.routeDetails?.routeName !== 'reports') {
       return;
     }
-
+    if (!isJsonStrMatch(this.user, state.user?.data)) {
+      this.user = cloneDeep(state.user?.data);
+    }
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       this.listLoadingActive = true;
       return;
@@ -298,9 +304,9 @@ class ReportsList extends connect(store)(
 
     this.partners = partnersDropdownDataSelector(state);
 
-    if (!this.allFilters) {
+    if (!this.allFilters && this.user) {
       this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
-      this.initFiltersForDisplay(state.commonData!);
+      this.initFiltersForDisplay(state.commonData!, this.user);
     }
 
     if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
@@ -346,8 +352,12 @@ class ReportsList extends connect(store)(
     return Boolean(state.commonData?.loadedTimestamp && state.user?.data && state.partners?.listIsLoaded);
   }
 
-  initFiltersForDisplay(commonData: CommonDataState) {
-    const availableFilters = JSON.parse(JSON.stringify(getReportFilters()));
+  initFiltersForDisplay(commonData: CommonDataState, user: EtoolsUser) {
+    const filters = user?.show_gpd
+      ? getReportFilters()
+      : getReportFilters().filter((x) => x.filterKey !== ReportsFilterKeys.is_gpd);
+
+    const availableFilters = JSON.parse(JSON.stringify(filters));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
   }
