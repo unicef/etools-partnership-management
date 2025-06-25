@@ -11,7 +11,8 @@ export enum ReportsFilterKeys {
   status = 'status',
   report_type = 'report_type',
   unicef_focal_points = 'unicef_focal_points',
-  year = 'year'
+  year = 'year',
+  is_gpd = 'is_gpd'
 }
 
 export const selectedValueTypeByFilterKey: AnyObject = {
@@ -22,7 +23,8 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [ReportsFilterKeys.status]: 'Array',
   [ReportsFilterKeys.report_type]: 'string',
   [ReportsFilterKeys.unicef_focal_points]: 'Array',
-  [ReportsFilterKeys.year]: 'string'
+  [ReportsFilterKeys.year]: 'string',
+  [ReportsFilterKeys.is_gpd]: 'string'
 };
 
 export const ReportsFiltersHelper = new FiltersHelper(selectedValueTypeByFilterKey);
@@ -45,6 +47,20 @@ export function getReportFilters() {
       type: EtoolsFilterTypes.Search,
       selectedValue: '',
       selected: true
+    },
+    {
+      filterName: getTranslation('DOCUMENT_TYPE'),
+      filterNameKey: 'DOCUMENT_TYPE',
+      filterKey: ReportsFilterKeys.is_gpd,
+      type: EtoolsFilterTypes.Dropdown,
+      singleSelection: true,
+      selectionOptions: [],
+      selectedValue: null,
+      optionValue: 'id',
+      optionLabel: 'name',
+      selected: true,
+      minWidth: '350px',
+      hideSearch: true
     },
     {
       filterName: getTranslation('CP_OUTPUT'),

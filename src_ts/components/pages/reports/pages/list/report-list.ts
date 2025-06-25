@@ -32,7 +32,7 @@ import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {langChanged, translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import dayjs from 'dayjs';
@@ -155,8 +155,9 @@ class ReportsList extends connect(store)(
                 })}"
               >
                 <etools-data-table-column class="col-2">${translate('REPORT_NUM')}</etools-data-table-column>
-                <etools-data-table-column class="col-3">${translate('PARTNER')}</etools-data-table-column>
+                <etools-data-table-column class="col-2">${translate('PARTNER')}</etools-data-table-column>
                 <etools-data-table-column class="col-1">${translate('REPORT_STATUS')}</etools-data-table-column>
+                <etools-data-table-column class="col-1">${translate('DOCUMENT_TYPE')}</etools-data-table-column>
                 <etools-data-table-column class="col-1">${translate('DUE_DATE')}</etools-data-table-column>
                 <etools-data-table-column class="col-2">${translate('REPORTING_PERIOD')}</etools-data-table-column>
                 ${!this.noPdSsfaRef
@@ -185,7 +186,7 @@ class ReportsList extends connect(store)(
                           </span>
                         </sl-tooltip>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="${translate('PARTNER')}">
+                      <span class="col-data col-2" data-col-header-label="${translate('PARTNER')}">
                         <sl-tooltip content="${report.partner_vendor_number}" placement="right">
                           <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
                             ${this._displayOrDefault(report.partner_name)}
@@ -194,6 +195,9 @@ class ReportsList extends connect(store)(
                       </span>
                       <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
                         <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
+                      </span>
+                      <span class="col-data col-1" data-col-header-label="${translate('DOCUMENT_TYPE')}">
+                        ${this._getDocTitle(report.is_gpd)}
                       </span>
                       <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
                         ${this._displayOrDefault(formatDateLocalized(report.due_date))}
@@ -352,6 +356,10 @@ class ReportsList extends connect(store)(
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.external_partner_id, this.partners);
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.cp_output, commonData!.cpOutputs);
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.section, commonData!.sections);
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.is_gpd, [
+      {id: 'false', name: getTranslation('PD_SPD')},
+      {id: 'true', name: getTranslation('GPD')}
+    ]);
     ReportsFiltersHelper.updateFilterSelectionOptions(
       allFilters,
       ReportsFilterKeys.report_type,
@@ -472,6 +480,7 @@ class ReportsList extends connect(store)(
       section: queryParams.section,
       status: queryParams.status,
       year: queryParams.year,
+      document_type: queryParams.document_type,
       unicef_focal_points: queryParams.unicef_focal_points,
       report_type: queryParams.report_type,
       page: queryParams.page ? Number(queryParams.page) : 1,
@@ -497,7 +506,11 @@ class ReportsList extends connect(store)(
   }
 
   _getReportTitle(report: any) {
-    return report.report_type + report.report_number;
+    return (report.is_gpd ? 'PR' : report.report_type) + report.report_number;
+  }
+
+  _getDocTitle(isGpd: boolean) {
+    return getTranslation(isGpd ? 'GPD' : 'PD_SPD');
   }
 
   // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
