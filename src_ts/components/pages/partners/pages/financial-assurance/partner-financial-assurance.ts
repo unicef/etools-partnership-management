@@ -65,6 +65,15 @@ export class PartnerFinancialAssurance extends PaginationMixin(
       <style>
         ${dataTableStylesLit}
         /* overview panel styles */
+        etools-data-table-column {
+          --list-header-column-height: auto;
+          min-height: 56px;
+        }
+
+        etools-data-table-header {
+          --list-header-wrapper-column-height: auto;
+        }
+
         .overview-header {
           background-color: var(--medium-theme-background-color, #eeeeee);
           padding: 0 !important;
@@ -127,8 +136,12 @@ export class PartnerFinancialAssurance extends PaginationMixin(
           font-weight: 500;
         }
 
+        .table-title {
+          padding: 0 !important;
+        }
+
         .panel-row-tall {
-          height: 56px;
+          min-height: 56px;
           box-sizing: border-box;
         }
 
