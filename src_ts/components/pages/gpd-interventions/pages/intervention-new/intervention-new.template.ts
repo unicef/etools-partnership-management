@@ -81,7 +81,7 @@ export function template(this: GddInterventionNew): TemplateResult {
           </etools-dropdown>
         </div>
         <!--   Agreement   -->
-        <div class="col-md-6 col-lg-4 col-12">
+        <div class="col-md-6 col-lg-4 col-12" hidden>
           <etools-dropdown
             id="agreements"
             label=${translate('NEW_GDD.AGREEMENT')}
