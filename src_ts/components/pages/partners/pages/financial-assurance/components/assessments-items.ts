@@ -14,8 +14,6 @@ import {sharedStyles} from '../../../../../styles/shared-styles-lit';
 import '../../../../../common/components/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles-lit';
-import {store} from '../../../../../../redux/store';
-import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../redux/actions/upload-status';
 import {PartnerAssessment} from '../../../../../../models/partners.models';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
@@ -246,16 +244,6 @@ export class AssessmentsItems extends CommonMixin(LitElement) {
         this.assessmentUpdated(response);
       }
     });
-  }
-
-  _uploadFinished(e: CustomEvent) {
-    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
-    if (e.detail.success) {
-      const assessmentIndex = Number((e.target as any).getAttribute('data-args-index')); // TODO - who is e.target
-      const uploadResponse = JSON.parse(e.detail.success);
-      this.dataItems[assessmentIndex].report_attachment = uploadResponse.id;
-      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
-    }
   }
 
   showArchivedChange(e: CustomEvent) {

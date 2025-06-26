@@ -23,7 +23,7 @@ import {ReportsFilterKeys, getReportFilters, ReportsFiltersHelper} from './repor
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {abortRequestByKey} from '@unicef-polymer/etools-utils/dist/etools-ajax/request';
-import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
+import {AnyObject, EtoolsUser, GenericObject} from '@unicef-polymer/etools-types';
 import {RouteDetails, RouteQueryParams} from '@unicef-polymer/etools-types/dist/router.types';
 import CONSTANTS from '../../../../../config/app-constants';
 import get from 'lodash-es/get';
@@ -32,10 +32,11 @@ import {debounce} from '@unicef-polymer/etools-utils/dist/debouncer.util';
 import pick from 'lodash-es/pick';
 import omit from 'lodash-es/omit';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import {langChanged, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {langChanged, translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import pmpEdpoints from '../../../../endpoints/endpoints';
 import {formatDateLocalized} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import dayjs from 'dayjs';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 /**
  * @LitElement
@@ -155,8 +156,9 @@ class ReportsList extends connect(store)(
                 })}"
               >
                 <etools-data-table-column class="col-2">${translate('REPORT_NUM')}</etools-data-table-column>
-                <etools-data-table-column class="col-3">${translate('PARTNER')}</etools-data-table-column>
+                <etools-data-table-column class="col-2">${translate('PARTNER')}</etools-data-table-column>
                 <etools-data-table-column class="col-1">${translate('REPORT_STATUS')}</etools-data-table-column>
+                <etools-data-table-column class="col-1">${translate('DOCUMENT_TYPE')}</etools-data-table-column>
                 <etools-data-table-column class="col-1">${translate('DUE_DATE')}</etools-data-table-column>
                 <etools-data-table-column class="col-2">${translate('REPORTING_PERIOD')}</etools-data-table-column>
                 ${!this.noPdSsfaRef
@@ -185,7 +187,7 @@ class ReportsList extends connect(store)(
                           </span>
                         </sl-tooltip>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="${translate('PARTNER')}">
+                      <span class="col-data col-2" data-col-header-label="${translate('PARTNER')}">
                         <sl-tooltip content="${report.partner_vendor_number}" placement="right">
                           <span id="tooltip-partner-${report.id}" class="tooltip-trigger">
                             ${this._displayOrDefault(report.partner_name)}
@@ -194,6 +196,9 @@ class ReportsList extends connect(store)(
                       </span>
                       <span class="col-data col-1" data-col-header-label="${translate('REPORT_STATUS')}">
                         <report-status .status="${report.status}" .final="${report.is_final}"></report-status>
+                      </span>
+                      <span class="col-data col-1" data-col-header-label="${translate('DOCUMENT_TYPE')}">
+                        ${this._getDocTitle(report.is_gpd)}
                       </span>
                       <span class="col-data col-1" data-col-header-label="${translate('DUE_DATE')}">
                         ${this._displayOrDefault(formatDateLocalized(report.due_date))}
@@ -206,7 +211,7 @@ class ReportsList extends connect(store)(
                         ? html` <span class="col-data col-3" data-col-header-label="${translate('PD_SPD_REF_NUM')}">
                             <a
                               class="pd-ref truncate"
-                              href="interventions/${report.programme_document?.external_id}/reports"
+                              href="${this.getRefLink(report)}"
                               title="${this.getDisplayValue(report.programme_document.reference_number, ',', false)}"
                             >
                               ${this.getDisplayValue(report.programme_document.reference_number, ',', false)}
@@ -257,6 +262,9 @@ class ReportsList extends connect(store)(
   allFilters!: EtoolsFilter[];
 
   @property({type: Object})
+  user!: EtoolsUser;
+
+  @property({type: Object})
   routeDetails!: RouteDetails | null;
 
   @property({type: Boolean})
@@ -275,7 +283,9 @@ class ReportsList extends connect(store)(
     if (state.app?.routeDetails?.routeName !== 'reports') {
       return;
     }
-
+    if (!isJsonStrMatch(this.user, state.user?.data)) {
+      this.user = cloneDeep(state.user?.data);
+    }
     if (!this.dataRequiredByFiltersHasBeenLoaded(state)) {
       this.listLoadingActive = true;
       return;
@@ -294,9 +304,9 @@ class ReportsList extends connect(store)(
 
     this.partners = partnersDropdownDataSelector(state);
 
-    if (!this.allFilters) {
+    if (!this.allFilters && this.user) {
       this.commonDataLoadedTimestamp = state.commonData!.loadedTimestamp;
-      this.initFiltersForDisplay(state.commonData!);
+      this.initFiltersForDisplay(state.commonData!, this.user);
     }
 
     if (this.commonDataLoadedTimestamp !== state.commonData!.loadedTimestamp && this.allFilters) {
@@ -342,8 +352,12 @@ class ReportsList extends connect(store)(
     return Boolean(state.commonData?.loadedTimestamp && state.user?.data && state.partners?.listIsLoaded);
   }
 
-  initFiltersForDisplay(commonData: CommonDataState) {
-    const availableFilters = JSON.parse(JSON.stringify(getReportFilters()));
+  initFiltersForDisplay(commonData: CommonDataState, user: EtoolsUser) {
+    const filters = user?.show_gpd
+      ? getReportFilters()
+      : getReportFilters().filter((x) => x.filterKey !== ReportsFilterKeys.is_gpd);
+
+    const availableFilters = JSON.parse(JSON.stringify(filters));
     this.populateDropdownFilterOptionsFromCommonData(commonData, availableFilters);
     this.allFilters = availableFilters;
   }
@@ -352,6 +366,10 @@ class ReportsList extends connect(store)(
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.external_partner_id, this.partners);
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.cp_output, commonData!.cpOutputs);
     ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.section, commonData!.sections);
+    ReportsFiltersHelper.updateFilterSelectionOptions(allFilters, ReportsFilterKeys.is_gpd, [
+      {id: 'false', name: getTranslation('PD_SPD')},
+      {id: 'true', name: getTranslation('GPD')}
+    ]);
     ReportsFiltersHelper.updateFilterSelectionOptions(
       allFilters,
       ReportsFilterKeys.report_type,
@@ -424,6 +442,11 @@ class ReportsList extends connect(store)(
     this.waitForPrpCountriesToLoad().then(() => this._loadReportsData());
   }
 
+  getRefLink(report: any) {
+    const path = report.is_gpd ? 'gpd-interventions' : 'interventions';
+    return `${path}/${report.programme_document?.external_id}/reports`;
+  }
+
   public waitForPrpCountriesToLoad() {
     return new Promise((resolve) => {
       const check = setInterval(() => {
@@ -472,6 +495,7 @@ class ReportsList extends connect(store)(
       section: queryParams.section,
       status: queryParams.status,
       year: queryParams.year,
+      is_gpd: queryParams.is_gpd,
       unicef_focal_points: queryParams.unicef_focal_points,
       report_type: queryParams.report_type,
       page: queryParams.page ? Number(queryParams.page) : 1,
@@ -497,7 +521,11 @@ class ReportsList extends connect(store)(
   }
 
   _getReportTitle(report: any) {
-    return report.report_type + report.report_number;
+    return (report.is_gpd ? 'PR' : report.report_type) + report.report_number;
+  }
+
+  _getDocTitle(isGpd: boolean) {
+    return getTranslation(isGpd ? 'GPD' : 'PD_SPD');
   }
 
   // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
