@@ -22,6 +22,7 @@ import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styl
 import {EWorkPlan} from '../intervention-tab-pages/common/types/store.types';
 import {cloneDeep} from '@unicef-polymer/etools-utils/dist/general.util';
 import dayjs from 'dayjs';
+import {Environment, EnvironmentType} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 @customElement('gdd-intervention-new')
 export class GddInterventionNew extends connect(store)(LitElement) {
@@ -227,12 +228,15 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: getTranslation('NEW_GDD.ON_SAVE_VALIDATION')});
       return;
     }
-    if (
-      this.newIntervention.budget_owner &&
-      (this.newIntervention.unicef_focal_points || []).includes(this.newIntervention.budget_owner)
-    ) {
-      fireEvent(this, 'toast', {text: getTranslation('BUDGET_OWNER_DIFFERENT_FOCAL_POINT')});
-      return;
+    
+    if (!Environment.is(EnvironmentType.DEMO)) {
+      if (
+        this.newIntervention.budget_owner &&
+        (this.newIntervention.unicef_focal_points || []).includes(this.newIntervention.budget_owner)
+      ) {
+        fireEvent(this, 'toast', {text: getTranslation('BUDGET_OWNER_DIFFERENT_FOCAL_POINT')});
+        return;
+      }
     }
 
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
