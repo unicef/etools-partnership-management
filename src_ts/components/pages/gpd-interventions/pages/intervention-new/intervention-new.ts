@@ -228,7 +228,7 @@ export class GddInterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: getTranslation('NEW_GDD.ON_SAVE_VALIDATION')});
       return;
     }
-    
+
     if (!Environment.is(EnvironmentType.DEMO)) {
       if (
         this.newIntervention.budget_owner &&
