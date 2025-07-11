@@ -11,7 +11,6 @@ import './components/indicator-report-target';
 import './components/indicator-details';
 import './components/sr-details';
 
-import UtilsMixin from '../../../../common/mixins/utils-mixin';
 import CommonMixin from '@unicef-polymer/etools-modules-common/dist/mixins/common-mixin';
 import {pageCommonStyles} from '../../../../styles/page-common-styles-lit';
 import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styles';
@@ -23,14 +22,14 @@ import {translateValue} from '@unicef-polymer/etools-modules-common/dist/utils/l
 import '@unicef-polymer/etools-unicef/src/etools-collapse/etools-collapse';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import {EtoolsIconButton} from '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {getIndicatorDisplayType} from '@unicef-polymer/etools-utils/dist/general.util';
 /**
  * @LitElement
  * @customElement
  * @appliesMixin CommonMixin
- * @appliesMixin UtilsMixin
  */
 @customElement('report-progress')
-export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
+export class ReportProgress extends CommonMixin(LitElement) {
   static get styles() {
     return [layoutStyles];
   }
@@ -106,7 +105,7 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
       </style>
 
       <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
-      ${this._equals(this.report.report_type, 'SR')
+      ${this.report.report_type === 'SR'
         ? html`<sr-details .report="${this.report}" .reportAttachments="${this.reportAttachments}"></sr-details>`
         : html`
             <div
@@ -155,7 +154,7 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
                                 <div class="indicator-header row">
                                   <div class="col col-md-8 col-12 indicator-header-title">
                                     <h3>
-                                      ${this.getIndicatorDisplayType(indicatorReport.reportable.blueprint)}
+                                      ${getIndicatorDisplayType(indicatorReport.reportable.blueprint)}
                                       ${indicatorReport.reportable.blueprint.title}
                                     </h3>
                                     <div class="layout-horizontal calculation-formula">
@@ -174,18 +173,13 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
                                     <indicator-report-target2
                                       .displayType="${indicatorReport.reportable.blueprint.display_type}"
                                       .target="${indicatorReport.reportable.target}"
-                                      .cumulativeProgress="${this._ternary(
-                                        indicatorReport.reportable.blueprint.display_type,
-                                        'number',
-                                        indicatorReport.reportable.achieved.v,
-                                        indicatorReport.reportable.achieved.c
-                                      )}"
-                                      .achievement="${this._ternary(
-                                        indicatorReport.reportable.blueprint.display_type,
-                                        'number',
-                                        indicatorReport.total.v,
-                                        indicatorReport.total.c
-                                      )}"
+                                      .cumulativeProgress="${indicatorReport.reportable.blueprint.display_type ===
+                                      'number'
+                                        ? indicatorReport.reportable.achieved.v
+                                        : indicatorReport.reportable.achieved.c}"
+                                      .achievement="${indicatorReport.reportable.blueprint.display_type === 'number'
+                                        ? indicatorReport.total.v
+                                        : indicatorReport.total.c}"
                                       bold
                                     ></indicator-report-target2>
                                   </div>
@@ -289,7 +283,11 @@ export class ReportProgress extends CommonMixin(UtilsMixin(LitElement)) {
 
   _calculationAcrossLocations(indicatorReport: any) {
     return translateValue(
-      this.getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations) as string,
+      this.getDisplayValue(
+        indicatorReport.reportable.blueprint.calculation_formula_across_locations,
+        ', ',
+        false
+      ) as string,
       'FOMRULA_CHOICES'
     );
   }

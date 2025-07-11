@@ -3,19 +3,18 @@ import {property, customElement} from 'lit/decorators.js';
 import '../mixins/disaggregations';
 import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
-import UtilsMixin from '../../../../../../../common/mixins/utils-mixin';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {capitalizeFirstLetter} from '@unicef-polymer/etools-utils/dist/general.util';
 
 /**
  * @LitElement
  * @customElement
- * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
 @customElement('two-disaggregations')
-export class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(LitElement)) {
+export class TwoDisaggregations extends DisaggregationsMixin(LitElement) {
   render() {
     return html`
       ${disaggregationTableStyles}
@@ -23,7 +22,7 @@ export class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(LitEleme
       <tr class="horizontal layout headerRow">
         <th></th>
 
-        ${(this.columns || []).map((column: any) => html` <th>${this._capitalizeFirstLetter(column.value)}</th> `)}
+        ${(this.columns || []).map((column: any) => html` <th>${capitalizeFirstLetter(column.value)}</th> `)}
 
         <th>${translate('GENERAL.TOTAL')}</th>
       </tr>

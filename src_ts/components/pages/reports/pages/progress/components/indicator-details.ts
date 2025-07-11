@@ -7,7 +7,6 @@ import './disaggregations/disaggregation-table.js';
 import {isEmptyObject} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 import EndpointsLitMixin from '@unicef-polymer/etools-modules-common/dist/mixins/endpoints-mixin-lit';
 import {appGridStyles} from './disaggregations/styles/app-grid-styles';
-import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
 import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
 import {GenericObject} from '@unicef-polymer/etools-types';
@@ -15,15 +14,15 @@ import pmpEdpoints from '../../../../../endpoints/endpoints.js';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
+import {formatIndicatorValue, formatNumber} from '@unicef-polymer/etools-utils/dist/general.util.js';
 
 /**
  * @LitElement
  * @customElement
  * @appliesMixin EndpointsMixin
- * @appliesMixin UtilsMixin
  */
 @customElement('indicator-details')
-export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) {
+export class IndicatorDetails extends EndpointsLitMixin(LitElement) {
   render() {
     return html`
       ${appGridStyles}
@@ -136,23 +135,21 @@ export class IndicatorDetails extends EndpointsLitMixin(UtilsMixin(LitElement)) 
                 <div>
                   <div class="tab-header">
                     <dl>
-                      ${this._equals(location.display_type, 'number')
+                      ${location.display_type === 'number'
                         ? html`
                             <dt>
                               ${translate('LOCATION_PROGRESS_AGAINST')} ${location.reporting_entity.title}
                               ${translate('TARGET_LOWCASE')}:
                             </dt>
-                            <dd>${this._formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
+                            <dd>${formatNumber(location.location_progress.v, '0', 0, ',')}</dd>
                             <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
-                            <dd>${this._formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
+                            <dd>${formatNumber(location.previous_location_progress?.v, '0', 0, ',')}</dd>
                           `
                         : html` <dt>${translate('LOCATION_PROGRESS')}:</dt>
-                            <dd>
-                              ${this._formatIndicatorValue(location.display_type, location.location_progress.c, true)}
-                            </dd>
+                            <dd>${formatIndicatorValue(location.display_type, location.location_progress.c, true)}</dd>
                             <dt>${translate('PREVIOUS_LOCATION_PROGRESS')}:</dt>
                             <dd>
-                              ${this._formatIndicatorValue(
+                              ${formatIndicatorValue(
                                 location.display_type,
                                 location.previous_location_progress?.c,
                                 true

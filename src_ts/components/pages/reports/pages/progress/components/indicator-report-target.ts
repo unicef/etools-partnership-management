@@ -1,16 +1,15 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import UtilsMixin from '../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {formatIndicatorValue, formatNumber} from '@unicef-polymer/etools-utils/dist/general.util.js';
 
 /**
  * @LitElement
  * @customElement
- * @appliesMixin UtilsMixin
  */
 @customElement('indicator-report-target2')
-export class IndicatorReportTarget extends UtilsMixin(LitElement) {
+export class IndicatorReportTarget extends LitElement {
   render() {
     return html`
       <style>
@@ -104,7 +103,7 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
       case 'number':
-        return this._formatNumber(target.v, '-', 0, ',');
+        return formatNumber(target.v, '-', 0, ',');
       case 'ratio':
         return target.v + '/' + target.d;
       case 'percentage':
@@ -114,10 +113,10 @@ export class IndicatorReportTarget extends UtilsMixin(LitElement) {
   }
 
   _getCumulativeProgress(displayType: string, cumulativeVal: string) {
-    return this._formatIndicatorValue(displayType, cumulativeVal, false);
+    return formatIndicatorValue(displayType, cumulativeVal, false);
   }
 
   _getAchievement(displayType: string, achievedVal: string) {
-    return this._formatIndicatorValue(displayType, achievedVal, false);
+    return formatIndicatorValue(displayType, achievedVal, false);
   }
 }
