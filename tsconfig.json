@@ -18,6 +18,7 @@
     "outDir": "src",
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "noEmit": true,
     "allowImportingTsExtensions": true
   },
   "include": ["src_ts/**/*.ts", "src_ts/components/pages/interventions/pages/intervention-tab-pages/assets/i18n/*.json"],
