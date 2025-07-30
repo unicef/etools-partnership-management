@@ -514,7 +514,7 @@ export class GddInterventionsList extends connect(store)(
       cp_outputs: queryStringObj.cp_outputs,
       start: queryStringObj.start,
       end: queryStringObj.end,
-      end_after: queryStringObj.endAfter,
+      end_after: queryStringObj.end_after,
       editable_by: queryStringObj.editable_by,
       search: queryStringObj.search
     };
