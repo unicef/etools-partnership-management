@@ -1,17 +1,16 @@
 import {html, LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import './disaggregation-field.js';
-import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {formatNumber} from '@unicef-polymer/etools-utils/dist/general.util.js';
 
 /**
  * @LitElement
  * @customElement
- * @appliesMixin UtilsMixin
  */
 @customElement('disaggregation-table-cell-number')
-export class DisaggregationTableCellNumber extends UtilsMixin(LitElement) {
+export class DisaggregationTableCellNumber extends LitElement {
   render() {
     return html`
       ${disaggregationTableStyles}
@@ -20,7 +19,7 @@ export class DisaggregationTableCellNumber extends UtilsMixin(LitElement) {
           display: block;
         }
       </style>
-      <span class="cellValue">${this._formatNumber(this.data?.v, '-', 0, ',')}</span>
+      <span class="cellValue">${formatNumber(this.data?.v, '-', 0, ',')}</span>
     `;
   }
 

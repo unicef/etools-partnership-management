@@ -1,6 +1,5 @@
 import {html, LitElement, PropertyValues} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import UtilsMixin from '../../../../../../common/mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';
@@ -10,6 +9,7 @@ import {layoutStyles} from '@unicef-polymer/etools-unicef/src/styles/layout-styl
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
 import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {valueWithDefault} from '@unicef-polymer/etools-utils/dist/general.util';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -18,10 +18,9 @@ import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
  *
  * @LitElement
  * @customElement
- * @appliesMixin UtilsMixin
  */
 @customElement('disaggregation-table')
-export class DisaggregationTable extends UtilsMixin(LitElement) {
+export class DisaggregationTable extends LitElement {
   static get styles() {
     return [layoutStyles];
   }
@@ -52,11 +51,11 @@ export class DisaggregationTable extends UtilsMixin(LitElement) {
                ? html`
                    <dl class="data-key">
                      <dt>${translate('LABEL')} -</dt>
-                     ${this._equals(this.data.display_type, 'number')
-                       ? html`<dd>[ ${this._withDefault(this.labels.label)} ]</dd>`
+                     ${this.data.display_type === 'number'
+                       ? html`<dd>[ ${valueWithDefault(this.labels.label)} ]</dd>`
                        : html` <dd>
-                           [ ${this._withDefault(this.labels.numerator_label)} ] / [
-                           ${this._withDefault(this.labels.denominator_label)} ]
+                           [ ${valueWithDefault(this.labels.numerator_label)} ] / [
+                           ${valueWithDefault(this.labels.denominator_label)} ]
                          </dd>`}
                    </dl>
                  `
@@ -67,24 +66,24 @@ export class DisaggregationTable extends UtilsMixin(LitElement) {
           : ''}
 
         <table class="layout-vertical">
-          ${this._equals(this.formattedMapping?.length, 0)
+          ${this.formattedMapping?.length === 0
             ? html`
                 <zero-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
                 </zero-disaggregations>
               `
             : ''}
-          ${this._equals(this.formattedMapping?.length, 1)
+          ${this.formattedMapping?.length === 1
             ? html`
                 <one-disaggregation .data="${this.viewData}" .mapping="${this.formattedMapping}"> </one-disaggregation>
               `
             : ''}
-          ${this._equals(this.formattedMapping?.length, 2)
+          ${this.formattedMapping?.length === 2
             ? html`
                 <two-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
                 </two-disaggregations>
               `
             : ''}
-          ${this._equals(this.formattedMapping?.length, 3)
+          ${this.formattedMapping?.length === 3
             ? html`
                 <three-disaggregations .data="${this.viewData}" .mapping="${this.formattedMapping}">
                 </three-disaggregations>

@@ -384,7 +384,12 @@ class ReportsList extends connect(store)(
   }
 
   filtersChange(e: CustomEvent) {
-    this.updateCurrentParams({...e.detail, page: 1}, true);
+    if (
+      buildUrlQueryString({...this.routeDetails!.queryParams}) !==
+      buildUrlQueryString({...this.routeDetails!.queryParams, ...e.detail})
+    ) {
+      this.updateCurrentParams({...e.detail, page: 1}, true);
+    }
   }
 
   filteringParamsHaveChanged(stateRouteDetails: any) {
@@ -399,7 +404,7 @@ class ReportsList extends connect(store)(
     const newParams: RouteQueryParams = cloneDeep({...currentParams, ...paramsToUpdate});
     this.prevQueryStringObj = newParams;
 
-    const stringParams: string = buildUrlQueryString(newParams);
+    const stringParams: string = buildUrlQueryString(newParams, true);
     EtoolsRouter.replaceAppLocation(`reports/list?${stringParams}`);
   }
 

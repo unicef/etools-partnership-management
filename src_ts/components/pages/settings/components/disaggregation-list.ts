@@ -134,6 +134,7 @@ export class DisaggregationList extends connect(store)(PaginationMixin(CommonMix
             .pageNumber="${this.paginator.page}"
             .totalResults="${this.paginator.count}"
             .visibleRange="${this.paginator.visible_range}"
+            .syncQueryParams="${true}"
             @page-size-changed="${this.pageSizeChanged}"
             @page-number-changed="${this.pageNumberChanged}"
           >
