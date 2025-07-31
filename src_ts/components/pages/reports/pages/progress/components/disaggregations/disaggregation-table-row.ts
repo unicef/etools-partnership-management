@@ -3,40 +3,38 @@ import {property, customElement} from 'lit/decorators.js';
 import './disaggregation-table-cell-number.js';
 import './disaggregation-table-cell-percentage.js';
 import './disaggregation-table-cell-ratio.js';
-import '../../../../../../common/mixins/utils-mixin.js';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {appGridStyles} from './styles/app-grid-styles';
-import UtilsMixin from '../../../../../../common/mixins/utils-mixin.js';
 import {GenericObject} from '@unicef-polymer/etools-types';
+import {capitalizeFirstLetter} from '@unicef-polymer/etools-utils/dist/general.util.js';
 
 /**
  * @LitElement
  * @customElement
- * @appliesMixin UtilsMixin
  */
 @customElement('disaggregation-table-row')
-export class DisaggregationTableRow extends UtilsMixin(LitElement) {
+export class DisaggregationTableRow extends LitElement {
   render() {
     return html`
       ${appGridStyles} ${disaggregationTableStyles}
 
       <tr class="${this._computeClass(this.rowType)}">
         <td class="cellTitle">
-          <span class="cellValue">${this._capitalizeFirstLetter(this.data?.title)}</span>
+          <span class="cellValue">${capitalizeFirstLetter(this.data?.title)}</span>
         </td>
 
         ${(this.data?.data || []).map(
           (item: any) => html`
             <td>
-              ${this._equals(this.indicatorType, 'number')
+              ${this.indicatorType === 'number'
                 ? html`<disaggregation-table-cell-number .data="${item.data}"></disaggregation-table-cell-number>`
                 : ''}
-              ${this._equals(this.indicatorType, 'percentage')
+              ${this.indicatorType === 'percentage'
                 ? html`<disaggregation-table-cell-percentage
                     .data="${item.data}"
                   ></disaggregation-table-cell-percentage>`
                 : ''}
-              ${this._equals(this.indicatorType, 'ratio')
+              ${this.indicatorType === 'ratio'
                 ? html`<disaggregation-table-cell-ratio .data="${item.data}"></disaggregation-table-cell-ratio>`
                 : ''}
             </td>
@@ -44,17 +42,17 @@ export class DisaggregationTableRow extends UtilsMixin(LitElement) {
         )}
         ${this.data?.total
           ? html` <td class="cellTotal">
-              ${this._equals(this.indicatorType, 'number')
+              ${this.indicatorType === 'number'
                 ? html`<disaggregation-table-cell-number
                     .data="${this.data.total.data}"
                   ></disaggregation-table-cell-number>`
                 : ''}
-              ${this._equals(this.indicatorType, 'percentage')
+              ${this.indicatorType === 'percentage'
                 ? html`<disaggregation-table-cell-percentage
                     .data="${this.data.total.data}"
                   ></disaggregation-table-cell-percentage>`
                 : ''}
-              ${this._equals(this.indicatorType, 'ratio')
+              ${this.indicatorType === 'ratio'
                 ? html`<disaggregation-table-cell-ratio
                     .data="${this.data.total.data}"
                   ></disaggregation-table-cell-ratio>`

@@ -55,7 +55,6 @@ import './components/common/environment-flags/environment-flags';
 import './components/pages/partners/data/partners-list-data.js';
 import './components/pages/agreements/data/agreements-list-data.js';
 
-import UtilsMixin from './components/common/mixins/utils-mixin.js';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 
 // import global config and dexie db config
@@ -115,10 +114,9 @@ initializeIcons();
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin LoadingMixin
- * @appliesMixin UtilsMixin
  */
 class AppShell extends connect(store)(
-  UploadsMixin(ScrollControlMixinLit(UtilsMixin(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement))))))
+  UploadsMixin(ScrollControlMixinLit(LoadingMixin(CommonDataMixin(UserDataMixin(LitElement)))))
 ) {
   render() {
     // main template
