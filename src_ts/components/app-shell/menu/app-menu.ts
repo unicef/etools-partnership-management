@@ -107,7 +107,8 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
 
             <div class="name">${translate('GPD')}</div>
           </a>
-          <a
+          <!-- TODO remove routes for this page and code related only
+            <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'government-partners')}"
             menu-name="government-partners"
             href="${Environment.basePath}government-partners/list"
@@ -115,8 +116,8 @@ class AppMenu extends connect(store)(MatomoMixin(EnvironmentFlagsMixin(LitElemen
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('GOVERNMENT')}">
               <etools-icon id="gov-icon" name="account-balance"></etools-icon>
             </sl-tooltip>
-            <div class="name">${translate('GOVERNMENT')}</div>
-          </a>
+            <div class="name">${translate('GOVERNMENT')}</div> </a
+          > -->
 
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'reports')}"
