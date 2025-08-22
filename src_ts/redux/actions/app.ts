@@ -155,7 +155,7 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
   }
 
   (async () => {
-    let routeName = routeDetails.routeName;
+    const routeName = routeDetails.routeName;
     const subRouteImportFunctions: any = {
       partners: importPartnerSubRoutes,
       interventions: importInterventionSubRoutes,
