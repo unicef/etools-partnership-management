@@ -121,17 +121,13 @@ const importReportsSubRoutes = async (subRouteName: string | null) => {
   }
 };
 
-const importPartnerSubRoutes = async (subRouteName: string | null, routeName: string | null) => {
+const importPartnerSubRoutes = async (subRouteName: string | null) => {
   if (!subRouteName) {
     return;
   }
 
   try {
-    if (routeName === 'government-partners' && subRouteName === 'list') {
-      await import(`../../components/pages/partners/pages/${subRouteName}/governments-${subRouteName}.ts`);
-    } else {
-      await import(`../../components/pages/partners/pages/${subRouteName}/partner-${subRouteName}.ts`);
-    }
+    await import(`../../components/pages/partners/pages/${subRouteName}/partner-${subRouteName}.ts`);
   } catch {
     console.log(`No file imports configuration found partners: ${subRouteName}!`);
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
@@ -168,14 +164,10 @@ const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (_dispatch: any
       reports: importReportsSubRoutes
     };
 
-    if (routeName === 'government-partners') {
-      routeName = 'partners';
-    }
-
     try {
       await import(`../../components/pages/${routeName}/${routeName}-module.ts`);
       if (Object.keys(subRouteImportFunctions).includes(routeName)) {
-        await subRouteImportFunctions[routeName](routeDetails.subRouteName, routeDetails.routeName);
+        await subRouteImportFunctions[routeName](routeDetails.subRouteName);
       }
     } catch {
       console.log(`No file imports configuration found for module: ${routeDetails.routeName}!`);
