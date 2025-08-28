@@ -559,11 +559,13 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
    * Show core values assessment attachment only if partner type is 'Civil Society Organization'
    * and cso_type is 'National'
    */
-  public _showCoreValueAssessment(partnerType: any, csoType: any) {
-    return (
-      partnerType === 'Civil Society Organization' &&
-      ['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1
-    );
+  public _showCoreValueAssessment(_partnerType: any, _csoType: any) {
+    return true;
+    // Remove validation because of #270069
+    // (
+    //   partnerType === 'Civil Society Organization' &&
+    //   ['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1
+    // );
   }
 
   public _isEmptyDate(date: any) {
@@ -579,6 +581,10 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
   }
 
   public _shouldDisplayCVAList() {
-    return !this._empty(this.partner.core_values_assessments) && this.showCoreValuesAssessmentAttachment;
+    return (
+      !this._empty(this.partner.core_values_assessments) &&
+      this.partner.core_values_assessments.length &&
+      this.showCoreValuesAssessmentAttachment
+    );
   }
 }
