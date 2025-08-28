@@ -104,7 +104,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             id="locationsDropdw"
             label=${translate('LOCATIONS')}
             placeholder="&#8212;"
-            .options="${this.allLocations}"
+            .options="${this.allLocations.filter((x) => x.is_active)}"}"
             option-label="name"
             option-value="id"
             required
