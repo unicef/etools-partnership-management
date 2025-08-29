@@ -33,7 +33,6 @@ import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
-import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 // @ts-ignore
@@ -168,34 +167,18 @@ export class InterventionsModule extends connect(store)(
               class="action"
               ?hidden="${!this._showAddNewIntervBtn(this.activePage == 'list', this.userPermissions)}"
             >
+              <etools-button variant="primary" @click="${this.openEcnImportDialog}" ?hidden="${this.listLoadingActive}">
+                <etools-icon name="file-upload" slot="prefix"></etools-icon>
+                <span>${translate('IMPORT_ECN')}</span>
+              </etools-button>
+
               <etools-button
                 variant="primary"
-                class="split-btn"
                 @click="${this._goToNewInterventionPage}"
                 ?hidden="${this.listLoadingActive}"
               >
                 <etools-icon name="add" slot="prefix"></etools-icon>
-                <span style="padding: 0 10px 0 0">${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
-                <sl-dropdown id="importEcn">
-                  <etools-icon
-                    slot="trigger"
-                    name="expand-more"
-                    @click="${(event: MouseEvent) => {
-                      event.stopImmediatePropagation();
-                      ((event.currentTarget as any)!.parentElement as SlDropdown).show();
-                    }}"
-                  ></etools-icon>
-                  <sl-menu>
-                    <sl-menu-item
-                      @click="${(e: CustomEvent) => {
-                        e.stopImmediatePropagation();
-                        this.openEcnImportDialog();
-                      }}"
-                    >
-                      ${translate('IMPORT_ECN')}
-                    </sl-menu-item>
-                  </sl-menu>
-                </sl-dropdown>
+                <span>${translate('INTERVENTIONS_LIST.ADD_NEW_PD')}</span>
               </etools-button>
             </div>
           </div>
