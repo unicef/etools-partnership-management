@@ -172,7 +172,7 @@ class AppShell extends connect(store)(
               id="partners"
               class="main-page"
               .permissions="${this.permissions}"
-              ?hidden="${!this._activeModuleIs(this.module, 'partners|government-partners')}"
+              ?hidden="${!this._activeModuleIs(this.module, 'partners')}"
             >
             </partners-module>
 
@@ -434,11 +434,6 @@ class AppShell extends connect(store)(
     }
 
     store.dispatch(handleUrlChange(path));
-  }
-
-  // @ts-ignore // TODO - verify if still needed
-  private _showOnlyGovernmentPartners(module: string) {
-    return module === 'government-partners';
   }
 
   _getRootPathAndModule(module: string) {

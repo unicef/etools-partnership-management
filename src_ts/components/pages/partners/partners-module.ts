@@ -79,10 +79,7 @@ export class PartnersModule extends connect(store)(
 
       <page-content-header .withTabsVisible="${this.tabsActive}">
         <div slot="page-title">
-          ${this.listActive
-            ? html` <span ?hidden="${this.showOnlyGovernmentType}">${translate('PARTNERS')}</span>
-                <span ?hidden="${!this.showOnlyGovernmentType}">${translate('GOVERNMENT_PARTNERS')}</span>`
-            : ''}
+          ${this.listActive ? html` <span>${translate('PARTNERS')}</span> ` : ''}
           ${this.tabsActive ? html`<span>${(this.partner || {}).name}</span>` : ''}
         </div>
 
@@ -141,17 +138,6 @@ export class PartnersModule extends connect(store)(
             }}
           >
           </partners-list>
-          <governments-list
-            id="g-list"
-            name="g-list"
-            ?hidden="${!(
-              this._pageEquals(this.activePage, 'list') && this.govListActive(this.listActive, this.reduxRouteDetails)
-            )}"
-            @csvDownloadUrl-changed=${(e: any) => {
-              this.csvDownloadUrl = e.detail;
-            }}
-          >
-          </governments-list>
           <partner-overview
             ?hidden="${!this._pageEquals(this.activePage, 'overview')}"
             name="overview"
@@ -224,9 +210,6 @@ export class PartnersModule extends connect(store)(
   @property({type: Object})
   permissions!: UserPermissions;
 
-  @property({type: Boolean})
-  showOnlyGovernmentType = false;
-
   @property({type: Object})
   originalPartnerData!: Partner;
 
@@ -272,7 +255,7 @@ export class PartnersModule extends connect(store)(
     if (!state.app?.routeDetails?.routeName) {
       return;
     }
-    if (['partners', 'government-partners'].includes(state.app?.routeDetails?.routeName!)) {
+    if (['partners'].includes(state.app?.routeDetails?.routeName!)) {
       this.reduxRouteDetails = state.app.routeDetails!;
       this.selectedPartnerId = Number(this.reduxRouteDetails!.params?.itemId);
       this.listActive = this.reduxRouteDetails?.subRouteName == 'list';
@@ -359,7 +342,7 @@ export class PartnersModule extends connect(store)(
   }
 
   public _pageChanged(listActive: boolean, routeDetails: EtoolsRouteDetails) {
-    if (!routeDetails || !['partners', 'government-partners'].includes(routeDetails?.routeName!)) {
+    if (!routeDetails || !['partners'].includes(routeDetails?.routeName!)) {
       return;
     }
     this.scrollToTopOnCondition(!listActive);
@@ -531,13 +514,6 @@ export class PartnersModule extends connect(store)(
       active: true,
       loadingSource: 'partners-page'
     });
-  }
-
-  govListActive(listActive: boolean, route?: EtoolsRouteDetails) {
-    if (!route) {
-      return false;
-    }
-    return listActive && route.routeName === 'government-partners';
   }
 
   partnersListActive(listActive: boolean, route?: EtoolsRouteDetails) {
