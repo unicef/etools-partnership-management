@@ -13,7 +13,7 @@ EtoolsRouter.init({
     notFound: '/not-found',
     default: '/partners/list'
   },
-  redirectedPathsToSubpageLists: ['interventions', 'partners', 'reports', 'government-partners', 'gpd-interventions']
+  redirectedPathsToSubpageLists: ['interventions', 'partners', 'reports', 'gpd-interventions']
 });
 
 EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
@@ -74,15 +74,6 @@ EtoolsRouter.addRoute(new RegExp('^interventions/list$'), (params: EtoolsRouteCa
     return {
       routeName: 'gpd-interventions',
       subRouteName: 'new',
-      path: params.matchDetails[0],
-      queryParams: params.queryParams,
-      params: null
-    };
-  })
-  .addRoute(new RegExp('^government-partners/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
-    return {
-      routeName: 'government-partners',
-      subRouteName: 'list',
       path: params.matchDetails[0],
       queryParams: params.queryParams,
       params: null

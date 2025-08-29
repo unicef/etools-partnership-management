@@ -149,9 +149,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
     });
 
     const afterDataRefreshLandingPage: string | null = this._getAfterRefreshLandingPage();
-    const restampLandingPage: boolean =
-      this.page === afterDataRefreshLandingPage ||
-      (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
+    const restampLandingPage: boolean = this.page === afterDataRefreshLandingPage;
 
     if (this.allSelected) {
       fireEvent(this, 'update-main-path', {
@@ -255,7 +253,7 @@ class DataRefreshDialog extends EndpointsLitMixin(LitElement) {
       return this.page;
     }
     if (this.partnersSelected) {
-      return this.page === 'government-partners' ? 'government-partners' : 'partners';
+      return 'partners';
     }
     if (this.agreementsSelected) {
       return 'agreements';
