@@ -406,9 +406,6 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
   sharedPartenerValues: LabelAndValue[] = [];
 
   @property({type: Boolean})
-  showCoreValuesAssessmentAttachment = false;
-
-  @property({type: Boolean})
   showArchivedAssessments = false;
 
   @property({type: Boolean})
@@ -492,9 +489,6 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
       });
     }, 200);
     if (!isEmptyObject(partner)) {
-      // decide if we should show core values assessment attachment
-      this.showCoreValuesAssessmentAttachment = this._showCoreValueAssessment(partner.partner_type, partner.cso_type);
-
       this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
 
       if (partner.type_of_assessment === 'Micro Assessment') {
@@ -555,19 +549,6 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
       : getTranslatedValue(partnerType, 'COMMON_DATA.PARTNERTYPES');
   }
 
-  /**
-   * Show core values assessment attachment only if partner type is 'Civil Society Organization'
-   * and cso_type is 'National'
-   */
-  public _showCoreValueAssessment(_partnerType: any, _csoType: any) {
-    return true;
-    // Remove validation because of #270069
-    // (
-    //   partnerType === 'Civil Society Organization' &&
-    //   ['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1
-    // );
-  }
-
   public _isEmptyDate(date: any) {
     if (!date) {
       return true;
@@ -581,10 +562,6 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
   }
 
   public _shouldDisplayCVAList() {
-    return (
-      !this._empty(this.partner.core_values_assessments) &&
-      this.partner.core_values_assessments.length &&
-      this.showCoreValuesAssessmentAttachment
-    );
+    return !this._empty(this.partner.core_values_assessments) && this.partner.core_values_assessments.length;
   }
 }
