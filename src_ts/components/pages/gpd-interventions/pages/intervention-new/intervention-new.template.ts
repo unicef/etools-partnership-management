@@ -67,7 +67,10 @@ export function template(this: GddInterventionNew): TemplateResult {
             id="partner"
             label=${translate('NEW_GDD.GOVERNMENT')}
             placeholder="&#8212;"
-            .options="${this.partnersDropdownData}"
+            .options="${this.partnersDropdownData.map((x: any) => ({
+              ...x,
+              itemTemplate: html` <span style="color:${x.hidden ? 'red' : 'inherit'}"> ${x.name} </span>`
+            }))}"
             option-value="id"
             option-label="name"
             required

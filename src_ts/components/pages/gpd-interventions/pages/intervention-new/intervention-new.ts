@@ -104,8 +104,9 @@ export class GddInterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.agreementsList, state.agreements!.list)) {
       this.agreementsList = [...state.agreements!.list] as unknown as StaticAgreement[];
     }
-    if (!isJsonStrMatch(this.partnersDropdownData, govPartnersSelector(state))) {
-      this.partnersDropdownData = [...govPartnersSelector(state)];
+    const govPartners = govPartnersSelector(state);
+    if (!isJsonStrMatch(this.partnersDropdownData, govPartners)) {
+      this.partnersDropdownData = [...govPartners];
     }
     if (!isJsonStrMatch(this.documentTypes, state.commonData!.documentTypes)) {
       this.documentTypes = [...state.commonData!.documentTypes];
@@ -137,6 +138,9 @@ export class GddInterventionNew extends connect(store)(LitElement) {
 
   partnerChanged({detail}: CustomEvent): void {
     this.selectedPartner = detail.selectedItem;
+    if (this.selectedPartner?.hidden) {
+      fireEvent(this, 'toast', {text: getTranslation('NEW_GDD.PARTNER_INACTIVE_SELECTED')});
+    }
     this.getDefaultTitle(this.newIntervention);
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
     this.setInterventionField('partner', id);
