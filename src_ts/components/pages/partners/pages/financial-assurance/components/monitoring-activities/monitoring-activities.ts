@@ -400,11 +400,13 @@ export class MonitoringActivities extends EndpointsLitMixin(LitElement) {
     // transform groups to activities array, add to map
     const groupedActivities: ActivitiesGroup[] = [];
     this.groups.forEach((group: number[]) => {
-      const activities: MonitoringActivity[] = group.map((id: number) => {
+      let activities: MonitoringActivity[] = group.map((id: number) => {
         const activity = activitiesMap.get(id) as MonitoringActivity;
         activitiesMap.delete(id);
         return activity;
       });
+      // not all IDs are found in activitiesMap, remove undefined from activities
+      activities = activities.filter((x) => !!x);
       groupedActivities.push({activities, id: getUniqueId()});
     });
     // transform single activities to array with one element, add to map
