@@ -149,7 +149,7 @@ const pmpEdpoints = {
     url: '/api/v2/reports/results'
   },
   frNumbersDetails: {
-    url: '/api/v2/funds/frs'
+    url: '/api/v2/funds/frs/'
   },
   userCountryDetails: {
     url: '/api/v3/users/country/'
