@@ -29,7 +29,6 @@
     "prepare": "relative-deps"
   },
   "dependencies": {
-    "@mapbox/leaflet-omnivore": "^0.3.4",
     "@rollup/plugin-dynamic-import-vars": "^2.1.5",
     "@shoelace-style/shoelace": "2.20.1",
     "@types/leaflet": "^1.9.3",
@@ -60,7 +59,7 @@
     "@rollup/plugin-terser": "0.4.4",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
-    "esbuild": "^0.19.5",
+    "esbuild": "^0.25.0",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-html": "^8.1.2",
