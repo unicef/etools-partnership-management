@@ -69,6 +69,8 @@
     "globals": "^15.13.0",
     "prettier": "~3.4.2",
     "relative-deps": "^1.0.7",
+    "braces": ">=3.0.3",
+    "js-yaml": ">=4.1.1",
     "rollup": "4.28.1",
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-delete": "2.1.0",
@@ -76,7 +78,7 @@
     "rollup-plugin-license": "3.5.3",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-serve": "3.0.0",
-    "rollup-plugin-workbox": "8.1.1",
+    "rollup-plugin-workbox": "^8.1.2",
     "svg-sprite": "^2.0.4",
     "typescript": "5.3.3"
   },
