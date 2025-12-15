@@ -4,8 +4,8 @@ import del from 'rollup-plugin-delete';
 import license from 'rollup-plugin-license';
 import terser from '@rollup/plugin-terser';
 import path from 'path';
-import { generateSW } from 'rollup-plugin-workbox';
-import { workboxConfig } from './workbox-config.js';
+import {generateSW} from 'rollup-plugin-workbox';
+import {workboxConfig} from './workbox-config.js';
 import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,10 +38,6 @@ const copyConfig = {
     {src: 'version.json', dest: 'src'},
     {src: 'node_modules/leaflet/dist/', dest: 'src/node_modules/leaflet/'},
     {src: 'node_modules/esri-leaflet/dist/esri-leaflet.js', dest: 'src/node_modules/esri-leaflet/dist'},
-    {
-      src: 'node_modules/@mapbox/leaflet-omnivore/leaflet-omnivore.min.js',
-      dest: 'src/node_modules/@mapbox/leaflet-omnivore/'
-    },
     {
       src: 'node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
       dest: 'src/node_modules/leaflet.markercluster/dist'
