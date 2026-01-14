@@ -37,11 +37,9 @@ export const UPDATE_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_INTERVENTION_AMENDMEN
 export const UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_GDD_INTERVENTION_AMENDMENT_TYPES';
 export const UPDATE_LOCATION_TYPES = 'UPDATE_LOCATION_TYPES';
 export const UPDATE_PARTNER_RISK_RATINGS = 'UPDATE_PARTNER_RISK_RATINGS';
-export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
 export const UPDATE_OFFICES = 'UPDATE_OFFICES';
 export const UPDATE_PRP_COUNTRIES = 'UPDATE_PRP_COUNTRIES';
 export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
-export const UPDATE_SITES = 'UPDATE_SITES';
 export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
@@ -154,10 +152,6 @@ export interface CommonDataActionUpdatePartnerRiskRatings extends Action<'UPDATE
   ratings: GenericObject[];
 }
 
-export interface CommonDataActionUpdateLocations extends Action<'UPDATE_LOCATIONS'> {
-  locations: GenericObject[];
-}
-
 export interface CommonDataActionUpdateOffices extends Action<'UPDATE_OFFICES'> {
   offices: GenericObject[];
 }
@@ -168,10 +162,6 @@ export interface CommonDataActionUpdatePRPCountries extends Action<'UPDATE_PRP_C
 
 export interface CommonDataActionUpdateSections extends Action<'UPDATE_SECTIONS'> {
   sections: GenericObject[];
-}
-
-export interface CommonDataActionUpdateSites extends Action<'UPDATE_SITES'> {
-  sites: GenericObject[];
 }
 
 export interface CommonDataActionUpdateUnicefUsers extends Action<'UPDATE_UNICEF_USERS'> {
@@ -433,13 +423,6 @@ export const updatePartnerRiskRatings: ActionCreator<CommonDataActionUpdatePartn
   };
 };
 
-export const updateLocations: ActionCreator<CommonDataActionUpdateLocations> = (locations: GenericObject[]) => {
-  return {
-    type: UPDATE_LOCATIONS,
-    locations
-  };
-};
-
 export const updateOfficesData: ActionCreator<CommonDataActionUpdateOffices> = (offices: GenericObject[]) => {
   return {
     type: UPDATE_OFFICES,
@@ -460,13 +443,6 @@ export const updateSections: ActionCreator<CommonDataActionUpdateSections> = (se
   return {
     type: UPDATE_SECTIONS,
     sections
-  };
-};
-
-export const updateSites: ActionCreator<CommonDataActionUpdateSites> = (sites: GenericObject[]) => {
-  return {
-    type: UPDATE_SITES,
-    sites
   };
 };
 

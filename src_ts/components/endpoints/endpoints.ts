@@ -99,9 +99,7 @@ const pmpEdpoints = {
     cachingKey: 'dropdownsStatic'
   },
   locations: {
-    url: '/api/locations-light',
-    exp: 60 * 60 * 60 * 1000, // 60h
-    cachingKey: 'locations'
+    url: '/api/locations-light'
   },
   offices: {
     url: '/api/offices/v3/',
@@ -120,9 +118,7 @@ const pmpEdpoints = {
     cachingKey: 'sections'
   },
   sites: {
-    url: '/api/v1/field-monitoring/settings/sites/?page_size=all',
-    exp: 6 * 60 * 60 * 1000,
-    cachingKey: 'sites'
+    url: '/api/v1/field-monitoring/settings/sites/'
   },
   ramIndicators: {
     template: '/api/v2/reports/results/<%=id%>/indicators/'
