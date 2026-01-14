@@ -44,10 +44,8 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
         'countryProgrammes',
         'dropdownsPmp',
         'dropdownsStatic',
-        'locations',
         'offices',
         'sections',
-        'sites',
         'unicefUsers',
         'userCountryDetails'
       ],
@@ -112,13 +110,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       const data: Partial<CommonDataState> = {};
       data.countryProgrammes = this.getValue(response[0]);
       this.setStaticAndDynamicData(data, this.getValue(response[1]), this.getValue(response[2]));
-
-      data.locations = this.getValue(response[3]);
-      data.offices = this.getValue(response[4]);
-      data.sections = this.getValue(response[5]);
-      data.sites = this.getValue(response[6]);
-      data.unicefUsersData = this.getValue(response[7]);
-      data.countryData = this.getValue(response[8]);
+      data.offices = this.getValue(response[3]);
+      data.sections = this.getValue(response[4]);
+      data.unicefUsersData = this.getValue(response[5]);
+      data.countryData = this.getValue(response[6]);
 
       return data;
     }
@@ -199,14 +194,10 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
           return this._handleDropdownsPmpResponse;
         case 'dropdownsStatic':
           return this._handleDropdownsStaticResponse;
-        case 'locations':
-          return this._handleLocationsResponse;
         case 'offices':
           return this._handleOfficesResponse;
         case 'sections':
           return this._handleSectionsResponse;
-        case 'sites':
-          return this._handleSitesResponse;
         case 'unicefUsers':
           return this._handleUnicefUsersResponse;
         case 'userCountryDetails':
@@ -361,13 +352,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       }
     }
 
-    protected _handleLocationsResponse(response: any) {
-      if (this._validReqResponseData(response)) {
-        // set locations values
-        store.dispatch(commonDataActions.updateLocations(response));
-      }
-    }
-
     protected _handleOfficesResponse(response: any) {
       if (this._validReqResponseData(response)) {
         // set offices values
@@ -379,13 +363,6 @@ function CommonDataMixin<T extends Constructor<LitElement>>(baseClass: T) {
       if (this._validReqResponseData(response)) {
         // set user country data
         store.dispatch(commonDataActions.updatePRPCountries(response));
-      }
-    }
-
-    protected _handleSitesResponse(response: any) {
-      if (this._validReqResponseData(response)) {
-        // set offices values
-        store.dispatch(commonDataActions.updateSites(response));
       }
     }
 
