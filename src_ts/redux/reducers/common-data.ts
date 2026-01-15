@@ -7,9 +7,7 @@ import {
   UPDATE_USER_COUNTRY_DATA,
   UPDATE_UNICEF_USERS,
   UPDATE_SECTIONS,
-  UPDATE_SITES,
   UPDATE_OFFICES,
-  UPDATE_LOCATIONS,
   UPDATE_PARTNER_RISK_RATINGS,
   UPDATE_LOCATION_TYPES,
   UPDATE_INTERVENTION_AMENDMENT_TYPES,
@@ -55,8 +53,7 @@ import {
   CountryProgram,
   GenericObject,
   Office,
-  Country,
-  LocationObject
+  Country
 } from '@unicef-polymer/etools-types';
 import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
@@ -74,7 +71,6 @@ export class CommonDataState {
   interventionStatuses: LabelAndValue[] = [];
   sections: GenericObject[] = [];
   unicefUsersData: MinimalUser[] = [];
-  locations: LocationObject[] = [];
   offices: Office[] = [];
   agreementsDropdownData: GenericObject[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
@@ -102,7 +98,6 @@ export class CommonDataState {
   riskTypes: LabelAndValue[] = [];
   gpdRiskTypes: LabelAndValue[] = [];
   cashTransferModalities: LabelAndValue[] = [];
-  sites: [] = [];
   loadedTimestamp = 0;
   gddAmendmentTypes: LabelAndValue[] = [];
   gpdStatuses: LabelAndValue[] = [];
@@ -177,18 +172,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         sections: action.sections
-      };
-
-    case UPDATE_SITES:
-      return {
-        ...state,
-        sites: action.sites
-      };
-
-    case UPDATE_LOCATIONS:
-      return {
-        ...state,
-        locations: action.locations
       };
 
     case UPDATE_UNICEF_USERS:

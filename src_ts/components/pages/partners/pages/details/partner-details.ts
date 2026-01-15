@@ -31,7 +31,7 @@ import {Partner} from '../../../../../models/partners.models';
 import {AnyObject, LabelAndValue, User} from '@unicef-polymer/etools-types';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
-import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
+import {translate, get as getTranslation, Values} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import ComponentBaseMixin from '@unicef-polymer/etools-modules-common/dist/mixins/component-base-mixin';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -523,11 +523,21 @@ export class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(C
 
     let notifMessage = '';
     if (daysUntilExpire < 1) {
-      notifMessage = 'The ' + assessmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
+      notifMessage = getTranslation('ASSESSMENT_EXPIRED', {
+        assessmentType: assessmentType,
+        assessmentExpDate: assessmentExpDate.format(datesFormat)
+      } as Values);
+      // Add INGO guidance for Core Values Assessment
+      if (assessmentType === 'Core Values Assessment' && this.partner?.cso_type === 'International') {
+        notifMessage += '. ' + getTranslation('INGO_CORE_VALUES_VERIFICATION_GUIDANCE');
+      }
     } else {
       const notifStartDate = dayjs(assessmentDate).add(57, 'months');
       if (dayjs(today).isAfter(notifStartDate)) {
-        notifMessage = 'The ' + assessmentType + ' will expire in ' + daysUntilExpire + ' days';
+        notifMessage = getTranslation('ASSESSMENT_WILL_EXPIRE_IN_DAYS', {
+          assessmentType: assessmentType,
+          daysUntilExpire: daysUntilExpire.toString()
+        } as Values);
       }
     }
     if (notifMessage) {

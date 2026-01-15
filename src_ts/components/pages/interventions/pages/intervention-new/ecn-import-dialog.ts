@@ -18,6 +18,7 @@ import CONSTANTS from '../../../../../config/app-constants';
 import {csoPartnersSelector} from '../../../../../redux/reducers/partners';
 import {EtoolsInput} from '@unicef-polymer/etools-unicef/src/etools-input/etools-input';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 
 /**
  * @LitElement
@@ -104,10 +105,12 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
             id="locationsDropdw"
             label=${translate('LOCATIONS')}
             placeholder="&#8212;"
-            .options="${this.allLocations.filter((x) => x.is_active)}"
+            .options="${this.allLocations || []}"
+            .loadDataMethod="${this.loadLocationsDropdownOptions}"
             option-label="name"
             option-value="id"
             required
+            preserve-search-on-close
             error-message="${translate('GENERAL.REQUIRED_FIELD')}"
             auto-validate
             trigger-value-change-event
@@ -160,7 +163,7 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   filteredAgreements: MinimalAgreement[] = [];
 
   @property({type: Array})
-  allLocations!: LocationObject[];
+  allLocations: LocationObject[] = [];
 
   @property({type: Array})
   allSections!: any[];
@@ -174,17 +177,41 @@ export class EcnImportDialog extends ComponentBaseMixin(LitElement) {
   @property({type: Object})
   data!: any;
 
+  @property({type: Object})
+  loadLocationsDropdownOptions!: (search: string, page: number, shownOptionsLimit: number) => void;
+
   _onClose(): void {
     fireEvent(this, 'dialog-closed', {confirmed: false});
   }
 
   connectedCallback(): void {
     super.connectedCallback();
+
+    this.loadLocationsDropdownOptions = this._loadLocationsDropdownOptions.bind(this);
     this.allPartners = [...csoPartnersSelector(store.getState())];
     this.allAgreements = (store.getState() as RootState).agreements!.list;
-    this.allLocations = (store.getState() as RootState).commonData!.locations;
     this.allSections = (store.getState() as RootState).commonData!.sections;
     this.allOffices = (store.getState() as RootState).commonData!.offices;
+  }
+
+  async _loadLocationsDropdownOptions(search: string, page: number, shownOptionsLimit: number) {
+    const params = {search: search, page: page, page_size: shownOptionsLimit, is_active: true};
+    if (!this.allLocations || page == 1) {
+      this.allLocations = [];
+    }
+
+    const endpoint = pmpEdpoints.locations;
+    endpoint.url += `?${EtoolsRouter.encodeQueryParams(params)}`;
+    sendRequest({
+      method: 'GET',
+      endpoint: endpoint
+    })
+      .then((resp: any) => {
+        this.allLocations = this.allLocations.concat(resp.results);
+      })
+      .catch((_err: any) => {
+        //parseRequestErrorsAndShowAsToastMsgs(err, this);
+      });
   }
 
   validate() {
