@@ -137,7 +137,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
 
   _checkAndShowSignedTransitionWarning(agreement: Agreement) {
     const today = new Date().toISOString().slice(0, 10);
-  
+
     if (
       !agreement ||
       agreement.status !== CONSTANTS.STATUSES.Draft.toLowerCase() ||
@@ -152,18 +152,14 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
     ) {
       return;
     }
-    
+
     fireEvent(this, 'toast', {
-      text: getTranslation(
-        'AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED',
-        { startDate: agreement.start }
-      ),
-      showCloseBtn: true,
+      text: getTranslation('AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED', {
+        startDate: agreement.start
+      }),
+      showCloseBtn: true
     });
   }
-  
-  
-
   _getMinimalAgreementData(detail: Agreement) {
     const minimalAgrData: Partial<MinimalAgreement> = {
       agreement_number: '',
