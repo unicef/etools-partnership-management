@@ -448,6 +448,7 @@
   "NO_REPORT_DATA": "There is no report data to display.",
   "OFFICES": "Offices",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Once you hit save, the Agreement will be Terminated and this action can not be reversed",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "This Agreement will automatically move to SIGNED status when the start date ({{startDate}}) is reached.",
   "OTHER_ASSESSMENTS": "Other Assessments",
   "OTHER_INFO": "Other Info",
   "OUTSTANDING_FINDINGS": "Outstanding Findings",

@@ -118,6 +118,9 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
           fireEvent(self, 'reload-list');
         });
     }
+
+    this._checkAndShowSignedTransitionWarning(response);
+
     setTimeout(() => {
       // call additional callback, if any
       if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
@@ -131,6 +134,35 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
       loadingSource: this.ajaxLoadingMsgSource
     });
   }
+
+  _checkAndShowSignedTransitionWarning(agreement: Agreement) {
+    const today = new Date().toISOString().slice(0, 10);
+  
+    if (
+      !agreement ||
+      agreement.status !== CONSTANTS.STATUSES.Draft.toLowerCase() ||
+      !agreement.start ||
+      agreement.start <= today ||
+      !agreement.end ||
+      !agreement.attachment ||
+      !agreement.partner_manager ||
+      !agreement.signed_by ||
+      !agreement.signed_by_partner_date ||
+      !agreement.signed_by_unicef_date
+    ) {
+      return;
+    }
+    
+    fireEvent(this, 'toast', {
+      text: getTranslation(
+        'AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED',
+        { startDate: agreement.start }
+      ),
+      showCloseBtn: true,
+    });
+  }
+  
+  
 
   _getMinimalAgreementData(detail: Agreement) {
     const minimalAgrData: Partial<MinimalAgreement> = {
