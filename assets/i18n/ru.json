@@ -448,7 +448,7 @@
   "NO_REPORT_DATA": "Нет отчетных данных для отображения.",
   "OFFICES": "Офисы",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Как только вы нажмете «Сохранить», Соглашение будет расторгнуто, и это действие не может быть отменено.",
-  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "Это Соглашение автоматически перейдет в статус ПОДПИСАНО, когда будет достигнута дата начала ({{startDate}}).",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "Соглашение автоматически перейдет в статус ПОДПИСАНО, после ({{startDate}}).",
   "OTHER_ASSESSMENTS": "Прочие оценки",
   "OTHER_INFO": "Другая информация",
   "OUTSTANDING_FINDINGS": "Невыполненные рекомендации",
