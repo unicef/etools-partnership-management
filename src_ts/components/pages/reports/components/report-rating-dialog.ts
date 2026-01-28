@@ -48,7 +48,7 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
         @confirm-btn-clicked="${this.saveStatus}"
         @close="${this._onClose}"
       >
-        <div id="content-box" ?hidden="${this.isSRReport}">
+        <div id="content-box" ?hidden="${this._hideControlsSelection()}">
           <p>${translate('RATE_THE_OVERALL_PROGRESS_OF_THIS_PD')}</p>
           <etools-radio-group
             id="overallStatus"
@@ -121,6 +121,10 @@ export class ReportRatingDialog extends connect(store)(EndpointsLitMixin(LitElem
     this.selectedOverallStatus = this.isSRReport && !this.isFinalReport ? 'Met' : '';
     this.okBtnText =
       this.isSRReport && !this.isFinalReport ? getTranslation('ACCEPT_REPORT') : getTranslation('RATE_ACCEPT_REPORT');
+  }
+
+  _hideControlsSelection() {
+    return this.isSRReport && !this.isFinalReport;
   }
 
   _onClose(): void {
