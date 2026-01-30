@@ -448,6 +448,7 @@
   "NO_REPORT_DATA": "لا توجد بيانات تقرير لعرضها.",
   "OFFICES": "مكاتب",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "بمجرد الضغط على \"حفظ\" ، سيتم إنهاء الاتفاقية ولا يمكن التراجع عن هذا الإجراء",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "ستنتقل هذه الاتفاقية تلقائيًا إلى حالة الموقعة عند الوصول إلى تاريخ البدء ({{startDate}}).",
   "OTHER_ASSESSMENTS": "تقييمات أخرى",
   "OTHER_INFO": "معلومات اخرى",
   "OUTSTANDING_FINDINGS": "النتائج المعلقة",

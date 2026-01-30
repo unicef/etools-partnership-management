@@ -448,6 +448,7 @@
   "NO_REPORT_DATA": "Não há dados de relatório para exibir.",
   "OFFICES": "Escritórios",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Depois de clicar em salvar, o acordo será rescindido e essa ação não poderá ser revertida",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "Este Acordo será automaticamente movido para o status ASSINADO quando a data de início ({{startDate}}) for atingida.",
   "OTHER_ASSESSMENTS": "Outras avaliações",
   "OTHER_INFO": "Outras informações",
   "OUTSTANDING_FINDINGS": "Apontamentos Importantes",
