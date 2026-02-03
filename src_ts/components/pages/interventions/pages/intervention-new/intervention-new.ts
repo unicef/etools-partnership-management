@@ -49,6 +49,10 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
+  @property() selectionModalities: LabelAndValue[] = [
+    {label: getTranslation('OPEN_SELECTION'), value: 'open'},
+    {label: getTranslation('DIRECT_SELECTION'), value: 'direct'}
+  ];
 
   @property() partnerStaffMembers: PartnerStaffMember[] = [];
   get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
@@ -181,8 +185,8 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
-    // @ts-ignore
-    this.newIntervention[field] = value;
+    // @ts-ignore - allow setting backend-added fields not yet present in shared typings
+    (this.newIntervention as any)[field] = value;
     this.requestUpdate();
   }
 
