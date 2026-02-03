@@ -448,6 +448,7 @@
   "NO_REPORT_DATA": "Il n'y a pas de données de rapport à afficher.",
   "OFFICES": "Des bureaux",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Une fois que vous avez cliqué sur Enregistrer, l'accord sera résilié et cette action ne pourra pas être annulée",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "Cet Accord passera automatiquement à l'état SIGNÉ lorsque la date de début ({{startDate}}) sera atteinte.",
   "OTHER_ASSESSMENTS": "Autres évaluations",
   "OTHER_INFO": "Autre info",
   "OUTSTANDING_FINDINGS": "Constatations en suspens",
