@@ -295,6 +295,7 @@ export class AgreementItemData extends AjaxServerErrorsMixin(EndpointsLitMixin(L
         fireEvent(this, 'toast', {
           text: getTranslation('CHANGES_ARE_SAVED')
         });
+        this._checkAndShowSignedTransitionWarning(this.agreement as Agreement);
         return Promise.resolve(false);
       }
     }
