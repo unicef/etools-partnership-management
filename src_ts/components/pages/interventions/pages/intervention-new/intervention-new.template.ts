@@ -19,22 +19,22 @@ export function template(this: InterventionNew): TemplateResult {
     ${sharedStyles}
     <style>
       label[required] {
-          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
-          width: auto !important;
-          max-width: 100%;
-          right: auto;
-          padding-inline-end: 15px;
+        background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 95% 45%/4px;
+        width: auto !important;
+        max-width: 100%;
+        right: auto;
+        padding-inline-end: 15px;
       }
 
-      :host-context([dir='rtl'])  label[required] {
-          background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
+      :host-context([dir='rtl']) label[required] {
+        background: url(${Environment.basePath + '/assets/images/required.svg'}) no-repeat 0% 45%/4px;
       }
 
       paper-input#unppNumber {
         --paper-input-error: {
           white-space: nowrap;
           overflow: visible;
-        }
+        };
       }
       datepicker-lite {
         --paper-input-container_-_width: 100%;
@@ -45,8 +45,9 @@ export function template(this: InterventionNew): TemplateResult {
         --iit-margin: 0 0 4px 4px;
         --iit-max-width: auto;
       }
-      etools-dropdown#documentType::part(form-control), etools-dropdown-multi#partnerFocalPoints::part(form-control) {
-        padding-top:0;
+      etools-dropdown#documentType::part(form-control),
+      etools-dropdown-multi#partnerFocalPoints::part(form-control) {
+        padding-top: 0;
       }
     </style>
 
@@ -130,12 +131,12 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Focal Points   -->
         <div class="col-md-6 col-lg-8 col-12">
-        <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
-        <info-icon-tooltip
-              position="top"
-              offset="48"
-              .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
-            ></info-icon-tooltip>
+          <label class="paper-label"> ${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}</label>
+          <info-icon-tooltip
+            position="top"
+            offset="48"
+            .tooltipText="${translate('NEW_INTERVENTION.PARTNER_FOCAL_POINTS_TOOLTIP')}"
+          ></info-icon-tooltip>
           <etools-dropdown-multi
             id="partnerFocalPoints"
             no-label-float
@@ -151,7 +152,6 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             auto-validate
           >
-
           </etools-dropdown-multi>
         </div>
         <div class="col-md-6 col-lg-4 col-12">
@@ -176,33 +176,62 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   UNPP CFEI Number   -->
         <div class="col-md-6 col-lg-4 col-12">
+          <label class="paper-label" required> ${translate('UNPP_CFEI_DSR_REF_NUM')} </label>
+          <info-icon-tooltip
+            position="top"
+            offset="48"
+            .tooltipText="${translate('UNPP_CFEI_DSR_REF_NUM_TOOLTIP')}"
+          ></info-icon-tooltip>
           <etools-input
             id="unppNumber"
             pattern="CEF/[a-zA-Z]{3}/\\d{4}/\\d{3}"
-            label=${translate('UNPP_CFEI_DSR_REF_NUM')}
+            no-label-float
             placeholder="CEF/___/____/___"
+            required
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}. ${this.windowWidthIsSmall
+              ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
+              : translate('CFEI_EXPECTED_FORMAT')}"
             .value="${this.newIntervention.cfei_number ? this.newIntervention.cfei_number : ''}"
-            error-message="${
-              this.windowWidthIsSmall
-                ? translate('NEW_INTERVENTION.CFEI_EXPECTED_FORMAT_SHORT')
-                : translate('CFEI_EXPECTED_FORMAT')
-            }"
             @blur="${(ev: CustomEvent) => this.validateCFEI(ev)}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
-          ></etool-input>
+          ></etools-input>
+        </div>
+        <!--   Partner Selection Modality   -->
+        <div class="col-md-6 col-lg-4 col-12">
+          <label class="paper-label" required> ${translate('PARTNER_SELECTION_MODALITY')} </label>
+          <info-icon-tooltip
+            position="top"
+            offset="48"
+            .tooltipText="${translate('PARTNER_SELECTION_MODALITY_TOOLTIP')}"
+          ></info-icon-tooltip>
+          <etools-dropdown
+            id="partnerSelectionModality"
+            placeholder="&#8212;"
+            no-label-float
+            required
+            .options="${this.selectionModalities}"
+            .selected="${(this.newIntervention as any).partner_selection_modality}"
+            error-message="${translate('THIS_FIELD_IS_REQUIRED')}"
+            @etools-selected-item-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'partner_selection_modality',
+                detail.selectedItem && detail.selectedItem.value
+              )}"
+            trigger-value-change-event
+            hide-search
+            @focus="${this.resetError}"
+            @click="${this.resetError}"
+          >
+          </etools-dropdown>
         </div>
       </div>
 
       <div class="row">
         <!--   Document Type   -->
         <div class="col-md-6 col-lg-4 col-12">
-        <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
-        <info-icon-tooltip
-              position="top"
-              offset="48"
-              .tooltipText="${this.getDocTypeTooltip()}"
-            ></info-icon-tooltip>
+          <label class="paper-label" required> ${translate('NEW_INTERVENTION.DOC_TYPE')}</label>
+          <info-icon-tooltip position="top" offset="48" .tooltipText="${this.getDocTypeTooltip()}"></info-icon-tooltip>
 
           <etools-dropdown
             id="documentType"
