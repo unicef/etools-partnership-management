@@ -209,6 +209,9 @@ export class InterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: getTranslation('NEW_INTERVENTION.ON_SAVE_VALIDATION')});
       return;
     }
+    if (!this.customValidation()) {
+      return;
+    }
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
   }
 
@@ -240,6 +243,16 @@ export class InterventionNew extends connect(store)(LitElement) {
   validateCFEI(e?: CustomEvent) {
     const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
     elem.validate();
+  }
+
+  customValidation() {
+    const focalPoints = this.newIntervention.unicef_focal_points || [];
+    if (this.newIntervention.budget_owner && focalPoints.includes(this.newIntervention.budget_owner)) {
+      fireEvent(this, 'toast', {text: getTranslation('BUDGET_OWNER_DIFFERENT_FOCAL_POINT')});
+      return false;
+    }
+
+    return true;
   }
 
   private validate(): boolean {
