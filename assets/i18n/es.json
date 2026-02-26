@@ -448,6 +448,7 @@
   "NO_REPORT_DATA": "No hay datos de informe para mostrar.",
   "OFFICES": "Oficinas",
   "ONCE_YOU_HIT_SAVE_THE_AGREEMENT_WILL_BE_TERMINATED": "Una vez que presione guardar, el acuerdo será terminado y esta acción no puede ser revertida",
+  "AGREEMENT_WILL_AUTO_SIGNED_WHEN_START_DATE_REACHED": "Este Acuerdo se moverá automáticamente al estado FIRMADO cuando se alcance la fecha de inicio ({{startDate}}).",
   "OTHER_ASSESSMENTS": "Otras Evaluaciones",
   "OTHER_INFO": "Otra información",
   "OUTSTANDING_FINDINGS": "Hallazgos Destacados",

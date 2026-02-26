@@ -49,6 +49,10 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   @property() documentTypes: LabelAndValue[] = [];
   @property() currencies: LabelAndValue[] = [];
+  @property() selectionModalities: LabelAndValue[] = [
+    {label: getTranslation('OPEN_SELECTION'), value: 'open'},
+    {label: getTranslation('DIRECT_SELECTION'), value: 'direct'}
+  ];
 
   @property() partnerStaffMembers: PartnerStaffMember[] = [];
   get formattedPartnerStaffMembers(): LabelAndValue<number>[] {
@@ -181,8 +185,8 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
-    // @ts-ignore
-    this.newIntervention[field] = value;
+    // @ts-ignore - allow setting backend-added fields not yet present in shared typings
+    (this.newIntervention as any)[field] = value;
     this.requestUpdate();
   }
 
@@ -203,6 +207,9 @@ export class InterventionNew extends connect(store)(LitElement) {
   createIntervention(): void {
     if (!this.validate()) {
       fireEvent(this, 'toast', {text: getTranslation('NEW_INTERVENTION.ON_SAVE_VALIDATION')});
+      return;
+    }
+    if (!this.customValidation()) {
       return;
     }
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
@@ -236,6 +243,16 @@ export class InterventionNew extends connect(store)(LitElement) {
   validateCFEI(e?: CustomEvent) {
     const elem = e ? (e.currentTarget as EtoolsInput) : this.shadowRoot?.querySelector<EtoolsInput>('#unppNumber')!;
     elem.validate();
+  }
+
+  customValidation() {
+    const focalPoints = this.newIntervention.unicef_focal_points || [];
+    if (this.newIntervention.budget_owner && focalPoints.includes(this.newIntervention.budget_owner)) {
+      fireEvent(this, 'toast', {text: getTranslation('BUDGET_OWNER_DIFFERENT_FOCAL_POINT')});
+      return false;
+    }
+
+    return true;
   }
 
   private validate(): boolean {
