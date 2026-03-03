@@ -160,20 +160,23 @@ export class InterventionsList extends connect(store)(
                   <a
                     class="text-btn-style pd-ref truncate"
                     href="interventions/${intervention.id}/metadata"
-                    title="${this.getDisplayValue(intervention.number)}"
+                    title="${this.getDisplayValue(intervention.number, '', false)}"
                   >
-                    ${this.getDisplayValue(intervention.number)}
+                    ${this.getDisplayValue(intervention.number, '', false)}
                   </a>
                 </span>
                 <span
                   class="col-data col-3"
                   data-col-header-label="${translate('INTERVENTIONS_LIST.PARTNER_ORG_NAME')}"
-                  title="${this.getDisplayValue(intervention.partner_name)}"
+                  title="${this.getDisplayValue(intervention.partner_name, '', false)}"
                 >
-                  <span>${this.getDisplayValue(intervention.partner_name)}</span>
+                  <span>${this.getDisplayValue(intervention.partner_name, '', false)}</span>
                 </span>
                 <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.DOC_TYPE')}">
-                  ${translateValue(this.getDisplayValue(intervention.document_type) as string, 'DOCUMENT_TYPES')}
+                  ${translateValue(
+                    this.getDisplayValue(intervention.document_type, '', false) as string,
+                    'DOCUMENT_TYPES'
+                  )}
                 </span>
                 <div class="col-data col-2 capitalize" data-col-header-label="${translate('GENERAL.STATUS')}">
                   <div>${this.getStatusCellText(intervention)}</div>
@@ -181,9 +184,9 @@ export class InterventionsList extends connect(store)(
                 <span
                   class="col-data col-2 break-word"
                   data-col-header-label="${translate('INTERVENTIONS_LIST.TITLE')}"
-                  title="${this.getDisplayValue(intervention.title)}"
+                  title="${this.getDisplayValue(intervention.title, '', false)}"
                 >
-                  ${this.getDisplayValue(intervention.title)}
+                  ${this.getDisplayValue(intervention.title, '', false)}
                 </span>
                 <span class="col-data col-1" data-col-header-label="${translate('INTERVENTIONS_LIST.START_DATE')}">
                   <etools-info-tooltip
@@ -222,13 +225,15 @@ export class InterventionsList extends connect(store)(
               <div slot="row-data-details" class="p-relative">
                 <div class="row-details-content col-2">
                   <span class="rdc-title">${translate('OFFICES')}</span>
-                  <span>${this.getDisplayValue(intervention.offices_names)}</span>
+                  <span>${this.getDisplayValue(intervention.offices_names, '', false)}</span>
                 </div>
                 <div class="row-details-content col-2">
                   <span class="rdc-title">${translate('SECTION')}</span>
                   <span
                     >${this.getDisplayValue(
-                      intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS'))
+                      intervention.section_names?.map((x) => getTranslatedValue(x, 'COMMON_DATA.SECTIONS')),
+                      '',
+                      false
                     )}</span
                   >
                 </div>
@@ -521,6 +526,7 @@ export class InterventionsList extends connect(store)(
       end_after: queryStringObj.end_after,
       editable_by: queryStringObj.editable_by,
       contingency_pd: queryStringObj.contingency_pd,
+      humanitarian_flag: queryStringObj.humanitarian_flag,
       search: queryStringObj.search
     };
     if (!forExport) {
