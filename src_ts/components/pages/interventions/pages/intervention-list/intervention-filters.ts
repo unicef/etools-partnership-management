@@ -20,7 +20,8 @@ export enum InterventionFilterKeys {
   end = 'end',
   endAfter = 'end_after',
   contingency_pd = 'contingency_pd',
-  editable_by = 'editable_by'
+  editable_by = 'editable_by',
+  humanitarian_flag = 'humanitarian_flag'
 }
 
 export const selectedValueTypeByFilterKey: AnyObject = {
@@ -39,6 +40,7 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [InterventionFilterKeys.end]: 'string',
   [InterventionFilterKeys.endAfter]: 'string',
   [InterventionFilterKeys.contingency_pd]: 'boolean',
+  [InterventionFilterKeys.humanitarian_flag]: 'boolean',
   [InterventionFilterKeys.editable_by]: 'string'
 };
 
@@ -223,6 +225,14 @@ export function getInterventionFilters() {
       filterName: getTranslation('INTERVENTIONS_LIST.CONTINGENCY_PD'),
       filterNameKey: 'INTERVENTIONS_LIST.CONTINGENCY_PD',
       filterKey: InterventionFilterKeys.contingency_pd,
+      type: EtoolsFilterTypes.Toggle,
+      selectedValue: false,
+      selected: true
+    },
+    {
+      filterName: getTranslation('INTERVENTIONS_LIST.HUMANITARIAN_FLAG'),
+      filterNameKey: 'INTERVENTIONS_LIST.HUMANITARIAN_FLAG',
+      filterKey: InterventionFilterKeys.humanitarian_flag,
       type: EtoolsFilterTypes.Toggle,
       selectedValue: false,
       selected: true

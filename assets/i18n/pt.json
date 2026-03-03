@@ -358,6 +358,7 @@
     "ADD_PROGRAMME_DOCUMENT": "Adicionar documento de programa (PD)",
     "BUDGET_OWNER": "Proprietário do Orçamento da UNICEF",
     "CONTINGENCY_PD": "PD de Contingência (Documento de Programa de contingência)",
+    "HUMANITARIAN_FLAG": "Este SPD é humanitário",
     "COUNTRY_PROGRAMME_OUTPUT": "Output do programa do país (CP Output)",
     "DOC_TYPE": "Tipo de documento",
     "DONORS": "Doadores",
